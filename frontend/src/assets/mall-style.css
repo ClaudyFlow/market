@@ -1,0 +1,26 @@
+/* 购物商城科幻风格主题 */
+:root {
+  /* 主色调 - 科技蓝绿 */
+  --mall-primary: #00d4ff;
+  --mall-secondary: #00ff88;
+  --mall-accent: #ff6600;
+
+  /* 背景色 - 深空 */
+  --mall-bg-dark: #0a0e1a;
+  --mall-bg-medium: #1a1f3a;
+}
+
+/* 商品类型标签 */
+.item-type-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.item-type-tag.digital { background: rgba(0,212,255,0.8); color: #fff; }
+.item-type-tag.appliance { background: rgba(0,255,136,0.8); color: #000; }
+.item-type-tag.fashion { background: rgba(255,51,102,0.8); color: #fff; }
+.item-type-tag.beauty { background: rgba(163,53,238,0.8); color: #fff; }
