@@ -1,0 +1,232 @@
+# 市场平台 - 部署脚本说明
+
+## 📋 脚本列表
+
+| 脚本名 | 功能 | 适用场景 |
+|--------|------|----------|
+| `start.bat` | 一键启动所有服务 | 快速启动完整系统 |
+| `dev.bat` | 前端开发模式 | 前端开发调试 |
+| `build-frontend.bat` | 构建前端生产版本 | 部署前构建 |
+| `start-nginx.bat` | 启动 Nginx | 单独启动 Web 服务器 |
+| `stop-nginx.bat` | 停止 Nginx | 停止 Web 服务器 |
+| `start-backend.bat` | 启动后端服务 | 单独启动后端 |
+| `clean.bat` | 清理构建产物 | 清理磁盘空间 |
+
+---
+
+## 🚀 快速开始
+
+### 方式一：一键启动（推荐）
+
+```bash
+# 双击运行
+scripts\start.bat
+
+# 或命令行
+cd scripts
+start.bat
+```
+
+**自动完成**：
+1. ✅ 启动后端 Spring Boot 服务
+2. ✅ 构建前端生产版本
+3. ✅ 部署到 Nginx
+4. ✅ 启动 Nginx Web 服务器
+5. ✅ 自动打开浏览器
+
+---
+
+### 方式二：分步启动
+
+```bash
+# 1. 构建前端
+scripts\build-frontend.bat
+
+# 2. 启动后端
+scripts\start-backend.bat
+
+# 3. 启动 Nginx
+scripts\start-nginx.bat
+```
+
+---
+
+### 方式三：开发模式
+
+```bash
+# 前端热更新开发
+scripts\dev.bat
+
+# 后端单独启动
+scripts\start-backend.bat
+```
+
+---
+
+## 📁 目录结构
+
+```
+market/
+├── scripts/
+│   ├── start.bat              # 一键启动
+│   ├── dev.bat                # 开发模式
+│   ├── build-frontend.bat     # 前端构建
+│   ├── start-nginx.bat        # 启动 Nginx
+│   ├── stop-nginx.bat         # 停止 Nginx
+│   ├── start-backend.bat      # 启动后端
+│   └── clean.bat              # 清理脚本
+│
+├── frontend/
+│   ├── src/                   # 前端源码
+│   ├── dist/                  # 构建输出（构建后生成）
+│   └── nginx/
+│       └── html/              # Nginx 静态文件（部署后生成）
+│
+└── backend/
+    └── target/                # 后端构建输出（构建后生成）
+```
+
+---
+
+## 🌐 访问地址
+
+启动完成后，可以访问：
+
+| 端 | 地址 | 说明 |
+|----|------|------|
+| **用户端** | http://localhost/ | C 端用户购物 |
+| **商家端** | http://localhost/merchant.html | B 端商家管理 |
+| **管理端** | http://localhost/admin.html | 平台管理后台 |
+| **后端 API** | http://localhost:8080/api/ | RESTful API |
+
+---
+
+## ⚙️ 配置说明
+
+### Nginx 配置
+
+位置：`frontend/nginx/conf/nginx.conf`
+
+主要配置项：
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+    
+    # 用户端
+    location / {
+        root html;
+        index index.html;
+    }
+    
+    # 商家端
+    location /merchant {
+        try_files $uri $uri/ /merchant.html;
+    }
+    
+    # 管理端
+    location /admin {
+        try_files $uri $uri/ /admin.html;
+    }
+    
+    # API 代理
+    location /api/ {
+        proxy_pass http://localhost:8080;
+    }
+}
+```
+
+### 后端配置
+
+位置：`backend/src/main/resources/application.yml`
+
+```yaml
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:sqlite:data/market.db
+```
+
+---
+
+## 🔧 常见问题
+
+### 1. 端口被占用
+
+**错误**: `Address already in use: bind`
+
+**解决**: 
+```bash
+# 停止 Nginx
+scripts\stop-nginx.bat
+
+# 或手动结束进程
+taskkill /F /IM nginx.exe
+```
+
+### 2. 前端构建失败
+
+**错误**: `npm run build` 失败
+
+**解决**:
+```bash
+# 清理并重新安装依赖
+cd frontend
+rmdir /s /q node_modules
+npm install
+npm run build
+```
+
+### 3. 后端启动失败
+
+**错误**: `Java not found`
+
+**解决**:
+- 确保已安装 JDK 21+
+- 检查 JAVA_HOME 环境变量
+
+---
+
+## 📝 部署到服务器
+
+### Linux 服务器
+
+```bash
+# 1. 上传项目
+scp -r market/ user@server:/opt/
+
+# 2. 构建前端
+cd /opt/market/frontend
+npm install
+npm run build
+
+# 3. 配置 Nginx
+sudo cp /opt/market/frontend/nginx/conf/nginx.conf /etc/nginx/sites-available/market
+sudo ln -s /etc/nginx/sites-available/market /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+
+# 4. 启动后端
+cd /opt/market
+nohup java -jar target/market-platform-1.0.0.jar > logs/app.log 2>&1 &
+```
+
+### Docker 部署
+
+```bash
+# 构建镜像
+docker build -t market-platform .
+
+# 启动容器
+docker-compose up -d
+```
+
+---
+
+## 📞 技术支持
+
+如有问题，请联系：
+- Email: support@market.com
+- GitHub Issues: https://github.com/market-platform/issues

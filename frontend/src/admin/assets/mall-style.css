@@ -1,0 +1,148 @@
+/* 平台端 - 科幻风格主题变量 */
+:root {
+  /* 主色调 - 科技蓝绿 */
+  --mall-primary: #00d4ff;
+  --mall-primary-dark: #00a8cc;
+  
+  /* 辅色 - 青绿色 */
+  --mall-secondary: #00ff88;
+  --mall-secondary-dark: #00cc6a;
+  
+  /* 强调色 - 橙红色 */
+  --mall-accent: #ff6600;
+  
+  /* 背景色 - 深空 */
+  --mall-bg-dark: #0a0e1a;
+  --mall-bg-medium: #1a1f3a;
+  --mall-bg-light: #2a2f4a;
+  
+  /* 文字颜色 */
+  --mall-text-primary: #ffffff;
+  --mall-text-secondary: #a0aec0;
+  --mall-text-disabled: #718096;
+  
+  /* 边框颜色 */
+  --mall-border: rgba(0, 212, 255, 0.2);
+  --mall-border-light: rgba(255, 255, 255, 0.1);
+  
+  /* 阴影 */
+  --mall-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
+  --mall-shadow-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+  
+  /* 圆角 */
+  --mall-radius: 8px;
+  --mall-radius-large: 12px;
+  
+  /* 过渡 */
+  --mall-transition: all 0.3s ease;
+  
+  /* 卡片背景 */
+  --mall-card-bg: rgba(26, 31, 58, 0.8);
+}
+
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  background: var(--mall-bg-dark);
+  color: var(--mall-text-primary);
+  min-height: 100vh;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mall-bg-medium);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mall-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mall-secondary);
+}
+
+/* 通用卡片样式 */
+.mall-card {
+  background: var(--mall-card-bg);
+  border: 1px solid var(--mall-border);
+  border-radius: var(--mall-radius-large);
+  padding: 20px;
+  box-shadow: var(--mall-shadow);
+  transition: var(--mall-transition);
+}
+
+.mall-card:hover {
+  border-color: var(--mall-primary);
+  box-shadow: var(--mall-shadow-glow);
+}
+
+/* 按钮发光效果 */
+.glow-btn {
+  background: linear-gradient(135deg, var(--mall-primary), var(--mall-secondary));
+  border: none;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+  transition: var(--mall-transition);
+}
+
+.glow-btn:hover {
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+/* 标题样式 */
+.mall-title {
+  background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+}
+
+/* 数据卡片 */
+.stat-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05));
+  border: 1px solid var(--mall-border);
+  border-radius: var(--mall-radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card .value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--mall-primary);
+}
+
+.stat-card .label {
+  font-size: 12px;
+  color: var(--mall-text-secondary);
+  margin-top: 8px;
+}
+
+/* 商品类型标签 */
+.item-type-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.item-type-tag.digital { background: rgba(0,212,255,0.8); color: #fff; }
+.item-type-tag.appliance { background: rgba(0,255,136,0.8); color: #000; }
+.item-type-tag.fashion { background: rgba(255,51,102,0.8); color: #fff; }
+.item-type-tag.beauty { background: rgba(163,53,238,0.8); color: #fff; }
