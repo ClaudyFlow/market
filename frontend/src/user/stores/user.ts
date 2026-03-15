@@ -1,79 +1,74 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getUserInfo, getVipInfo, getUserPoints, checkIn } from '@user/api/user'
+import type { UserInfo, VipInfo, UserPoints } from '@user/types'
 import { ElMessage } from 'element-plus'
 
+/**
+ * 用户状态管理
+ */
 export const useUserStore = defineStore('user', () => {
   const userPoints = ref(0)
   const userVipLevel = ref(0)
-  const vipExpireTime = ref(null)
-  const vipBenefits = ref([])
-  const userInfo = ref(null)
-  const isLoading = ref(false)
-
-  // 是否已签到
+  const vipExpireTime = ref<string | null>(null)
+  const vipBenefits = ref<string[]>([])
+  const userInfo = ref<UserInfo | null>(null)
+  const loading = ref(false)
   const hasCheckedIn = ref(false)
 
-  // VIP 等级名称
   const vipLevelName = computed(() => {
     const names = ['普通会员', '白银会员', '黄金会员', '铂金会员', '钻石会员', '至尊会员']
     return names[userVipLevel.value] || '普通会员'
   })
 
-  // 是否 VIP
   const isVip = computed(() => userVipLevel.value > 0)
 
-  // 加载用户信息
   const loadUserInfo = async () => {
-    isLoading.value = true
+    loading.value = true
     try {
-      const [info, vip, points] = await Promise.all([
+      const [infoResult, vipResult, pointsResult] = await Promise.all([
         getUserInfo(),
         getVipInfo(),
         getUserPoints()
       ])
-      userInfo.value = info.data || {}
-      userVipLevel.value = vip.data?.level || 0
-      vipExpireTime.value = vip.data?.expireTime || null
-      vipBenefits.value = vip.data?.benefits || []
-      userPoints.value = points.data?.points || 0
-      hasCheckedIn.value = points.data?.hasCheckedIn || false
-    } catch (error) {
-      console.error('加载用户信息失败:', error)
-      // 使用默认值
+      // axios 响应已经是 .data 后的结果（见 request.ts 拦截器）
+      userInfo.value = (infoResult as any).data || null
+      userVipLevel.value = (vipResult as any).data?.level || 0
+      vipExpireTime.value = (vipResult as any).data?.expireTime || null
+      vipBenefits.value = (vipResult as any).data?.benefits || []
+      userPoints.value = (pointsResult as any).data?.points || 0
+      hasCheckedIn.value = (pointsResult as any).data?.hasCheckedIn || false
+    } catch {
       userPoints.value = 0
       userVipLevel.value = 0
     } finally {
-      isLoading.value = false
+      loading.value = false
     }
   }
 
-  // 签到
-  const doCheckIn = async () => {
+  const doCheckIn = async (): Promise<boolean> => {
     if (hasCheckedIn.value) {
       ElMessage.info('今天已经签到过了哦~')
       return false
     }
     try {
       const result = await checkIn()
-      const points = result.data?.points || 10
+      const points = (result as any).data?.points || 10
       userPoints.value += points
       hasCheckedIn.value = true
       ElMessage.success(`签到成功！获得 ${points} 积分奖励`)
       return true
-    } catch (error) {
+    } catch {
       ElMessage.error('签到失败，请稍后重试')
       return false
     }
   }
 
-  // 添加积分
-  const addPoints = (amount) => {
+  const addPoints = (amount: number) => {
     userPoints.value += amount
   }
 
-  // 消费积分
-  const spendPoints = (amount) => {
+  const consumePoints = (amount: number): boolean => {
     if (userPoints.value >= amount) {
       userPoints.value -= amount
       return true
@@ -81,7 +76,6 @@ export const useUserStore = defineStore('user', () => {
     return false
   }
 
-  // 登出
   const logout = () => {
     userPoints.value = 0
     userVipLevel.value = 0
@@ -97,14 +91,14 @@ export const useUserStore = defineStore('user', () => {
     vipExpireTime,
     vipBenefits,
     userInfo,
-    isLoading,
+    loading,
     hasCheckedIn,
     vipLevelName,
     isVip,
     loadUserInfo,
     doCheckIn,
     addPoints,
-    spendPoints,
+    consumePoints,
     logout
   }
 })
