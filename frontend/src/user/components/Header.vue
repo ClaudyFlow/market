@@ -6,14 +6,14 @@
         <TopInfoBar user-text="尊敬的会员">
           <template #user-info>
             <div class="user-info">
-              <span class="username">
-                <el-avatar :size="24" src="https://via.placeholder.com/24x24/00d4ff/fff?text=U">
-                  <el-icon><User /></el-icon>
+              <span class="username" @click="handleAuthClick" style="cursor: pointer;">
+                <el-avatar :size="24" :src="isLoggedIn && currentUser?.avatarUrl ? currentUser.avatarUrl : `https://via.placeholder.com/24x24/00d4ff/fff?text=${userDisplayName ? userDisplayName[0].toUpperCase() : 'U'}`">
+                  <el-icon v-if="!isLoggedIn"><User /></el-icon>
                 </el-avatar>
-                尊敬的会员
+                <span class="auth-text">{{ isLoggedIn && userDisplayName ? userDisplayName : '登录/注册' }}</span>
               </span>
               <span class="points">
-                <el-icon><Trophy /></el-icon> 积分：{{ userPoints }}
+                <el-icon><Trophy /></el-icon> 积分：{{ 用户积分 }}
               </span>
             </div>
           </template>
@@ -82,7 +82,7 @@
 
         <div class="cart-icon" @click="router.push('/cart')">
           <el-icon size="22"><ShoppingCart /></el-icon>
-          <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
+          <span class="cart-count" v-if="购物车数量 > 0">{{ 购物车数量 }}</span>
         </div>
       </div>
     </div>
@@ -90,28 +90,71 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
 import { useUserStore } from '@user/stores/user'
 import TopInfoBar from '@common/components/TopInfoBar.vue'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const cartStore = useCartStore()
 const userStore = useUserStore()
 
 const searchKeyword = ref('')
+const isLoggedIn = ref(false)
+const currentUser = ref(null)
+
+// 检查登录状态
+const checkLoginStatus = () => {
+  const token = localStorage.getItem('token')
+  const user = localStorage.getItem('user')
+  if (token && user) {
+    isLoggedIn.value = true
+    currentUser.value = JSON.parse(user)
+  } else {
+    isLoggedIn.value = false
+    currentUser.value = null
+  }
+}
+
+// 获取用户显示名称
+const userDisplayName = computed(() => {
+  if (isLoggedIn.value && currentUser.value) {
+    return currentUser.value.name || currentUser.value.username || '用户'
+  }
+  return null
+})
+
+// 处理登录/注册点击
+const handleAuthClick = () => {
+  if (isLoggedIn.value) {
+    // 已登录，跳转到用户中心
+    router.push('/user')
+  } else {
+    // 未登录，直接跳转到登录页
+    router.push('/login')
+  }
+}
 
 // 购物车数量
-const cartCount = computed(() => cartStore.totalCount)
+const 购物车数量 = computed(() => cartStore.totalCount)
 // 用户积分
-const userPoints = computed(() => userStore.userPoints)
+const 用户积分 = computed(() => userStore.用户积分)
 
 const handleSearch = () => {
   if (searchKeyword.value.trim()) {
     router.push({ path: '/items', query: { keyword: searchKeyword.value } })
   }
 }
+
+// 组件挂载时检查登录状态
+onMounted(() => {
+  checkLoginStatus()
+  
+  // 监听存储变化
+  window.addEventListener('storage', checkLoginStatus)
+})
 </script>
 
 <style scoped>
@@ -151,6 +194,16 @@ const handleSearch = () => {
   align-items: center;
   gap: 8px;
   color: #fff;
+  transition: all 0.3s ease;
+}
+
+.username:hover {
+  color: var(--mall-primary);
+  text-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+
+.auth-text {
+  font-weight: 500;
 }
 
 .points {

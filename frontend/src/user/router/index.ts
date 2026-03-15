@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
@@ -54,6 +54,56 @@ const routes = [
     name: 'Order',
     component: () => import('@user/views/Order.vue'),
     meta: { title: '订单确认' }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@user/views/auth/Login.vue'),
+    meta: { title: '登录/注册' }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    redirect: '/login?tab=register',
+    meta: { title: '注册' }
+  },
+  {
+    path: '/user',
+    name: 'UserCenter',
+    component: () => import('@user/views/user/UserCenter.vue'),
+    meta: { title: '用户中心' },
+    children: [
+      {
+        path: 'orders',
+        name: 'UserOrders',
+        component: () => import('@user/views/user/Orders.vue'),
+        meta: { title: '我的订单' }
+      },
+      {
+        path: 'address',
+        name: 'UserAddress',
+        component: () => import('@user/views/user/Address.vue'),
+        meta: { title: '地址管理' }
+      },
+      {
+        path: 'points',
+        name: 'UserPoints',
+        component: () => import('@user/views/user/Points.vue'),
+        meta: { title: '我的积分' }
+      },
+      {
+        path: 'favorites',
+        name: 'UserFavorites',
+        component: () => import('@user/views/user/Favorites.vue'),
+        meta: { title: '我的收藏' }
+      },
+      {
+        path: 'follows',
+        name: 'UserFollows',
+        component: () => import('@user/views/user/Follows.vue'),
+        meta: { title: '我的关注' }
+      }
+    ]
   }
 ]
 

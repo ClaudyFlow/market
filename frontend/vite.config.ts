@@ -5,7 +5,6 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [
     vue(),
-    // 开发环境下支持 /merchant 和 /admin 路径访问
     {
       name: 'html-rewrite',
       configureServer(server) {
@@ -48,10 +47,14 @@ export default defineConfig({
   },
 
   build: {
-    // 直接输出到 nginx/html 目录
     outDir: resolve(__dirname, 'nginx/html'),
     emptyOutDir: true,
-
+    minify: 'esbuild',
+    esbuildOptions: {
+      drop: ['console', 'debugger'],
+      treeShaking: true,
+      target: 'es2020'
+    },
     rollupOptions: {
       input: {
         user: resolve(__dirname, 'index.html'),
@@ -61,9 +64,28 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor-vue': ['vue', 'vue-router', 'pinia'],
-          'vendor-element': ['element-plus']
-        }
+          'vendor-element': ['element-plus'],
+          'vendor-icons': ['@element-plus/icons-vue'],
+          'vendor-utils': ['axios']
+        },
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]'
       }
+    },
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 500
+  },
+
+  optimizeDeps: {
+    include: ['vue', 'vue-router', 'pinia', 'element-plus', '@element-plus/icons-vue', 'axios'],
+    exclude: ['lodash-es'],
+    esbuildOptions: {
+      minify: true,
+      treeShaking: true,
+      target: 'es2020'
     }
   }
 })

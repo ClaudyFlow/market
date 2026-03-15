@@ -167,8 +167,8 @@
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, type Ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@user/stores/cart";
 import { useUserStore } from "@user/stores/user";
@@ -176,19 +176,48 @@ import { banners } from "@user/data/categories";
 import ProductCard from "@user/components/ProductCard.vue";
 import CategoryPanel from "@user/components/CategoryPanel.vue";
 import AnnouncementPanel from "@user/components/AnnouncementPanel.vue";
+import { ElMessage } from "element-plus";
+import { 获取进度颜色 } from "@user/utils/discount";
 
-const router = useRouter();
-const cartStore = useCartStore();
-const userStore = useUserStore();
-const remainingPercent = ref(42);
+interface Product {
+  id: number
+  name: string
+  price: number
+  originalPrice: number
+  type?: string
+  rating?: number
+  sales?: string
+  image?: string
+  soldCount?: number
+  remainCount?: number
+  salesPercent?: number
+  remaining?: number
+  description?: string
+}
+
+interface Banner {
+  title: string
+  subtitle: string
+  gradient: string
+}
+
+interface Brand {
+  name: string
+  description: string
+}
+
+const router = useRouter()
+const cartStore = useCartStore()
+const userStore = useUserStore()
+const remainingPercent = ref(42)
 
 // 签到处理
 const handleCheckIn = async () => {
-  await userStore.doCheckIn();
-};
+  await userStore.doCheckIn()
+}
 
 // 倒计时
-const countdown = ref({ hours: "04", minutes: "30", seconds: "00" });
+const countdown: Ref<{ hours: string; minutes: string; seconds: string }> = ref({ hours: "04", minutes: "30", seconds: "00" })
 
 // 限时特惠商品 - 15 个（使用 soldCount 和 remainCount 格式）
 const flashItems = ref([
@@ -592,41 +621,42 @@ const brands = ref([
   { name: "LV", description: "奢华与经典的象征" },
 ]);
 
-let timer = null;
+let timer: ReturnType<typeof setInterval> | null = null
+
 const updateCountdown = () => {
-  const now = new Date();
-  const target = new Date();
-  target.setHours(23, 59, 59);
-  const diff = target - now;
+  const now = new Date()
+  const target = new Date()
+  target.setHours(23, 59, 59)
+  const diff = target.getTime() - now.getTime()
   if (diff > 0) {
-    const hours = Math.floor(diff / 1000 / 60 / 60);
-    const minutes = Math.floor((diff / 1000 / 60) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+    const hours = Math.floor(diff / 1000 / 60 / 60)
+    const minutes = Math.floor((diff / 1000 / 60) % 60)
+    const seconds = Math.floor((diff / 1000) % 60)
     countdown.value = {
       hours: String(hours).padStart(2, "0"),
       minutes: String(minutes).padStart(2, "0"),
-      seconds: String(seconds).padStart(2, "0"),
-    };
+      seconds: String(seconds).padStart(2, "0")
+    }
   }
-};
+}
 
-const goToDetail = (id) => {
-  router.push(`/item/${id}`);
-};
+const goToDetail = (id: number) => {
+  router.push(`/item/${id}`)
+}
 
-const addToCart = (item) => {
-  cartStore.addToCart({ ...item, quantity: 1 });
-  ElMessage.success("已加入购物车");
-};
+const addToCart = (item: Product) => {
+  cartStore.addToCart({ ...item, quantity: 1 })
+  ElMessage.success("已加入购物车")
+}
 
 onMounted(() => {
-  updateCountdown();
-  timer = setInterval(updateCountdown, 1000);
-});
+  updateCountdown()
+  timer = setInterval(updateCountdown, 1000)
+})
 
 onUnmounted(() => {
-  if (timer) clearInterval(timer);
-});
+  if (timer) clearInterval(timer)
+})
 </script>
 
 <style scoped>

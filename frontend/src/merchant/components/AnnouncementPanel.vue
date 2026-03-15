@@ -148,6 +148,6 @@ import { announcements } from '@user/data/categories'
 .notice-date {
   font-size: 10px;
   color: #666;
-  line-height: 1;
+  
 }
 </style>

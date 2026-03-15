@@ -1,15 +1,22 @@
 <template>
   <div class="top-info-bar" aria-label="顶部信息栏">
-    <div class="server-info">
+    <!-- 左侧：地址和在线人数 -->
+    <div class="left-section">
       <LocationInfo />
-      <span class="divider">|</span>
       <div class="online-info">
         <el-icon><Connection /></el-icon>
         <span class="online-count">在线人数 {{ onlineCount.toLocaleString() }}</span>
+        <StatusDot status="success" />
       </div>
     </div>
-    <TimeInfo />
-    <div class="user-section">
+
+    <!-- 中间：时间 -->
+    <div class="center-section">
+      <TimeInfo />
+    </div>
+
+    <!-- 右侧：用户信息和积分 -->
+    <div class="right-section">
       <slot name="user-info">
         <div class="user-info">
           <span class="username">
@@ -18,21 +25,31 @@
           </span>
         </div>
       </slot>
+      <div class="points-info">
+        <el-icon><Trophy /></el-icon>
+        <span class="points-count">{{ userPoints }} 积分</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { Connection } from '@element-plus/icons-vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Connection, Trophy } from '@element-plus/icons-vue'
 import TimeInfo from './TimeInfo.vue'
 import LocationInfo from './LocationInfo.vue'
+import StatusDot from './StatusDot.vue'
 
 const props = defineProps({
-  // 用户文本，如 '尊敬的会员' 或 '商家账号' 或 '管理员'
+  // 用户文本
   userText: {
     type: String,
     default: '用户'
+  },
+  // 用户积分
+  userPoints: {
+    type: Number,
+    default: 0
   },
   // 是否显示在线人数
   showOnline: {
@@ -72,34 +89,22 @@ onUnmounted(() => {
 
 <style scoped>
 .top-info-bar {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
   position: relative;
   width: 100%;
+  padding: 8px 16px;
 }
 
-.server-info {
+/* 左侧区域 - 地址和在线人数 */
+.left-section {
   display: flex;
-  align-items: center;
-  gap: 15px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
   color: var(--mall-primary);
-}
-
-.time-display {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.user-section {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.divider {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 12px;
 }
 
 .online-info {
@@ -110,6 +115,28 @@ onUnmounted(() => {
 
 .online-count {
   color: var(--mall-secondary);
+  font-size: 12px;
+}
+
+/* 中间区域 - 时间居中 */
+.center-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-section :deep(.time-display) {
+  justify-content: center;
+}
+
+/* 右侧区域 - 用户信息和积分 */
+.right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  color: #fff;
   font-size: 13px;
 }
 
@@ -117,13 +144,22 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #fff;
-  font-size: 13px;
 }
 
 .username {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.points-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.points-count {
+  color: var(--mall-secondary);
+  font-size: 12px;
 }
 </style>

@@ -2,6 +2,12 @@
   <article class="product-card" @click="handleClick">
     <div class="sale-image">
       <img :src="product.image" :alt="product.name" />
+      <FavoriteButton
+        :productId="product.id"
+        circle
+        :showText="false"
+        class="favorite-overlay"
+      />
     </div>
     <div class="sale-info">
       <div class="sale-content">
@@ -25,11 +31,11 @@
             <span class="discount">{{ discount }}折</span>
           </span>
         </div>
-        <div class="progress-container" :style="{ '--progress-color': getProgressColor(remainingPercent) }">
+        <div class="progress-container" :style="{ '--progress-color': 获取进度颜色 (remainingPercent) }">
           <el-progress
             :percentage="remainingPercent"
             :format="percent => percent.toFixed(2) + '%'"
-            :color="getProgressColor(remainingPercent)"
+            :color="获取进度颜色 (remainingPercent)"
             :stroke-width="10"
             class="full-width-progress"
           />
@@ -58,19 +64,35 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ShoppingCart, CircleClose, StarFilled } from '@element-plus/icons-vue'
 import { computed } from 'vue'
-import { calculateDiscount, getProgressColor } from '@user/utils/discount'
+import { 计算折扣 as calculateDiscount, 获取进度颜色 as getProgressColor } from '@user/utils/discount'
 
-const props = defineProps({
-  product: {
-    type: Object,
-    required: true
-  }
-})
+interface Product {
+  id: number
+  name: string
+  price: number
+  originalPrice: number
+  type?: string
+  rating?: number
+  sales?: string
+  image?: string
+  remainCount?: number
+  soldCount?: number
+  salesPercent?: number
+  remaining?: number
+  [key: string]: unknown
+}
 
-const emit = defineEmits(['click', 'add-to-cart'])
+const props = defineProps<{
+  product: Product
+}>()
+
+const emit = defineEmits<{
+  click: [product: Product]
+  'add-to-cart': [product: Product]
+}>()
 
 // 计算折扣率
 const discount = computed(() => {
@@ -87,42 +109,37 @@ const totalCount = computed(() => {
 
 // 计算已售百分比
 const soldPercent = computed(() => {
-  // 如果直接提供了 salesPercent，优先使用
   if (props.product.salesPercent !== undefined) {
     return props.product.salesPercent
   }
-  // 否则通过 soldCount 和 totalCount 计算
   if (props.product.soldCount !== undefined && totalCount.value > 0) {
     return Math.round((props.product.soldCount / totalCount.value) * 100)
   }
-  return 70 // 默认值
+  return 70
 })
 
 // 计算剩余数量
 const remaining = computed(() => {
-  // 如果直接提供了 remaining，优先使用
   if (props.product.remaining !== undefined) {
     return props.product.remaining
   }
-  // 否则使用 remainCount
   if (props.product.remainCount !== undefined) {
     return props.product.remainCount
   }
-  // 否则通过 totalCount 和 soldPercent 计算
   if (totalCount.value !== null) {
     return Math.round(totalCount.value * (1 - soldPercent.value / 100))
   }
   return 0
 })
 
-// 计算剩余百分比（用于进度条显示剩余）
+// 计算剩余百分比
 const remainingPercent = computed(() => {
   return 100 - soldPercent.value
 })
 
-const typeText = (type) => {
-  const map = { digital: '数码', appliance: '家电', fashion: '服饰', beauty: '美妆' }
-  return map[type] || '商品'
+const typeText = (type: string | undefined) => {
+  const map: Record<string, string> = { digital: '数码', appliance: '家电', fashion: '服饰', beauty: '美妆' }
+  return map[type || ''] || '商品'
 }
 
 const handleClick = () => {
@@ -132,6 +149,10 @@ const handleClick = () => {
 const handleAddToCart = () => {
   emit('add-to-cart', props.product)
 }
+
+// 模板中使用的中文函数别名
+const 计算折扣 = calculateDiscount
+const 获取进度颜色 = getProgressColor
 </script>
 
 <style scoped>
@@ -274,7 +295,7 @@ const handleAddToCart = () => {
   color: #fff;
   font-size: 11px;
   font-weight: bold;
-  line-height: 1;
+  
   white-space: nowrap;
 }
 
