@@ -33,18 +33,22 @@ public class PointsController {
     
     @GetMapping("/history")
     public ResponseEntity<List<PointsHistory>> getHistory(@AuthenticationPrincipal User user) {
-        List<PointsHistory> history = pointsService.getUserHistory(user);
+        List<PointsHistory> history = pointsService.getUserPointsHistory(user.getId());
         return ResponseEntity.ok(history);
     }
-    
-    @PostMapping("/exchange")
-    public ResponseEntity<?> exchangePoints(
+
+    @PostMapping("/redeem")
+    public ResponseEntity<?> redeemPoints(
             @AuthenticationPrincipal User user,
             @RequestParam Integer points,
-            @RequestParam String couponType) {
+            @RequestParam String reason) {
         try {
-            pointsService.exchangePoints(user, points, couponType);
-            return ResponseEntity.ok("兑换成功");
+            boolean success = pointsService.deductPoints(user.getId(), points, reason);
+            if (success) {
+                return ResponseEntity.ok("兑换成功");
+            } else {
+                return ResponseEntity.badRequest().body("积分不足");
+            }
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
