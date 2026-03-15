@@ -1,11 +1,10 @@
 package com.market.config;
 
-import com.market.security.JwtAuthenticationFilter;
 import com.market.security.JwtAuthenticationEntryPoint;
+import com.market.security.JwtAuthenticationFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,22 +29,28 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final ApplicationContext applicationContext;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public SecurityConfig(
-            @Lazy UserDetailsService userDetailsService,
+            UserDetailsService userDetailsService,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            ApplicationContext applicationContext) {
+            JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.applicationContext = applicationContext;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = applicationContext.getBean(JwtAuthenticationFilter.class);
-
         http
+            .cors(cors -> cors.configurationSource(request -> {
+                org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
+                config.addAllowedOriginPattern("*");
+                config.addAllowedMethod("*");
+                config.addAllowedHeader("*");
+                config.setAllowCredentials(true);
+                return config;
+            }))
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint))
@@ -55,10 +60,16 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/email/**").permitAll()
                 .requestMatchers("/api/products/**").permitAll()
+                .requestMatchers("/api/reviews/product/**").permitAll()
+                .requestMatchers("/api/reviews/rating/**").permitAll()
                 .requestMatchers("/api/cart/**").authenticated()
                 .requestMatchers("/api/orders/**").authenticated()
                 .requestMatchers("/api/points/**").authenticated()
-                .anyRequest().authenticated());
+                .requestMatchers("/api/reviews/**").authenticated()
+                .requestMatchers("/api/user/**").authenticated()
+                .requestMatchers("/api/favorites/**").authenticated()
+                .requestMatchers("/api/follows/**").authenticated()
+                .anyRequest().permitAll());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

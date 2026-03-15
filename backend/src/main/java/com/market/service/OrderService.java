@@ -84,7 +84,7 @@ public class OrderService {
         
         int pointsToAdd = totalAmount.intValue() / 10;
         if (pointsToAdd > 0) {
-            pointsService.addPoints(user, pointsToAdd, "订单奖励：" + savedOrder.getOrderNo());
+            pointsService.addPoints(user.getId(), pointsToAdd, "订单奖励：" + savedOrder.getOrderNo());
         }
         
         return savedOrder;
