@@ -1,0 +1,1 @@
+import{_ as s}from"./preload-helper-CNMNW0ET.js";import{o as t,c as o,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},c={__name:"UserList",setup(_){return(n,e)=>(t(),o("div",r,[...e[0]||(e[0]=[a("h1",null,"用户列表",-1)])]))}},l=s(c,[["__scopeId","data-v-9a31c38f"]]);export{l as default};

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "points_history")
-public class PointsHistory {
+public class CreditHistory {
 
     /**
      * 记录ID
@@ -71,7 +71,7 @@ public class PointsHistory {
      * 无参构造函数
      * 供JPA框架使用
      */
-    public PointsHistory() {
+    public CreditHistory() {
     }
 
     /**
@@ -83,7 +83,7 @@ public class PointsHistory {
      * @param balanceAfter 变化后的余额
      * @param reason 积分变化原因
      */
-    public PointsHistory(Long userId, Integer pointsChange, Integer balanceAfter, String reason) {
+    public CreditHistory(Long userId, Integer pointsChange, Integer balanceAfter, String reason) {
         this.userId = userId;
         this.pointsChange = pointsChange;
         this.balanceAfter = balanceAfter;

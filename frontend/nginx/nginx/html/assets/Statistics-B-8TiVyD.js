@@ -1,0 +1,1 @@
+import{_ as s}from"./preload-helper-CNMNW0ET.js";import{o as e,c as o,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},c={__name:"Statistics",setup(_){return(n,t)=>(e(),o("div",r,[...t[0]||(t[0]=[a("h1",null,"数据统计",-1)])]))}},f=s(c,[["__scopeId","data-v-f986f97b"]]);export{f as default};

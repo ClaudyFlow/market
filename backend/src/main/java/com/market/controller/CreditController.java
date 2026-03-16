@@ -1,6 +1,6 @@
 package com.market.controller;
 
-import com.market.entity.PointsHistory;
+import com.market.entity.CreditHistory;
 import com.market.entity.User;
 import com.market.service.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ import java.util.Map;
  * 积分控制器
  */
 @RestController
-@RequestMapping("/api/points")
+@RequestMapping("/api/credit")
 @CrossOrigin(origins = "*")
-public class PointsController {
+public class CreditController {
     
     @Autowired
     private PointsService pointsService;
@@ -32,8 +32,8 @@ public class PointsController {
     }
     
     @GetMapping("/history")
-    public ResponseEntity<List<PointsHistory>> getHistory(@AuthenticationPrincipal User user) {
-        List<PointsHistory> history = pointsService.getUserPointsHistory(user.getId());
+    public ResponseEntity<List<CreditHistory>> getHistory(@AuthenticationPrincipal User user) {
+        List<CreditHistory> history = pointsService.getUserPointsHistory(user.getId());
         return ResponseEntity.ok(history);
     }
 

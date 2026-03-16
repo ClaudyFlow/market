@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * 关注控制器
  */
 @RestController
-@RequestMapping("/api/follows")
+@RequestMapping("/api/follow")
 @CrossOrigin(origins = "*")
 public class FollowController {
 

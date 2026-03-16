@@ -1,0 +1,1 @@
+import{_ as o}from"./preload-helper-CNMNW0ET.js";import{o as e,c as a,a as r}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const s={class:"page-container"},c={__name:"ProductAudit",setup(_){return(n,t)=>(e(),a("div",s,[...t[0]||(t[0]=[r("h1",null,"商品审核",-1)])]))}},u=o(c,[["__scopeId","data-v-86ae111c"]]);export{u as default};

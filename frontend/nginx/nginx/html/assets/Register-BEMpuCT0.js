@@ -1,0 +1,1 @@
+import{_ as t}from"./preload-helper-CNMNW0ET.js";import{o,c as s,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},_={__name:"Register",setup(c){return(n,e)=>(o(),s("div",r,[...e[0]||(e[0]=[a("h1",null,"注册",-1)])]))}},l=t(_,[["__scopeId","data-v-915127a5"]]);export{l as default};

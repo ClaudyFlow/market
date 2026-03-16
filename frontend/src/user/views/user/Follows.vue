@@ -61,7 +61,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { UserFilled, Close, Clock } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFollows, removeFollow } from '@user/api/follow'
+import { getFollows, removeFollow as removeFollowApi } from '@user/api/follow'
 
 const router = useRouter()
 
@@ -118,7 +118,7 @@ const removeFollow = async (shopId) => {
       type: 'warning'
     })
     
-    await removeFollow(shopId)
+    await removeFollowApi(shopId)
     ElMessage.success('已取消关注')
     await loadFollows()
   } catch (error) {

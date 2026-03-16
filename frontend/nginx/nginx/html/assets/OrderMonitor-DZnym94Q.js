@@ -1,0 +1,1 @@
+import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o as r,c as t,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const a={class:"page-container"},n={__name:"OrderMonitor",setup(c){return(_,o)=>(r(),t("div",a,[...o[0]||(o[0]=[s("h1",null,"订单监控",-1)])]))}},m=e(n,[["__scopeId","data-v-37966c2d"]]);export{m as default};

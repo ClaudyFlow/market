@@ -5,19 +5,13 @@ import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
 import com.market.entity.*;
 import com.market.repository.UserRepository;
+import com.market.security.JwtService;
 import com.market.service.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -30,65 +24,73 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private JwtService jwtService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Value("${jwt.secret:market-platform-secret-key-2024}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration:86400000}")
-    private Long jwtExpiration;
 
     // 每日签到基础积分
     private static final int DAILY_CHECKIN_POINTS = 10;
 
     // VIP 等级配置
     private static final String[] VIP_LEVEL_NAMES = {
-        "普通会员", "白银会员", "黄金会员", "铂金会员", "钻石会员", "至尊会员"
+            "普通会员", "白银会员", "黄金会员", "铂金会员", "钻石会员", "至尊会员"
     };
 
-    @Override
-    @Transactional
-    public AuthResponse register(RegisterRequest request) {
-        // 验证密码
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            return AuthResponse.failure("两次输入的密码不一致");
-        }
+    // VIP 权益配置
+    private static final Map<Integer, List<String>> VIP_BENEFITS = new HashMap<>();
+    static {
+        VIP_BENEFITS.put(0, Arrays.asList("基础购物"));
+        VIP_BENEFITS.put(1, Arrays.asList("基础购物", "生日礼包"));
+        VIP_BENEFITS.put(2, Arrays.asList("基础购物", "生日礼包", "运费券"));
+        VIP_BENEFITS.put(3, Arrays.asList("基础购物", "生日礼包", "运费券", "专属客服"));
+        VIP_BENEFITS.put(4, Arrays.asList("基础购物", "生日礼包", "运费券", "专属客服", "折扣优惠"));
+        VIP_BENEFITS.put(5, Arrays.asList("基础购物", "生日礼包", "运费券", "专属客服", "折扣优惠", "优先发货"));
+    }
 
-        // 检查用户名是否存在
+    @Override
+    public AuthResponse register(RegisterRequest request) {
+        // 检查用户名是否已存在
         if (userRepository.existsByName(request.getName())) {
             return AuthResponse.failure("用户名已存在");
         }
 
-        // 检查邮箱是否存在
-        if (userRepository.existsByEmail(request.getEmail())) {
-            return AuthResponse.failure("邮箱已被注册");
+        // 检查邮箱是否已存在（如果有提供）
+        if (request.getEmail() != null && !request.getEmail().isEmpty() &&
+                userRepository.existsByEmail(request.getEmail())) {
+            return AuthResponse.failure("邮箱已被使用");
         }
 
         // 创建新用户
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setPoints(0);
-        user.setTotalPoints(0);
+        User user = new User(request.getName(), request.getEmail(),
+                passwordEncoder.encode(request.getPassword()));
+        user = userRepository.save(user);
 
+        // 生成 JWT token
+        String token = jwtService.generateToken(user);
+
+        return AuthResponse.success("注册成功", token, convertToUserDTO(user));
+    }
+
+    @Override
+    @Transactional
+    public boolean addCredit(Long userId, Integer amount) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return false;
+        }
+
+        user.setPoints(user.getPoints() + amount);
+        user.setTotalPoints(user.getTotalPoints() + amount);
         userRepository.save(user);
-
-        // 生成 token
-        String token = generateToken(user);
-
-        AuthResponse.UserDTO userDTO = new AuthResponse.UserDTO(
-            user.getId(), user.getName(), user.getEmail(), user.getAvatarUrl()
-        );
-
-        return AuthResponse.success("注册成功", token, userDTO);
+        return true;
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        // 查找用户
+        // 根据用户名或邮箱查找用户
         User user = userRepository.findByName(request.getName())
-            .orElseGet(() -> userRepository.findByEmail(request.getName()).orElse(null));
+                .orElseGet(() -> userRepository.findByEmail(request.getName()).orElse(null));
 
         if (user == null) {
             return AuthResponse.failure("用户名或密码错误");
@@ -99,14 +101,10 @@ public class UserServiceImpl implements UserService {
             return AuthResponse.failure("用户名或密码错误");
         }
 
-        // 生成 token
-        String token = generateToken(user);
+        // 生成 JWT token
+        String token = jwtService.generateToken(user);
 
-        AuthResponse.UserDTO userDTO = new AuthResponse.UserDTO(
-            user.getId(), user.getName(), user.getEmail(), user.getAvatarUrl()
-        );
-
-        return AuthResponse.success("登录成功", token, userDTO);
+        return AuthResponse.success("登录成功", token, convertToUserDTO(user));
     }
 
     @Override
@@ -117,9 +115,13 @@ public class UserServiceImpl implements UserService {
         }
 
         VipInfo vipInfo = new VipInfo();
-        vipInfo.setLevel(0);
-        vipInfo.setLevelName(VIP_LEVEL_NAMES[0]);
-        vipInfo.setBenefits(Collections.singletonList("基础购物"));
+        vipInfo.setLevel(user.getVipLevel());
+        vipInfo.setLevelName(VIP_LEVEL_NAMES[user.getVipLevel()]);
+        vipInfo.setExpireTime(user.getVipExpireTime());
+        vipInfo.setBenefits(VIP_BENEFITS.getOrDefault(user.getVipLevel(), VIP_BENEFITS.get(0)));
+        vipInfo.setGrowthValue(user.getGrowthValue());
+        vipInfo.setNextLevelGrowth(calculateNextLevelGrowth(user.getVipLevel()));
+
         return vipInfo;
     }
 
@@ -133,9 +135,14 @@ public class UserServiceImpl implements UserService {
         UserPointsInfo pointsInfo = new UserPointsInfo();
         pointsInfo.setPoints(user.getPoints());
         pointsInfo.setTotalPoints(user.getTotalPoints());
-        pointsInfo.setConsumedPoints(0);
-        pointsInfo.setHasCheckedIn(false);
-        pointsInfo.setConsecutiveDays(0);
+        pointsInfo.setConsumedPoints(user.getConsumedPoints());
+
+        // 检查今日是否已签到
+        boolean hasCheckedIn = hasCheckedInToday(user.getLastCheckInTime());
+        pointsInfo.setHasCheckedIn(hasCheckedIn);
+        pointsInfo.setConsecutiveDays(user.getConsecutiveCheckinDays());
+        pointsInfo.setLastCheckInTime(user.getLastCheckInTime());
+
         return pointsInfo;
     }
 
@@ -155,30 +162,43 @@ public class UserServiceImpl implements UserService {
             return result;
         }
 
-        LocalDate today = LocalDate.now();
-        LocalDate lastCheckInDate = null;
-        if (user.getUpdatedAt() != null) {
-            lastCheckInDate = user.getUpdatedAt().toLocalDate();
-        }
-
-        CheckInResult result = new CheckInResult();
-        if (lastCheckInDate != null && lastCheckInDate.equals(today)) {
+        // 检查今日是否已签到
+        if (hasCheckedInToday(user.getLastCheckInTime())) {
+            CheckInResult result = new CheckInResult();
             result.setSuccess(false);
             result.setHasCheckedIn(true);
             result.setMessage("今日已签到");
             return result;
         }
 
-        int points = DAILY_CHECKIN_POINTS;
-        user.setPoints(user.getPoints() + points);
-        user.setTotalPoints(user.getTotalPoints() + points);
+        // 计算连续签到天数
+        int consecutiveDays = calculateConsecutiveDays(user.getLastCheckInTime(), user.getConsecutiveCheckinDays());
+
+        // 计算奖励积分（连续签到有额外奖励）
+        int bonusPoints = calculateBonusPoints(consecutiveDays);
+        int totalPoints = DAILY_CHECKIN_POINTS + bonusPoints;
+
+        // 更新用户积分
+        user.setPoints(user.getPoints() + totalPoints);
+        user.setTotalPoints(user.getTotalPoints() + totalPoints);
+        user.setConsecutiveCheckinDays(consecutiveDays);
+        user.setLastCheckInTime(new Date());
+
+        // 更新成长值
+        user.setGrowthValue(user.getGrowthValue() + 10);
+
+        // 检查是否需要升级 VIP
+        updateVipLevel(user);
+
         userRepository.save(user);
 
+        CheckInResult result = new CheckInResult();
         result.setSuccess(true);
-        result.setPoints(points);
-        result.setHasCheckedIn(false);
-        result.setConsecutiveDays(1);
-        result.setMessage("签到成功，获得 " + points + " 积分");
+        result.setPoints(totalPoints);
+        result.setHasCheckedIn(true);
+        result.setConsecutiveDays(consecutiveDays);
+        result.setMessage(String.format("签到成功！获得 %d 积分，连续签到 %d 天", totalPoints, consecutiveDays));
+
         return result;
     }
 
@@ -189,7 +209,9 @@ public class UserServiceImpl implements UserService {
         if (user == null || user.getPoints() < amount) {
             return false;
         }
+
         user.setPoints(user.getPoints() - amount);
+        user.setConsumedPoints(user.getConsumedPoints() + amount);
         userRepository.save(user);
         return true;
     }
@@ -201,6 +223,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return false;
         }
+
         user.setPoints(user.getPoints() + amount);
         user.setTotalPoints(user.getTotalPoints() + amount);
         userRepository.save(user);
@@ -208,17 +231,108 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 生成 JWT Token
+     * 检查今日是否已签到
      */
-    private String generateToken(User user) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-        return Jwts.builder()
-            .subject(user.getId().toString())
-            .claim("username", user.getName())
-            .claim("email", user.getEmail())
-            .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-            .signWith(key)
-            .compact();
+    private boolean hasCheckedInToday(Date lastCheckInTime) {
+        if (lastCheckInTime == null) {
+            return false;
+        }
+
+        Calendar today = Calendar.getInstance();
+        Calendar lastCheckIn = Calendar.getInstance();
+        lastCheckIn.setTime(lastCheckInTime);
+
+        return today.get(Calendar.YEAR) == lastCheckIn.get(Calendar.YEAR) &&
+                today.get(Calendar.DAY_OF_YEAR) == lastCheckIn.get(Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * 计算连续签到天数
+     */
+    private int calculateConsecutiveDays(Date lastCheckInTime, int currentDays) {
+        if (lastCheckInTime == null) {
+            return 1;
+        }
+
+        Calendar today = Calendar.getInstance();
+        Calendar lastCheckIn = Calendar.getInstance();
+        lastCheckIn.setTime(lastCheckInTime);
+
+        long diffDays = (today.getTimeInMillis() - lastCheckIn.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+
+        if (diffDays == 0) {
+            // 今天已签到
+            return currentDays;
+        } else if (diffDays == 1) {
+            // 昨天签到，连续
+            return currentDays + 1;
+        } else {
+            // 中断，重新计算
+            return 1;
+        }
+    }
+
+    /**
+     * 计算连续签到奖励积分
+     */
+    private int calculateBonusPoints(int consecutiveDays) {
+        if (consecutiveDays >= 30) {
+            return 20; // 连续 30 天奖励 20 积分
+        } else if (consecutiveDays >= 14) {
+            return 10; // 连续 14 天奖励 10 积分
+        } else if (consecutiveDays >= 7) {
+            return 5;  // 连续 7 天奖励 5 积分
+        }
+        return 0;
+    }
+
+    /**
+     * 计算下一等级所需成长值
+     */
+    private int calculateNextLevelGrowth(int currentLevel) {
+        if (currentLevel >= 5) {
+            return 0; // 最高等级
+        }
+        return (currentLevel + 1) * 1000;
+    }
+
+    /**
+     * 更新 VIP 等级
+     */
+    private void updateVipLevel(User user) {
+        int growthValue = user.getGrowthValue();
+        int newLevel = 0;
+
+        if (growthValue >= 5000) {
+            newLevel = 5;
+        } else if (growthValue >= 4000) {
+            newLevel = 4;
+        } else if (growthValue >= 3000) {
+            newLevel = 3;
+        } else if (growthValue >= 2000) {
+            newLevel = 2;
+        } else if (growthValue >= 1000) {
+            newLevel = 1;
+        }
+
+        if (newLevel > user.getVipLevel()) {
+            user.setVipLevel(newLevel);
+            // 设置 VIP 过期时间为一年后
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.YEAR, 1);
+            user.setVipExpireTime(calendar.getTime());
+        }
+    }
+
+    /**
+     * 将 User 实体转换为 UserDTO
+     */
+    private AuthResponse.UserDTO convertToUserDTO(User user) {
+        return new AuthResponse.UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getAvatarUrl()
+        );
     }
 }

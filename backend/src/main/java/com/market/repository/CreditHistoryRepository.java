@@ -1,6 +1,6 @@
 package com.market.repository;
 
-import com.market.entity.PointsHistory;
+import com.market.entity.CreditHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +19,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Repository
-public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Long> {
+public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Long> {
 
     /**
      * 查询用户的所有积分历史记录
@@ -28,7 +28,7 @@ public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Lo
      * @param userId 用户ID
      * @return 积分历史记录列表，按时间倒序排列
      */
-    List<PointsHistory> findByUserIdOrderByCreatedAtDesc(Long userId);
+    List<CreditHistory> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     /**
      * 查询用户积分变化的总量
@@ -37,7 +37,7 @@ public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Lo
      * @param userId 用户ID
      * @return 积分变化总量
      */
-    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM PointsHistory ph WHERE ph.userId = :userId")
+    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId")
     Integer getTotalPointsChange(@Param("userId") Long userId);
 
     /**
@@ -47,7 +47,7 @@ public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Lo
      * @param userId 用户ID
      * @return 积分获得总量
      */
-    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM PointsHistory ph WHERE ph.userId = :userId AND ph.pointsChange > 0")
+    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.pointsChange > 0")
     Integer getTotalPointsEarned(@Param("userId") Long userId);
 
     /**
@@ -57,6 +57,6 @@ public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Lo
      * @param userId 用户ID
      * @return 积分兑换总量
      */
-    @Query("SELECT COALESCE(SUM(ABS(ph.pointsChange)), 0) FROM PointsHistory ph WHERE ph.userId = :userId AND ph.pointsChange < 0")
+    @Query("SELECT COALESCE(SUM(ABS(ph.pointsChange)), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.pointsChange < 0")
     Integer getTotalPointsRedeemed(@Param("userId") Long userId);
 }

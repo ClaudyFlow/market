@@ -179,11 +179,11 @@ docker-compose up -d
 - `PUT /api/user/profile` - 更新用户信息
 
 ### 商品接口
-- `GET /api/products` - 获取商品列表
-- `GET /api/products/{id}` - 获取商品详情
-- `POST /api/products` - 创建商品
-- `PUT /api/products/{id}` - 更新商品
-- `DELETE /api/products/{id}` - 删除商品
+- `GET /api/product` - 获取商品列表
+- `GET /api/product/{id}` - 获取商品详情
+- `POST /api/product` - 创建商品
+- `PUT /api/product/{id}` - 更新商品
+- `DELETE /api/product/{id}` - 删除商品
 
 ### 购物车接口
 - `GET /api/cart` - 获取购物车
@@ -192,15 +192,15 @@ docker-compose up -d
 - `DELETE /api/cart/items/{id}` - 删除购物车项
 
 ### 订单接口
-- `GET /api/orders` - 获取订单列表
-- `GET /api/orders/{id}` - 获取订单详情
-- `POST /api/orders` - 创建订单
-- `PUT /api/orders/{id}/status` - 更新订单状态
+- `GET /api/order` - 获取订单列表
+- `GET /api/order/{id}` - 获取订单详情
+- `POST /api/order` - 创建订单
+- `PUT /api/order/{id}/status` - 更新订单状态
 
 ### 积分接口
-- `GET /api/points` - 获取积分余额
-- `GET /api/points/history` - 获取积分历史
-- `POST /api/points/checkin` - 签到打卡
+- `GET /api/credit` - 获取积分余额
+- `GET /api/credit/history` - 获取积分历史
+- `POST /api/credit/redeem` - 积分兑换
 
 ## 🔧 配置说明
 

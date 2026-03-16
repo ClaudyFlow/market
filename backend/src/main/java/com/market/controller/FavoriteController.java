@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * 收藏控制器
  */
 @RestController
-@RequestMapping("/api/favorites")
+@RequestMapping("/api/favorite")
 @CrossOrigin(origins = "*")
 public class FavoriteController {
 

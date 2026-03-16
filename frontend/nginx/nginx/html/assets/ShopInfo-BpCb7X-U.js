@@ -1,0 +1,1 @@
+import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o as t,c as a,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},n={__name:"ShopInfo",setup(c){return(p,o)=>(t(),a("div",r,[...o[0]||(o[0]=[s("h1",null,"店铺管理",-1)])]))}},f=e(n,[["__scopeId","data-v-a8b2dce3"]]);export{f as default};

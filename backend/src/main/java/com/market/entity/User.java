@@ -7,7 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
+/**
+ * 用户实体类
+ */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -34,6 +38,26 @@ public class User implements UserDetails {
     @Column(name = "total_points", nullable = false)
     private Integer totalPoints = 0;
 
+    @Column(name = "consumed_points", nullable = false)
+    private Integer consumedPoints = 0;
+
+    @Column(name = "vip_level", nullable = false)
+    private Integer vipLevel = 0;
+
+    @Column(name = "vip_expire_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date vipExpireTime;
+
+    @Column(name = "growth_value", nullable = false)
+    private Integer growthValue = 0;
+
+    @Column(name = "consecutive_checkin_days", nullable = false)
+    private Integer consecutiveCheckinDays = 0;
+
+    @Column(name = "last_checkin_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastCheckInTime;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -59,6 +83,7 @@ public class User implements UserDetails {
         updatedAt = LocalDateTime.now();
     }
 
+    // 基础字段
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -80,12 +105,35 @@ public class User implements UserDetails {
     public Integer getTotalPoints() { return totalPoints; }
     public void setTotalPoints(Integer totalPoints) { this.totalPoints = totalPoints; }
 
+    // VIP 相关字段
+    public Integer getVipLevel() { return vipLevel; }
+    public void setVipLevel(Integer vipLevel) { this.vipLevel = vipLevel; }
+
+    public Date getVipExpireTime() { return vipExpireTime; }
+    public void setVipExpireTime(Date vipExpireTime) { this.vipExpireTime = vipExpireTime; }
+
+    public Integer getGrowthValue() { return growthValue; }
+    public void setGrowthValue(Integer growthValue) { this.growthValue = growthValue; }
+
+    // 签到相关字段
+    public Integer getConsecutiveCheckinDays() { return consecutiveCheckinDays; }
+    public void setConsecutiveCheckinDays(Integer consecutiveCheckinDays) { this.consecutiveCheckinDays = consecutiveCheckinDays; }
+
+    public Date getLastCheckInTime() { return lastCheckInTime; }
+    public void setLastCheckInTime(Date lastCheckInTime) { this.lastCheckInTime = lastCheckInTime; }
+
+    // 积分消费字段
+    public Integer getConsumedPoints() { return consumedPoints; }
+    public void setConsumedPoints(Integer consumedPoints) { this.consumedPoints = consumedPoints; }
+
+    // 时间字段
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
+    // Spring Security 接口实现
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

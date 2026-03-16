@@ -1,0 +1,1 @@
+import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o as a,c as o,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},c={__name:"MerchantList",setup(n){return(_,t)=>(a(),o("div",r,[...t[0]||(t[0]=[s("h1",null,"商家列表",-1)])]))}},l=e(c,[["__scopeId","data-v-40a856e8"]]);export{l as default};

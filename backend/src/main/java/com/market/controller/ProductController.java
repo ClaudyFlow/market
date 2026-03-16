@@ -13,7 +13,7 @@ import java.util.List;
  * 商品控制器
  */
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 @CrossOrigin(origins = "*")
 public class ProductController {
     

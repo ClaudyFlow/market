@@ -1,8 +1,8 @@
 package com.market.service;
 
-import com.market.entity.PointsHistory;
+import com.market.entity.CreditHistory;
 import com.market.entity.User;
-import com.market.repository.PointsHistoryRepository;
+import com.market.repository.CreditHistoryRepository;
 import com.market.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +18,9 @@ public class PointsService {
     private static final Logger log = LoggerFactory.getLogger(PointsService.class);
 
     private final UserRepository userRepository;
-    private final PointsHistoryRepository pointsHistoryRepository;
+    private final CreditHistoryRepository pointsHistoryRepository;
 
-    public PointsService(UserRepository userRepository, PointsHistoryRepository pointsHistoryRepository) {
+    public PointsService(UserRepository userRepository, CreditHistoryRepository pointsHistoryRepository) {
         this.userRepository = userRepository;
         this.pointsHistoryRepository = pointsHistoryRepository;
     }
@@ -68,7 +68,7 @@ public class PointsService {
         userRepository.save(user);
 
         // 记录积分历史
-        PointsHistory history = new PointsHistory(userId, points, user.getPoints(), reason);
+        CreditHistory history = new CreditHistory(userId, points, user.getPoints(), reason);
         history.setRelatedOrderId(relatedOrderId);
         pointsHistoryRepository.save(history);
 
@@ -122,7 +122,7 @@ public class PointsService {
         userRepository.save(user);
 
         // 记录积分历史（负数表示扣除）
-        PointsHistory history = new PointsHistory(userId, -points, user.getPoints(), reason);
+        CreditHistory history = new CreditHistory(userId, -points, user.getPoints(), reason);
         history.setRelatedOrderId(relatedOrderId);
         pointsHistoryRepository.save(history);
 
@@ -145,7 +145,7 @@ public class PointsService {
      * @param userId 用户ID
      * @return 积分历史记录列表，按时间倒序
      */
-    public List<PointsHistory> getUserPointsHistory(Long userId) {
+    public List<CreditHistory> getUserPointsHistory(Long userId) {
         return pointsHistoryRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 

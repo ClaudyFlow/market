@@ -57,18 +57,24 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // 公开接口
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/email/**").permitAll()
-                .requestMatchers("/api/products/**").permitAll()
-                .requestMatchers("/api/reviews/product/**").permitAll()
-                .requestMatchers("/api/reviews/rating/**").permitAll()
+                // 商品查询公开，但修改需要权限
+                .requestMatchers("/api/product/**").permitAll()
+                // 评论查询公开
+                .requestMatchers("/api/review/product/**").permitAll()
+                .requestMatchers("/api/review/rating/**").permitAll()
+                // 需要认证的接口
                 .requestMatchers("/api/cart/**").authenticated()
-                .requestMatchers("/api/orders/**").authenticated()
-                .requestMatchers("/api/points/**").authenticated()
-                .requestMatchers("/api/reviews/**").authenticated()
+                .requestMatchers("/api/order/**").authenticated()
+                .requestMatchers("/api/credit/**").authenticated()
+                .requestMatchers("/api/review/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
-                .requestMatchers("/api/favorites/**").authenticated()
-                .requestMatchers("/api/follows/**").authenticated()
+                .requestMatchers("/api/favorite/**").authenticated()
+                .requestMatchers("/api/follow/**").authenticated()
+                // 管理员接口
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll());
 
         http.authenticationProvider(authenticationProvider());

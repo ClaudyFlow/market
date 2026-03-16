@@ -1,0 +1,1 @@
+import{_ as t}from"./preload-helper-CNMNW0ET.js";import{o,c as r,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const a={class:"page-container"},n={__name:"UserCenter",setup(c){return(_,e)=>(o(),r("div",a,[...e[0]||(e[0]=[s("h1",null,"个人中心",-1)])]))}},i=t(n,[["__scopeId","data-v-c7058dda"]]);export{i as default};

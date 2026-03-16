@@ -49,4 +49,8 @@ public interface UserService {
      * 添加积分
      */
     boolean addPoints(Long userId, Integer amount);
+    /**
+     * 添加积分
+     */
+    boolean addCredit(Long userId, Integer amount);
 }

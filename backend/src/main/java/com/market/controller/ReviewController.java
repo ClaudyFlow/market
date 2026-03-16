@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * 评价控制器
  */
 @RestController
-@RequestMapping("/api/reviews")
+@RequestMapping("/api/review")
 @CrossOrigin(origins = "*")
 public class ReviewController {
 
