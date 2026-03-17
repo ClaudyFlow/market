@@ -1,1 +1,0 @@
-import{_ as s}from"./preload-helper-CNMNW0ET.js";import{o,c as t,a as r}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const a={class:"page-container"},_={__name:"Address",setup(c){return(d,e)=>(o(),t("div",a,[...e[0]||(e[0]=[r("h1",null,"地址管理",-1)])]))}},i=s(_,[["__scopeId","data-v-de9349db"]]);export{i as default};

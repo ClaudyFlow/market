@@ -32,14 +32,14 @@ public class User implements UserDetails {
     @Column(length = 255)
     private String avatarUrl;
 
-    @Column(name = "points", nullable = false)
-    private Integer points = 0;
+    @Column(name = "credit", nullable = false)
+    private Integer credit = 0;
 
-    @Column(name = "total_points", nullable = false)
-    private Integer totalPoints = 0;
+    @Column(name = "total_credit", nullable = false)
+    private Integer totalCredit = 0;
 
-    @Column(name = "consumed_points", nullable = false)
-    private Integer consumedPoints = 0;
+    @Column(name = "consumed_credit", nullable = false)
+    private Integer consumedCredit = 0;
 
     @Column(name = "vip_level", nullable = false)
     private Integer vipLevel = 0;
@@ -99,11 +99,11 @@ public class User implements UserDetails {
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 
-    public Integer getPoints() { return points; }
-    public void setPoints(Integer points) { this.points = points; }
+    public Integer getCredit() { return credit; }
+    public void setCredit(Integer credit) { this.credit = credit; }
 
-    public Integer getTotalPoints() { return totalPoints; }
-    public void setTotalPoints(Integer totalPoints) { this.totalPoints = totalPoints; }
+    public Integer getTotalCredit() { return totalCredit; }
+    public void setTotalCredit(Integer totalCredit) { this.totalCredit = totalCredit; }
 
     // VIP 相关字段
     public Integer getVipLevel() { return vipLevel; }
@@ -123,8 +123,8 @@ public class User implements UserDetails {
     public void setLastCheckInTime(Date lastCheckInTime) { this.lastCheckInTime = lastCheckInTime; }
 
     // 积分消费字段
-    public Integer getConsumedPoints() { return consumedPoints; }
-    public void setConsumedPoints(Integer consumedPoints) { this.consumedPoints = consumedPoints; }
+    public Integer getConsumedCredit() { return consumedCredit; }
+    public void setConsumedCredit(Integer consumedCredit) { this.consumedCredit = consumedCredit; }
 
     // 时间字段
     public LocalDateTime getCreatedAt() { return createdAt; }

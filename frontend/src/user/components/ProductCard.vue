@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { ShoppingCart, CircleClose, StarFilled } from '@element-plus/icons-vue'
 import { computed } from 'vue'
-import { 计算折扣 as calculateDiscount, 获取进度颜色 as getProgressColor } from '@user/utils/discount'
+import { 计算折扣 as calculateDiscount, 获取进度颜色 as getProgressColor } from '@user/util/discount'
 
 interface Product {
   id: number

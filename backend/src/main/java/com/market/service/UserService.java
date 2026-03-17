@@ -28,7 +28,7 @@ public interface UserService {
     /**
      * 获取用户积分信息
      */
-    UserPointsInfo getUserPointsInfo(Long userId);
+    UserCreditInfo getUserCreditInfo(Long userId);
 
     /**
      * 获取用户信息
@@ -43,12 +43,8 @@ public interface UserService {
     /**
      * 使用积分
      */
-    boolean consumePoints(Long userId, Integer amount);
+    boolean consumeCredit(Long userId, Integer amount);
 
-    /**
-     * 添加积分
-     */
-    boolean addPoints(Long userId, Integer amount);
     /**
      * 添加积分
      */

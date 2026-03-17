@@ -13,42 +13,42 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PointsService {
+public class CreditService {
 
-    private static final Logger log = LoggerFactory.getLogger(PointsService.class);
+    private static final Logger log = LoggerFactory.getLogger(CreditService.class);
 
     private final UserRepository userRepository;
-    private final CreditHistoryRepository pointsHistoryRepository;
+    private final CreditHistoryRepository creditHistoryRepository;
 
-    public PointsService(UserRepository userRepository, CreditHistoryRepository pointsHistoryRepository) {
+    public CreditService(UserRepository userRepository, CreditHistoryRepository creditHistoryRepository) {
         this.userRepository = userRepository;
-        this.pointsHistoryRepository = pointsHistoryRepository;
+        this.creditHistoryRepository = creditHistoryRepository;
     }
 
     /**
      * 增加用户积分
      * @param userId 用户ID
-     * @param points 增加的积分数量
+     * @param credit 增加的积分数量
      * @param reason 积分变化原因
      * @return 是否成功
      */
     @Transactional
-    public boolean addPoints(Long userId, Integer points, String reason) {
-        return addPoints(userId, points, reason, null);
+    public boolean addCredit(Long userId, Integer credit, String reason) {
+        return addCredit(userId, credit, reason, null);
     }
 
     /**
      * 增加用户积分（带关联订单）
      * @param userId 用户ID
-     * @param points 增加的积分数量
+     * @param credit 增加的积分数量
      * @param reason 积分变化原因
      * @param relatedOrderId 关联订单ID
      * @return 是否成功
      */
     @Transactional
-    public boolean addPoints(Long userId, Integer points, String reason, String relatedOrderId) {
-        if (points <= 0) {
-            log.warn("增加积分数量必须大于0: {}", points);
+    public boolean addCredit(Long userId, Integer credit, String reason, String relatedOrderId) {
+        if (credit <= 0) {
+            log.warn("增加积分数量必须大于0: {}", credit);
             return false;
         }
 
@@ -59,47 +59,47 @@ public class PointsService {
         }
 
         User user = userOpt.get();
-        Integer oldPoints = user.getPoints();
-        Integer oldTotalPoints = user.getTotalPoints();
+        Integer oldCredit = user.getCredit();
+        Integer oldTotalCredit = user.getTotalCredit();
 
         // 更新用户积分
-        user.setPoints(oldPoints + points);
-        user.setTotalPoints(oldTotalPoints + points);
+        user.setCredit(oldCredit + credit);
+        user.setTotalCredit(oldTotalCredit + credit);
         userRepository.save(user);
 
         // 记录积分历史
-        CreditHistory history = new CreditHistory(userId, points, user.getPoints(), reason);
+        CreditHistory history = new CreditHistory(userId, credit, user.getCredit(), reason);
         history.setRelatedOrderId(relatedOrderId);
-        pointsHistoryRepository.save(history);
+        creditHistoryRepository.save(history);
 
-        log.info("用户 {} 积分增加 {}，原因: {}，当前积分: {}", userId, points, reason, user.getPoints());
+        log.info("用户 {} 积分增加 {}，原因: {}，当前积分: {}", userId, credit, reason, user.getCredit());
         return true;
     }
 
     /**
      * 扣除用户积分
      * @param userId 用户ID
-     * @param points 扣除的积分数量
+     * @param credit 扣除的积分数量
      * @param reason 积分变化原因
      * @return 是否成功
      */
     @Transactional
-    public boolean deductPoints(Long userId, Integer points, String reason) {
-        return deductPoints(userId, points, reason, null);
+    public boolean deductCredit(Long userId, Integer credit, String reason) {
+        return deductCredit(userId, credit, reason, null);
     }
 
     /**
      * 扣除用户积分（带关联订单）
      * @param userId 用户ID
-     * @param points 扣除的积分数量
+     * @param credit 扣除的积分数量
      * @param reason 积分变化原因
      * @param relatedOrderId 关联订单ID
      * @return 是否成功
      */
     @Transactional
-    public boolean deductPoints(Long userId, Integer points, String reason, String relatedOrderId) {
-        if (points <= 0) {
-            log.warn("扣除积分数量必须大于0: {}", points);
+    public boolean deductCredit(Long userId, Integer credit, String reason, String relatedOrderId) {
+        if (credit <= 0) {
+            log.warn("扣除积分数量必须大于0: {}", credit);
             return false;
         }
 
@@ -110,23 +110,23 @@ public class PointsService {
         }
 
         User user = userOpt.get();
-        if (user.getPoints() < points) {
-            log.warn("用户 {} 积分不足，当前积分: {}，需要扣除: {}", userId, user.getPoints(), points);
+        if (user.getCredit() < credit) {
+            log.warn("用户 {} 积分不足，当前积分: {}，需要扣除: {}", userId, user.getCredit(), credit);
             return false;
         }
 
-        Integer oldPoints = user.getPoints();
+        Integer oldCredit = user.getCredit();
 
         // 更新用户积分
-        user.setPoints(oldPoints - points);
+        user.setCredit(oldCredit - credit);
         userRepository.save(user);
 
         // 记录积分历史（负数表示扣除）
-        CreditHistory history = new CreditHistory(userId, -points, user.getPoints(), reason);
+        CreditHistory history = new CreditHistory(userId, -credit, user.getCredit(), reason);
         history.setRelatedOrderId(relatedOrderId);
-        pointsHistoryRepository.save(history);
+        creditHistoryRepository.save(history);
 
-        log.info("用户 {} 积分扣除 {}，原因: {}，当前积分: {}", userId, points, reason, user.getPoints());
+        log.info("用户 {} 积分扣除 {}，原因: {}，当前积分: {}", userId, credit, reason, user.getCredit());
         return true;
     }
 
@@ -135,9 +135,9 @@ public class PointsService {
      * @param userId 用户ID
      * @return 当前积分，用户不存在返回null
      */
-    public Integer getUserPoints(Long userId) {
+    public Integer getCredit(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
-        return userOpt.map(User::getPoints).orElse(null);
+        return userOpt.map(User::getCredit).orElse(null);
     }
 
     /**
@@ -145,8 +145,8 @@ public class PointsService {
      * @param userId 用户ID
      * @return 积分历史记录列表，按时间倒序
      */
-    public List<CreditHistory> getUserPointsHistory(Long userId) {
-        return pointsHistoryRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    public List<CreditHistory> getCreditHistory(Long userId) {
+        return creditHistoryRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     /**
@@ -154,19 +154,19 @@ public class PointsService {
      * @param userId 用户ID
      * @return 积分统计信息数组：[当前积分, 累计积分, 获得总量, 兑换总量]
      */
-    public Integer[] getUserPointsStats(Long userId) {
+    public Integer[] getCreditStats(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return null;
         }
 
         User user = userOpt.get();
-        Integer totalEarned = pointsHistoryRepository.getTotalPointsEarned(userId);
-        Integer totalRedeemed = pointsHistoryRepository.getTotalPointsRedeemed(userId);
+        Integer totalEarned = creditHistoryRepository.getTotalCreditEarned(userId);
+        Integer totalRedeemed = creditHistoryRepository.getTotalCreditRedeemed(userId);
 
         return new Integer[]{
-            user.getPoints(),      // 当前积分
-            user.getTotalPoints(), // 累计积分
+            user.getCredit(),      // 当前积分
+            user.getTotalCredit(), // 累计积分
             totalEarned,           // 获得总量
             totalRedeemed          // 兑换总量
         };

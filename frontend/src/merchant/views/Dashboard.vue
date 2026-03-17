@@ -47,13 +47,13 @@
         <div class="user-vip">
           <span class="vip-tag">营业中</span>
         </div>
-        <div class="user-points">
-          <span class="points-tag">
+        <div class="user-stats">
+          <span class="stats-tag">
             <el-icon><ShoppingCart /></el-icon> {{ stats.orderCount }} 订单
           </span>
         </div>
-        <div class="user-points">
-          <span class="points-tag">
+        <div class="user-stats">
+          <span class="stats-tag">
             <el-icon><Money /></el-icon> ¥{{ stats.revenue }} 销售额
           </span>
         </div>
@@ -375,11 +375,11 @@ section.mall-home {
   font-weight: bold;
 }
 
-.user-points {
+.user-stats {
   margin: 8px 0;
 }
 
-.points-tag {
+.stats-tag {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,7 +388,7 @@ section.mall-home {
   color: #aaa;
 }
 
-.points-tag .el-icon {
+.stats-tag .el-icon {
   color: var(--mall-primary);
 }
 

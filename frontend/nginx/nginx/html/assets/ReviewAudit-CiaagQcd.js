@@ -1,1 +1,0 @@
-import{_ as t}from"./preload-helper-CNMNW0ET.js";import{o,c as a,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},_={__name:"ReviewAudit",setup(c){return(n,e)=>(o(),a("div",r,[...e[0]||(e[0]=[s("h1",null,"评价审核",-1)])]))}},m=t(_,[["__scopeId","data-v-95a32580"]]);export{m as default};

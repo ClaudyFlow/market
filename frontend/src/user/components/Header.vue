@@ -12,7 +12,7 @@
                 </el-avatar>
                 <span class="auth-text">{{ isLoggedIn && userDisplayName ? userDisplayName : '登录/注册' }}</span>
               </span>
-              <span class="points">
+              <span class="credit">
                 <el-icon><Trophy /></el-icon> 积分：{{ 用户积分 }}
               </span>
             </div>
@@ -140,7 +140,7 @@ const handleAuthClick = () => {
 // 购物车数量
 const 购物车数量 = computed(() => cartStore.totalCount)
 // 用户积分
-const 用户积分 = computed(() => userStore.用户积分)
+const 用户积分 = computed(() => userStore.userCredit)
 
 const handleSearch = () => {
   if (searchKeyword.value.trim()) {
@@ -206,7 +206,7 @@ onMounted(() => {
   font-weight: 500;
 }
 
-.points {
+.credit {
   display: flex;
   align-items: center;
   gap: 5px;

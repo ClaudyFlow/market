@@ -43,8 +43,8 @@ market/
 │   ├── index.html        # 用户端入口
 │   ├── admin.html        # 管理后台入口
 │   └── merchant.html     # 商家后台入口
-├── docs/                 # 项目文档 (.typ 源文件)
-├── scripts/              # 辅助脚本
+├── doc/                  # 项目文档 (.typ 源文件)
+├── script/               # 辅助脚本
 ├── pom.xml               # Maven 配置
 └── start_backend.bat     # 后端启动脚本
 ```
@@ -157,7 +157,7 @@ docker-compose up -d
 
 ## 📚 文档
 
-详细文档位于 `docs/` 目录：
+详细文档位于 `doc/` 目录：
 
 | 文档 | 说明 |
 |------|------|

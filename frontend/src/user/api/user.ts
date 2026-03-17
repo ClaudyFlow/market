@@ -1,5 +1,5 @@
 import request from './request'
-import type { UserInfo, VipInfo, UserPoints } from '../types'
+import type { UserInfo, VipInfo, UserCredit } from '../types'
 
 interface ApiResponse<T> {
   data: T
@@ -24,16 +24,16 @@ export function getVipInfo() {
 }
 
 // 获取用户积分
-export function getUserPoints() {
-  return request<ApiResponse<UserPoints>>({
-    url: '/user/points',
+export function getUserCredit() {
+  return request<ApiResponse<UserCredit>>({
+    url: '/user/credit',
     method: 'get'
   })
 }
 
 // 签到
 export function checkIn() {
-  return request<ApiResponse<{ points: number }>>({
+  return request<ApiResponse<{ credit: number }>>({
     url: '/user/checkin',
     method: 'post'
   })

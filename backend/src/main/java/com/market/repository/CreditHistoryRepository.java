@@ -37,8 +37,8 @@ public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Lo
      * @param userId 用户ID
      * @return 积分变化总量
      */
-    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId")
-    Integer getTotalPointsChange(@Param("userId") Long userId);
+    @Query("SELECT COALESCE(SUM(ph.creditChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId")
+    Integer getTotalCreditChange(@Param("userId") Long userId);
 
     /**
      * 统计用户积分获得总量
@@ -47,8 +47,8 @@ public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Lo
      * @param userId 用户ID
      * @return 积分获得总量
      */
-    @Query("SELECT COALESCE(SUM(ph.pointsChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.pointsChange > 0")
-    Integer getTotalPointsEarned(@Param("userId") Long userId);
+    @Query("SELECT COALESCE(SUM(ph.creditChange), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.creditChange > 0")
+    Integer getTotalCreditEarned(@Param("userId") Long userId);
 
     /**
      * 统计用户积分兑换总量
@@ -57,6 +57,6 @@ public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Lo
      * @param userId 用户ID
      * @return 积分兑换总量
      */
-    @Query("SELECT COALESCE(SUM(ABS(ph.pointsChange)), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.pointsChange < 0")
-    Integer getTotalPointsRedeemed(@Param("userId") Long userId);
+    @Query("SELECT COALESCE(SUM(ABS(ph.creditChange)), 0) FROM CreditHistory ph WHERE ph.userId = :userId AND ph.creditChange < 0")
+    Integer getTotalCreditRedeemed(@Param("userId") Long userId);
 }

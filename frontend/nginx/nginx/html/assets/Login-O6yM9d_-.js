@@ -1,1 +1,0 @@
-import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o as t,c as s,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},c={__name:"Login",setup(n){return(_,o)=>(t(),s("div",r,[...o[0]||(o[0]=[a("h1",null,"登录",-1)])]))}},l=e(c,[["__scopeId","data-v-931c9c11"]]);export{l as default};

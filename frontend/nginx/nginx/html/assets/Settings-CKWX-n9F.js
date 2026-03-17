@@ -1,1 +1,0 @@
-import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o,c as s,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},n={__name:"Settings",setup(_){return(c,t)=>(o(),s("div",r,[...t[0]||(t[0]=[a("h1",null,"系统设置",-1)])]))}},d=e(n,[["__scopeId","data-v-a05575d2"]]);export{d as default};

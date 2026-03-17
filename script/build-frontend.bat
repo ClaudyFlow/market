@@ -59,7 +59,7 @@ echo     构建完成！
 echo ========================================
 echo.
 echo 下一步操作：
-echo   1. 启动 Nginx: scripts\start-nginx.bat
-echo   2. 或直接运行：scripts\start.bat
+echo   1. 启动 Nginx: script\start-nginx.bat
+echo   2. 或直接运行：script\start.bat
 echo.
 pause

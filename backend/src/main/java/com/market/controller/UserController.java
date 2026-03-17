@@ -2,7 +2,7 @@ package com.market.controller;
 
 import com.market.entity.CheckInResult;
 import com.market.entity.User;
-import com.market.entity.UserPointsInfo;
+import com.market.entity.UserCreditInfo;
 import com.market.entity.VipInfo;
 import com.market.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class UserController {
         result.put("name", user.getName());
         result.put("email", user.getEmail());
         result.put("avatarUrl", user.getAvatarUrl());
-        result.put("points", user.getPoints());
+        result.put("credit", user.getCredit());
         result.put("vipLevel", user.getVipLevel());
         return ResponseEntity.ok(result);
     }
@@ -52,9 +52,9 @@ public class UserController {
      * 获取用户积分信息
      */
     @GetMapping("/credit")
-    public ResponseEntity<UserPointsInfo> getUserPoints(@AuthenticationPrincipal User user) {
-        UserPointsInfo pointsInfo = userService.getUserPointsInfo(user.getId());
-        return ResponseEntity.ok(pointsInfo);
+    public ResponseEntity<UserCreditInfo> getUserCredit(@AuthenticationPrincipal User user) {
+        UserCreditInfo creditInfo = userService.getUserCreditInfo(user.getId());
+        return ResponseEntity.ok(creditInfo);
     }
 
     /**
@@ -70,10 +70,10 @@ public class UserController {
      * 使用积分
      */
     @PostMapping("/credit/consume")
-    public ResponseEntity<Boolean> consumePoints(
+    public ResponseEntity<Boolean> consumeCredit(
             @RequestParam Integer amount,
             @AuthenticationPrincipal User user) {
-        boolean success = userService.consumePoints(user.getId(), amount);
+        boolean success = userService.consumeCredit(user.getId(), amount);
         return ResponseEntity.ok(success);
     }
 }

@@ -30,7 +30,7 @@
 
 <script setup>
 import { Bell } from '@element-plus/icons-vue'
-import { announcements } from '@user/data/categories'
+import { announcements } from '@user/data/announcements'
 </script>
 
 <style scoped>

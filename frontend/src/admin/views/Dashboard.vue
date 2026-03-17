@@ -47,13 +47,13 @@
         <div class="user-vip">
           <span class="vip-tag">正常运行</span>
         </div>
-        <div class="user-points">
-          <span class="points-tag">
+        <div class="user-stats">
+          <span class="stats-tag">
             <el-icon><User /></el-icon> {{ stats.userCount }} 用户
           </span>
         </div>
-        <div class="user-points">
-          <span class="points-tag">
+        <div class="user-stats">
+          <span class="stats-tag">
             <el-icon><Shop /></el-icon> {{ stats.merchantCount }} 商家
           </span>
         </div>
@@ -385,11 +385,11 @@ section.mall-home {
   font-weight: bold;
 }
 
-.user-points {
+.user-stats {
   margin: 8px 0;
 }
 
-.points-tag {
+.stats-tag {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,7 +398,7 @@ section.mall-home {
   color: #aaa;
 }
 
-.points-tag .el-icon {
+.stats-tag .el-icon {
   color: var(--mall-primary);
 }
 

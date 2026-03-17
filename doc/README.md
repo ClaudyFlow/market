@@ -106,7 +106,7 @@ typst watch 项目简介.typ
 ## 📁 目录结构
 
 ```
-docs/
+doc/
 ├── README.md                 # 本文档
 ├── 项目简介.typ              # 项目概述文档
 ├── 前端功能介绍.typ          # 前端功能详解

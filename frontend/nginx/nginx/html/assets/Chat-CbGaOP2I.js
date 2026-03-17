@@ -1,1 +1,0 @@
-import{_ as e}from"./preload-helper-CNMNW0ET.js";import{o,c as a,a as s}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},_={__name:"Chat",setup(c){return(n,t)=>(o(),a("div",r,[...t[0]||(t[0]=[s("h1",null,"客服聊天",-1)])]))}},l=e(_,[["__scopeId","data-v-3b9793f1"]]);export{l as default};

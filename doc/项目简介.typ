@@ -333,10 +333,10 @@
 #h(2.0em)├── frontend/ 前端 Vue.js项目\
 #h(2.0em)├── lib/ Flutter移动端项目\
 #h(2.0em)├── web/ Flutter Web项目\
-#h(2.0em)├── docs/ 项目文档（包含 .typ 源文件和 .pdf 输出）\
+#h(2.0em)├── doc/ 项目文档（包含 .typ 源文件和 .pdf 输出）\
 #h(2.0em)├── data/ 数据文件（SQLite数据库）\
 #h(2.0em)├── logs/ 日志文件\
-#h(2.0em)├── scripts/ 辅助脚本\
+#h(2.0em)├── script/ 辅助脚本\
 #h(2.0em)├── test/ 测试文件\
 #h(2.0em)├── pom.xml Maven配置文件\
 #h(2.0em)├── pubspec.yaml Flutter配置文件\
@@ -345,7 +345,7 @@
 === 文档说明
 
 
-#h(2.0em)docs/#h(0.25em)目录包含完整的技术文档：\
+#h(2.0em)doc/#h(0.25em)目录包含完整的技术文档：\
 #h(2.0em)1. 项目简介：项目概述、架构、功能、技术特色；\
 #h(2.0em)2. 前端功能介绍：详细的功能模块说明和使用指南；\
 #h(2.0em)3. 前端接口文档：组件接口规范、数据结构、API设计；\

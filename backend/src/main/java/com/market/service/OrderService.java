@@ -3,6 +3,7 @@ package com.market.service;
 import com.market.entity.*;
 import com.market.repository.OrderRepository;
 import com.market.repository.ProductRepository;
+import com.market.service.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +29,9 @@ public class OrderService {
     
     @Autowired
     private CartService cartService;
-    
+
     @Autowired
-    private PointsService pointsService;
+    private CreditService creditService;
     
     public List<Order> getUserOrders(User user) {
         return orderRepository.findByUserOrderByCreatedAtDesc(user);
@@ -81,10 +82,10 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
         
         cartService.clearCart(user);
-        
-        int pointsToAdd = totalAmount.intValue() / 10;
-        if (pointsToAdd > 0) {
-            pointsService.addPoints(user.getId(), pointsToAdd, "订单奖励：" + savedOrder.getOrderNo());
+
+        int creditToAdd = totalAmount.intValue() / 10;
+        if (creditToAdd > 0) {
+            creditService.addCredit(user.getId(), creditToAdd, "订单奖励：" + savedOrder.getOrderNo());
         }
         
         return savedOrder;

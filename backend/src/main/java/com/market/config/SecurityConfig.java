@@ -59,7 +59,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // 公开接口
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/email/**").permitAll()
+                // .requestMatchers("/api/email/**").permitAll() // 邮箱验证已禁用
                 // 商品查询公开，但修改需要权限
                 .requestMatchers("/api/product/**").permitAll()
                 // 评论查询公开
@@ -73,8 +73,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/api/favorite/**").authenticated()
                 .requestMatchers("/api/follow/**").authenticated()
-                // 管理员接口
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // 管理员接口（暂时禁用）
+                // .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll());
 
         http.authenticationProvider(authenticationProvider());

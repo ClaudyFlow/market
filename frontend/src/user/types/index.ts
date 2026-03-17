@@ -15,7 +15,7 @@ export interface VipInfo {
   benefits: string[]
 }
 
-export interface UserPoints {
-  points: number
+export interface UserCredit {
+  credit: number
   hasCheckedIn: boolean
 }

@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     // 每日签到基础积分
-    private static final int DAILY_CHECKIN_POINTS = 10;
+    private static final int DAILY_CHECKIN_CREDIT = 10;
 
     // VIP 等级配置
     private static final String[] VIP_LEVEL_NAMES = {
@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        user.setPoints(user.getPoints() + amount);
-        user.setTotalPoints(user.getTotalPoints() + amount);
+        user.setCredit(user.getCredit() + amount);
+        user.setTotalCredit(user.getTotalCredit() + amount);
         userRepository.save(user);
         return true;
     }
@@ -126,24 +126,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserPointsInfo getUserPointsInfo(Long userId) {
+    public UserCreditInfo getUserCreditInfo(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             return null;
         }
 
-        UserPointsInfo pointsInfo = new UserPointsInfo();
-        pointsInfo.setPoints(user.getPoints());
-        pointsInfo.setTotalPoints(user.getTotalPoints());
-        pointsInfo.setConsumedPoints(user.getConsumedPoints());
+        UserCreditInfo creditInfo = new UserCreditInfo();
+        creditInfo.setCredit(user.getCredit());
+        creditInfo.setTotalCredit(user.getTotalCredit());
+        creditInfo.setConsumedCredit(user.getConsumedCredit());
 
         // 检查今日是否已签到
         boolean hasCheckedIn = hasCheckedInToday(user.getLastCheckInTime());
-        pointsInfo.setHasCheckedIn(hasCheckedIn);
-        pointsInfo.setConsecutiveDays(user.getConsecutiveCheckinDays());
-        pointsInfo.setLastCheckInTime(user.getLastCheckInTime());
+        creditInfo.setHasCheckedIn(hasCheckedIn);
+        creditInfo.setConsecutiveDays(user.getConsecutiveCheckinDays());
+        creditInfo.setLastCheckInTime(user.getLastCheckInTime());
 
-        return pointsInfo;
+        return creditInfo;
     }
 
     @Override
@@ -175,12 +175,12 @@ public class UserServiceImpl implements UserService {
         int consecutiveDays = calculateConsecutiveDays(user.getLastCheckInTime(), user.getConsecutiveCheckinDays());
 
         // 计算奖励积分（连续签到有额外奖励）
-        int bonusPoints = calculateBonusPoints(consecutiveDays);
-        int totalPoints = DAILY_CHECKIN_POINTS + bonusPoints;
+        int bonusCredit = calculateBonusCredit(consecutiveDays);
+        int totalCredit = DAILY_CHECKIN_CREDIT + bonusCredit;
 
         // 更新用户积分
-        user.setPoints(user.getPoints() + totalPoints);
-        user.setTotalPoints(user.getTotalPoints() + totalPoints);
+        user.setCredit(user.getCredit() + totalCredit);
+        user.setTotalCredit(user.getTotalCredit() + totalCredit);
         user.setConsecutiveCheckinDays(consecutiveDays);
         user.setLastCheckInTime(new Date());
 
@@ -194,41 +194,29 @@ public class UserServiceImpl implements UserService {
 
         CheckInResult result = new CheckInResult();
         result.setSuccess(true);
-        result.setPoints(totalPoints);
+        result.setCredit(totalCredit);
         result.setHasCheckedIn(true);
         result.setConsecutiveDays(consecutiveDays);
-        result.setMessage(String.format("签到成功！获得 %d 积分，连续签到 %d 天", totalPoints, consecutiveDays));
+        result.setMessage(String.format("签到成功！获得 %d 积分，连续签到 %d 天", totalCredit, consecutiveDays));
 
         return result;
     }
 
     @Override
     @Transactional
-    public boolean consumePoints(Long userId, Integer amount) {
+    public boolean consumeCredit(Long userId, Integer amount) {
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null || user.getPoints() < amount) {
+        if (user == null || user.getCredit() < amount) {
             return false;
         }
 
-        user.setPoints(user.getPoints() - amount);
-        user.setConsumedPoints(user.getConsumedPoints() + amount);
+        user.setCredit(user.getCredit() - amount);
+        user.setConsumedCredit(user.getConsumedCredit() + amount);
         userRepository.save(user);
         return true;
     }
 
-    @Override
-    @Transactional
-    public boolean addPoints(Long userId, Integer amount) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return false;
-        }
-
-        user.setPoints(user.getPoints() + amount);
-        user.setTotalPoints(user.getTotalPoints() + amount);
-        userRepository.save(user);
-        return true;
-    }
+    
 
     /**
      * 检查今日是否已签到
@@ -275,7 +263,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 计算连续签到奖励积分
      */
-    private int calculateBonusPoints(int consecutiveDays) {
+    private int calculateBonusCredit(int consecutiveDays) {
         if (consecutiveDays >= 30) {
             return 20; // 连续 30 天奖励 20 积分
         } else if (consecutiveDays >= 14) {

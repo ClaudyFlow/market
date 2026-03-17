@@ -33,7 +33,7 @@
             <span class="menu-text">地址管理</span>
           </router-link>
           
-          <router-link to="/user/points" class="menu-item">
+          <router-link to="/user/credit" class="menu-item">
             <div class="menu-icon">
               <el-icon><Trophy /></el-icon>
             </div>

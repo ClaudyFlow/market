@@ -66,9 +66,9 @@
         <div class="user-vip">
           <span class="vip-tag">{{ userStore.vipLevelName }}</span>
         </div>
-        <div class="user-points">
-          <span class="points-tag">
-            <el-icon><Trophy /></el-icon> {{ userStore.userPoints }} 积分
+        <div class="user-credit">
+          <span class="credit-tag">
+            <el-icon><Trophy /></el-icon> {{ userStore.userCredit }} 积分
           </span>
         </div>
         <button
@@ -177,7 +177,7 @@ import ProductCard from "@user/components/ProductCard.vue";
 import CategoryPanel from "@user/components/CategoryPanel.vue";
 import AnnouncementPanel from "@user/components/AnnouncementPanel.vue";
 import { ElMessage } from "element-plus";
-import { 获取进度颜色 } from "@user/utils/discount";
+import { 获取进度颜色 } from "@user/util/discount";
 
 interface Product {
   id: number
@@ -792,14 +792,14 @@ figure.user-avatar :deep(.el-avatar) {
   color: #000;
 }
 
-.user-points {
+.user-credit {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 }
 
-.user-points .points-tag {
+.user-credit .credit-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;

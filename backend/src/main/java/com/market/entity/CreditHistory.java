@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Entity
-@Table(name = "points_history")
+@Table(name = "credit_history")
 public class CreditHistory {
 
     /**
@@ -36,8 +36,8 @@ public class CreditHistory {
      * 积分变化量
      * 正数表示增加积分，负数表示扣除积分
      */
-    @Column(name = "points_change", nullable = false)
-    private Integer pointsChange; // 正数为增加，负数为减少
+    @Column(name = "credit_change", nullable = false)
+    private Integer creditChange; // 正数为增加，负数为减少
 
     /**
      * 变化后的余额
@@ -79,13 +79,13 @@ public class CreditHistory {
      * 用于创建积分历史记录
      *
      * @param userId 用户ID
-     * @param pointsChange 积分变化量（正数增加，负数减少）
+     * @param creditChange 积分变化量（正数增加，负数减少）
      * @param balanceAfter 变化后的余额
      * @param reason 积分变化原因
      */
-    public CreditHistory(Long userId, Integer pointsChange, Integer balanceAfter, String reason) {
+    public CreditHistory(Long userId, Integer creditChange, Integer balanceAfter, String reason) {
         this.userId = userId;
-        this.pointsChange = pointsChange;
+        this.creditChange = creditChange;
         this.balanceAfter = balanceAfter;
         this.reason = reason;
         this.createdAt = LocalDateTime.now();
@@ -141,17 +141,17 @@ public class CreditHistory {
      *
      * @return 积分变化量（正数增加，负数减少）
      */
-    public Integer getPointsChange() {
-        return pointsChange;
+    public Integer getCreditChange() {
+        return creditChange;
     }
 
     /**
      * 设置积分变化量
      *
-     * @param pointsChange 积分变化量（正数增加，负数减少）
+     * @param creditChange 积分变化量（正数增加，负数减少）
      */
-    public void setPointsChange(Integer pointsChange) {
-        this.pointsChange = pointsChange;
+    public void setCreditChange(Integer creditChange) {
+        this.creditChange = creditChange;
     }
 
     /**

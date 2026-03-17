@@ -28,9 +28,6 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    /**
-     * 生成随机验证码
-     */
     public String generateVerificationCode() {
         Random random = new Random();
         StringBuilder code = new StringBuilder();
@@ -40,9 +37,6 @@ public class EmailService {
         return code.toString();
     }
 
-    /**
-     * 发送验证码邮件
-     */
     public boolean sendVerificationCode(String email, String code) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -60,9 +54,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * 发送HTML格式邮件
-     */
     public boolean sendHtmlEmail(String to, String subject, String htmlContent) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -81,9 +72,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * 发送欢迎邮件
-     */
     public boolean sendWelcomeEmail(String email, String username) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

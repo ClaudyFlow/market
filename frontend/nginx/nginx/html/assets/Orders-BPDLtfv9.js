@@ -1,1 +1,0 @@
-import{_ as o}from"./preload-helper-CNMNW0ET.js";import{o as r,c as s,a as t}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const a={class:"page-container"},c={__name:"Orders",setup(_){return(n,e)=>(r(),s("div",a,[...e[0]||(e[0]=[t("h1",null,"我的订单",-1)])]))}},i=o(c,[["__scopeId","data-v-7ceb1c7b"]]);export{i as default};

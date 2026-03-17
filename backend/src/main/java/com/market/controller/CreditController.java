@@ -2,7 +2,7 @@ package com.market.controller;
 
 import com.market.entity.CreditHistory;
 import com.market.entity.User;
-import com.market.service.PointsService;
+import com.market.service.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,29 +21,29 @@ import java.util.Map;
 public class CreditController {
     
     @Autowired
-    private PointsService pointsService;
-    
+    private CreditService creditService;
+
     @GetMapping
     public ResponseEntity<Map<String, Object>> getPoints(@AuthenticationPrincipal User user) {
         Map<String, Object> result = new HashMap<>();
-        result.put("points", user.getPoints());
-        result.put("totalPoints", user.getTotalPoints());
+        result.put("credit", user.getCredit());
+        result.put("totalCredit", user.getTotalCredit());
         return ResponseEntity.ok(result);
     }
     
     @GetMapping("/history")
     public ResponseEntity<List<CreditHistory>> getHistory(@AuthenticationPrincipal User user) {
-        List<CreditHistory> history = pointsService.getUserPointsHistory(user.getId());
+        List<CreditHistory> history = creditService.getCreditHistory(user.getId());
         return ResponseEntity.ok(history);
     }
 
     @PostMapping("/redeem")
     public ResponseEntity<?> redeemPoints(
             @AuthenticationPrincipal User user,
-            @RequestParam Integer points,
+            @RequestParam Integer credit,
             @RequestParam String reason) {
         try {
-            boolean success = pointsService.deductPoints(user.getId(), points, reason);
+            boolean success = creditService.deductCredit(user.getId(), credit, reason);
             if (success) {
                 return ResponseEntity.ok("兑换成功");
             } else {

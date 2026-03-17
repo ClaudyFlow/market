@@ -20,10 +20,10 @@
 
 ```bash
 # 双击运行
-scripts\start.bat
+script\start.bat
 
 # 或命令行
-cd scripts
+cd script
 start.bat
 ```
 
@@ -40,13 +40,13 @@ start.bat
 
 ```bash
 # 1. 构建前端
-scripts\build-frontend.bat
+script\build-frontend.bat
 
 # 2. 启动后端
-scripts\start-backend.bat
+script\start-backend.bat
 
 # 3. 启动 Nginx
-scripts\start-nginx.bat
+script\start-nginx.bat
 ```
 
 ---
@@ -55,10 +55,10 @@ scripts\start-nginx.bat
 
 ```bash
 # 前端热更新开发
-scripts\dev.bat
+script\dev.bat
 
 # 后端单独启动
-scripts\start-backend.bat
+script\start-backend.bat
 ```
 
 ---
@@ -67,7 +67,7 @@ scripts\start-backend.bat
 
 ```
 market/
-├── scripts/
+├── script/
 │   ├── start.bat              # 一键启动
 │   ├── dev.bat                # 开发模式
 │   ├── build-frontend.bat     # 前端构建
@@ -160,7 +160,7 @@ spring:
 **解决**: 
 ```bash
 # 停止 Nginx
-scripts\stop-nginx.bat
+script\stop-nginx.bat
 
 # 或手动结束进程
 taskkill /F /IM nginx.exe

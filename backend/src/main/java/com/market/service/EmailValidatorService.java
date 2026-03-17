@@ -16,18 +16,13 @@ public class EmailValidatorService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailValidatorService.class);
 
-    // RFC 5322标准邮箱正则表达式
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
-    /**
-     * 基础邮箱格式验证
-     */
     public boolean isValidEmailFormat(String email) {
         if (email == null || email.isEmpty()) {
             return false;
         }
         
-        // 使用正则表达式验证
         if (!email.matches(EMAIL_REGEX)) {
             return false;
         }
@@ -35,9 +30,6 @@ public class EmailValidatorService {
         return true;
     }
 
-    /**
-     * 验证邮箱域名的MX记录
-     */
     public boolean hasMXRecord(String email) {
         if (email == null || email.isEmpty()) {
             return false;
@@ -67,14 +59,10 @@ public class EmailValidatorService {
             return false;
         } catch (NamingException e) {
             log.warn("无法验证域名 {} 的MX记录: {}", domain, e.getMessage());
-            // 如果DNS查询失败，我们仍然允许邮箱通过（可能是网络问题）
             return true;
         }
     }
 
-    /**
-     * 提取邮箱域名
-     */
     private String extractDomain(String email) {
         int atIndex = email.lastIndexOf('@');
         if (atIndex == -1 || atIndex == email.length() - 1) {
@@ -83,9 +71,6 @@ public class EmailValidatorService {
         return email.substring(atIndex + 1);
     }
 
-    /**
-     * 完整的邮箱验证（格式+MX记录）
-     */
     public boolean isValidEmail(String email) {
         if (!isValidEmailFormat(email)) {
             log.warn("邮箱格式无效: {}", email);
@@ -100,9 +85,6 @@ public class EmailValidatorService {
         return true;
     }
 
-    /**
-     * 获取邮箱验证错误信息
-     */
     public String getEmailValidationError(String email) {
         if (email == null || email.isEmpty()) {
             return "邮箱不能为空";

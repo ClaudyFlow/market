@@ -25,9 +25,9 @@
           </span>
         </div>
       </slot>
-      <div class="points-info">
+      <div class="credit-info">
         <el-icon><Trophy /></el-icon>
-        <span class="points-count">{{ userPoints }} 积分</span>
+        <span class="credit-count">{{ userCredit }} 积分</span>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@ const props = defineProps({
     default: '用户'
   },
   // 用户积分
-  userPoints: {
+  userCredit: {
     type: Number,
     default: 0
   },
@@ -152,13 +152,13 @@ onUnmounted(() => {
   gap: 6px;
 }
 
-.points-info {
+.credit-info {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.points-count {
+.credit-count {
   color: var(--mall-secondary);
   font-size: 12px;
 }

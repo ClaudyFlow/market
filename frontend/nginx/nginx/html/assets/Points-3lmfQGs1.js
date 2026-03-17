@@ -1,1 +1,0 @@
-import{_ as t}from"./preload-helper-CNMNW0ET.js";import{o as e,c as s,a}from"./vendor-vue-BjvmX-f6.js";import"./vendor-icons-CmuF4jaV.js";const r={class:"page-container"},n={__name:"Points",setup(c){return(_,o)=>(e(),s("div",r,[...o[0]||(o[0]=[a("h1",null,"积分中心",-1)])]))}},l=t(n,[["__scopeId","data-v-e33918ac"]]);export{l as default};

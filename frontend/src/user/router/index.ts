@@ -86,9 +86,9 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '地址管理' }
       },
       {
-        path: 'points',
-        name: 'UserPoints',
-        component: () => import('@user/views/user/Points.vue'),
+        path: 'credit',
+        name: 'UserCredit',
+        component: () => import('@user/views/user/Credit.vue'),
         meta: { title: '我的积分' }
       },
       {

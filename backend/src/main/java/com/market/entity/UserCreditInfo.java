@@ -5,25 +5,25 @@ import java.util.Date;
 /**
  * 用户积分信息
  */
-public class UserPointsInfo {
+public class UserCreditInfo {
 
-    private Integer points;
-    private Integer totalPoints;
-    private Integer consumedPoints;
+    private Integer credit;
+    private Integer totalCredit;
+    private Integer consumedCredit;
     private Boolean hasCheckedIn;
     private Integer consecutiveDays;
     private Date lastCheckInTime;
 
-    public UserPointsInfo() {}
+    public UserCreditInfo() {}
 
-    public Integer getPoints() { return points; }
-    public void setPoints(Integer points) { this.points = points; }
+    public Integer getCredit() { return credit; }
+    public void setCredit(Integer credit) { this.credit = credit; }
 
-    public Integer getTotalPoints() { return totalPoints; }
-    public void setTotalPoints(Integer totalPoints) { this.totalPoints = totalPoints; }
+    public Integer getTotalCredit() { return totalCredit; }
+    public void setTotalCredit(Integer totalCredit) { this.totalCredit = totalCredit; }
 
-    public Integer getConsumedPoints() { return consumedPoints; }
-    public void setConsumedPoints(Integer consumedPoints) { this.consumedPoints = consumedPoints; }
+    public Integer getConsumedCredit() { return consumedCredit; }
+    public void setConsumedCredit(Integer consumedCredit) { this.consumedCredit = consumedCredit; }
 
     public Boolean getHasCheckedIn() { return hasCheckedIn; }
     public void setHasCheckedIn(Boolean hasCheckedIn) { this.hasCheckedIn = hasCheckedIn; }
