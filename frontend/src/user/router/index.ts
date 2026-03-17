@@ -104,6 +104,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '我的关注' }
       }
     ]
+  },
+  {
+    path: '/lottery',
+    name: 'Lottery',
+    component: () => import('@user/views/Lottery.vue'),
+    meta: { title: '幸运抽奖' }
   }
 ]
 

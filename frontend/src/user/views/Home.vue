@@ -81,6 +81,14 @@
           <span>{{ userStore.hasCheckedIn ? "已签到" : "立即签到" }}</span>
           <span class="check-in-reward" v-if="userStore.hasCheckedIn">+10 积分</span>
         </button>
+        <button
+          class="lottery-btn"
+          @click="goToLottery"
+          aria-label="点击抽奖"
+        >
+          
+          <span><el-icon><Coin /></el-icon>点击抽奖</span>
+        </button>
       </article>
 
       <div class="announcement-wrapper">
@@ -168,7 +176,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, type Ref } from "vue";
+import { ref, onMounted, onUnmounted, type Ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@user/stores/cart";
 import { useUserStore } from "@user/stores/user";
@@ -178,6 +186,7 @@ import CategoryPanel from "@user/components/CategoryPanel.vue";
 import AnnouncementPanel from "@user/components/AnnouncementPanel.vue";
 import { ElMessage } from "element-plus";
 import { 获取进度颜色 } from "@user/util/discount";
+import { Coin } from '@element-plus/icons-vue'
 
 interface Product {
   id: number
@@ -214,6 +223,13 @@ const remainingPercent = ref(42)
 // 签到处理
 const handleCheckIn = async () => {
   await userStore.doCheckIn()
+  // 签到后刷新积分显示
+  userStore.loadUserInfo()
+}
+
+// 跳转到抽奖页面
+const goToLottery = () => {
+  router.push('/lottery')
 }
 
 // 倒计时
@@ -602,6 +618,12 @@ const recommendedItem = ref([
   },
 ]);
 
+// 限时特惠商品（computed 属性）
+const flashItems = computed(() => flashItem.value);
+
+// 推荐商品（computed 属性）
+const recommendedItems = computed(() => recommendedItem.value);
+
 // 品牌数据 - 15 个
 const brands = ref([
   { name: "华为", description: "构建万物互联的智能世界" },
@@ -863,6 +885,43 @@ figure.user-avatar :deep(.el-avatar) {
   font-size: 11px;
   font-weight: bold;
   margin-left: 5px;
+}
+
+/* 抽奖按钮 */
+.lottery-btn {
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 136, 0, 0.2));
+  border: 1px solid rgba(255, 102, 0, 0.4);
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #ff8800;
+  font-size: 14px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.lottery-btn:hover {
+  background: linear-gradient(135deg, #ff6600, #ff8800);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.lottery-btn .el-icon {
+  font-size: 20px;
+}
+
+.lottery-cost {
+  font-size: 11px;
+  font-weight: normal;
+  opacity: 0.8;
 }
 
 /* 快捷操作栏 */

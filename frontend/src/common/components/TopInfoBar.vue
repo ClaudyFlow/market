@@ -155,11 +155,23 @@ onUnmounted(() => {
 .credit-info {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 136, 0, 0.2));
+  border: 1px solid rgba(255, 136, 0, 0.4);
+  border-radius: 12px;
+  color: #ffa500;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(255, 136, 0, 0.2);
+}
+
+.credit-info .el-icon {
+  font-size: 14px;
+  color: #ffa500;
 }
 
 .credit-count {
-  color: var(--mall-secondary);
-  font-size: 12px;
+  color: #ffa500;
 }
 </style>

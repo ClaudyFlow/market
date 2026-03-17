@@ -3,7 +3,7 @@
     <!-- 顶部信息栏 -->
     <div class="top-info">
       <div class="container">
-        <TopInfoBar user-text="尊敬的会员">
+        <TopInfoBar user-text="尊敬的会员" :user-credit="用户积分">
           <template #user-info>
             <div class="user-info">
               <span class="username" @click="handleAuthClick" style="cursor: pointer;">
@@ -11,9 +11,6 @@
                   <el-icon v-if="!isLoggedIn"><User /></el-icon>
                 </el-avatar>
                 <span class="auth-text">{{ isLoggedIn && userDisplayName ? userDisplayName : '登录/注册' }}</span>
-              </span>
-              <span class="credit">
-                <el-icon><Trophy /></el-icon> 积分：{{ 用户积分 }}
               </span>
             </div>
           </template>
@@ -45,6 +42,10 @@
           <router-link to="/item" class="nav-item" active-class="active">
             <el-icon><Box /></el-icon>
             <span>全部商品</span>
+          </router-link>
+          <router-link to="/lottery" class="nav-item" active-class="active">
+            <el-icon><Star /></el-icon>
+            <span>幸运抽奖</span>
           </router-link>
           <router-link to="/digital" class="nav-item" active-class="active">
             <el-icon><Cellphone /></el-icon>
@@ -96,6 +97,7 @@ import { useCartStore } from '@user/stores/cart'
 import { useUserStore } from '@user/stores/user'
 import TopInfoBar from '@common/components/TopInfoBar.vue'
 import { ElMessage } from 'element-plus'
+import { Star } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const cartStore = useCartStore()
@@ -186,7 +188,7 @@ onMounted(() => {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
 }
 
 .username {
@@ -195,6 +197,7 @@ onMounted(() => {
   gap: 8px;
   color: #fff;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .username:hover {
@@ -204,14 +207,7 @@ onMounted(() => {
 
 .auth-text {
   font-weight: 500;
-}
-
-.credit {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--mall-accent);
-  font-weight: bold;
+  font-size: 14px;
 }
 
 /* 主导航 */
