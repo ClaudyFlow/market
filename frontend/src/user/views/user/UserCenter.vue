@@ -5,21 +5,21 @@
       
       <div class="user-menu">
         <div class="menu-grid">
-          <router-link to="/user/orders" class="menu-item">
+          <router-link to="/user/order" class="menu-item">
             <div class="menu-icon">
               <el-icon><Document /></el-icon>
             </div>
             <span class="menu-text">我的订单</span>
           </router-link>
-          
-          <router-link to="/user/favorites" class="menu-item">
+
+          <router-link to="/user/favorite" class="menu-item">
             <div class="menu-icon">
               <el-icon><StarFilled /></el-icon>
             </div>
             <span class="menu-text">我的收藏</span>
           </router-link>
-          
-          <router-link to="/user/follows" class="menu-item">
+
+          <router-link to="/user/follow" class="menu-item">
             <div class="menu-icon">
               <el-icon><UserFilled /></el-icon>
             </div>
@@ -40,7 +40,7 @@
             <span class="menu-text">我的积分</span>
           </router-link>
           
-          <router-link to="/user/coupons" class="menu-item">
+          <router-link to="/user/coupon" class="menu-item">
             <div class="menu-icon">
               <el-icon><Ticket /></el-icon>
             </div>

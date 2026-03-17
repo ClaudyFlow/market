@@ -5,7 +5,7 @@
       <div class="breadcrumb">
         <router-link to="/">首页</router-link>
         <span>/</span>
-        <router-link to="/products">商品列表</router-link>
+        <router-link to="/product">商品列表</router-link>
         <span>/</span>
         <span>{{ 商品.name }}</span>
       </div>

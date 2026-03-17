@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 店铺关注实体类
  */
 @Entity
-@Table(name = "follows")
+@Table(name = "follow")
 public class Follow {
 
     @Id

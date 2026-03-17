@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 用户优惠券实体类
  */
 @Entity
-@Table(name = "user_coupons")
+@Table(name = "user_coupon")
 public class UserCoupon {
     
     @Id

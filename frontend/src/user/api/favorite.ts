@@ -18,7 +18,7 @@ export interface Favorite {
 // 获取收藏列表
 export function getFavorites() {
   return request<ApiResponse<Favorite[]>>({
-    url: '/favorites',
+    url: '/favorite',
     method: 'get'
   })
 }
@@ -26,7 +26,7 @@ export function getFavorites() {
 // 添加收藏
 export function addFavorite(productId: number) {
   return request({
-    url: '/favorites',
+    url: '/favorite',
     method: 'post',
     data: { productId }
   })
@@ -35,7 +35,7 @@ export function addFavorite(productId: number) {
 // 取消收藏
 export function removeFavorite(productId: number) {
   return request({
-    url: `/favorites/${productId}`,
+    url: `/favorite/${productId}`,
     method: 'delete'
   })
 }
@@ -43,7 +43,7 @@ export function removeFavorite(productId: number) {
 // 切换收藏状态
 export function toggleFavorite(productId: number) {
   return request({
-    url: `/favorites/toggle/${productId}`,
+    url: `/favorite/toggle/${productId}`,
     method: 'post'
   })
 }
@@ -51,7 +51,7 @@ export function toggleFavorite(productId: number) {
 // 检查是否已收藏
 export function checkFavorite(productId: number) {
   return request<ApiResponse<{ isFavorite: boolean }>>({
-    url: `/favorites/check/${productId}`,
+    url: `/favorite/check/${productId}`,
     method: 'get'
   })
 }
@@ -59,7 +59,7 @@ export function checkFavorite(productId: number) {
 // 获取收藏数量
 export function getFavoriteCount() {
   return request<ApiResponse<{ count: number }>>({
-    url: '/favorites/count',
+    url: '/favorite/count',
     method: 'get'
   })
 }

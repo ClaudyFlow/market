@@ -29,7 +29,7 @@ interface ApiResponse<T> {
 // 获取商品列表
 export function getProducts(params?: ProductListParams) {
   return request<ApiResponse<Product[]>>({
-    url: '/products',
+    url: '/product',
     method: 'get',
     params
   })
@@ -38,7 +38,7 @@ export function getProducts(params?: ProductListParams) {
 // 获取商品详情
 export function getProductById(id: number) {
   return request<ApiResponse<Product>>({
-    url: `/products/${id}`,
+    url: `/product/${id}`,
     method: 'get'
   })
 }

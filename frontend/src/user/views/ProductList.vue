@@ -7,7 +7,7 @@
           <span class="filter-label">分类：</span>
           <el-radio-group v-model="selectedCategory" size="small">
             <el-radio-button label="">全部</el-radio-button>
-            <el-radio-button v-for="cat in categories" :key="cat" :label="cat">{{ cat }}</el-radio-button>
+            <el-radio-button v-for="cat in category" :key="cat" :label="cat">{{ cat }}</el-radio-button>
           </el-radio-group>
         </div>
         <div class="filter-item">
@@ -31,9 +31,9 @@
       </div>
 
       <!-- 商品列表 -->
-      <div class="products-grid">
+      <div class="product-grid">
         <ProductCard
-          v-for="product in filteredProducts"
+          v-for="product in filteredProduct"
           :key="product.id"
           :product="formatProduct(product)"
           @click="goToDetail(product.id)"
@@ -66,7 +66,7 @@ const router = useRouter()
 const route = useRoute()
 const cartStore = useCartStore()
 
-const categories = ['手机数码', '电脑办公', '家用电器', '服装鞋包', '美妆护肤', '图书文娱', '食品生鲜', '母婴玩具']
+const category = ['手机数码', '电脑办公', '家用电器', '服装鞋包', '美妆护肤', '图书文娱', '食品生鲜', '母婴玩具']
 
 const selectedCategory = ref(route.query.category || '')
 const priceRange = ref('')
@@ -75,7 +75,7 @@ const currentPage = ref(1)
 const pageSize = ref(8)
 
 // 模拟商品数据 - 每个商品添加库存和销量数据
-const allProducts = ref([
+const allProduct = ref([
   { id: 1, name: 'Apple iPhone 15 Pro Max', price: 9999, originalPrice: 11999, description: '256GB / 钛金属 / A17 Pro 芯片', rating: 4.9, type: 'digital', sales: '10 万+', salesPercent: 85, remaining: 1500, image: 'https://via.placeholder.com/250x250/f5f5f5/333?text=iPhone15' },
   { id: 2, name: '华为 Mate 60 Pro', price: 6999, originalPrice: 7999, description: '512GB / 卫星通话 / 昆仑玻璃', rating: 4.8, type: 'digital', sales: '8 万+', salesPercent: 75, remaining: 2500, image: 'https://via.placeholder.com/250x250/f5f5f5/333?text=Mate60' },
   { id: 3, name: 'MacBook Pro 16 寸', price: 18999, originalPrice: 21999, description: 'M3 Max / 32GB / 1TB SSD', rating: 4.9, type: 'digital', sales: '5 万+', salesPercent: 65, remaining: 350, image: 'https://via.placeholder.com/250x250/f5f5f5/333?text=MBP16' },
@@ -124,12 +124,12 @@ const getProgressColor = (percent) => {
   return '#ff3366'
 }
 
-const filteredProducts = computed(() => {
-  let result = [...allProducts.value]
+const filteredProduct = computed(() => {
+  let result = [...allProduct.value]
 
   // 分类筛选
   if (selectedCategory.value) {
-    result = result.filter(p => p.category === selectedCategory.value)
+    result = result.filter(p => p.type === selectedCategory.value)
   }
 
   // 价格筛选
@@ -153,7 +153,7 @@ const filteredProducts = computed(() => {
   return result
 })
 
-const totalProducts = computed(() => filteredProducts.value.length)
+const totalProduct = computed(() => filteredProduct.value.length)
 
 const goToDetail = (id) => {
   router.push(`/product/${id}`)
@@ -217,7 +217,7 @@ watch([selectedCategory, priceRange, sortBy], () => {
 }
 
 /* 商品网格 */
-.products-grid {
+.product-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;

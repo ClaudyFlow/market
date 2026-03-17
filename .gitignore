@@ -87,7 +87,11 @@ frontend/nginx/docs/
 *.db
 *.sqlite
 *.sqlite3
-data/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+# 允许 SQL 文件上传
+!data/*.sql
 
 # Logs
 *.log

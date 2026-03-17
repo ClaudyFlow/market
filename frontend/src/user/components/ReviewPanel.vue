@@ -31,7 +31,7 @@
     <!-- 评价列表 -->
     <div class="review-list">
       <div
-        v-for="review in reviews"
+        v-for="review in review"
         :key="review.id"
         class="review-item"
       >
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div v-if="reviews.length === 0" class="empty-reviews">
+      <div v-if="review.length === 0" class="empty-review">
         暂无评价
       </div>
     </div>
@@ -75,13 +75,13 @@ const props = defineProps<{
   productId: number
 }>()
 
-const reviews = ref<Review[]>([])
+const review = ref<Review[]>([])
 const ratingInfo = ref<RatingInfo | null>(null)
 
 const loadReviews = async () => {
   try {
     const res = await getProductReviews(props.productId)
-    reviews.value = res.data.data || []
+    review.value = res.data.data || []
   } catch (error) {
     console.error('加载评价失败:', error)
   }

@@ -14,14 +14,14 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '首页看板' }
   },
   {
-    path: '/products',
-    name: 'Products',
+    path: '/product',
+    name: 'Product',
     component: () => import('@merchant/views/product/ProductList.vue'),
     meta: { title: '商品管理' }
   },
   {
-    path: '/orders',
-    name: 'Orders',
+    path: '/order',
+    name: 'Order',
     component: () => import('@merchant/views/order/OrderList.vue'),
     meta: { title: '订单管理' }
   },
@@ -32,14 +32,14 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '店铺管理' }
   },
   {
-    path: '/statistics',
-    name: 'Statistics',
+    path: '/statistic',
+    name: 'Statistic',
     component: () => import('@merchant/views/stats/Statistics.vue'),
     meta: { title: '数据统计' }
   },
   {
-    path: '/reviews',
-    name: 'Reviews',
+    path: '/review',
+    name: 'Review',
     component: () => import('@merchant/views/Dashboard.vue'),
     meta: { title: '评价管理' }
   },
@@ -56,8 +56,8 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '消息中心' }
   },
   {
-    path: '/settings',
-    name: 'Settings',
+    path: '/setting',
+    name: 'Setting',
     component: () => import('@merchant/views/shop/ShopInfo.vue'),
     meta: { title: '店铺设置' }
   }

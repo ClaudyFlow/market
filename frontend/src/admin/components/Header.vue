@@ -19,15 +19,15 @@
             <el-icon><DataAnalysis /></el-icon>
             <span>平台概览</span>
           </router-link>
-          <router-link to="/admin/users" class="nav-item">
+          <router-link to="/admin/user" class="nav-item">
             <el-icon><User /></el-icon>
             <span>用户管理</span>
           </router-link>
-          <router-link to="/admin/products" class="nav-item">
+          <router-link to="/admin/product" class="nav-item">
             <el-icon><Goods /></el-icon>
             <span>商品审核</span>
           </router-link>
-          <router-link to="/admin/orders" class="nav-item">
+          <router-link to="/admin/order" class="nav-item">
             <el-icon><ShoppingCart /></el-icon>
             <span>订单监控</span>
           </router-link>

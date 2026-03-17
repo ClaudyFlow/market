@@ -25,8 +25,8 @@ public class OrderController {
     
     @GetMapping
     public ResponseEntity<List<Order>> getUserOrders(@AuthenticationPrincipal User user) {
-        List<Order> orders = orderService.getUserOrders(user);
-        return ResponseEntity.ok(orders);
+        List<Order> order = orderService.getUserOrders(user);
+        return ResponseEntity.ok(order);
     }
     
     @GetMapping("/{id}")
@@ -77,19 +77,19 @@ public class OrderController {
     
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getOrderStats(@AuthenticationPrincipal User user) {
-        List<Order> orders = orderService.getUserOrders(user);
-        
+        List<Order> order = orderService.getUserOrders(user);
+
         Map<String, Object> stats = new HashMap<>();
-        stats.put("totalOrders", orders.size());
-        
-        long pendingCount = orders.stream().filter(o -> "PENDING".equals(o.getStatus())).count();
-        long paidCount = orders.stream().filter(o -> "PAID".equals(o.getStatus())).count();
-        long completedCount = orders.stream().filter(o -> "COMPLETED".equals(o.getStatus())).count();
-        
+        stats.put("totalOrders", order.size());
+
+        long pendingCount = order.stream().filter(o -> "PENDING".equals(o.getStatus())).count();
+        long paidCount = order.stream().filter(o -> "PAID".equals(o.getStatus())).count();
+        long completedCount = order.stream().filter(o -> "COMPLETED".equals(o.getStatus())).count();
+
         stats.put("pendingOrders", pendingCount);
         stats.put("paidOrders", paidCount);
         stats.put("completedOrders", completedCount);
-        
+
         return ResponseEntity.ok(stats);
     }
 }

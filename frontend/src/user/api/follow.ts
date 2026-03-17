@@ -17,7 +17,7 @@ export interface Follow {
 // 获取关注列表
 export function getFollows() {
   return request<ApiResponse<Follow[]>>({
-    url: '/follows',
+    url: '/follow',
     method: 'get'
   })
 }
@@ -25,7 +25,7 @@ export function getFollows() {
 // 添加关注
 export function addFollow(shopId: number, shopName: string, shopAvatar?: string) {
   return request({
-    url: '/follows',
+    url: '/follow',
     method: 'post',
     data: { shopId, shopName, shopAvatar }
   })
@@ -34,7 +34,7 @@ export function addFollow(shopId: number, shopName: string, shopAvatar?: string)
 // 取消关注
 export function removeFollow(shopId: number) {
   return request({
-    url: `/follows/${shopId}`,
+    url: `/follow/${shopId}`,
     method: 'delete'
   })
 }
@@ -42,7 +42,7 @@ export function removeFollow(shopId: number) {
 // 切换关注状态
 export function toggleFollow(shopId: number, shopName: string, shopAvatar?: string) {
   return request({
-    url: `/follows/toggle/${shopId}`,
+    url: `/follow/toggle/${shopId}`,
     method: 'post',
     data: { shopId, shopName, shopAvatar }
   })
@@ -51,7 +51,7 @@ export function toggleFollow(shopId: number, shopName: string, shopAvatar?: stri
 // 检查是否已关注
 export function checkFollow(shopId: number) {
   return request<ApiResponse<{ isFavorite: boolean }>>({
-    url: `/follows/check/${shopId}`,
+    url: `/follow/check/${shopId}`,
     method: 'get'
   })
 }
@@ -59,7 +59,7 @@ export function checkFollow(shopId: number) {
 // 获取关注数量
 export function getFollowCount() {
   return request<ApiResponse<{ count: number }>>({
-    url: '/follows/count',
+    url: '/follow/count',
     method: 'get'
   })
 }

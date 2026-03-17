@@ -7,10 +7,10 @@
       </h1>
 
       <!-- 收藏列表 -->
-      <div v-loading="loading" class="favorites-content">
-        <div v-if="favorites.length > 0" class="favorites-grid">
+      <div v-loading="loading" class="favorite-content">
+        <div v-if="favorite.length > 0" class="favorite-grid">
           <div
-            v-for="item in favorites"
+            v-for="item in favorite"
             :key="item.id"
             class="favorite-card"
           >
@@ -76,7 +76,7 @@ import { addToCart as apiAddToCart } from '@user/api/cart'
 const router = useRouter()
 
 const loading = ref(false)
-const favorites = ref([])
+const favorite = ref([])
 
 // 格式化时间
 const 格式化时间 = (dateString) => {
@@ -110,7 +110,7 @@ const loadFavorites = async () => {
   loading.value = true
   try {
     const res = await getFavorites()
-    favorites.value = res.data
+    favorite.value = res.data
   } catch (error) {
     console.error('加载收藏失败:', error)
     ElMessage.error('加载收藏列表失败')
@@ -127,9 +127,9 @@ const removeFavoriteItem = async (productId) => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    
+
     await removeFavorite(productId)
-    favorites.value = favorites.value.filter(f => f.productId !== productId)
+    favorite.value = favorite.value.filter(f => f.productId !== productId)
     ElMessage.success('已取消收藏')
   } catch (error) {
     if (error !== 'cancel') {
@@ -157,7 +157,7 @@ const addToCart = async (productId) => {
 
 // 去逛逛
 const goToProducts = () => {
-  router.push('/products')
+  router.push('/product')
 }
 
 onMounted(() => {
@@ -166,7 +166,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.favorites-page {
+.favorite-page {
   min-height: calc(100vh - 120px);
   padding: 40px 20px;
   background: rgba(10, 25, 41, 0.5);
@@ -191,14 +191,14 @@ onMounted(() => {
   font-size: 32px;
 }
 
-.favorites-content {
+.favorite-content {
   background: rgba(26, 31, 58, 0.6);
   border-radius: 12px;
   padding: 30px;
   border: 1px solid rgba(0, 212, 255, 0.1);
 }
 
-.favorites-grid {
+.favorite-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;

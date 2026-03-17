@@ -30,7 +30,7 @@ export interface RatingInfo {
 // 获取商品的所有评价
 export function getProductReviews(productId: number) {
   return request<ApiResponse<Review[]>>({
-    url: `/reviews/product/${productId}`,
+    url: `/review/product/${productId}`,
     method: 'get'
   })
 }
@@ -38,7 +38,7 @@ export function getProductReviews(productId: number) {
 // 获取用户的所有评价
 export function getUserReviews() {
   return request<ApiResponse<Review[]>>({
-    url: '/reviews/user',
+    url: '/review/user',
     method: 'get'
   })
 }
@@ -46,7 +46,7 @@ export function getUserReviews() {
 // 添加评价
 export function addReview(productId: number, rating: number, content: string) {
   return request({
-    url: '/reviews',
+    url: '/review',
     method: 'post',
     data: { productId, rating, content }
   })
@@ -55,7 +55,7 @@ export function addReview(productId: number, rating: number, content: string) {
 // 更新评价
 export function updateReview(productId: number, rating: number, content: string) {
   return request({
-    url: `/reviews/${productId}`,
+    url: `/review/${productId}`,
     method: 'put',
     data: { productId, rating, content }
   })
@@ -64,7 +64,7 @@ export function updateReview(productId: number, rating: number, content: string)
 // 删除评价
 export function deleteReview(productId: number) {
   return request({
-    url: `/reviews/${productId}`,
+    url: `/review/${productId}`,
     method: 'delete'
   })
 }
@@ -72,19 +72,19 @@ export function deleteReview(productId: number) {
 // 获取商品评分信息
 export function getProductRating(productId: number) {
   return request<ApiResponse<RatingInfo>>({
-    url: `/reviews/product/${productId}/rating`,
+    url: `/review/product/${productId}/rating`,
     method: 'get'
   })
 }
 
 // 检查用户是否已评价
 export function checkReview(productId: number) {
-  return request<ApiResponse<{ 
+  return request<ApiResponse<{
     hasReviewed: boolean
     rating?: number
     content?: string
   }>>({
-    url: `/reviews/product/${productId}/check`,
+    url: `/review/product/${productId}/check`,
     method: 'get'
   })
 }

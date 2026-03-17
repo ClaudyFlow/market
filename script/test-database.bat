@@ -56,7 +56,7 @@ if %errorlevel% equ 0 (
 REM 测试商品列表
 echo.
 echo 测试 2: 获取商品列表...
-curl -s http://localhost:8080/api/products >nul 2>&1
+curl -s http://localhost:8080/api/product >nul 2>&1
 if %errorlevel% equ 0 (
     echo [通过] 商品接口可访问
 ) else (
@@ -78,6 +78,6 @@ echo 手动测试命令:
 echo   1. 启动后端：cd backend ^&^& mvnw spring-boot:run
 echo   2. 测试注册：curl -X POST http://localhost:8080/api/auth/register -H "Content-Type: application/json" -d "{\"name\":\"test\",\"email\":\"test@test.com\",\"password\":\"123456\",\"confirmPassword\":\"123456\"}"
 echo   3. 测试登录：curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"name\":\"test\",\"password\":\"123456\"}"
-echo   4. 测试商品：curl http://localhost:8080/api/products
+echo   4. 测试商品：curl http://localhost:8080/api/product
 echo.
 pause

@@ -194,7 +194,7 @@
 
 == 用户表
 
-#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)1-#h(1.0em)用户表(#text(font: "Times New Roman")[users])结构]]
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)1-#h(1.0em)用户表(#text(font: "Times New Roman")[user])结构]]
 
 #v(0.5em)
 
@@ -224,7 +224,7 @@
 
 == 商品表
 
-#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)2-#h(1.0em)商品表(#text(font: "Times New Roman")[products])结构]]
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)2-#h(1.0em)商品表(#text(font: "Times New Roman")[product])结构]]
 
 #v(0.5em)
 
@@ -232,7 +232,7 @@
 
 == 购物车表
 
-#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)3-#h(1.0em)购物车表(#text(font: "Times New Roman")[cart_items])结构]]
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)3-#h(1.0em)购物车表(#text(font: "Times New Roman")[cart_item])结构]]
 
 #v(0.5em)
 
@@ -240,7 +240,7 @@
 
 == 订单表
 
-#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)4-#h(1.0em)订单表(#text(font: "Times New Roman")[orders])结构]]
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)4-#h(1.0em)订单表(#text(font: "Times New Roman")[order])结构]]
 
 #v(0.5em)
 
@@ -248,7 +248,7 @@
 
 == 订单商品表
 
-#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)5-#h(1.0em)订单商品表(#text(font: "Times New Roman")[order_items])结构]]
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)5-#h(1.0em)订单商品表(#text(font: "Times New Roman")[order_item])结构]]
 
 #v(0.5em)
 
@@ -288,15 +288,15 @@
 
 #h(2.0em)当前版本已实现的表关系如下：\
 
-#h(2.0em)#text(font: "SimHei")[用户与积分历史]：#text(font: "Times New Roman")[users.id] - #text(font: "Times New Roman")[points_history.user_id] (一对多)\
+#h(2.0em)#text(font: "SimHei")[用户与积分历史]：#text(font: "Times New Roman")[user.id] - #text(font: "Times New Roman")[points_history.user_id] (一对多)\
 
 #h(2.0em)规划中的表关系：\
 
-#h(2.0em)#text(font: "SimHei")[用户与购物车]：#text(font: "Times New Roman")[users.id] - #text(font: "Times New Roman")[cart_items.user_id] (一对多)  #text(font: "SimHei")[（规划中）]\
-#h(2.0em)#text(font: "SimHei")[用户与订单]：#text(font: "Times New Roman")[users.id] - #text(font: "Times New Roman")[orders.user_id] (一对多)  #text(font: "SimHei")[（规划中）]\
-#h(2.0em)#text(font: "SimHei")[购物车与商品]：#text(font: "Times New Roman")[products.id] - #text(font: "Times New Roman")[cart_items.product_id] (一对多)  #text(font: "SimHei")[（规划中）]\
-#h(2.0em)#text(font: "SimHei")[订单与订单商品]：#text(font: "Times New Roman")[orders.id] - #text(font: "Times New Roman")[order_items.order_id] (一对多)  #text(font: "SimHei")[（规划中）]\
-#h(2.0em)#text(font: "SimHei")[订单商品与商品]：#text(font: "Times New Roman")[products.id] - #text(font: "Times New Roman")[order_items.product_id] (一对多)  #text(font: "SimHei")[（规划中）]\
+#h(2.0em)#text(font: "SimHei")[用户与购物车]：#text(font: "Times New Roman")[user.id] - #text(font: "Times New Roman")[cart_item.user_id] (一对多)  #text(font: "SimHei")[（规划中）]\
+#h(2.0em)#text(font: "SimHei")[用户与订单]：#text(font: "Times New Roman")[user.id] - #text(font: "Times New Roman")[order.user_id] (一对多)  #text(font: "SimHei")[（规划中）]\
+#h(2.0em)#text(font: "SimHei")[购物车与商品]：#text(font: "Times New Roman")[product.id] - #text(font: "Times New Roman")[cart_item.product_id] (一对多)  #text(font: "SimHei")[（规划中）]\
+#h(2.0em)#text(font: "SimHei")[订单与订单商品]：#text(font: "Times New Roman")[order.id] - #text(font: "Times New Roman")[order_item.order_id] (一对多)  #text(font: "SimHei")[（规划中）]\
+#h(2.0em)#text(font: "SimHei")[订单商品与商品]：#text(font: "Times New Roman")[product.id] - #text(font: "Times New Roman")[order_item.product_id] (一对多)  #text(font: "SimHei")[（规划中）]\
 
 == ER图说明
 

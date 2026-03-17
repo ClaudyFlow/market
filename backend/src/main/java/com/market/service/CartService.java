@@ -88,12 +88,12 @@ public class CartService {
     }
     
     public BigDecimal getCartTotal(User user) {
-        List<CartItem> items = getCartItems(user);
-        return items.stream()
+        List<CartItem> item = getCartItems(user);
+        return item.stream()
             .map(CartItem::getSubtotal)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
+
     public int getCartItemCount(User user) {
         return getCartItems(user).size();
     }

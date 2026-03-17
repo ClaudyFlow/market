@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 商品收藏实体类
  */
 @Entity
-@Table(name = "favorites")
+@Table(name = "favorite")
 public class Favorite {
 
     @Id

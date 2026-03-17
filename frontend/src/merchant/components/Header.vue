@@ -19,11 +19,11 @@
             <el-icon><DataAnalysis /></el-icon>
             <span>首页看板</span>
           </router-link>
-          <router-link to="/merchant/products" class="nav-item">
+          <router-link to="/merchant/product" class="nav-item">
             <el-icon><Goods /></el-icon>
             <span>商品管理</span>
           </router-link>
-          <router-link to="/merchant/orders" class="nav-item">
+          <router-link to="/merchant/order" class="nav-item">
             <el-icon><ShoppingCart /></el-icon>
             <span>订单管理</span>
           </router-link>

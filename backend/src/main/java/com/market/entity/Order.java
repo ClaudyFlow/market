@@ -10,7 +10,7 @@ import java.util.List;
  * 订单实体类
  */
 @Entity
-@Table(name = "orders")
+@Table(name = "\"order\"")
 public class Order {
     
     @Id
@@ -25,7 +25,7 @@ public class Order {
     private User user;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrderItem> item = new ArrayList<>();
     
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
@@ -44,14 +44,14 @@ public class Order {
     
     public Order() {}
     
-    public void addItem(OrderItem item) {
-        items.add(item);
-        item.setOrder(this);
+    public void addItem(OrderItem newItem) {
+        item.add(newItem);
+        newItem.setOrder(this);
     }
-    
-    public void removeItem(OrderItem item) {
-        items.remove(item);
-        item.setOrder(null);
+
+    public void removeItem(OrderItem itemToRemove) {
+        item.remove(itemToRemove);
+        itemToRemove.setOrder(null);
     }
     
     @PrePersist
@@ -75,8 +75,8 @@ public class Order {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
     
-    public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public List<OrderItem> getItem() { return item; }
+    public void setItem(List<OrderItem> item) { this.item = item; }
     
     public BigDecimal getTotalAmount() { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }

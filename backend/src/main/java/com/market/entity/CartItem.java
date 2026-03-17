@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  * 购物车实体类
  */
 @Entity
-@Table(name = "cart_items")
+@Table(name = "cart_item")
 public class CartItem {
     
     @Id

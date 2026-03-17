@@ -32,23 +32,23 @@ public class FavoriteController {
      */
     @GetMapping
     public ResponseEntity<List<FavoriteResponse>> getFavorites(@AuthenticationPrincipal User user) {
-        List<Favorite> favorites = favoriteService.getFavorites(user.getId());
-        
-        List<FavoriteResponse> response = favorites.stream()
-            .map(favorite -> {
-                Product product = favorite.getProduct();
+        List<Favorite> favoriteList = favoriteService.getFavorites(user.getId());
+
+        List<FavoriteResponse> response = favoriteList.stream()
+            .map(fav -> {
+                Product product = fav.getProduct();
                 return FavoriteResponse.builder()
-                    .id(favorite.getId())
-                    .userId(favorite.getUserId())
-                    .productId(favorite.getProductId())
+                    .id(fav.getId())
+                    .userId(fav.getUserId())
+                    .productId(fav.getProductId())
                     .productName(product.getName())
                     .productImage(product.getImageUrl())
                     .productPrice(product.getPrice().toString())
-                    .createdAt(favorite.getCreatedAt())
+                    .createdAt(fav.getCreatedAt())
                     .build();
             })
             .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok(response);
     }
 

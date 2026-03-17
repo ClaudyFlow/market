@@ -14,38 +14,38 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '平台概览' }
   },
   {
-    path: '/users',
-    name: 'Users',
+    path: '/user',
+    name: 'User',
     component: () => import('@admin/views/user/UserList.vue'),
     meta: { title: '用户管理' }
   },
   {
-    path: '/merchants',
-    name: 'Merchants',
+    path: '/merchant',
+    name: 'Merchant',
     component: () => import('@admin/views/merchant/MerchantList.vue'),
     meta: { title: '商家管理' }
   },
   {
-    path: '/products',
-    name: 'Products',
+    path: '/product',
+    name: 'Product',
     component: () => import('@admin/views/product/ProductAudit.vue'),
     meta: { title: '商品审核' }
   },
   {
-    path: '/orders',
-    name: 'Orders',
+    path: '/order',
+    name: 'Order',
     component: () => import('@admin/views/order/OrderMonitor.vue'),
     meta: { title: '订单监控' }
   },
   {
-    path: '/reviews',
-    name: 'Reviews',
+    path: '/review',
+    name: 'Review',
     component: () => import('@admin/views/content/ReviewAudit.vue'),
     meta: { title: '评价审核' }
   },
   {
-    path: '/statistics',
-    name: 'Statistics',
+    path: '/statistic',
+    name: 'Statistic',
     component: () => import('@admin/views/Dashboard.vue'),
     meta: { title: '数据统计' }
   },
@@ -56,8 +56,8 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '消息中心' }
   },
   {
-    path: '/settings',
-    name: 'Settings',
+    path: '/setting',
+    name: 'Setting',
     component: () => import('@admin/views/system/Settings.vue'),
     meta: { title: '平台设置' }
   }

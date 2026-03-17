@@ -13,7 +13,7 @@ import java.util.Date;
  * 用户实体类
  */
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
     @Id

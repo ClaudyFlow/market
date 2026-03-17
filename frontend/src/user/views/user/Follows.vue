@@ -7,10 +7,10 @@
       </h1>
 
       <!-- 关注列表 -->
-      <div v-loading="loading" class="follows-content">
-        <div v-if="follows.length > 0" class="follows-grid">
+      <div v-loading="loading" class="follow-content">
+        <div v-if="follow.length > 0" class="follow-grid">
           <div
-            v-for="item in follows"
+            v-for="item in follow"
             :key="item.id"
             class="follow-card"
           >
@@ -66,7 +66,7 @@ import { getFollows, removeFollow as removeFollowApi } from '@user/api/follow'
 const router = useRouter()
 
 const loading = ref(false)
-const follows = ref([])
+const follow = ref([])
 
 // 格式化时间
 const 格式化时间 = (dateString) => {
@@ -100,7 +100,7 @@ const loadFollows = async () => {
   loading.value = true
   try {
     const res = await getFollows()
-    follows.value = res.data || []
+    follow.value = res.data || []
   } catch (error) {
     console.error('加载关注列表失败:', error)
     ElMessage.error('加载关注列表失败')
@@ -136,7 +136,7 @@ const viewShop = (shopId) => {
 
 // 去逛逛
 const goToProducts = () => {
-  router.push('/items')
+  router.push('/item')
 }
 
 onMounted(() => {
@@ -145,7 +145,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.follows-page {
+.follow-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   padding: 40px 20px;
@@ -165,14 +165,14 @@ onMounted(() => {
   gap: 10px;
 }
 
-.follows-content {
+.follow-content {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   padding: 30px;
   min-height: 400px;
 }
 
-.follows-grid {
+.follow-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;

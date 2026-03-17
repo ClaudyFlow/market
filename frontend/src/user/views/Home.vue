@@ -21,7 +21,7 @@
 
       <!-- 快捷操作 -->
       <nav class="quick-actions-bar" aria-label="快捷操作">
-        <button class="action-item" @click="router.push('/items')" aria-label="浏览商品">
+        <button class="action-item" @click="router.push('/item')" aria-label="浏览商品">
           <el-icon><Box /></el-icon>
           <span>商品</span>
         </button>
@@ -220,7 +220,7 @@ const handleCheckIn = async () => {
 const countdown: Ref<{ hours: string; minutes: string; seconds: string }> = ref({ hours: "04", minutes: "30", seconds: "00" })
 
 // 限时特惠商品 - 15 个（使用 soldCount 和 remainCount 格式）
-const flashItems = ref([
+const flashItem = ref([
   {
     id: 1,
     name: "无线蓝牙耳机",
@@ -404,7 +404,7 @@ const flashItems = ref([
 ]);
 
 // 推荐商品 - 15 个
-const recommendedItems = ref([
+const recommendedItem = ref([
   {
     id: 101,
     name: "iPhone 15 Pro",

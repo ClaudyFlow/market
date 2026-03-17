@@ -31,9 +31,9 @@ public class FollowController {
      */
     @GetMapping
     public ResponseEntity<List<FollowResponse>> getFollows(@AuthenticationPrincipal User user) {
-        List<Follow> follows = followService.getFavorites(user.getId());
+        List<Follow> followList = followService.getFavorites(user.getId());
 
-        List<FollowResponse> response = follows.stream()
+        List<FollowResponse> response = followList.stream()
             .map(follow -> FollowResponse.builder()
                 .id(follow.getId())
                 .userId(follow.getUserId())

@@ -31,8 +31,8 @@ public class ReviewController {
      */
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewResponse>> getProductReviews(@PathVariable Long productId) {
-        List<Review> reviews = reviewService.getProductReviews(productId);
-        List<ReviewResponse> response = reviews.stream()
+        List<Review> review = reviewService.getProductReviews(productId);
+        List<ReviewResponse> response = review.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
         return ResponseEntity.ok(response);
@@ -43,8 +43,8 @@ public class ReviewController {
      */
     @GetMapping("/user")
     public ResponseEntity<List<ReviewResponse>> getUserReviews(@AuthenticationPrincipal User user) {
-        List<Review> reviews = reviewService.getUserReviews(user.getId());
-        List<ReviewResponse> response = reviews.stream()
+        List<Review> review = reviewService.getUserReviews(user.getId());
+        List<ReviewResponse> response = review.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
         return ResponseEntity.ok(response);

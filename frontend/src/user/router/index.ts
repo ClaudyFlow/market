@@ -8,8 +8,8 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '首页' }
   },
   {
-    path: '/items',
-    name: 'Items',
+    path: '/item',
+    name: 'Item',
     component: () => import('@user/views/ProductList.vue'),
     meta: { title: '全部商品' }
   },
@@ -74,8 +74,8 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '用户中心' },
     children: [
       {
-        path: 'orders',
-        name: 'UserOrders',
+        path: 'order',
+        name: 'UserOrder',
         component: () => import('@user/views/user/Orders.vue'),
         meta: { title: '我的订单' }
       },
@@ -92,14 +92,14 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '我的积分' }
       },
       {
-        path: 'favorites',
-        name: 'UserFavorites',
+        path: 'favorite',
+        name: 'UserFavorite',
         component: () => import('@user/views/user/Favorites.vue'),
         meta: { title: '我的收藏' }
       },
       {
-        path: 'follows',
-        name: 'UserFollows',
+        path: 'follow',
+        name: 'UserFollow',
         component: () => import('@user/views/user/Follows.vue'),
         meta: { title: '我的关注' }
       }

@@ -42,7 +42,7 @@
             <el-icon><HomeFilled /></el-icon>
             <span>首页</span>
           </router-link>
-          <router-link to="/items" class="nav-item" active-class="active">
+          <router-link to="/item" class="nav-item" active-class="active">
             <el-icon><Box /></el-icon>
             <span>全部商品</span>
           </router-link>
@@ -144,7 +144,7 @@ const 用户积分 = computed(() => userStore.userCredit)
 
 const handleSearch = () => {
   if (searchKeyword.value.trim()) {
-    router.push({ path: '/items', query: { keyword: searchKeyword.value } })
+    router.push({ path: '/item', query: { keyword: searchKeyword.value } })
   }
 }
 

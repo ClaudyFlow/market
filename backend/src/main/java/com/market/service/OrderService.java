@@ -102,13 +102,13 @@ public class OrderService {
         }
         
         order.setStatus("CANCELLED");
-        
-        for (OrderItem item : order.getItems()) {
+
+        for (OrderItem item : order.getItem()) {
             Product product = item.getProduct();
             product.setStock(product.getStock() + item.getQuantity());
             productRepository.save(product);
         }
-        
+
         return orderRepository.save(order);
     }
     

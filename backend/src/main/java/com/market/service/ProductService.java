@@ -72,7 +72,7 @@ public class ProductService {
     
     public void seedSampleData() {
         if (productRepository.count() == 0) {
-            String[][] products = {
+            String[][] product = {
                 {"无线蓝牙耳机", "高品质音质，长续航", "299", "100", "电子产品"},
                 {"纯棉 T 恤", "舒适透气，多色可选", "99", "200", "服装"},
                 {"智能手表", "多功能运动监测", "599", "50", "电子产品"},
@@ -84,17 +84,17 @@ public class ProductService {
                 {"牛仔裤", "经典款式，修身版型", "199", "180", "服装"},
                 {"无线鼠标", "静音设计，长续航", "129", "250", "电子产品"}
             };
-            
-            for (String[] p : products) {
-                Product product = new Product();
-                product.setName(p[0]);
-                product.setDescription(p[1]);
-                product.setPrice(new BigDecimal(p[2]));
-                product.setStock(Integer.parseInt(p[3]));
-                product.setCategory(p[4]);
-                product.setImageUrl("/images/product.jpg");
-                product.setAvailable(true);
-                productRepository.save(product);
+
+            for (String[] p : product) {
+                Product productItem = new Product();
+                productItem.setName(p[0]);
+                productItem.setDescription(p[1]);
+                productItem.setPrice(new BigDecimal(p[2]));
+                productItem.setStock(Integer.parseInt(p[3]));
+                productItem.setCategory(p[4]);
+                productItem.setImageUrl("/images/product.jpg");
+                productItem.setAvailable(true);
+                productRepository.save(productItem);
             }
         }
     }

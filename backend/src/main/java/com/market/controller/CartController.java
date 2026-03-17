@@ -26,8 +26,8 @@ public class CartController {
     
     @GetMapping
     public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal User user) {
-        List<CartItem> items = cartService.getCartItems(user);
-        return ResponseEntity.ok(items);
+        List<CartItem> item = cartService.getCartItems(user);
+        return ResponseEntity.ok(item);
     }
     
     @PostMapping("/add")
@@ -75,13 +75,12 @@ public class CartController {
     
     @GetMapping("/total")
     public ResponseEntity<Map<String, Object>> getCartTotal(@AuthenticationPrincipal User user) {
-        List<CartItem> items = cartService.getCartItems(user);
+        List<CartItem> item = cartService.getCartItems(user);
         BigDecimal total = cartService.getCartTotal(user);
-        
+
         Map<String, Object> response = new HashMap<>();
-        response.put("itemCount", items.size());
-        response.put("totalAmount", total);
-        
+        response.put("itemCount", item.size());
+
         return ResponseEntity.ok(response);
     }
 }

@@ -24,17 +24,17 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String keyword) {
-        
-        List<Product> products;
+
+        List<Product> product;
         if (keyword != null && !keyword.isEmpty()) {
-            products = productService.searchProducts(keyword);
+            product = productService.searchProducts(keyword);
         } else if (category != null && !category.isEmpty()) {
-            products = productService.getProductsByCategory(category);
+            product = productService.getProductsByCategory(category);
         } else {
-            products = productService.getAllProducts();
+            product = productService.getAllProducts();
         }
-        
-        return ResponseEntity.ok(products);
+
+        return ResponseEntity.ok(product);
     }
     
     @GetMapping("/{id}")

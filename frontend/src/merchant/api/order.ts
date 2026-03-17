@@ -44,7 +44,7 @@ interface ShipOrderData {
 // 获取订单列表
 export function getOrderList(params?: OrderListParams) {
   return request<ApiResponse<Order[]>>({
-    url: '/merchant/orders',
+    url: '/merchant/order',
     method: 'get',
     params
   })
@@ -53,7 +53,7 @@ export function getOrderList(params?: OrderListParams) {
 // 获取订单详情
 export function getOrderDetail(id: number) {
   return request<ApiResponse<Order>>({
-    url: `/merchant/orders/${id}`,
+    url: `/merchant/order/${id}`,
     method: 'get'
   })
 }
@@ -61,7 +61,7 @@ export function getOrderDetail(id: number) {
 // 发货
 export function shipOrder(id: number, data: ShipOrderData) {
   return request({
-    url: `/merchant/orders/${id}/ship`,
+    url: `/merchant/order/${id}/ship`,
     method: 'post',
     data
   })

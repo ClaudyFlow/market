@@ -208,7 +208,7 @@ const stats = ref({
   pendingMessages: 12
 });
 
-const topProducts = ref([
+const topProduct = ref([
   { rank: 1, name: '无线蓝牙耳机', category: '手机数码', sales: 1024, revenue: '¥20.4 万' },
   { rank: 2, name: '智能手环', category: '手机数码', sales: 896, revenue: '¥12.9 万' },
   { rank: 3, name: '机械键盘', category: '电脑办公', sales: 768, revenue: '¥25.2 万' },
