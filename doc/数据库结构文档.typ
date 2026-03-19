@@ -30,7 +30,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——数据库结构文档]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——数据库结构文档]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -73,7 +73,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——数据库结构文档]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——数据库结构文档]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -96,7 +96,7 @@
 #set par(justify: true, first-line-indent: 2em)
 #set block(spacing: 1.25em)
 
-#h(2.0em)本文档详细描述了市场平台数据库的结构设计，包括表结构、关系图、索引策略、数据完整性约束、性能优化和安全设计等内容。\
+#h(2.0em)本文档详细描述了购物商城系统数据库的结构设计，包括表结构、关系图、索引策略、数据完整性约束、性能优化和安全设计等内容。\
 
 #h(2.0em)数据库设计遵循规范化设计原则，支持完整的电商业务流程，保证数据一致性和完整性，优化查询性能，易于扩展和维护，支持高并发访问。\
 
@@ -115,7 +115,7 @@
 #set page(
   numbering: "1",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——数据库结构文档]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——数据库结构文档]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [

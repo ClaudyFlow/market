@@ -4,7 +4,7 @@
   paper: "a4",
   margin: (inside: 25mm, outside: 20mm, top: 35mm, bottom: 30mm),
   // header: [
-  //   #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端功能介绍]]
+  //   #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
   //   #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   // ],
   // footer: [
@@ -20,7 +20,7 @@
 
 #v(85mm)
 
-#align(center)[#text(26pt, font: "SimHei")[市场平台\
+#align(center)[#text(26pt, font: "SimHei")[购物商城系统\
   前端功能介绍]]
 
 // 第1页结束
@@ -40,7 +40,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -83,7 +83,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -107,15 +107,15 @@
 #set text(font: "SimSun", size: 10.5pt)
 #set par(leading: 1.25em)
 
-#h(2.0em)本前端功能介绍旨在为开发人员和用户提供详细的市场平台前端应用功能说明。\
+#h(2.0em)本前端功能介绍旨在为开发人员和用户提供详细的购物商城系统前端应用功能说明。\
 #h(2.0em)文档涵盖了技术栈、功能模块、组件架构、数据管理、用户体验特性等多个方面的内容。\
-#h(2.0em)市场平台是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用，采用组件化架构，支持完整的电商购物流程。\
+#h(2.0em)购物商城系统是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用，采用组件化架构，支持完整的电商购物流程。\
 #h(2.0em)通过本指南，读者将能够了解前端应用的完整设计理念和实现细节，掌握必要的技术知识，并能够独立进行前端开发和维护工作。\
 #h(2.0em)我们希望本指南能够帮助用户快速理解前端应用的功能特性和技术架构。\
 #h(2.0em)本指南适用于具备一定前端开发基础的人员使用，读者应熟悉HTML、CSS、JavaScript等基础知识。\
 #h(2.0em)在开始使用前，请仔细阅读本文档，确保理解每个功能模块的设计思想和使用方法。\
 #h(2.0em)如遇到本文档未覆盖的问题或有任何疑问，请及时联系技术支持团队。\
-#h(2.0em)我们将持续更新和完善本指南，以帮助用户更好地使用市场平台前端应用。\
+#h(2.0em)我们将持续更新和完善本指南，以帮助用户更好地使用购物商城系统前端应用。\
 
 // 第4页结束
 #pagebreak()
@@ -132,7 +132,7 @@
 #set page(
   numbering: "1",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -171,7 +171,7 @@
 
 = 项目概述
 
-#h(2.0em)市场平台是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用。应用采用组件化架构，支持完整的电商购物流程，包括商品浏览、购物车管理、订单查看和用户系统。\
+#h(2.0em)购物商城系统是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用。应用采用组件化架构，支持完整的电商购物流程，包括商品浏览、购物车管理、订单查看和用户系统。\
 #h(2.0em)前端应用使用纯JavaScript开发，无需构建工具，直接在浏览器中运行，简化了开发和部署流程。\
 #h(2.0em)本前端功能介绍将详细介绍系统的各项功能特性，帮助读者全面了解前端应用的设计和实现。\
 

@@ -8,7 +8,7 @@
 
 #v(85mm)
 
-#align(center)[#text(26pt, font: "SimHei")[市场平台\
+#align(center)[#text(26pt, font: "SimHei")[购物商城系统\
   前端接口文档]]
 
 // 第1页结束
@@ -28,7 +28,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端接口文档]]\
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端接口文档]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -71,7 +71,7 @@
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端接口文档]]\
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端接口文档]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -95,15 +95,15 @@
 #set text(font: "SimSun", size: 10.5pt)
 #set par(leading: 1.25em)
 
-#h(2.0em)本前端接口文档旨在为开发人员提供详细的市场平台前端应用接口说明。\
+#h(2.0em)本前端接口文档旨在为开发人员提供详细的购物商城系统前端应用接口说明。\
 #h(2.0em)文档涵盖了组件接口规范、数据接口规范、本地存储接口以及部署配置相关接口。\
-#h(2.0em)市场平台是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用，采用组件化架构，使用Nginx作为Web服务器，支持完整的电商购物流程。\
+#h(2.0em)购物商城系统是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用，采用组件化架构，使用Nginx作为Web服务器，支持完整的电商购物流程。\
 #h(2.0em)通过本接口文档，开发人员将能够全面了解前端应用的组件设计、数据流转、状态管理和部署配置，便于进行功能扩展和维护优化。\
 #h(2.0em)我们希望本接口文档能够帮助开发人员快速理解前端应用的架构设计和接口规范，提高开发效率和代码质量。\
 #h(2.0em)本接口文档适用于具备一定前端开发基础的人员使用，读者应熟悉Vue#h(0.25em)3组件化开发、#h(0.25em)JavaScript响应式编程、#h(0.25em)Nginx配置等基础知识。\
 #h(2.0em)在开始使用前，请仔细阅读本文档，确保理解每个接口的定义和使用方法。\
 #h(2.0em)如遇到本文档未覆盖的问题或有任何疑问，请及时联系技术支持团队。\
-#h(2.0em)我们将持续更新和完善本接口文档，以帮助用户更好地使用市场平台前端应用。\
+#h(2.0em)我们将持续更新和完善本接口文档，以帮助用户更好地使用购物商城系统前端应用。\
 
 // 第4页结束
 #pagebreak()
@@ -120,7 +120,7 @@
 #set page(
   numbering: "1",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[市场平台——前端接口文档]]\
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端接口文档]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
@@ -172,15 +172,15 @@
 
 = 概述
 
-#h(2.0em)市场平台前端接口文档详细描述了前端应用的组件接口、数据结构和事件系统。\
-#h(2.0em)市场平台采用纯前端开发模式，无需构建工具，直接在浏览器中运行，使用Nginx作为Web服务器提供静态文件服务。\
+#h(2.0em)购物商城系统前端接口文档详细描述了前端应用的组件接口、数据结构和事件系统。\
+#h(2.0em)购物商城系统采用纯前端开发模式，无需构建工具，直接在浏览器中运行，使用Nginx作为Web服务器提供静态文件服务。\
 #h(2.0em)前端应用包含五个核心组件：Navbar（导航栏）、#h(0.25em)ProductCard（商品卡片）、#h(0.25em)CartItem（购物车商品）、#h(0.25em)OrderCard（订单卡片）、#h(0.25em)Modal（模态框）。\
 #h(2.0em)应用使用localStorage进行数据持久化，包括购物车数据和用户登录状态。\
 #h(2.0em)本文档面向开发人员，提供了完整的接口规范说明，包括组件Props和Events定义、数据结构规范、本地存储接口以及部署配置说明。\
 
 == 系统架构
 
-#h(2.0em)市场平台前端采用以下技术架构：\
+#h(2.0em)购物商城系统前端采用以下技术架构：\
 #h(2.0em)——前端框架：Vue#h(0.25em)3#h(0.25em)CDN版本，使用组合式API进行组件开发；\
 #h(2.0em)——Web服务器：Nginx#h(0.25em)1.18及以上，提供静态文件服务和反向代理；\
 #h(2.0em)——图标库：Font#h(0.25em)Awesome#h(0.25em)6，提供丰富的矢量图标；\
@@ -190,7 +190,7 @@
 
 == 端口配置
 
-#h(2.0em)市场平台前端使用以下端口配置：\
+#h(2.0em)购物商城系统前端使用以下端口配置：\
 #h(2.0em)——80端口：Http访问，默认端口；\
 #h(2.0em)——443端口：Https访问（可选，建议生产环境启用）；\
 #h(2.0em)——访问地址：http://localhost或https://localhost。\
@@ -930,7 +930,7 @@ watch([isLoggedIn, user], () => {
 
 == 服务器配置
 
-市场平台前端使用 Nginx 作为 Web 服务器，提供静态文件服务。\
+购物商城系统前端使用 Nginx 作为 Web 服务器，提供静态文件服务。\
 Nginx 配置文件位于 frontend/nginx/conf/nginx.conf。
 
 === Nginx 配置
@@ -980,7 +980,7 @@ server {
 
 == 访问地址
 
-#h(2.0em)市场平台前端的访问地址配置如下：\
+#h(2.0em)购物商城系统前端的访问地址配置如下：\
 #h(2.0em)——本地开发：http://localhost；\
 #h(2.0em)——生产环境：https://market.com（示例）；\
 #h(2.0em)——测试环境：#h(0.25em)https://test.market.com（示例）。\
