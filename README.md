@@ -13,8 +13,8 @@
 | 层级 | 技术 |
 |------|------|
 | **前端** | Vue 3 (组合式 API) + Element Plus + Pinia + Vue Router + Axios |
-| **后端** | Java 21 + Spring Boot 3.4.0 + Spring Security + Spring Data JPA |
-| **数据库** | SQLite 3.45+ |
+| **后端** | Java 21 + Spring Boot 3.4.0 + Spring Security + Spring Data JPA + Redis |
+| **数据库** | PostgreSQL + Redis |
 | **认证** | JWT Token |
 | **构建工具** | Vite (前端) / Maven (后端) |
 | **部署** | Nginx + Docker |
@@ -109,7 +109,8 @@ market/
 
 **开发环境：**
 - JDK 21+
-- SQLite 3.45+
+- PostgreSQL 14+ / SQLite 3.45+
+- Redis 6+
 - Maven 3.6+
 - Node.js 18+
 - Git 2.20.0+
@@ -225,6 +226,49 @@ spring.mail.host=smtp.example.com
 spring.mail.port=587
 spring.mail.username=your-email
 spring.mail.password=your-password
+
+# Redis 配置
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.data.redis.password=
+spring.data.redis.database=0
+```
+
+### Redis 安装
+
+**Windows:**
+```bash
+# 使用 winget 安装
+winget install Microsoft.OpenRedis
+
+# 或使用 Docker
+docker run -d -p 6379:6379 --name redis redis:latest
+```
+
+**Linux:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install redis-server
+
+# CentOS/RHEL
+sudo yum install redis
+```
+
+**macOS:**
+```bash
+brew install redis
+brew services start redis
+```
+
+启动 Redis 服务：
+```bash
+redis-server
+```
+
+验证 Redis 连接：
+```bash
+redis-cli ping
+# 返回 PONG 表示成功
 ```
 
 ## 📝 版本历史

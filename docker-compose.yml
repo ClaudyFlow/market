@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Redis 服务
+  redis:
+    image: redis:latest
+    container_name: market-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    command: redis-server --appendonly yes
+
+  # PostgreSQL 服务
+  postgres:
+    image: postgres:15
+    container_name: market-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: market
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+volumes: {}
