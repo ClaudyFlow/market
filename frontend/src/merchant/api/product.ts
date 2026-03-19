@@ -1,4 +1,4 @@
-import request from '@merchant/api/request'
+﻿import request from '@merchant/api/request'
 
 export interface Product {
   id: number

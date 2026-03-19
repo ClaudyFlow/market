@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <span class="loading-dot" :class="{ loading }" aria-label="加载中">
     <span class="dot"></span>
   </span>

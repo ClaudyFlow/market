@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -32,10 +32,58 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '家居家装' }
   },
   {
+    path: '/beauty',
+    name: 'Beauty',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '美妆护肤' }
+  },
+  {
+    path: '/food',
+    name: 'Food',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '食品生鲜' }
+  },
+  {
+    path: '/books',
+    name: 'Books',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '图书文具' }
+  },
+  {
+    path: '/baby',
+    name: 'Baby',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '母婴用品' }
+  },
+  {
+    path: '/sports',
+    name: 'Sports',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '运动户外' }
+  },
+  {
+    path: '/jewelry',
+    name: 'Jewelry',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '珠宝首饰' }
+  },
+  {
     path: '/sale',
     name: 'Sale',
     component: () => import('@user/views/ProductList.vue'),
     meta: { title: '限时特惠' }
+  },
+  {
+    path: '/new',
+    name: 'New',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '新品上市' }
+  },
+  {
+    path: '/hot',
+    name: 'Hot',
+    component: () => import('@user/views/ProductList.vue'),
+    meta: { title: '热销爆款' }
   },
   {
     path: '/item/:id',

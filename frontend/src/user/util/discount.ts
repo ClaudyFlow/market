@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 折扣计算工具
  */
 
@@ -16,7 +16,7 @@ export interface Product {
  * 计算折扣率
  * @param price - 当前售价
  * @param originalPrice - 原价
- * @returns 折扣率（如 "8.5" 表示 8.5 折）,不打折返回 null
+ * @returns 折扣率(如 "8.5" 表示 8.5 折),不打折返回 null
  */
 export function 计算折扣 (price: number | undefined | null, originalPrice: number | undefined | null): string | null {
   if (!price || !originalPrice || price <= 0 || originalPrice <= 0) {
@@ -51,7 +51,7 @@ export function 应用批量折扣 (products: Product[], discountRate: number): 
 }
 
 /**
- * 取消促销，恢复原价
+ * 取消促销,恢复原价
  */
 export function 取消促销 (products: Product[]): Product[] {
   return products.map(product => ({

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <article class="product-card" @click="handleClick">
     <div class="sale-image">
       <img :src="product.image" :alt="product.name" />

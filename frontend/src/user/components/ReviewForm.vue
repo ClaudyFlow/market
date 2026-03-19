@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="review-form-overlay" @click="handleOverlayClick">
     <div class="review-form-modal" @click.stop>
       <div class="review-form-header">
@@ -107,7 +107,7 @@ const handleSubmit = async () => {
     emit('success')
     emit('close')
   } catch (error: any) {
-    alert(error.response?.data || '提交失败，请重试')
+    alert(error.response?.data || '提交失败,请重试')
   } finally {
     isSubmitting.value = false
   }

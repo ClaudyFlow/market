@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <el-button
     :type="isFavorited ? 'warning' : 'default'"
     :size="size"

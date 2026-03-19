@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="review-panel">
     <!-- 评分汇总 -->
     <div class="review-summary" v-if="ratingInfo">

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="page-container">
     <h1>优惠券管理</h1>
   </div>

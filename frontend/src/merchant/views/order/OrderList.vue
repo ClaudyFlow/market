@@ -1,15 +1,551 @@
-<template>
+﻿<template>
   <div class="page-container">
-    <h1>订单列表</h1>
+    <!-- 页面标题栏 -->
+    <header class="page-header">
+      <div class="header-left">
+        <h1 class="page-title">
+          <el-icon><List /></el-icon>
+          订单管理
+        </h1>
+      </div>
+      <div class="header-right">
+        <el-button type="success" @click="导出订单">
+          <el-icon><Download /></el-icon>
+          导出订单
+        </el-button>
+      </div>
+    </header>
+
+    <!-- 统计卡片 -->
+    <section class="stats-cards">
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <div class="stat-card primary" @click="筛选订单状态 ('')">
+            <div class="stat-icon"><el-icon><List /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ 订单统计.全部 }}</div>
+              <div class="stat-label">全部订单</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card warning" @click="筛选订单状态 ('pending')">
+            <div class="stat-icon"><el-icon><Clock /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ 订单统计.待付款 }}</div>
+              <div class="stat-label">待付款</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card info" @click="筛选订单状态 ('paid')">
+            <div class="stat-icon"><el-icon><ShoppingCart /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ 订单统计.待发货 }}</div>
+              <div class="stat-label">待发货</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card success" @click="筛选订单状态 ('shipped')">
+            <div class="stat-icon"><el-icon><Van /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ 订单统计.已发货 }}</div>
+              <div class="stat-label">已发货</div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </section>
+
+    <!-- 搜索筛选栏 -->
+    <section class="search-bar">
+      <el-form :inline="true" :model="筛选表单">
+        <el-form-item label="订单编号">
+          <el-input v-model="筛选表单.订单编号" placeholder="请输入订单编号" clearable style="width: 180px" />
+        </el-form-item>
+        <el-form-item label="商品名称">
+          <el-input v-model="筛选表单.商品名称" placeholder="请输入商品名称" clearable style="width: 180px" />
+        </el-form-item>
+        <el-form-item label="订单状态">
+          <el-select v-model="筛选表单.状态" placeholder="请选择状态" clearable style="width: 120px">
+            <el-option label="待付款" value="pending" />
+            <el-option label="待发货" value="paid" />
+            <el-option label="已发货" value="shipped" />
+            <el-option label="已完成" value="completed" />
+            <el-option label="已取消" value="cancelled" />
+            <el-option label="退款中" value="refunding" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="下单时间">
+          <el-date-picker
+            v-model="筛选表单.日期范围"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="搜索订单">搜索</el-button>
+          <el-button @click="重置筛选">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </section>
+
+    <!-- 订单列表 -->
+    <section class="table-section">
+      <el-table :data="订单列表" class="sci-table" style="width: 100%" v-loading="加载中">
+        <el-table-column prop="orderNo" label="订单编号" width="160" />
+        <el-table-column prop="productImage" label="商品图片" width="80">
+          <template #default="{ row }">
+            <el-image
+              :src="row.productImage || 'https://via.placeholder.com/50x50/1a2a4a/00d4ff?text=商品'"
+              class="product-image"
+              fit="cover"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="productName" label="商品名称" min-width="150" />
+        <el-table-column prop="customerName" label="客户" width="100" />
+        <el-table-column prop="amount" label="订单金额" width="100">
+          <template #default="{ row }">
+            <span class="price-text">¥{{ row.amount }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderTime" label="下单时间" width="160" />
+        <el-table-column prop="status" label="状态" width="90">
+          <template #default="{ row }">
+            <el-tag :type="获取状态类型 (row.status)" size="small">
+              {{ 获取状态文本 (row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="220" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" text size="small" @click="查看订单详情 (row)">详情</el-button>
+            <el-button
+              v-if="row.status === 'paid'"
+              type="success"
+              text
+              size="small"
+              @click="发货操作 (row)"
+            >
+              发货
+            </el-button>
+            <el-button
+              v-if="row.status === 'shipped'"
+              type="info"
+              text
+              size="small"
+              @click="查看物流 (row)"
+            >
+              物流
+            </el-button>
+            <el-button
+              v-if="row.status === 'refunding'"
+              type="warning"
+              text
+              size="small"
+              @click="处理退款 (row)"
+            >
+              处理退款
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页 -->
+      <div class="pagination-bar">
+        <el-pagination
+          v-model:current-page="分页.当前页"
+          v-model:page-size="分页.每页数量"
+          :total="分页.总数"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="加载订单列表"
+          @current-change="加载订单列表"
+        />
+      </div>
+    </section>
+
+    <!-- 发货对话框 -->
+    <el-dialog v-model="发货对话框.可见" title="发货操作" width="500px">
+      <el-form :model="发货表单" label-width="80px">
+        <el-form-item label="物流公司">
+          <el-select v-model="发货表单.物流公司" placeholder="请选择物流公司" style="width: 100%">
+            <el-option label="顺丰速运" value="sf" />
+            <el-option label="中通快递" value="zto" />
+            <el-option label="圆通速递" value="yto" />
+            <el-option label="申通快递" value="sto" />
+            <el-option label="韵达快递" value="yunda" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="物流单号">
+          <el-input v-model="发货表单.物流单号" placeholder="请输入物流单号" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="发货表单.备注" type="textarea" :rows="3" placeholder="选填备注" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="发货对话框.可见 = false">取消</el-button>
+        <el-button type="primary" @click="确认发货">确认发货</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-// 订单列表
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { List, Download, Clock, ShoppingCart, Van } from '@element-plus/icons-vue'
+
+interface 订单项 {
+  orderNo: string
+  productImage: string
+  productName: string
+  customerName: string
+  amount: number
+  orderTime: string
+  status: string
+}
+
+interface 筛选表单类型 {
+  订单编号:string
+  商品名称:string
+  状态:string
+  日期范围:[Date, Date] | null
+}
+
+interface 订单统计类型 {
+  全部:number
+  待付款:number
+  待发货:number
+  已发货:number
+  已完成:number
+}
+
+interface 分页类型 {
+  当前页:number
+  每页数量:number
+  总数:number
+}
+
+interface 发货对话框类型 {
+  可见:boolean
+  当前订单:订单项 | null
+}
+
+interface 发货表单类型 {
+  物流公司:string
+  物流单号:string
+  备注:string
+}
+
+const 加载中 = ref(false)
+const 订单列表 = ref<订单项[]>([])
+const 筛选表单 = reactive<筛选表单类型>({
+  订单编号:'',
+  商品名称:'',
+  状态:'',
+  日期范围:null
+})
+
+const 订单统计 = ref<订单统计类型>({
+  全部:1256,
+  待付款:86,
+  待发货:124,
+  已发货:358,
+  已完成:688
+})
+
+const 分页 = reactive<分页类型>({
+  当前页:1,
+  每页数量:10,
+  总数:0
+})
+
+const 发货对话框 = reactive<发货对话框类型>({
+  可见:false,
+  当前订单:null
+})
+
+const 发货表单 = reactive<发货表单类型>({
+  物流公司:'',
+  物流单号:'',
+  备注:''
+})
+
+// 模拟订单数据
+const 模拟订单数据:订单项 [] = [
+  { orderNo: 'DD202603180001', productImage: '', productName: '无线蓝牙耳机', customerName: '张先生', amount: 199, orderTime: '2026-03-18 10:30:00', status: 'paid' },
+  { orderNo: 'DD202603180002', productImage: '', productName: '智能手环', customerName: '李女士', amount: 149, orderTime: '2026-03-18 09:15:00', status: 'pending' },
+  { orderNo: 'DD202603170003', productImage: '', productName: '机械键盘', customerName: '王先生', amount: 329, orderTime: '2026-03-17 16:45:00', status: 'shipped' },
+  { orderNo: 'DD202603170004', productImage: '', productName: '空气净化器', customerName: '赵女士', amount: 999, orderTime: '2026-03-17 14:20:00', status: 'completed' },
+  { orderNo: 'DD202603170005', productImage: '', productName: '运动跑鞋', customerName: '刘先生', amount: 299, orderTime: '2026-03-17 11:00:00', status: 'refunding' },
+  { orderNo: 'DD202603160006', productImage: '', productName: '护肤套装', customerName: '陈女士', amount: 459, orderTime: '2026-03-16 20:30:00', status: 'completed' },
+  { orderNo: 'DD202603160007', productImage: '', productName: '智能手表', customerName: '杨先生', amount: 899, orderTime: '2026-03-16 15:10:00', status: 'shipped' },
+  { orderNo: 'DD202603160008', productImage: '', productName: '办公椅', customerName: '周女士', amount: 599, orderTime: '2026-03-16 10:00:00', status: 'cancelled' }
+]
+
+const 加载订单列表 = () => {
+  加载中.value = true
+  setTimeout(() => {
+    订单列表.value = 模拟订单数据
+    分页.总数 = 模拟订单数据.length
+    加载中.value = false
+  }, 500)
+}
+
+const 筛选订单状态 = (状态:string) => {
+  筛选表单.状态 = 状态
+  加载订单列表 ()
+}
+
+const 搜索订单 = () => {
+  ElMessage.success('搜索功能演示')
+  加载订单列表 ()
+}
+
+const 重置筛选 = () => {
+  筛选表单.订单编号 = ''
+  筛选表单.商品名称 = ''
+  筛选表单.状态 = ''
+  筛选表单.日期范围 = null
+}
+
+const 获取状态类型 = (状态:string) => {
+  const 映射 = {
+    pending: 'warning',
+    paid: 'info',
+    shipped: 'success',
+    completed: '',
+    cancelled: 'info',
+    refunding: 'danger'
+  }
+  return 映射 [状态] || 'info'
+}
+
+const 获取状态文本 = (状态:string) => {
+  const 映射 = {
+    pending: '待付款',
+    paid: '待发货',
+    shipped: '已发货',
+    completed: '已完成',
+    cancelled: '已取消',
+    refunding: '退款中'
+  }
+  return 映射 [状态] || 状态
+}
+
+const 查看订单详情 = (订单:订单项) => {
+  ElMessage.info(`查看订单详情:${订单.orderNo}`)
+}
+
+const 发货操作 = (订单:订单项) => {
+  发货对话框.可见 = true
+  发货对话框.当前订单 = 订单
+  发货表单.物流公司 = ''
+  发货表单.物流单号 = ''
+  发货表单.备注 = ''
+}
+
+const 确认发货 = () => {
+  if (!发货表单.物流公司 || !发货表单.物流单号) {
+    ElMessage.warning('请选择物流公司并填写物流单号')
+    return
+  }
+  ElMessage.success('发货成功')
+  发货对话框.可见 = false
+  加载订单列表 ()
+}
+
+const 查看物流 = (订单:订单项) => {
+  ElMessage.info(`查看物流:${订单.orderNo}`)
+}
+
+const 处理退款 = (订单:订单项) => {
+  ElMessage.info(`处理退款:${订单.orderNo}`)
+}
+
+const 导出订单 = () => {
+  ElMessage.success('订单导出功能演示')
+}
+
+onMounted(() => {
+  加载订单列表 ()
+})
 </script>
 
 <style scoped>
 .page-container {
   padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.page-title .el-icon {
+  color: var(--mall-primary);
+  font-size: 24px;
+}
+
+.stats-cards {
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glow-color);
+  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
+}
+
+.stat-card.primary { --glow-color: #00d4ff; }
+.stat-card.warning { --glow-color: #ffaa00; }
+.stat-card.info { --glow-color: #00d4ff; }
+.stat-card.success { --glow-color: #00ff88; }
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.stat-card.primary .stat-icon {
+  background: linear-gradient(135deg, #00d4ff, #00a8cc);
+}
+
+.stat-card.warning .stat-icon {
+  background: linear-gradient(135deg, #ffaa00, #ff8800);
+}
+
+.stat-card.info .stat-icon {
+  background: linear-gradient(135deg, #00d4ff, #0088cc);
+}
+
+.stat-card.success .stat-icon {
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.search-bar {
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.search-bar :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.search-bar :deep(.el-form-item__label) {
+  color: #aaa;
+}
+
+.table-section {
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+}
+
+.price-text {
+  color: var(--mall-primary);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.pagination-bar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sci-table :deep(.el-table__header th) {
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--mall-primary);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.sci-table :deep(.el-table__body td) {
+  background: transparent;
+  color: #aaa;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+
+.sci-table :deep(.el-table__row:hover) {
+  background: rgba(0, 212, 255, 0.05);
 }
 </style>

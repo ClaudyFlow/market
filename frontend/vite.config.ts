@@ -9,9 +9,12 @@ export default defineConfig({
       name: 'html-rewrite',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          if (req.url === '/merchant' || req.url === '/merchant/') {
+          // 商家端路由重写
+          if (req.url === '/merchant' || req.url === '/merchant/' || req.url.startsWith('/merchant/')) {
             req.url = '/merchant.html'
-          } else if (req.url === '/admin' || req.url === '/admin/') {
+          }
+          // 管理端路由重写
+          else if (req.url === '/admin' || req.url === '/admin/' || req.url.startsWith('/admin/')) {
             req.url = '/admin.html'
           }
           next()
@@ -48,7 +51,7 @@ export default defineConfig({
 
   build: {
     outDir: resolve(__dirname, 'nginx/html'),
-    emptyOutDir: true,
+    emptyOutDir: false,
     minify: 'esbuild',
     esbuildOptions: {
       drop: ['console', 'debugger'],

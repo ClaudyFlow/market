@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+﻿import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getUserInfo, getVipInfo, getUserCredit, checkIn } from '@user/api/user'
 import type { UserInfo, VipInfo, UserCredit } from '@user/types'
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', () => {
         getVipInfo(),
         getUserCredit()
       ])
-      // axios 响应已经是 .data 后的结果（见 request.ts 拦截器）
+      // axios 响应已经是 .data 后的结果(见 request.ts 拦截器)
       userInfo.value = (infoResult as any).data || null
       userVipLevel.value = (vipResult as any).data?.level || 0
       vipExpireTime.value = (vipResult as any).data?.expireTime || null
@@ -56,10 +56,10 @@ export const useUserStore = defineStore('user', () => {
       const credit = (result as any).data?.credit || 10
       userCredit.value += credit
       hasCheckedIn.value = true
-      ElMessage.success(`签到成功！获得 ${credit} 积分奖励`)
+      ElMessage.success(`签到成功!获得 ${credit} 积分奖励`)
       return true
     } catch {
-      ElMessage.error('签到失败，请稍后重试')
+      ElMessage.error('签到失败,请稍后重试')
       return false
     }
   }

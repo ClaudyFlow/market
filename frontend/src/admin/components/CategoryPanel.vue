@@ -1,35 +1,35 @@
-<template>
-  <aside class="category-panel" aria-label="平台分类">
+﻿<template>
+  <aside class="category-panel" aria-label="管理分类">
     <header class="category-header">
-      <el-icon><Menu/></el-icon>
+      <el-icon><Menu /></el-icon>
       <span>平台管理</span>
     </header>
     <el-menu
-      :default-active="activeCategory"
+      :default-active="当前路径"
       class="category-menu"
-      @select="goToCategory"
+      @select="跳转分类"
     >
-      <el-menu-item v-for="cat in categories" :key="cat.name" :index="cat.path">
-        <el-icon><component :is="cat.icon" /></el-icon>
-        <span>{{ cat.name }}</span>
+      <el-menu-item v-for="分类 in 分类列表" :key="分类.名称" :index="分类.路径">
+        <el-icon><component :is="分类.图标" /></el-icon>
+        <span>{{ 分类.名称 }}</span>
       </el-menu-item>
     </el-menu>
   </aside>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Menu } from '@element-plus/icons-vue'
-import { categories } from '@admin/data/categories'
+import { 分类列表 } from '@admin/data/categories'
 
 const router = useRouter()
 const route = useRoute()
 
-const activeCategory = computed(() => route.path)
+const 当前路径 = computed(() => route.path)
 
-const goToCategory = (path) => {
-  router.push(path)
+const 跳转分类 = (路径:string) => {
+  router.push(路径)
 }
 </script>
 

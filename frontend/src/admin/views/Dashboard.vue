@@ -1,15 +1,15 @@
-<template>
-  <!-- 第一部分：轮播图 + 平台信息 -->
+﻿<template>
+  <!-- 第一部分:轮播图 + 平台信息 -->
   <section class="mall-home">
-    <!-- 中间：轮播图 + 快捷操作 -->
+    <!-- 中间:轮播图 + 快捷操作 -->
     <div class="banner-section">
       <el-carousel height="420px" aria-label="促销轮播">
-        <el-carousel-item v-for="(banner, index) in banners" :key="index">
-          <article class="banner-item" :style="{ background: banner.gradient }">
+        <el-carousel-item v-for="(轮播,index) in 轮播图列表" :key="index">
+          <article class="banner-item" :style="{ background: 轮播.渐变 }">
             <div class="banner-info">
-              <h2 class="banner-title">{{ banner.title }}</h2>
-              <p class="banner-subtitle">{{ banner.subtitle }}</p>
-              <el-button type="primary" size="large" class="glow-btn" @click="goToBanner(banner.link)">
+              <h2 class="banner-title">{{ 轮播.标题 }}</h2>
+              <p class="banner-subtitle">{{ 轮播.副标题 }}</p>
+              <el-button type="primary" size="large" class="glow-btn" @click="跳转链接 (轮播.链接)">
                 立即查看
               </el-button>
             </div>
@@ -20,14 +20,14 @@
       <!-- 快捷操作 -->
       <nav class="quick-actions-bar" aria-label="快捷操作">
         <button
-          v-for="action in quickActions"
-          :key="action.name"
+          v-for="操作 in 快捷操作列表"
+          :key="操作.名称"
           class="action-item"
-          @click="handleQuickAction(action)"
-          :aria-label="action.name"
+          @click="处理快捷操作 (操作)"
+          :aria-label="操作.名称"
         >
-          <el-icon><component :is="action.icon" /></el-icon>
-          <span>{{ action.name }}</span>
+          <el-icon><component :is="操作.图标" /></el-icon>
+          <span>{{ 操作.名称 }}</span>
         </button>
       </nav>
     </div>
@@ -36,25 +36,25 @@
     <div class="user-panel" aria-label="平台信息">
       <article class="user-card">
         <figure class="user-avatar">
-          <el-avatar :size="80" src="https://via.placeholder.com/80x80/00d4ff/fff?text=Admin">
-            <el-icon size="40"><Setting /></el-icon>
+          <el-avatar :size="80" :src="平台信息.头像 || `https://via.placeholder.com/80x80/00d4ff/fff?text=平台`">
+            <el-icon v-if="!平台信息.头像" size="40"><Setting /></el-icon>
           </el-avatar>
         </figure>
-        <h3 class="user-name">平台管理中心</h3>
+        <h3 class="user-name">{{ 平台信息.平台名称 }}</h3>
         <div class="user-level">
-          <span class="level-badge">官方运营</span>
+          <span class="level-badge">{{ 平台信息.运营状态 }}</span>
         </div>
         <div class="user-vip">
           <span class="vip-tag">正常运行</span>
         </div>
         <div class="user-stats">
           <span class="stats-tag">
-            <el-icon><User /></el-icon> {{ stats.userCount }} 用户
+            <el-icon><User /></el-icon> {{ 平台数据.用户总数 }} 用户
           </span>
         </div>
         <div class="user-stats">
           <span class="stats-tag">
-            <el-icon><Shop /></el-icon> {{ stats.merchantCount }} 商家
+            <el-icon><Shop /></el-icon> {{ 平台数据.商家总数 }} 商家
           </span>
         </div>
       </article>
@@ -65,7 +65,7 @@
     </div>
   </section>
 
-  <!-- 第二部分：平台数据 -->
+  <!-- 第二部分:平台数据 -->
   <section class="stats-section" aria-label="平台数据">
     <div class="container">
       <header class="section-header">
@@ -81,7 +81,7 @@
               <el-icon><User /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.userCount }}</div>
+              <div class="stats-value">{{ 平台数据.用户总数 }}</div>
               <div class="stats-label">用户总数</div>
             </div>
           </div>
@@ -92,7 +92,7 @@
               <el-icon><Shop /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.merchantCount }}</div>
+              <div class="stats-value">{{ 平台数据.商家总数 }}</div>
               <div class="stats-label">商家总数</div>
             </div>
           </div>
@@ -103,7 +103,7 @@
               <el-icon><ShoppingCart /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.todayOrders }}</div>
+              <div class="stats-value">{{ 平台数据.今日订单 }}</div>
               <div class="stats-label">今日订单</div>
             </div>
           </div>
@@ -114,7 +114,7 @@
               <el-icon><Money /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">¥{{ stats.todayRevenue }}</div>
+              <div class="stats-value">¥{{ 平台数据.今日销售额 }}</div>
               <div class="stats-label">平台销售额</div>
             </div>
           </div>
@@ -123,7 +123,7 @@
     </div>
   </section>
 
-  <!-- 第三部分：审核状态 -->
+  <!-- 第三部分:审核状态 -->
   <section class="content-section" aria-label="审核管理">
     <div class="container">
       <el-row :gutter="15">
@@ -134,12 +134,12 @@
               <span class="card-title">商品审核状态</span>
             </div>
             <div class="status-list">
-              <div v-for="status in auditStatusOptions" :key="status.value" class="status-item">
-                <span class="status-dot" :style="{ background: status.color }"></span>
-                <span class="status-label">{{ status.label }}</span>
-                <span class="status-count">{{ getRandomCount() }}个</span>
+              <div v-for="状态 in 审核状态选项" :key="状态.值" class="status-item" v-if="状态.值">
+                <span class="status-dot" :style="{ background: 状态.颜色 || '#00d4ff' }"></span>
+                <span class="status-label">{{ 状态.标签 }}</span>
+                <span class="status-count">{{ 获取随机数量 () }}个</span>
                 <div class="status-bar">
-                  <div class="status-bar-inner" :style="{ width: getRandomPercent() + '%', background: status.color }"></div>
+                  <div class="status-bar-inner" :style="{ width: 获取随机百分比 () + '%', background: 状态.颜色 || '#00d4ff' }"></div>
                 </div>
               </div>
             </div>
@@ -152,12 +152,12 @@
               <span class="card-title">商家状态分布</span>
             </div>
             <div class="status-list">
-              <div v-for="status in merchantStatusOptions" :key="status.value" class="status-item">
-                <span class="status-dot" :style="{ background: status.color }"></span>
-                <span class="status-label">{{ status.label }}</span>
-                <span class="status-count">{{ getRandomCount() }}家</span>
+              <div v-for="状态 in 商家状态选项" :key="状态.值" class="status-item" v-if="状态.值">
+                <span class="status-dot" :style="{ background: 状态.颜色 || '#00d4ff' }"></span>
+                <span class="status-label">{{ 状态.标签 }}</span>
+                <span class="status-count">{{ 获取随机数量 () }}家</span>
                 <div class="status-bar">
-                  <div class="status-bar-inner" :style="{ width: getRandomPercent() + '%', background: status.color }"></div>
+                  <div class="status-bar-inner" :style="{ width: 获取随机百分比 () + '%', background: 状态.颜色 || '#00d4ff' }"></div>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@
     </div>
   </section>
 
-  <!-- 第四部分：待处理事项 -->
+  <!-- 第四部分:待处理事项 -->
   <section class="content-section" aria-label="待处理事项">
     <div class="container">
       <div class="section-card">
@@ -175,10 +175,10 @@
           <el-icon><Bell /></el-icon>
           <span class="card-title">待处理事项</span>
         </div>
-        <el-table :data="pendingTasks" class="sci-table" style="width: 100%">
+        <el-table :data="待处理事项列表" class="sci-table" style="width: 100%">
           <el-table-column prop="type" label="类型" width="140">
             <template #default="{ row }">
-              <el-tag :type="getTaskTagType(row.type)" size="small" class="task-tag">{{ row.type }}</el-tag>
+              <el-tag :type="获取事项类型 (row.type)" size="small" class="task-tag">{{ row.type }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="count" label="待处理数量" width="120">
@@ -198,50 +198,95 @@
   </section>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { banners, auditStatusOptions, merchantStatusOptions, quickActions } from "@admin/data/categories";
-import AnnouncementPanel from "@admin/components/AnnouncementPanel.vue";
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import {
+  Setting,
+  User,
+  Shop,
+  ShoppingCart,
+  Money,
+  DataAnalysis,
+  DocumentChecked,
+  TrendCharts,
+  Bell
+} from '@element-plus/icons-vue'
+import { 轮播图列表,快捷操作列表,审核状态选项,商家状态选项 } from '@admin/data/categories'
+import AnnouncementPanel from '@admin/components/AnnouncementPanel.vue'
+import type { 快捷操作项 } from '@admin/data/categories'
 
-const router = useRouter();
+interface 平台信息类型 {
+  平台名称:string
+  运营状态:string
+  头像:string
+}
 
-const stats = ref({
-  userCount: '12,580',
-  merchantCount: '356',
-  todayOrders: '8,976',
-  todayRevenue: '125.8 万'
-});
+interface 平台数据类型 {
+  用户总数:string
+  商家总数:string
+  今日订单:string
+  今日销售额:string
+}
 
-const pendingTasks = ref([
+interface 待处理事项项 {
+  type: string
+  count: number
+  desc: string
+}
+
+const router = useRouter()
+
+const 平台信息 = ref<平台信息类型>({
+  平台名称:'购物商城平台',
+  运营状态:'官方运营',
+  头像:''
+})
+
+const 平台数据 = ref<平台数据类型>({
+  用户总数:'12,580',
+  商家总数:'356',
+  今日订单:'8,976',
+  今日销售额:'125.8 万'
+})
+
+const 待处理事项列表 = ref<待处理事项项[]>([
   { type: '商品审核', count: 23, desc: '新提交的商品待审核' },
   { type: '评价审核', count: 15, desc: '用户举报的评价待处理' },
   { type: '商家入驻', count: 8, desc: '待审核的商家入驻申请' },
   { type: '客诉处理', count: 5, desc: '待处理的客户投诉' },
   { type: '退款申请', count: 12, desc: '待处理的退款申请' }
-]);
+])
 
-const handleQuickAction = (action) => {
-  if (action.path) router.push(action.path);
-};
+const 处理快捷操作 = (操作:快捷操作项) => {
+  if (操作.路径) {
+    router.push(操作.路径)
+  }
+}
 
-const goToBanner = (link) => {
-  router.push(link);
-};
+const 跳转链接 = (链接:string) => {
+  router.push(链接)
+}
 
-const getRandomCount = () => Math.floor(Math.random() * 200) + 20;
-const getRandomPercent = () => Math.floor(Math.random() * 60) + 20;
+const 获取随机数量 = () => Math.floor(Math.random() * 200) + 20
+const 获取随机百分比 = () => Math.floor(Math.random() * 60) + 20
 
-const getTaskTagType = (type) => {
-  const map = { '商品审核': 'warning', '评价审核': 'info', '商家入驻': 'success', '客诉处理': 'danger', '退款申请': 'warning' };
-  return map[type] || 'info';
-};
+const 获取事项类型 = (类型:string) => {
+  const 映射:Record<string, string> = {
+    '商品审核': 'warning',
+    '评价审核': 'info',
+    '商家入驻': 'success',
+    '客诉处理': 'danger',
+    '退款申请': 'warning'
+  }
+  return 映射 [类型] || 'info'
+}
 </script>
 
 <style scoped>
 @import "@admin/assets/mall-style.css";
 
-/* 主容器 - 2 列布局（轮播图 + 右侧信息） */
+/* 主容器 - 2 列布局(轮播图 + 右侧信息) */
 section.mall-home {
   display: grid;
   grid-template-columns: 1fr 280px;

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="auth-page">
     <div class="auth-container">
       <div class="auth-card">
@@ -57,7 +57,7 @@
           <el-form-item prop="email">
             <el-input
               v-model="registerForm.email"
-              placeholder="邮箱（可选）"
+              placeholder="邮箱(可选)"
               prefix-icon="Message"
               size="large"
             />
@@ -115,7 +115,7 @@ const loginFormRef = ref()
 const registerFormRef = ref()
 const loading = ref(false)
 
-// 监听路由参数，如果是 /register 则自动切换到注册标签
+// 监听路由参数,如果是 /register 则自动切换到注册标签
 if (route.query.tab === 'register' || route.path === '/register') {
   activeTab.value = 'register'
 }
@@ -193,7 +193,7 @@ const handleLogin = async () => {
       }
     } catch (error: any) {
       console.error('登录错误:', error)
-      ElMessage.error(error.response?.data?.message || error.message || '登录失败，请检查网络')
+      ElMessage.error(error.response?.data?.message || error.message || '登录失败,请检查网络')
     } finally {
       loading.value = false
     }
@@ -234,7 +234,7 @@ const handleRegister = async () => {
     } catch (error: any) {
       console.error('注册错误详情:', error)
       console.error('错误响应:', error.response)
-      const errorMsg = error.response?.data?.message || error.message || '注册失败，请检查网络'
+      const errorMsg = error.response?.data?.message || error.message || '注册失败,请检查网络'
       ElMessage.error(errorMsg)
     } finally {
       loading.value = false

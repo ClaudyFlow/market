@@ -1,107 +1,147 @@
-import { 
-  DataBoard, 
-  User, 
-  Shop, 
-  Goods, 
-  List, 
-  ChatDotRound, 
-  DataAnalysis, 
-  ChatLineSquare, 
+﻿import type { Component } from 'vue'
+import {
+  DataBoard,
+  User,
+  Shop,
+  Goods,
+  List,
+  ChatDotRound,
+  DataAnalysis,
+  ChatLineSquare,
   Setting,
   Monitor,
   ShoppingCart,
   TrendCharts,
-  Tools
+  Tools,
+  DocumentChecked,
+  Bell,
+  Money,
+  Star
 } from '@element-plus/icons-vue'
 
-export const categories = [
+export interface 分类项 {
+  名称:string
+  路径:string
+  图标:Component
+}
+
+export interface 轮播图项 {
+  标题:string
+  副标题:string
+  渐变:string
+  链接:string
+}
+
+export interface 快捷操作项 {
+  图标:Component
+  名称:string
+  路径:string
+}
+
+export interface 状态选项 {
+  标签:string
+  值:string
+  颜色?: string
+}
+
+export const 分类列表:分类项 [] = [
   {
-    name: '平台概览',
-    path: '/',
-    icon: DataBoard
+    名称:'平台概览',
+    路径:'/admin/dashboard',
+    图标:DataBoard
   },
   {
-    name: '用户管理',
-    path: '/users',
-    icon: User
+    名称:'用户管理',
+    路径:'/admin/user',
+    图标:User
   },
   {
-    name: '商家管理',
-    path: '/merchants',
-    icon: Shop
+    名称:'商家管理',
+    路径:'/admin/merchant',
+    图标:Shop
   },
   {
-    name: '商品审核',
-    path: '/products',
-    icon: Goods
+    名称:'商品审核',
+    路径:'/admin/product',
+    图标:Goods
   },
   {
-    name: '订单监控',
-    path: '/orders',
-    icon: List
+    名称:'订单监控',
+    路径:'/admin/order',
+    图标:List
   },
   {
-    name: '评价审核',
-    path: '/reviews',
-    icon: ChatDotRound
+    名称:'评价审核',
+    路径:'/admin/review',
+    图标:ChatDotRound
   },
   {
-    name: '数据统计',
-    path: '/statistics',
-    icon: DataAnalysis
+    名称:'数据统计',
+    路径:'/admin/statistic',
+    图标:DataAnalysis
   },
   {
-    name: '消息中心',
-    path: '/chat',
-    icon: ChatLineSquare
+    名称:'消息中心',
+    路径:'/admin/chat',
+    图标:ChatLineSquare
   },
   {
-    name: '平台设置',
-    path: '/settings',
-    icon: Setting
+    名称:'平台设置',
+    路径:'/admin/setting',
+    图标:Setting
   }
 ]
 
-export const banners = [
+export const 轮播图列表:轮播图项 [] = [
   {
-    title: '平台运营报告',
-    subtitle: '数据驱动决策',
-    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    标题:'平台运营报告',
+    副标题:'数据驱动决策',
+    渐变:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    链接:'/admin/statistic'
   },
   {
-    title: '商家审核加速',
-    subtitle: '提升入驻效率',
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    标题:'商家审核加速',
+    副标题:'提升入驻效率',
+    渐变:'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    链接:'/admin/merchant'
   },
   {
-    title: '系统升级通知',
-    subtitle: '功能持续优化',
-    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    标题:'系统升级通知',
+    副标题:'功能持续优化',
+    渐变:'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    链接:'/admin/setting'
   }
 ]
 
-export const auditStatusOptions = [
-  { label: '全部商品', value: '' },
-  { label: '待审核', value: 'pending' },
-  { label: '已通过', value: 'approved' },
-  { label: '已拒绝', value: 'rejected' }
+export const 审核状态选项:状态选项 [] = [
+  { 标签:'全部商品', 值:'' },
+  { 标签:'待审核', 值:'pending', 颜色:'#ffaa00' },
+  { 标签:'已通过', 值:'approved', 颜色:'#00ff88' },
+  { 标签:'已拒绝', 值:'rejected', 颜色:'#ff6666' }
 ]
 
-export const merchantStatusOptions = [
-  { label: '全部商家', value: '' },
-  { label: '待审核', value: 'pending' },
-  { label: '已通过', value: 'approved' },
-  { label: '已拒绝', value: 'rejected' },
-  { label: '已封禁', value: 'banned' }
+export const 商家状态选项:状态选项 [] = [
+  { 标签:'全部商家', 值:'' },
+  { 标签:'待审核', 值:'pending', 颜色:'#ffaa00' },
+  { 标签:'已通过', 值:'approved', 颜色:'#00ff88' },
+  { 标签:'已拒绝', 值:'rejected', 颜色:'#ff6666' },
+  { 标签:'已封禁', 值:'banned', 颜色:'#ff4444' }
 ]
 
-export const quickActions = [
-  { icon: User, label: '用户管理', path: '/users' },
-  { icon: Shop, label: '商家管理', path: '/merchants' },
-  { icon: Goods, label: '商品审核', path: '/products' },
-  { icon: List, label: '订单监控', path: '/orders' },
-  { icon: TrendCharts, label: '数据统计', path: '/statistics' },
-  { icon: Monitor, label: '系统监控', path: '/monitor' },
-  { icon: ShoppingCart, label: '营销管理', path: '/marketing' },
-  { icon: Tools, label: '平台设置', path: '/settings' }
+export const 快捷操作列表:快捷操作项 [] = [
+  { 图标:User, 名称:'用户管理', 路径:'/admin/user' },
+  { 图标:Shop, 名称:'商家管理', 路径:'/admin/merchant' },
+  { 图标:Goods, 名称:'商品审核', 路径:'/admin/product' },
+  { 图标:List, 名称:'订单监控', 路径:'/admin/order' },
+  { 图标:TrendCharts, 名称:'数据统计', 路径:'/admin/statistic' },
+  { 图标:Monitor, 名称:'系统监控', 路径:'/admin/monitor' },
+  { 图标:ShoppingCart, 名称:'营销管理', 路径:'/admin/marketing' },
+  { 图标:Tools, 名称:'平台设置', 路径:'/admin/setting' }
 ]
+
+// 导出兼容旧代码的变量
+export const categories = 分类列表
+export const banners = 轮播图列表
+export const auditStatusOptions = 审核状态选项
+export const merchantStatusOptions = 商家状态选项
+export const quickActions = 快捷操作列表

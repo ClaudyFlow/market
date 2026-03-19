@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="page-container">
     <h1>系统设置</h1>
   </div>

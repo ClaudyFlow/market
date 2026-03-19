@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <header class="header">
     <!-- 顶部信息栏 -->
     <div class="top-info">
@@ -131,10 +131,10 @@ const userDisplayName = computed(() => {
 // 处理登录/注册点击
 const handleAuthClick = () => {
   if (isLoggedIn.value) {
-    // 已登录，跳转到用户中心
+    // 已登录,跳转到用户中心
     router.push('/user')
   } else {
-    // 未登录，直接跳转到登录页
+    // 未登录,直接跳转到登录页
     router.push('/login')
   }
 }

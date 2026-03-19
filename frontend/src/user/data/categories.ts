@@ -1,15 +1,22 @@
-import { 
-  Grid, 
-  Monitor, 
-  ShoppingBag, 
-  House, 
-  Timer 
+﻿import {
+  Grid,
+  Monitor,
+  ShoppingBag,
+  House,
+  Timer,
+  MagicStick,
+  Food,
+  Notebook,
+  Van,
+  Star,
+  Stamp,
+  Trophy
 } from '@element-plus/icons-vue'
 
 export const categories = [
   {
     name: '全部商品',
-    path: '/items',
+    path: '/item',
     icon: Grid
   },
   {
@@ -28,9 +35,49 @@ export const categories = [
     icon: House
   },
   {
+    name: '美妆护肤',
+    path: '/beauty',
+    icon: MagicStick
+  },
+  {
+    name: '食品生鲜',
+    path: '/food',
+    icon: Food
+  },
+  {
+    name: '图书文具',
+    path: '/books',
+    icon: Notebook
+  },
+  {
+    name: '母婴用品',
+    path: '/baby',
+    icon: Van
+  },
+  {
+    name: '运动户外',
+    path: '/sports',
+    icon: Trophy
+  },
+  {
+    name: '珠宝首饰',
+    path: '/jewelry',
+    icon: Stamp
+  },
+  {
     name: '限时特惠',
     path: '/sale',
     icon: Timer
+  },
+  {
+    name: '新品上市',
+    path: '/new',
+    icon: Star
+  },
+  {
+    name: '热销爆款',
+    path: '/hot',
+    icon: Trophy
   }
 ]
 

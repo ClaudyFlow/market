@@ -1,9 +1,9 @@
-<template>
+﻿<template>
   <section class="mall-home">
     <!-- 左侧分类导航 -->
     <CategoryPanel />
 
-    <!-- 中间：轮播图 + 快捷操作 -->
+    <!-- 中间:轮播图 + 快捷操作 -->
     <div class="banner-section">
       <el-carousel height="420px" aria-label="促销轮播">
         <el-carousel-item v-for="(banner, index) in banners" :key="index">
@@ -235,7 +235,7 @@ const goToLottery = () => {
 // 倒计时
 const countdown: Ref<{ hours: string; minutes: string; seconds: string }> = ref({ hours: "04", minutes: "30", seconds: "00" })
 
-// 限时特惠商品 - 15 个（使用 soldCount 和 remainCount 格式）
+// 限时特惠商品 - 15 个(使用 soldCount 和 remainCount 格式)
 const flashItem = ref([
   {
     id: 1,
@@ -618,10 +618,10 @@ const recommendedItem = ref([
   },
 ]);
 
-// 限时特惠商品（computed 属性）
+// 限时特惠商品(computed 属性)
 const flashItems = computed(() => flashItem.value);
 
-// 推荐商品（computed 属性）
+// 推荐商品(computed 属性)
 const recommendedItems = computed(() => recommendedItem.value);
 
 // 品牌数据 - 15 个
@@ -629,15 +629,15 @@ const brands = ref([
   { name: "华为", description: "构建万物互联的智能世界" },
   { name: "小米", description: "永远相信美好的事情即将发生" },
   { name: "海尔", description: "真诚到永远" },
-  { name: "格力", description: "格力造，中国造" },
+  { name: "格力", description: "格力造,中国造" },
   { name: "苹果", description: "Think Different" },
   { name: "索尼", description: "感动人心" },
   { name: "三星", description: "数字世界的新纪元" },
   { name: "耐克", description: "Just Do It" },
   { name: "阿迪达斯", description: "Impossible Is Nothing" },
-  { name: "兰蔻", description: "法式优雅，永恒之美" },
+  { name: "兰蔻", description: "法式优雅,永恒之美" },
   { name: "戴森", description: "科技重新定义生活" },
-  { name: "西门子", description: "德国工艺，品质生活" },
+  { name: "西门子", description: "德国工艺,品质生活" },
   { name: "美的", description: "原来生活可以更美的" },
   { name: "任天堂", description: "独乐不如众乐" },
   { name: "LV", description: "奢华与经典的象征" },

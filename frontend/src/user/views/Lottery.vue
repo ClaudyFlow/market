@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="lottery-page">
     <div class="lottery-container">
       <h1 class="page-title">🎰 幸运抽奖 🎰</h1>
@@ -7,11 +7,11 @@
       <div class="user-info">
         <div class="credit-display">
           <el-icon><Coin /></el-icon>
-          <span>当前积分：{{ userCredit }}</span>
+          <span>当前积分:{{ userCredit }}</span>
         </div>
         <div class="draw-count">
           <el-icon><Ticket /></el-icon>
-          <span>已抽次数：{{ drawCount }}</span>
+          <span>已抽次数:{{ drawCount }}</span>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
       </div>
 
       <!-- 中奖结果 -->
-      <el-dialog v-model="resultDialogVisible" title="🎉 中奖啦！" width="400" class="result-dialog">
+      <el-dialog v-model="resultDialogVisible" title="🎉 中奖啦!" width="400" class="result-dialog">
         <div class="result-content">
           <div class="result-icon">🎁</div>
           <div class="result-name">{{ lastPrize }}</div>
@@ -126,7 +126,7 @@
           </div>
         </div>
         <div class="checkin-info">
-          <span>当前连续签到：{{ currentCheckinDay }} / 7 天</span>
+          <span>当前连续签到:{{ currentCheckinDay }} / 7 天</span>
           <el-button v-if="allCompleted" type="primary" size="small" @click="resetCheckin" class="reset-btn">
             <el-icon><Refresh /></el-icon> 重新开始
           </el-button>
@@ -149,7 +149,7 @@ const userStore = useUserStore()
 // 用户积分
 const userCredit = ref(0)
 
-// 监听积分变化，同步到 store
+// 监听积分变化,同步到 store
 watch(userCredit, (newVal) => {
   userStore.userCredit = newVal
 })
@@ -158,10 +158,10 @@ watch(userCredit, (newVal) => {
 const isDrawing = ref(false)
 const drawCount = ref(0)
 
-// 老虎机转盘（单排横向）
+// 老虎机转盘(单排横向)
 const reelItems = ref([])
 const reelOffset = ref(0)
-const itemWidth = 130 // 每个奖品卡片的宽度（含间距）
+const itemWidth = 130 // 每个奖品卡片的宽度(含间距)
 const visibleCount = 9 // 一行显示 9 个
 let currentRowIndex = 0 // 当前显示的行索引
 
@@ -204,7 +204,7 @@ const resetCheckin = () => {
     day.available = index === 0
     day.current = index === 0
   })
-  ElMessage.success('签到已重置，可以重新签到')
+  ElMessage.success('签到已重置,可以重新签到')
 }
 
 // 奖品图标
@@ -212,11 +212,11 @@ const prizeIcons: Record<string, string> = {
   '50 积分': '💰',
   '75 积分': '💰💰',
   '100 积分': '💰💰💰',
-  '抽纸（一袋）': '🧻',
-  '洗衣液（一瓶）': '🧴',
-  '电饭锅（一个）': '🍚',
-  '电脑（一台）': '💻',
-  '人类下一颗类地行星命名权（遥遥无期）': '🪐'
+  '抽纸(一袋)': '🧻',
+  '洗衣液(一瓶)': '🧴',
+  '电饭锅(一个)': '🍚',
+  '电脑(一台)': '💻',
+  '人类下一颗类地行星命名权(遥遥无期)': '🪐'
 }
 
 const getPrizeIcon = (name: string) => {
@@ -230,7 +230,7 @@ const initSlotItems = () => {
     name: p.name,
     icon: getPrizeIcon(p.name)
   }))
-  // 重复 2 组，保证只有一行滚动
+  // 重复 2 组,保证只有一行滚动
   reelItems.value = [...allItems, ...allItems]
   reelOffset.value = 0
   currentRowIndex = 0
@@ -314,7 +314,7 @@ const handleDraw = async () => {
 const spinReels = () => {
   return new Promise<void>((resolve) => {
     const randomIndex = Math.floor(Math.random() * 8) // 8 个奖品
-    // 目标位置：第一组 + 随机位置
+    // 目标位置:第一组 + 随机位置
     const targetIndex = 9 + randomIndex // 第二组的随机位置
     
     // 计算偏移量
@@ -335,7 +335,7 @@ const spinReels = () => {
       if (progress < 1) {
         requestAnimationFrame(animate)
       } else {
-        // 重置位置到第一组对应位置（实现循环效果）
+        // 重置位置到第一组对应位置(实现循环效果)
         reelOffset.value = -(randomIndex * itemWidth)
         setTimeout(resolve, 500)
       }
@@ -365,7 +365,7 @@ const handleCheckin = async (index: number) => {
     return
   }
 
-  // 测试模式：直接更新 UI，不调用后端 API
+  // 测试模式:直接更新 UI,不调用后端 API
   checkinDays[index].completed = true
   if (index < checkinDays.length - 1) {
     checkinDays[index + 1].available = true
@@ -375,7 +375,7 @@ const handleCheckin = async (index: number) => {
 
   const credit = checkinDays[index].credit
   userCredit.value += credit
-  ElMessage.success(`测试签到成功！获得 ${credit} 积分`)
+  ElMessage.success(`测试签到成功!获得 ${credit} 积分`)
 }
 
 // 格式化时间

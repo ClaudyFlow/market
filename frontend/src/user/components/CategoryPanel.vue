@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <aside class="category-panel" aria-label="商品分类">
     <header class="category-header">
       <el-icon><Menu/></el-icon>

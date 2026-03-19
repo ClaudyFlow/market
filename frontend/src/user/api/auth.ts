@@ -1,4 +1,4 @@
-import request from './request'
+﻿import request from './request'
 import type { UserInfo } from '../types'
 
 interface RegisterData {

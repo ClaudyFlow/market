@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="位置信息">
     <el-icon class="位置图标"><Location /></el-icon>
     <span class="位置文本">{{ locationText }}</span>
@@ -153,7 +153,7 @@ const getCountryProvinceCityDistrict = (address: Address | null): string => {
 };
 
 const getLocation = async (): Promise<void> => {
-  // 2 秒后如果还没获取到，显示卡顿状态（黄点）
+  // 2 秒后如果还没获取到,显示卡顿状态(黄点)
   const stuckTimer = setTimeout(() => {
     if (status.value === 'loading') {
       status.value = 'stuck'

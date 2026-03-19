@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <div class="时间显示容器 time-display">
-    <!-- 内容区域：标签列 + 状态列 + UTC 列 + 时差列 + 年月日周时分列 -->
+    <!-- 内容区域:标签列 + 状态列 + UTC 列 + 时差列 + 年月日周时分列 -->
     <div class="内容区域">
       <!-- 左侧标签列 -->
       <div class="标签列">
@@ -236,7 +236,7 @@ onUnmounted(() => {
   color: #00ff88;
 }
 
-/* 单行样式：渐变 +2 倍拉伸，1 倍行距 */
+/* 单行样式:渐变 +2 倍拉伸,1 倍行距 */
 .单行 {
   font-family: "Courier New", monospace;
   font-weight: 600;
@@ -252,7 +252,7 @@ onUnmounted(() => {
   transform-origin: center;
 }
 
-/* 双行样式：1 倍行距，无拉伸，上下行颜色不同 */
+/* 双行样式:1 倍行距,无拉伸,上下行颜色不同 */
 .双行 {
   font-family: "Courier New", monospace;
   font-weight: 600;

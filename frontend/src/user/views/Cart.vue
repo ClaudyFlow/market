@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="cart-page">
     <div class="container">
       <h1 class="page-title">我的购物车</h1>
@@ -51,7 +51,7 @@
               已选 <span class="highlight">{{ 已选数量 }}</span> 件商品
             </div>
             <div class="total-info">
-              <span class="label">合计：</span>
+              <span class="label">合计:</span>
               <span class="total-price">¥{{ 已选总额.toFixed (2) }}</span>
             </div>
             <el-button type="danger" size="large" @click="去结算">去结算</el-button>
@@ -101,7 +101,7 @@ const 更新数量 = (商品) => {
 }
 
 const 删除商品 = (id) => {
-  ElMessageBox.confirm('确定要删除该商品吗？', '提示', {
+  ElMessageBox.confirm('确定要删除该商品吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -112,7 +112,7 @@ const 删除商品 = (id) => {
 }
 
 const 清空购物车 = () => {
-  ElMessageBox.confirm('确定要清空购物车吗？', '提示', {
+  ElMessageBox.confirm('确定要清空购物车吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'

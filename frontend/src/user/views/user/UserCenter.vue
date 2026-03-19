@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="user-center-page">
     <div class="container">
       <h1 class="page-title">个人中心</h1>

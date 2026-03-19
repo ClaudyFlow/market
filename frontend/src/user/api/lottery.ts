@@ -1,4 +1,4 @@
-import request from './request'
+﻿import request from './request'
 
 interface ApiResponse<T> {
   data: T
@@ -34,7 +34,7 @@ export function getLotteryRecords() {
   })
 }
 
-// 获取用户积分（复用现有的）
+// 获取用户积分(复用现有的)
 export function getUserCredit() {
   return request<ApiResponse<{ credit: number }>>({
     url: '/user/credit',

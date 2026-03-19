@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="product-detail">
     <div class="container">
       <!-- 面包屑 -->
@@ -149,7 +149,7 @@ const 数量 = ref(1)
 const showReviewForm = ref(false)
 const isPurchased = ref(true) // TODO: 根据实际订单状态判断
 
-// 监听路由变化，跳转到页面顶部
+// 监听路由变化,跳转到页面顶部
 watch(() => 路由参数.fullPath, () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }, { immediate: true })
@@ -164,7 +164,7 @@ const checkLoginAndReview = () => {
   const token = localStorage.getItem('token')
   if (!token) {
     ElMessage.warning('请先登录后再评价')
-    // 跳转到登录页，并传递返回地址
+    // 跳转到登录页,并传递返回地址
     路由.push(`/login?redirect=${路由.currentRoute.value.fullPath}`)
     return
   }

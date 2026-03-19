@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="announcement" aria-label="网站公告">
     <header class="announcement-title">
       <el-icon><Bell/></el-icon>

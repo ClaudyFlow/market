@@ -1,15 +1,15 @@
-<template>
-  <!-- 第一部分：轮播图 + 商家信息 -->
+﻿<template>
+  <!-- 第一部分:轮播图 + 商家信息 -->
   <section class="mall-home">
-    <!-- 中间：轮播图 + 快捷操作 -->
+    <!-- 中间:轮播图 + 快捷操作 -->
     <div class="banner-section">
       <el-carousel height="420px" aria-label="促销轮播">
-        <el-carousel-item v-for="(banner, index) in banners" :key="index">
-          <article class="banner-item" :style="{ background: banner.gradient }">
+        <el-carousel-item v-for="(轮播,index) in 轮播图列表" :key="index">
+          <article class="banner-item" :style="{ background: 轮播.渐变 }">
             <div class="banner-info">
-              <h2 class="banner-title">{{ banner.title }}</h2>
-              <p class="banner-subtitle">{{ banner.subtitle }}</p>
-              <el-button type="primary" size="large" class="glow-btn" @click="goToBanner(banner.link)">
+              <h2 class="banner-title">{{ 轮播.标题 }}</h2>
+              <p class="banner-subtitle">{{ 轮播.副标题 }}</p>
+              <el-button type="primary" size="large" class="glow-btn" @click="跳转链接 (轮播.链接)">
                 立即查看
               </el-button>
             </div>
@@ -20,14 +20,14 @@
       <!-- 快捷操作 -->
       <nav class="quick-actions-bar" aria-label="快捷操作">
         <button
-          v-for="action in quickActions"
-          :key="action.name"
+          v-for="操作 in 快捷操作列表"
+          :key="操作.名称"
           class="action-item"
-          @click="handleQuickAction(action)"
-          :aria-label="action.name"
+          @click="处理快捷操作 (操作)"
+          :aria-label="操作.名称"
         >
-          <el-icon><component :is="action.icon" /></el-icon>
-          <span>{{ action.name }}</span>
+          <el-icon><component :is="操作.图标" /></el-icon>
+          <span>{{ 操作.名称 }}</span>
         </button>
       </nav>
     </div>
@@ -36,25 +36,25 @@
     <div class="user-panel" aria-label="商家信息">
       <article class="user-card">
         <figure class="user-avatar">
-          <el-avatar :size="80" src="https://via.placeholder.com/80x80/00d4ff/fff?text=Shop">
-            <el-icon size="40"><Shop /></el-icon>
+          <el-avatar :size="80" :src="商家信息.头像 || `https://via.placeholder.com/80x80/00d4ff/fff?text=${商家信息.店铺名称?.[0] || '商'}`">
+            <el-icon v-if="!商家信息.头像" size="40"><Shop /></el-icon>
           </el-avatar>
         </figure>
-        <h3 class="user-name">店铺名称</h3>
+        <h3 class="user-name">{{ 商家信息.店铺名称 }}</h3>
         <div class="user-level">
-          <span class="level-badge">金牌商家</span>
+          <span class="level-badge">{{ 商家信息.店铺等级 }}</span>
         </div>
         <div class="user-vip">
-          <span class="vip-tag">营业中</span>
+          <span class="vip-tag">{{ 商家信息.营业状态 }}</span>
         </div>
         <div class="user-stats">
           <span class="stats-tag">
-            <el-icon><ShoppingCart /></el-icon> {{ stats.orderCount }} 订单
+            <el-icon><ShoppingCart /></el-icon> {{ 统计数据.订单总数 }} 订单
           </span>
         </div>
         <div class="user-stats">
           <span class="stats-tag">
-            <el-icon><Money /></el-icon> ¥{{ stats.revenue }} 销售额
+            <el-icon><Money /></el-icon> ¥{{ 统计数据.销售额 }} 销售额
           </span>
         </div>
       </article>
@@ -65,7 +65,7 @@
     </div>
   </section>
 
-  <!-- 第二部分：数据统计 -->
+  <!-- 第二部分:数据统计 -->
   <section class="stats-section" aria-label="数据统计">
     <div class="container">
       <header class="section-header">
@@ -81,7 +81,7 @@
               <el-icon><ShoppingCart /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.todayOrders }}</div>
+              <div class="stats-value">{{ 统计数据.今日订单 }}</div>
               <div class="stats-label">今日订单</div>
             </div>
           </div>
@@ -92,7 +92,7 @@
               <el-icon><Money /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">¥{{ stats.todayRevenue }}</div>
+              <div class="stats-value">¥{{ 统计数据.今日销售额 }}</div>
               <div class="stats-label">今日销售额</div>
             </div>
           </div>
@@ -103,7 +103,7 @@
               <el-icon><Goods /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.productCount }}</div>
+              <div class="stats-value">{{ 统计数据.商品总数 }}</div>
               <div class="stats-label">商品总数</div>
             </div>
           </div>
@@ -114,7 +114,7 @@
               <el-icon><ChatDotRound /></el-icon>
             </div>
             <div class="stats-info">
-              <div class="stats-value">{{ stats.pendingMessages }}</div>
+              <div class="stats-value">{{ 统计数据.待处理消息 }}</div>
               <div class="stats-label">待处理消息</div>
             </div>
           </div>
@@ -123,7 +123,7 @@
     </div>
   </section>
 
-  <!-- 第三部分：订单和商品状态 -->
+  <!-- 第三部分:订单和商品状态 -->
   <section class="content-section" aria-label="内容管理">
     <div class="container">
       <el-row :gutter="15">
@@ -134,12 +134,12 @@
               <span class="card-title">订单状态分布</span>
             </div>
             <div class="status-list">
-              <div v-for="status in orderStatusOptions" :key="status.value" class="status-item">
-                <span class="status-dot" :style="{ background: status.color }"></span>
-                <span class="status-label">{{ status.label }}</span>
-                <span class="status-count">{{ getRandomCount() }}单</span>
+              <div v-for="状态 in 订单状态选项" :key="状态.值" class="status-item" v-if="状态.值">
+                <span class="status-dot" :style="{ background: 状态.颜色 || '#00d4ff' }"></span>
+                <span class="status-label">{{ 状态.标签 }}</span>
+                <span class="status-count">{{ 获取随机数量 () }}单</span>
                 <div class="status-bar">
-                  <div class="status-bar-inner" :style="{ width: getRandomPercent() + '%', background: status.color }"></div>
+                  <div class="status-bar-inner" :style="{ width: 获取随机百分比 () + '%', background: 状态.颜色 || '#00d4ff' }"></div>
                 </div>
               </div>
             </div>
@@ -152,12 +152,12 @@
               <span class="card-title">商品状态分布</span>
             </div>
             <div class="status-list">
-              <div v-for="status in productStatusOptions" :key="status.value" class="status-item">
-                <span class="status-dot" :style="{ background: status.color }"></span>
-                <span class="status-label">{{ status.label }}</span>
-                <span class="status-count">{{ getRandomCount() }}个</span>
+              <div v-for="状态 in 商品状态选项" :key="状态.值" class="status-item" v-if="状态.值">
+                <span class="status-dot" :style="{ background: 状态.颜色 || '#00d4ff' }"></span>
+                <span class="status-label">{{ 状态.标签 }}</span>
+                <span class="status-count">{{ 获取随机数量 () }}个</span>
                 <div class="status-bar">
-                  <div class="status-bar-inner" :style="{ width: getRandomPercent() + '%', background: status.color }"></div>
+                  <div class="status-bar-inner" :style="{ width: 获取随机百分比 () + '%', background: 状态.颜色 || '#00d4ff' }"></div>
                 </div>
               </div>
             </div>
@@ -167,15 +167,15 @@
     </div>
   </section>
 
-  <!-- 第四部分：销售排行 -->
+  <!-- 第四部分:销售排行 -->
   <section class="content-section" aria-label="销售排行">
     <div class="container">
       <div class="section-card">
         <div class="card-header">
-          <el-icon><Ranking /></el-icon>
+          <el-icon><Odometer /></el-icon>
           <span class="card-title">商品销售排行</span>
         </div>
-        <el-table :data="topProducts" class="sci-table" style="width: 100%">
+        <el-table :data="销售排行列表" class="sci-table" style="width: 100%">
           <el-table-column prop="rank" label="排名" width="80">
             <template #default="{ row }">
               <span class="rank-badge" :class="'rank-' + row.rank">{{ row.rank }}</span>
@@ -191,47 +191,100 @@
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { banners, orderStatusOptions, productStatusOptions, quickActions } from "@merchant/data/categories";
-import AnnouncementPanel from "@merchant/components/AnnouncementPanel.vue";
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import {
+  Shop,
+  ShoppingCart,
+  Money,
+  Goods,
+  ChatDotRound,
+  DataAnalysis,
+  TrendCharts,
+  Odometer
+} from '@element-plus/icons-vue'
+import { 轮播图列表,快捷操作列表,订单状态选项,商品状态选项 } from '@merchant/data/categories'
+import AnnouncementPanel from '@merchant/components/AnnouncementPanel.vue'
+import type { 快捷操作项 } from '@merchant/data/categories'
 
-const router = useRouter();
+interface 商家信息类型 {
+  店铺名称:string
+  店铺等级:string
+  营业状态:string
+  头像:string
+}
 
-const stats = ref({
-  orderCount: 1256,
-  revenue: '9,876',
-  todayOrders: 128,
-  todayRevenue: '9,876',
-  productCount: 256,
-  pendingMessages: 12
-});
+interface 统计数据类型 {
+  订单总数:number
+  销售额:string
+  今日订单:number
+  今日销售额:string
+  商品总数:number
+  待处理消息:number
+}
 
-const topProduct = ref([
+interface 销售排行项 {
+  rank: number
+  name: string
+  category: string
+  sales: number
+  revenue: string
+}
+
+const router = useRouter()
+
+const 商家信息 = ref<商家信息类型>({
+  店铺名称:'品质优选店',
+  店铺等级:'金牌商家',
+  营业状态:'营业中',
+  头像:''
+})
+
+const 统计数据 = ref<统计数据类型>({
+  订单总数:1256,
+  销售额:'9,876',
+  今日订单:128,
+  今日销售额:'9,876',
+  商品总数:256,
+  待处理消息:12
+})
+
+const 销售排行列表 = ref<销售排行项[]>([
   { rank: 1, name: '无线蓝牙耳机', category: '手机数码', sales: 1024, revenue: '¥20.4 万' },
   { rank: 2, name: '智能手环', category: '手机数码', sales: 896, revenue: '¥12.9 万' },
   { rank: 3, name: '机械键盘', category: '电脑办公', sales: 768, revenue: '¥25.2 万' },
   { rank: 4, name: '空气净化器', category: '家用电器', sales: 512, revenue: '¥51.2 万' },
   { rank: 5, name: '运动跑鞋', category: '服装鞋包', sales: 486, revenue: '¥14.5 万' }
-]);
+])
 
-const handleQuickAction = (action) => {
-  if (action.path) router.push(action.path);
-};
+const 处理快捷操作 = (操作:快捷操作项) => {
+  if (操作.路径) {
+    router.push(操作.路径)
+  }
+}
 
-const goToBanner = (link) => {
-  router.push(link);
-};
+const 跳转链接 = (链接:string) => {
+  router.push(链接)
+}
 
-const getRandomCount = () => Math.floor(Math.random() * 100) + 10;
-const getRandomPercent = () => Math.floor(Math.random() * 60) + 20;
+const 获取随机数量 = () => Math.floor(Math.random() * 100) + 10
+const 获取随机百分比 = () => Math.floor(Math.random() * 60) + 20
+
+// 组件挂载时加载数据
+onMounted(() => {
+  // 模拟加载商家信息
+  const 存储信息 = localStorage.getItem('merchantInfo')
+  if (存储信息) {
+    商家信息.value = JSON.parse(存储信息)
+  }
+})
 </script>
 
 <style scoped>
 @import "@merchant/assets/mall-style.css";
 
-/* 主容器 - 2 列布局（轮播图 + 右侧信息） */
+/* 主容器 - 2 列布局(轮播图 + 右侧信息) */
 section.mall-home {
   display: grid;
   grid-template-columns: 1fr 280px;

@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
+﻿import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 
 // 创建 axios 实例 - 平台管理端
 const request: AxiosInstance = axios.create({

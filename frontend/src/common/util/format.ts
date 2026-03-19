@@ -1,7 +1,7 @@
-/**
+﻿/**
  * 格式化日期
  * @param date - 日期对象或日期字符串
- * @param format - 格式化模板，默认 'YYYY-MM-DD HH:mm:ss'
+ * @param format - 格式化模板,默认 'YYYY-MM-DD HH:mm:ss'
  * @returns 格式化后的日期字符串
  */
 export function formatDate(date: string | Date | null | undefined, format = 'YYYY-MM-DD HH:mm:ss'): string {
@@ -35,7 +35,7 @@ export function 格式化价格 (price: number | string): string {
 /**
  * 格式化数字
  * @param num - 要格式化的数字
- * @returns 格式化后的字符串（如 1.5 万）
+ * @returns 格式化后的字符串(如 1.5 万)
  */
 export function 格式化数字 (num: number): string {
   if (num >= 10000) {

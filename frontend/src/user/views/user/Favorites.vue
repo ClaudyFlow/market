@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="favorites-page">
     <div class="container">
       <h1 class="page-title">
@@ -122,7 +122,7 @@ const loadFavorites = async () => {
 // 取消收藏
 const removeFavoriteItem = async (productId) => {
   try {
-    await ElMessageBox.confirm('确定要取消收藏吗？', '提示', {
+    await ElMessageBox.confirm('确定要取消收藏吗?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

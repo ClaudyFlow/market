@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="order-page">
     <div class="container">
       <h1 class="page-title">订单确认</h1>
@@ -30,7 +30,7 @@
               <img :src="item.image" :alt="item.name" />
               <div class="item-info">
                 <div class="item-name">{{ item.name }}</div>
-                <div class="item-spec">颜色：{{ item.selectedColor || '默认' }} | 版本：{{ item.selectedVersion || '默认' }}</div>
+                <div class="item-spec">颜色:{{ item.selectedColor || '默认' }} | 版本:{{ item.selectedVersion || '默认' }}</div>
               </div>
               <div class="item-price">¥{{ item.price }}</div>
               <div class="item-quantity">x{{ item.quantity }}</div>
@@ -85,7 +85,7 @@
           <el-input
             v-model="订单备注"
             type="textarea"
-            placeholder="选填：对本订单的说明（如：送货时间要求等）"
+            placeholder="选填:对本订单的说明(如:送货时间要求等)"
             :rows="3"
           />
         </div>
@@ -94,16 +94,16 @@
         <div class="order-footer">
           <div class="footer-left">
             <div class="amount-item">
-              <span>商品总额：</span>
+              <span>商品总额:</span>
               <span class="amount">¥{{ 购物车.totalPrice.toFixed (2) }}</span>
             </div>
             <div class="amount-item">
-              <span>运费：</span>
+              <span>运费:</span>
               <span class="amount free">免运费</span>
             </div>
           </div>
           <div class="footer-right">
-            <div class="total-label">应付总额：</div>
+            <div class="total-label">应付总额:</div>
             <div class="total-price">¥{{ 购物车.totalPrice.toFixed (2) }}</div>
             <el-button type="danger" size="large" @click="提交订单">提交订单</el-button>
           </div>
@@ -127,7 +127,7 @@ const 支付方式 = ref('wechat')
 const 订单备注 = ref('')
 
 const 提交订单 = () => {
-  ElMessage.success('订单提交成功！')
+  ElMessage.success('订单提交成功!')
   setTimeout(() => {
     购物车.clearCart()
     路由.push('/')

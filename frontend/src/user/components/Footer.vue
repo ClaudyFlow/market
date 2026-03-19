@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <footer class="footer">
     <div class="container">
       <!-- 服务承诺 -->

@@ -1,8 +1,8 @@
-<template>
-  <div class="announcement" aria-label="网站公告">
+﻿<template>
+  <div class="announcement" aria-label="商家公告">
     <header class="announcement-title">
-      <el-icon><Bell/></el-icon>
-      <span>公告</span>
+      <el-icon><Bell /></el-icon>
+      <span>商家公告</span>
     </header>
     <el-carousel
       :interval="3000"
@@ -10,17 +10,17 @@
       height="120px"
       aria-label="公告列表"
     >
-      <el-carousel-item v-for="(note, index) in announcements" :key="index">
+      <el-carousel-item v-for="(公告,index) in 公告列表" :key="index">
         <div class="notice-item">
           <div class="notice-content">
             <div class="notice-title-row">
-              <span class="notice-type" :class="'type-' + note.type">{{ note.type }}</span>
-              <h4 class="notice-title">{{ note.title }}</h4>
+              <span class="notice-type" :class="'type-' + 公告.类型">{{ 公告.类型 }}</span>
+              <h4 class="notice-title">{{ 公告.标题 }}</h4>
             </div>
-            <p class="notice-text">{{ note.content }}</p>
+            <p class="notice-text">{{ 公告.内容 }}</p>
           </div>
           <div class="notice-header">
-            <span class="notice-date">{{ note.date }}</span>
+            <span class="notice-date">{{ 公告.日期 }}</span>
           </div>
         </div>
       </el-carousel-item>
@@ -28,9 +28,42 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Bell } from '@element-plus/icons-vue'
-import { announcements } from '@user/data/announcements'
+
+interface 公告类型 {
+  类型:string
+  标题:string
+  内容:string
+  日期:string
+}
+
+const 公告列表:公告类型 [] = [
+  {
+    类型:'活动',
+    标题:'双 11 大促报名开启',
+    内容:'年度最大促销活动,全场商品 5 折起,流量扶持,快来报名!',
+    日期:'2026-03-15'
+  },
+  {
+    类型:'公告',
+    标题:'商家后台系统升级通知',
+    内容:'系统将于本周末进行升级维护,届时部分功能可能无法使用.',
+    日期:'2026-03-14'
+  },
+  {
+    类型:'规则',
+    标题:'商品发布规范更新',
+    内容:'新增商品图片质量要求,请商家朋友们注意遵守最新规范.',
+    日期:'2026-03-10'
+  },
+  {
+    类型:'培训',
+    标题:'商家运营培训课程',
+    内容:'免费线上培训课程,帮助商家提升运营能力,欢迎报名参加.',
+    日期:'2026-03-08'
+  }
+]
 </script>
 
 <style scoped>
@@ -38,7 +71,7 @@ import { announcements } from '@user/data/announcements'
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   flex: 1;
   min-height: 150px;
   max-height: 250px;
@@ -67,7 +100,7 @@ import { announcements } from '@user/data/announcements'
 }
 
 .announcement :deep(.el-carousel__container) {
-  height: 160px;
+  height: 140px;
 }
 
 .announcement :deep(.el-carousel-item) {
@@ -103,6 +136,7 @@ import { announcements } from '@user/data/announcements'
   padding: 1px 6px;
   border-radius: 3px;
   color: #fff;
+  white-space: nowrap;
 }
 
 .notice-type.type-活动 {
@@ -113,11 +147,11 @@ import { announcements } from '@user/data/announcements'
   background: linear-gradient(135deg, #00d4ff, #00a8cc);
 }
 
-.notice-type.type-优惠 {
+.notice-type.type-规则 {
   background: linear-gradient(135deg, #ff3366, #ff5588);
 }
 
-.notice-type.type-新品 {
+.notice-type.type-培训 {
   background: linear-gradient(135deg, #00ff88, #00cc6a);
 }
 
@@ -148,6 +182,5 @@ import { announcements } from '@user/data/announcements'
 .notice-date {
   font-size: 10px;
   color: #666;
-  
 }
 </style>

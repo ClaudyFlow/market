@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <div class="top-info-bar" aria-label="顶部信息栏">
-    <!-- 左侧：地址和在线人数 -->
+    <!-- 左侧:地址和在线人数 -->
     <div class="left-section">
       <LocationInfo />
       <div class="online-info">
@@ -10,12 +10,12 @@
       </div>
     </div>
 
-    <!-- 中间：时间 -->
+    <!-- 中间:时间 -->
     <div class="center-section">
       <TimeInfo />
     </div>
 
-    <!-- 右侧：用户信息和积分 -->
+    <!-- 右侧:用户信息和积分 -->
     <div class="right-section">
       <slot name="user-info">
         <div class="user-info">

@@ -1,70 +1,76 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/admin/login',
+    name: 'Login',
+    component: () => import('@admin/views/login/Login.vue'),
+    meta: { title: '管理员登录' }
+  },
+  {
+    path: '/admin',
     name: 'Dashboard',
     component: () => import('@admin/views/Dashboard.vue'),
-    meta: { title: '平台概览' }
+    meta: { title: '平台概览', requiresAuth: true }
   },
   {
-    path: '/dashboard',
+    path: '/admin/dashboard',
     name: 'DashboardPage',
     component: () => import('@admin/views/Dashboard.vue'),
-    meta: { title: '平台概览' }
+    meta: { title: '平台概览', requiresAuth: true }
   },
   {
-    path: '/user',
+    path: '/admin/user',
     name: 'User',
     component: () => import('@admin/views/user/UserList.vue'),
-    meta: { title: '用户管理' }
+    meta: { title: '用户管理', requiresAuth: true }
   },
   {
-    path: '/merchant',
+    path: '/admin/merchant',
     name: 'Merchant',
     component: () => import('@admin/views/merchant/MerchantList.vue'),
-    meta: { title: '商家管理' }
+    meta: { title: '商家管理', requiresAuth: true }
   },
   {
-    path: '/product',
+    path: '/admin/product',
     name: 'Product',
     component: () => import('@admin/views/product/ProductAudit.vue'),
-    meta: { title: '商品审核' }
+    meta: { title: '商品审核', requiresAuth: true }
   },
   {
-    path: '/order',
+    path: '/admin/order',
     name: 'Order',
     component: () => import('@admin/views/order/OrderMonitor.vue'),
-    meta: { title: '订单监控' }
+    meta: { title: '订单监控', requiresAuth: true }
   },
   {
-    path: '/review',
+    path: '/admin/review',
     name: 'Review',
     component: () => import('@admin/views/content/ReviewAudit.vue'),
-    meta: { title: '评价审核' }
+    meta: { title: '评价审核', requiresAuth: true }
   },
   {
-    path: '/statistic',
+    path: '/admin/statistic',
     name: 'Statistic',
-    component: () => import('@admin/views/Dashboard.vue'),
-    meta: { title: '数据统计' }
+    component: () => import('@admin/views/system/Statistics.vue'),
+    meta: { title: '数据统计', requiresAuth: true }
   },
   {
-    path: '/chat',
+    path: '/admin/chat',
     name: 'Chat',
-    component: () => import('@admin/views/Dashboard.vue'),
-    meta: { title: '消息中心' }
+    component: () => import('@admin/views/content/MessageCenter.vue'),
+    meta: { title: '消息中心', requiresAuth: true }
   },
   {
-    path: '/setting',
+    path: '/admin/setting',
     name: 'Setting',
     component: () => import('@admin/views/system/Settings.vue'),
-    meta: { title: '平台设置' }
+    meta: { title: '平台设置', requiresAuth: true }
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/admin'),
   routes
 })
 
@@ -72,6 +78,25 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = `${to.meta.title} - 市场平台管理端`
   }
+
+  // 检查是否需要登录
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('admin_token')
+    if (!token && !to.path.includes('/login')) {
+      next('/admin/login')
+      return
+    }
+  }
+
+  // 已登录时访问登录页，重定向到首页
+  if (to.path === '/admin/login') {
+    const token = localStorage.getItem('admin_token')
+    if (token) {
+      next('/admin')
+      return
+    }
+  }
+
   next()
 })
 

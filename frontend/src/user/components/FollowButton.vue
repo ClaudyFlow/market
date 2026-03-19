@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <el-button
     :type="isFollowed ? 'primary' : 'default'"
     :size="size"

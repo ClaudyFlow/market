@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="follows-page">
     <div class="container">
       <h1 class="page-title">
@@ -112,7 +112,7 @@ const loadFollows = async () => {
 // 取消关注
 const removeFollow = async (shopId) => {
   try {
-    await ElMessageBox.confirm('确定要取消关注该店铺吗？', '提示', {
+    await ElMessageBox.confirm('确定要取消关注该店铺吗?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

@@ -1,15 +1,571 @@
-<template>
+﻿<template>
   <div class="page-container">
-    <h1>商家列表</h1>
+    <header class="page-header">
+      <h1 class="page-title">
+        <el-icon><Shop /></el-icon>
+        商家管理
+      </h1>
+    </header>
+
+    <section class="stats-cards">
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <div class="stat-card primary">
+            <div class="stat-icon"><el-icon><Shop /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ merchantStats.total }}</div>
+              <div class="stat-label">商家总数</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card success">
+            <div class="stat-icon"><el-icon><CircleCheck /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ merchantStats.approved }}</div>
+              <div class="stat-label">已审核</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card warning">
+            <div class="stat-icon"><el-icon><Clock /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ merchantStats.pending }}</div>
+              <div class="stat-label">待审核</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card danger">
+            <div class="stat-icon"><el-icon><CircleClose /></el-icon></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ merchantStats.rejected }}</div>
+              <div class="stat-label">已拒绝</div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </section>
+
+    <section class="search-bar">
+      <el-form :inline="true" :model="filterForm">
+        <el-form-item label="商家 ID">
+          <el-input v-model="filterForm.merchantId" placeholder="请输入商家 ID" clearable style="width: 150px" />
+        </el-form-item>
+        <el-form-item label="店铺名称">
+          <el-input v-model="filterForm.shopName" placeholder="请输入店铺名称" clearable style="width: 180px" />
+        </el-form-item>
+        <el-form-item label="审核状态">
+          <el-select v-model="filterForm.status" placeholder="请选择状态" clearable style="width: 120px">
+            <el-option label="待审核" value="pending" />
+            <el-option label="已通过" value="approved" />
+            <el-option label="已拒绝" value="rejected" />
+            <el-option label="已封禁" value="banned" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="入驻时间">
+          <el-date-picker
+            v-model="filterForm.dateRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchMerchants">搜索</el-button>
+          <el-button @click="resetFilter">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </section>
+
+    <section class="table-section">
+      <el-table :data="merchantList" class="sci-table" style="width: 100%" v-loading="loading">
+        <el-table-column prop="id" label="商家 ID" width="100" />
+        <el-table-column prop="logo" label="店铺 Logo" width="80">
+          <template #default="{ row }">
+            <el-avatar :size="50" shape="square" :src="row.logo || `https://via.placeholder.com/50x50/00d4ff/fff?text=店`" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="shopName" label="店铺名称" min-width="150" />
+        <el-table-column prop="ownerName" label="店主姓名" width="100" />
+        <el-table-column prop="phone" label="联系电话" width="130" />
+        <el-table-column prop="category" label="主营类目" width="120">
+          <template #default="{ row }">
+            <el-tag size="small" type="info">{{ row.category }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="joinTime" label="入驻时间" width="140" />
+        <el-table-column prop="status" label="状态" width="90">
+          <template #default="{ row }">
+            <el-tag :type="getStatusType(row.status)" size="small">
+              {{ getStatusText(row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="250" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" text size="small" @click="viewMerchant(row)">详情</el-button>
+            <el-button
+              v-if="row.status === 'pending'"
+              type="success"
+              text
+              size="small"
+              @click="approveMerchant(row)"
+            >
+              通过
+            </el-button>
+            <el-button
+              v-if="row.status === 'pending'"
+              type="danger"
+              text
+              size="small"
+              @click="rejectMerchant(row)"
+            >
+              拒绝
+            </el-button>
+            <el-button
+              v-if="row.status === 'approved'"
+              type="warning"
+              text
+              size="small"
+              @click="banMerchant(row)"
+            >
+              封禁
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination-bar">
+        <el-pagination
+          v-model:current-page="pagination.currentPage"
+          v-model:page-size="pagination.pageSize"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="loadMerchantList"
+          @current-change="loadMerchantList"
+        />
+      </div>
+    </section>
+
+    <el-dialog
+      v-model="auditDialog.visible"
+      title="商家入驻审核"
+      width="700px"
+      :close-on-click-modal="false"
+    >
+      <el-descriptions :column="2" border class="sci-descriptions">
+        <el-descriptions-item label="商家 ID">{{ currentMerchant?.id }}</el-descriptions-item>
+        <el-descriptions-item label="店铺名称">{{ currentMerchant?.shopName }}</el-descriptions-item>
+        <el-descriptions-item label="店主姓名">{{ currentMerchant?.ownerName }}</el-descriptions-item>
+        <el-descriptions-item label="联系电话">{{ currentMerchant?.phone }}</el-descriptions-item>
+        <el-descriptions-item label="主营类目">{{ currentMerchant?.category }}</el-descriptions-item>
+        <el-descriptions-item label="入驻时间">{{ currentMerchant?.joinTime }}</el-descriptions-item>
+        <el-descriptions-item label="店铺简介" :span="2">{{ currentMerchant?.description }}</el-descriptions-item>
+      </el-descriptions>
+      
+      <div class="cert-section">
+        <h4>资质证照</h4>
+        <div class="cert-images">
+          <el-image
+            :src="currentMerchant?.businessLicense || 'https://via.placeholder.com/200x130/1a2a4a/00d4ff?text=营业执照'"
+            class="cert-image"
+            fit="cover"
+            :preview-src-list="[currentMerchant?.businessLicense || 'https://via.placeholder.com/200x130/1a2a4a/00d4ff?text=营业执照']"
+          />
+          <el-image
+            :src="currentMerchant?.license || 'https://via.placeholder.com/200x130/1a2a4a/00d4ff?text=许可证'"
+            class="cert-image"
+            fit="cover"
+            :preview-src-list="[currentMerchant?.license || 'https://via.placeholder.com/200x130/1a2a4a/00d4ff?text=许可证']"
+          />
+        </div>
+      </div>
+
+      <el-form :model="auditForm" label-width="80px" style="margin-top: 20px">
+        <el-form-item label="审核意见">
+          <el-input
+            v-model="auditForm.comment"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入审核意见"
+          />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="auditDialog.visible = false">取消</el-button>
+        <el-button type="danger" @click="handleAudit('rejected')">拒绝</el-button>
+        <el-button type="primary" @click="handleAudit('approved')">通过</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-// 商家列表
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Shop, CircleCheck, CircleClose, Clock } from '@element-plus/icons-vue'
+
+interface MerchantItem {
+  id: number
+  shopName: string
+  ownerName: string
+  phone: string
+  category: string
+  joinTime: string
+  status: string
+  logo?: string
+  description?: string
+  businessLicense?: string
+  license?: string
+}
+
+interface FilterForm {
+  merchantId: string
+  shopName: string
+  status: string
+  dateRange: [Date, Date] | null
+}
+
+interface MerchantStats {
+  total: number
+  approved: number
+  pending: number
+  rejected: number
+}
+
+interface Pagination {
+  currentPage: number
+  pageSize: number
+  total: number
+}
+
+interface Dialog {
+  visible: boolean
+}
+
+interface AuditForm {
+  comment: string
+}
+
+const loading = ref(false)
+const merchantList = ref<MerchantItem[]>([])
+const filterForm = reactive<FilterForm>({
+  merchantId: '',
+  shopName: '',
+  status: '',
+  dateRange: null
+})
+
+const merchantStats = ref<MerchantStats>({
+  total: 356,
+  approved: 298,
+  pending: 35,
+  rejected: 23
+})
+
+const pagination = reactive<Pagination>({
+  currentPage: 1,
+  pageSize: 10,
+  total: 0
+})
+
+const auditDialog = reactive<Dialog>({
+  visible: false
+})
+
+const auditForm = reactive<AuditForm>({
+  comment: ''
+})
+
+const currentMerchant = ref<MerchantItem | null>(null)
+
+const mockMerchantData: MerchantItem[] = [
+  { id: 2001, shopName: '品质优选店', ownerName: '张三', phone: '138****1234', category: '手机数码', joinTime: '2026-01-15', status: 'approved', logo: '', description: '专注品质商品', businessLicense: '', license: '' },
+  { id: 2002, shopName: '时尚衣橱', ownerName: '李四', phone: '139****5678', category: '服装鞋包', joinTime: '2026-01-20', status: 'approved', logo: '', description: '时尚女装', businessLicense: '', license: '' },
+  { id: 2003, shopName: '数码港湾', ownerName: '王五', phone: '137****9012', category: '电脑办公', joinTime: '2026-02-01', status: 'pending', logo: '', description: '电脑配件', businessLicense: '', license: '' },
+  { id: 2004, shopName: '家居生活馆', ownerName: '赵六', phone: '136****3456', category: '家居家装', joinTime: '2026-02-10', status: 'pending', logo: '', description: '家居用品', businessLicense: '', license: '' },
+  { id: 2005, shopName: '美妆小屋', ownerName: '钱七', phone: '135****7890', category: '美妆护肤', joinTime: '2026-02-15', status: 'rejected', logo: '', description: '进口美妆', businessLicense: '', license: '' },
+  { id: 2006, shopName: '食品专营店', ownerName: '孙八', phone: '134****2345', category: '食品生鲜', joinTime: '2026-02-20', status: 'approved', logo: '', description: '进口食品', businessLicense: '', license: '' },
+  { id: 2007, shopName: '电器城', ownerName: '周九', phone: '133****6789', category: '家用电器', joinTime: '2026-03-01', status: 'banned', logo: '', description: '家用电器', businessLicense: '', license: '' },
+  { id: 2008, shopName: '图书文具店', ownerName: '吴十', phone: '132****0123', category: '图书文具', joinTime: '2026-03-05', status: 'pending', logo: '', description: '图书文具', businessLicense: '', license: '' }
+]
+
+const loadMerchantList = () => {
+  loading.value = true
+  setTimeout(() => {
+    merchantList.value = mockMerchantData
+    pagination.total = mockMerchantData.length
+    loading.value = false
+  }, 500)
+}
+
+const searchMerchants = () => {
+  ElMessage.success('搜索功能演示')
+  loadMerchantList()
+}
+
+const resetFilter = () => {
+  filterForm.merchantId = ''
+  filterForm.shopName = ''
+  filterForm.status = ''
+  filterForm.dateRange = null
+}
+
+const getStatusType = (status: string) => {
+  const map: Record<string, string> = { pending: 'warning', approved: 'success', rejected: 'danger', banned: 'info' }
+  return map[status] || 'info'
+}
+
+const getStatusText = (status: string) => {
+  const map: Record<string, string> = { pending: '待审核', approved: '已通过', rejected: '已拒绝', banned: '已封禁' }
+  return map[status] || status
+}
+
+const viewMerchant = (merchant: MerchantItem) => {
+  currentMerchant.value = merchant
+  auditDialog.visible = true
+  auditForm.comment = ''
+}
+
+const approveMerchant = (merchant: MerchantItem) => {
+  ElMessageBox.confirm(`确定要通过商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'success'
+  }).then(() => {
+    merchant.status = 'approved'
+    ElMessage.success('审核通过')
+  }).catch(() => {})
+}
+
+const rejectMerchant = (merchant: MerchantItem) => {
+  ElMessageBox.confirm(`确定要拒绝商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    merchant.status = 'rejected'
+    ElMessage.success('已拒绝')
+  }).catch(() => {})
+}
+
+const banMerchant = (merchant: MerchantItem) => {
+  ElMessageBox.confirm(`确定要封禁商家"${merchant.shopName}"吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error'
+  }).then(() => {
+    merchant.status = 'banned'
+    ElMessage.success('已封禁')
+  }).catch(() => {})
+}
+
+const handleAudit = (result: string) => {
+  if (currentMerchant.value) {
+    currentMerchant.value.status = result
+    ElMessage.success(result === 'approved' ? '审核通过' : '已拒绝')
+    auditDialog.visible = false
+  }
+}
+
+onMounted(() => {
+  loadMerchantList()
+})
 </script>
 
 <style scoped>
 .page-container {
   padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.page-title .el-icon {
+  color: var(--mall-primary);
+  font-size: 24px;
+}
+
+.stats-cards {
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glow-color);
+  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
+}
+
+.stat-card.primary { --glow-color: #00d4ff; }
+.stat-card.success { --glow-color: #00ff88; }
+.stat-card.warning { --glow-color: #ffaa00; }
+.stat-card.danger { --glow-color: #ff6666; }
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.stat-card.primary .stat-icon {
+  background: linear-gradient(135deg, #00d4ff, #00a8cc);
+}
+
+.stat-card.success .stat-icon {
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+}
+
+.stat-card.warning .stat-icon {
+  background: linear-gradient(135deg, #ffaa00, #ff8800);
+}
+
+.stat-card.danger .stat-icon {
+  background: linear-gradient(135deg, #ff6666, #ff4444);
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.search-bar {
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.search-bar :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.search-bar :deep(.el-form-item__label) {
+  color: #aaa;
+}
+
+.table-section {
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.pagination-bar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sci-table :deep(.el-table__header th) {
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--mall-primary);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.sci-table :deep(.el-table__body td) {
+  background: transparent;
+  color: #aaa;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+
+.sci-table :deep(.el-table__row:hover) {
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.cert-section {
+  margin-top: 20px;
+}
+
+.cert-section h4 {
+  color: var(--mall-primary);
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.cert-images {
+  display: flex;
+  gap: 15px;
+}
+
+.cert-image {
+  width: 200px;
+  height: 130px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.sci-descriptions {
+  --el-descriptions-bg-color: transparent;
+}
+
+.sci-descriptions :deep(.el-descriptions__label) {
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--mall-primary);
+}
+
+.sci-descriptions :deep(.el-descriptions__content) {
+  color: #aaa;
 }
 </style>

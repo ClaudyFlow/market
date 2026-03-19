@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <span class="status-dot" :class="status" :title="statusText" aria-label="状态指示">
     <span class="dot"></span>
   </span>

@@ -1,107 +1,146 @@
-import { 
-  HomeFilled, 
-  Goods, 
-  List, 
-  Shop, 
-  DataAnalysis, 
-  ChatDotRound, 
-  Ticket, 
-  ChatLineSquare, 
+﻿import type { Component } from 'vue'
+import {
+  HomeFilled,
+  Goods,
+  List,
+  Shop,
+  DataAnalysis,
+  ChatDotRound,
+  Ticket,
+  ChatLineSquare,
   Setting,
   ShoppingCart,
   Box,
   TrendCharts,
-  User
+  User,
+  Money,
+  Star,
+  Timer
 } from '@element-plus/icons-vue'
 
-export const categories = [
+export interface 分类项 {
+  名称:string
+  路径:string
+  图标:Component
+}
+
+export interface 轮播图项 {
+  标题:string
+  副标题:string
+  渐变:string
+  链接:string
+}
+
+export interface 快捷操作项 {
+  图标:Component
+  名称:string
+  路径:string
+}
+
+export interface 状态选项 {
+  标签:string
+  值:string
+  颜色?: string
+}
+
+export const 分类列表:分类项 [] = [
   {
-    name: '首页看板',
-    path: '/',
-    icon: HomeFilled
+    名称:'首页看板',
+    路径:'/merchant/dashboard',
+    图标:HomeFilled
   },
   {
-    name: '商品管理',
-    path: '/products',
-    icon: Goods
+    名称:'商品管理',
+    路径:'/merchant/product',
+    图标:Goods
   },
   {
-    name: '订单管理',
-    path: '/orders',
-    icon: List
+    名称:'订单管理',
+    路径:'/merchant/order',
+    图标:List
   },
   {
-    name: '店铺管理',
-    path: '/shop',
-    icon: Shop
+    名称:'店铺管理',
+    路径:'/merchant/shop',
+    图标:Shop
   },
   {
-    name: '数据统计',
-    path: '/statistics',
-    icon: DataAnalysis
+    名称:'数据统计',
+    路径:'/merchant/statistic',
+    图标:DataAnalysis
   },
   {
-    name: '评价管理',
-    path: '/reviews',
-    icon: ChatDotRound
+    名称:'评价管理',
+    路径:'/merchant/review',
+    图标:ChatDotRound
   },
   {
-    name: '优惠券',
-    path: '/coupon',
-    icon: Ticket
+    名称:'优惠券',
+    路径:'/merchant/coupon',
+    图标:Ticket
   },
   {
-    name: '消息中心',
-    path: '/chat',
-    icon: ChatLineSquare
+    名称:'消息中心',
+    路径:'/merchant/chat',
+    图标:ChatLineSquare
   },
   {
-    name: '店铺设置',
-    path: '/settings',
-    icon: Setting
+    名称:'店铺设置',
+    路径:'/merchant/setting',
+    图标:Setting
   }
 ]
 
-export const banners = [
+export const 轮播图列表:轮播图项 [] = [
   {
-    title: '商家入驻季',
-    subtitle: '新商家专属优惠',
-    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    标题:'商家入驻季',
+    副标题:'新商家专属优惠',
+    渐变:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    链接:'/merchant/shop'
   },
   {
-    title: '流量扶持',
-    subtitle: '平台流量倾斜',
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    标题:'流量扶持',
+    副标题:'平台流量倾斜',
+    渐变:'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    链接:'/merchant/statistic'
   },
   {
-    title: '营销工具',
-    subtitle: '智能营销助手',
-    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    标题:'营销工具',
+    副标题:'智能营销助手',
+    渐变:'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    链接:'/merchant/coupon'
   }
 ]
 
-export const orderStatusOptions = [
-  { label: '全部订单', value: '' },
-  { label: '待付款', value: 'pending' },
-  { label: '待发货', value: 'paid' },
-  { label: '已发货', value: 'shipped' },
-  { label: '已完成', value: 'completed' },
-  { label: '已取消', value: 'cancelled' },
-  { label: '退款中', value: 'refunding' }
+export const 订单状态选项:状态选项 [] = [
+  { 标签:'全部订单', 值:'' },
+  { 标签:'待付款', 值:'pending', 颜色:'#ffaa00' },
+  { 标签:'待发货', 值:'paid', 颜色:'#00d4ff' },
+  { 标签:'已发货', 值:'shipped', 颜色:'#00ff88' },
+  { 标签:'已完成', 值:'completed', 颜色:'#00cc6a' },
+  { 标签:'已取消', 值:'cancelled', 颜色:'#ff6666' },
+  { 标签:'退款中', 值:'refunding', 颜色:'#ff8800' }
 ]
 
-export const productStatusOptions = [
-  { label: '全部商品', value: '' },
-  { label: '在售', value: 'active' },
-  { label: '下架', value: 'inactive' },
-  { label: '售罄', value: 'sold_out' }
+export const 商品状态选项:状态选项 [] = [
+  { 标签:'全部商品', 值:'' },
+  { 标签:'在售', 值:'active', 颜色:'#00ff88' },
+  { 标签:'下架', 值:'inactive', 颜色:'#ff6666' },
+  { 标签:'售罄', 值:'sold_out', 颜色:'#ffaa00' }
 ]
 
-export const quickActions = [
-  { icon: ShoppingCart, label: '发布商品', path: '/products/add' },
-  { icon: Box, label: '商品管理', path: '/products' },
-  { icon: List, label: '订单管理', path: '/orders' },
-  { icon: TrendCharts, label: '数据统计', path: '/statistics' },
-  { icon: User, label: '客户管理', path: '/customers' },
-  { icon: Ticket, label: '优惠券', path: '/coupon' }
+export const 快捷操作列表:快捷操作项 [] = [
+  { 图标:ShoppingCart, 名称:'发布商品', 路径:'/merchant/product/edit' },
+  { 图标:Goods, 名称:'商品管理', 路径:'/merchant/product' },
+  { 图标:List, 名称:'订单管理', 路径:'/merchant/order' },
+  { 图标:TrendCharts, 名称:'数据统计', 路径:'/merchant/statistic' },
+  { 图标:User, 名称:'客户管理', 路径:'/merchant/customer' },
+  { 图标:Ticket, 名称:'优惠券', 路径:'/merchant/coupon' }
 ]
+
+// 导出兼容旧代码的变量
+export const categories = 分类列表
+export const banners = 轮播图列表
+export const orderStatusOptions = 订单状态选项
+export const productStatusOptions = 商品状态选项
+export const quickActions = 快捷操作列表

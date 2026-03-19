@@ -1,17 +1,17 @@
-<template>
+﻿<template>
   <div class="product-list">
     <div class="container">
       <!-- 筛选栏 -->
       <div class="filter-bar">
         <div class="filter-item">
-          <span class="filter-label">分类：</span>
+          <span class="filter-label">分类:</span>
           <el-radio-group v-model="selectedCategory" size="small">
             <el-radio-button label="">全部</el-radio-button>
             <el-radio-button v-for="cat in category" :key="cat" :label="cat">{{ cat }}</el-radio-button>
           </el-radio-group>
         </div>
         <div class="filter-item">
-          <span class="filter-label">价格：</span>
+          <span class="filter-label">价格:</span>
           <el-radio-group v-model="priceRange" size="small">
             <el-radio-button label="">全部</el-radio-button>
             <el-radio-button label="0-1000">0-1000 元</el-radio-button>
@@ -20,7 +20,7 @@
           </el-radio-group>
         </div>
         <div class="filter-item">
-          <span class="filter-label">排序：</span>
+          <span class="filter-label">排序:</span>
           <el-radio-group v-model="sortBy" size="small">
             <el-radio-button label="default">综合</el-radio-button>
             <el-radio-button label="sales">销量</el-radio-button>
