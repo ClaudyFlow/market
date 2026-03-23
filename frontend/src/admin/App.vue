@@ -1,20 +1,32 @@
 ﻿<template>
   <div class="app-container">
-    <Header />
-    <main class="main-content">
-      <CategoryPanel />
-      <div class="page-content">
-        <router-view />
-      </div>
-    </main>
-    <Footer />
+    <!-- 未登录时只显示路由内容（登录页） -->
+    <template v-if="!isLoggedIn">
+      <router-view />
+    </template>
+    <!-- 已登录时显示完整布局 -->
+    <template v-else>
+      <Header />
+      <main class="main-content">
+        <CategoryPanel />
+        <div class="page-content">
+          <router-view />
+        </div>
+      </main>
+      <Footer />
+    </template>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import Header from '@admin/components/Header.vue'
 import Footer from '@admin/components/Footer.vue'
 import CategoryPanel from '@admin/components/CategoryPanel.vue'
+
+const isLoggedIn = computed(() => {
+  return !!localStorage.getItem('admin_token')
+})
 </script>
 
 <style>

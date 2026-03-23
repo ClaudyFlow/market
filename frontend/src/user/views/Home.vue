@@ -417,6 +417,18 @@ const flashItem = ref([
     sales: "10 万+",
     image: "https://via.placeholder.com/200x200/1a2a4a/ff8800?text=优衣库",
   },
+  {
+    id: 16,
+    name: "罗技 MX Master 3S",
+    price: 699,
+    originalPrice: 899,
+    soldCount: 5500,
+    remainCount: 4500,
+    type: "digital",
+    rating: 4.7,
+    sales: "5 万+",
+    image: "https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=罗技",
+  },
 ]);
 
 // 推荐商品 - 15 个
@@ -616,6 +628,19 @@ const recommendedItem = ref([
     remaining: 3000,
     image: "https://via.placeholder.com/250x250/1a2a4a/ff8800?text=北面",
   },
+  {
+    id: 116,
+    name: "Bose QuietComfort 45",
+    price: 2299,
+    originalPrice: 2999,
+    description: "主动降噪 / 24 小时续航",
+    rating: 4.7,
+    type: "digital",
+    sales: "6 万+",
+    salesPercent: 65,
+    remaining: 3500,
+    image: "https://via.placeholder.com/250x250/1a2a4a/00d4ff?text=Bose",
+  },
 ]);
 
 // 限时特惠商品(computed 属性)
@@ -641,6 +666,7 @@ const brands = ref([
   { name: "美的", description: "原来生活可以更美的" },
   { name: "任天堂", description: "独乐不如众乐" },
   { name: "LV", description: "奢华与经典的象征" },
+  { name: "联想", description: "智能，为每一个可能" },
 ]);
 
 let timer: ReturnType<typeof setInterval> | null = null
@@ -1050,7 +1076,7 @@ section.flash-sale-section {
 
 .sale-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 
@@ -1204,7 +1230,7 @@ section.recommended-section {
 
 .recommend-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 
@@ -1221,7 +1247,7 @@ section.brand-section {
 
 .brand-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 

@@ -2,67 +2,61 @@
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/admin/login',
+    path: '/login',
     name: 'Login',
     component: () => import('@admin/views/login/Login.vue'),
     meta: { title: '管理员登录' }
   },
   {
-    path: '/admin',
-    name: 'Dashboard',
+    path: '/',
+    name: 'Home',
     component: () => import('@admin/views/Dashboard.vue'),
     meta: { title: '平台概览', requiresAuth: true }
   },
   {
-    path: '/admin/dashboard',
-    name: 'DashboardPage',
-    component: () => import('@admin/views/Dashboard.vue'),
-    meta: { title: '平台概览', requiresAuth: true }
-  },
-  {
-    path: '/admin/user',
+    path: '/user',
     name: 'User',
     component: () => import('@admin/views/user/UserList.vue'),
     meta: { title: '用户管理', requiresAuth: true }
   },
   {
-    path: '/admin/merchant',
+    path: '/merchant',
     name: 'Merchant',
     component: () => import('@admin/views/merchant/MerchantList.vue'),
     meta: { title: '商家管理', requiresAuth: true }
   },
   {
-    path: '/admin/product',
+    path: '/product',
     name: 'Product',
     component: () => import('@admin/views/product/ProductAudit.vue'),
     meta: { title: '商品审核', requiresAuth: true }
   },
   {
-    path: '/admin/order',
+    path: '/order',
     name: 'Order',
     component: () => import('@admin/views/order/OrderMonitor.vue'),
     meta: { title: '订单监控', requiresAuth: true }
   },
   {
-    path: '/admin/review',
+    path: '/review',
     name: 'Review',
     component: () => import('@admin/views/content/ReviewAudit.vue'),
     meta: { title: '评价审核', requiresAuth: true }
   },
   {
-    path: '/admin/statistic',
+    path: '/statistic',
     name: 'Statistic',
     component: () => import('@admin/views/system/Statistics.vue'),
     meta: { title: '数据统计', requiresAuth: true }
   },
   {
-    path: '/admin/chat',
+    path: '/chat',
     name: 'Chat',
     component: () => import('@admin/views/content/MessageCenter.vue'),
     meta: { title: '消息中心', requiresAuth: true }
   },
   {
-    path: '/admin/setting',
+    path: '/setting',
     name: 'Setting',
     component: () => import('@admin/views/system/Settings.vue'),
     meta: { title: '平台设置', requiresAuth: true }
@@ -82,17 +76,17 @@ router.beforeEach((to, from, next) => {
   // 检查是否需要登录
   if (to.meta.requiresAuth) {
     const token = localStorage.getItem('admin_token')
-    if (!token && !to.path.includes('/login')) {
-      next('/admin/login')
+    if (!token) {
+      next('/login')
       return
     }
   }
 
-  // 已登录时访问登录页，重定向到首页
-  if (to.path === '/admin/login') {
+  // 已登录时访问登录页，重定向到主页
+  if (to.path === '/login') {
     const token = localStorage.getItem('admin_token')
     if (token) {
-      next('/admin')
+      next('/')
       return
     }
   }

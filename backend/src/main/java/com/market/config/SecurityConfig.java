@@ -65,6 +65,9 @@ public class SecurityConfig {
                 // 评论查询公开
                 .requestMatchers("/api/review/product/**").permitAll()
                 .requestMatchers("/api/review/rating/**").permitAll()
+                // WebSocket 端点
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/ws").permitAll()
                 // 需要认证的接口
                 .requestMatchers("/api/cart/**").authenticated()
                 .requestMatchers("/api/order/**").authenticated()
@@ -73,6 +76,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/api/favorite/**").authenticated()
                 .requestMatchers("/api/follow/**").authenticated()
+                .requestMatchers("/api/chat/**").authenticated()
                 // 管理员接口（暂时禁用）
                 // .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll());

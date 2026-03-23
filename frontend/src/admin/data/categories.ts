@@ -47,47 +47,47 @@ export interface 状态选项 {
 export const 分类列表:分类项 [] = [
   {
     名称:'平台概览',
-    路径:'/admin/dashboard',
+    路径:'/',
     图标:DataBoard
   },
   {
     名称:'用户管理',
-    路径:'/admin/user',
+    路径:'/user',
     图标:User
   },
   {
     名称:'商家管理',
-    路径:'/admin/merchant',
+    路径:'/merchant',
     图标:Shop
   },
   {
     名称:'商品审核',
-    路径:'/admin/product',
+    路径:'/product',
     图标:Goods
   },
   {
     名称:'订单监控',
-    路径:'/admin/order',
+    路径:'/order',
     图标:List
   },
   {
     名称:'评价审核',
-    路径:'/admin/review',
+    路径:'/review',
     图标:ChatDotRound
   },
   {
     名称:'数据统计',
-    路径:'/admin/statistic',
+    路径:'/statistic',
     图标:DataAnalysis
   },
   {
     名称:'消息中心',
-    路径:'/admin/chat',
+    路径:'/chat',
     图标:ChatLineSquare
   },
   {
     名称:'平台设置',
-    路径:'/admin/setting',
+    路径:'/setting',
     图标:Setting
   }
 ]
@@ -97,19 +97,19 @@ export const 轮播图列表:轮播图项 [] = [
     标题:'平台运营报告',
     副标题:'数据驱动决策',
     渐变:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    链接:'/admin/statistic'
+    链接:'/statistic'
   },
   {
     标题:'商家审核加速',
     副标题:'提升入驻效率',
     渐变:'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    链接:'/admin/merchant'
+    链接:'/merchant'
   },
   {
     标题:'系统升级通知',
     副标题:'功能持续优化',
     渐变:'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    链接:'/admin/setting'
+    链接:'/setting'
   }
 ]
 
@@ -129,14 +129,14 @@ export const 商家状态选项:状态选项 [] = [
 ]
 
 export const 快捷操作列表:快捷操作项 [] = [
-  { 图标:User, 名称:'用户管理', 路径:'/admin/user' },
-  { 图标:Shop, 名称:'商家管理', 路径:'/admin/merchant' },
-  { 图标:Goods, 名称:'商品审核', 路径:'/admin/product' },
-  { 图标:List, 名称:'订单监控', 路径:'/admin/order' },
-  { 图标:TrendCharts, 名称:'数据统计', 路径:'/admin/statistic' },
-  { 图标:Monitor, 名称:'系统监控', 路径:'/admin/monitor' },
-  { 图标:ShoppingCart, 名称:'营销管理', 路径:'/admin/marketing' },
-  { 图标:Tools, 名称:'平台设置', 路径:'/admin/setting' }
+  { 图标:User, 名称:'用户管理', 路径:'/user' },
+  { 图标:Shop, 名称:'商家管理', 路径:'/merchant' },
+  { 图标:Goods, 名称:'商品审核', 路径:'/product' },
+  { 图标:List, 名称:'订单监控', 路径:'/order' },
+  { 图标:TrendCharts, 名称:'数据统计', 路径:'/statistic' },
+  { 图标:Monitor, 名称:'系统监控', 路径:'/monitor' },
+  { 图标:ShoppingCart, 名称:'营销管理', 路径:'/marketing' },
+  { 图标:Tools, 名称:'平台设置', 路径:'/setting' }
 ]
 
 // 导出兼容旧代码的变量

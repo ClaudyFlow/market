@@ -1,29 +1,209 @@
 version: '3.8'
 
 services:
-  # Redis 服务
-  redis:
-    image: redis:latest
-    container_name: market-redis
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/redis:/data
-    command: redis-server --appendonly yes
-
-  # PostgreSQL 服务
+  # ==================== 数据库服务 ====================
+  # PostgreSQL 数据库
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: market-postgres
     restart: always
     environment:
       POSTGRES_DB: market
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
+      TZ: Asia/Shanghai
     ports:
       - "5432:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - market-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d market"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-volumes: {}
+  # ==================== 缓存服务 ====================
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: market-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    command: redis-server --appendonly yes --requirepass 123456
+    networks:
+      - market-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== 应用服务 ====================
+  # Spring Boot 应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: market-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/market
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=123456
+      - JWT_SECRET=${JWT_SECRET:-market-platform-secret-key-2024}
+      - JWT_EXPIRATION=86400000
+      - MAIL_USERNAME=${MAIL_USERNAME:-2481036245@qq.com}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-your-app-password}
+    volumes:
+      - ./logs:/app/logs
+      - ./data/uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - market-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ==================== 前端开发服务（可选） ====================
+  # Node.js + Vue + TypeScript 开发环境
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: market-frontend-dev
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8080
+    networks:
+      - market-network
+    profiles:
+      - dev
+
+  # ==================== Typst 编译服务（可选） ====================
+  # Typst 文档编译环境
+  typst:
+    image: ghcr.io/typst/typst:latest
+    container_name: market-typst
+    volumes:
+      - ./doc:/doc
+    working_dir: /doc
+    command: typst compile --root /doc
+    profiles:
+      - tools
+
+  # ==================== 前端服务（可选） ====================
+  # Nginx 反向代理 + 前端静态资源
+  nginx:
+    build:
+      context: ./frontend/nginx
+      dockerfile: Dockerfile
+    container_name: market-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    networks:
+      - market-network
+
+  # ==================== 监控服务（可选） ====================
+  # Prometheus 监控
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: market-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - market-network
+    profiles:
+      - monitoring
+
+  # Grafana 可视化
+  grafana:
+    image: grafana/grafana:latest
+    container_name: market-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - market-network
+    profiles:
+      - monitoring
+
+  # ==================== 日志服务（可选） ====================
+  # Loki 日志聚合
+  loki:
+    image: grafana/loki:latest
+    container_name: market-loki
+    restart: always
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki:/etc/loki
+      - ./data/loki:/loki
+    command: -config.file=/etc/loki/loki.yml
+    networks:
+      - market-network
+    profiles:
+      - monitoring
+
+  # Promtail 日志收集
+  promtail:
+    image: grafana/promtail:latest
+    container_name: market-promtail
+    restart: always
+    volumes:
+      - ./logs:/var/log/app
+      - ./promtail:/etc/promtail
+    command: -config.file=/etc/promtail/promtail.yml
+    networks:
+      - market-network
+    profiles:
+      - monitoring
+
+networks:
+  market-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:

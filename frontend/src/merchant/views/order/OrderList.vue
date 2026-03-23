@@ -382,33 +382,39 @@ onMounted(() => {
 <style scoped>
 .page-container {
   padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+  min-height: 100vh;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .page-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
+  gap: 12px;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
 }
 
 .page-title .el-icon {
   color: var(--mall-primary);
-  font-size: 24px;
+  font-size: 26px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
 }
 
 .stats-cards {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .stat-card {
@@ -416,7 +422,7 @@ onMounted(() => {
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: rgba(26, 31, 58, 0.6);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
   transition: all 0.3s;
@@ -460,18 +466,22 @@ onMounted(() => {
 
 .stat-card.primary .stat-icon {
   background: linear-gradient(135deg, #00d4ff, #00a8cc);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
 
 .stat-card.warning .stat-icon {
   background: linear-gradient(135deg, #ffaa00, #ff8800);
+  box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
 }
 
 .stat-card.info .stat-icon {
   background: linear-gradient(135deg, #00d4ff, #0088cc);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
 
 .stat-card.success .stat-icon {
   background: linear-gradient(135deg, #00ff88, #00cc6a);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
 }
 
 .stat-info {
@@ -490,33 +500,91 @@ onMounted(() => {
   margin-top: 4px;
 }
 
+/* 搜索栏优化 */
 .search-bar {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.15);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
-  padding: 15px 20px;
+  padding: 20px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
 }
 
 .search-bar :deep(.el-form-item) {
   margin-bottom: 0;
+  margin-right: 15px;
 }
 
 .search-bar :deep(.el-form-item__label) {
-  color: #aaa;
+  color: #ccc;
+  font-weight: 500;
 }
 
+.search-bar :deep(.el-input__wrapper) {
+  background: rgba(10, 14, 26, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.3s;
+}
+
+.search-bar :deep(.el-input__wrapper:hover) {
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.search-bar :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--mall-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.search-bar :deep(.el-input__inner) {
+  color: #fff;
+}
+
+.search-bar :deep(.el-select .el-input__wrapper) {
+  background: rgba(10, 14, 26, 0.6);
+}
+
+.search-bar :deep(.el-select__wrapper) {
+  color: #fff;
+}
+
+.search-bar :deep(.el-date-editor .el-input__wrapper) {
+  background: rgba(10, 14, 26, 0.6);
+}
+
+.search-bar :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  border: none;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+  color: #000;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.search-bar :deep(.el-button--primary:hover) {
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.search-bar :deep(.el-button) {
+  border-radius: 8px;
+}
+
+/* 表格区域 */
 .table-section {
-  background: rgba(26, 31, 58, 0.6);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
   padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
 }
 
 .product-image {
   width: 50px;
   height: 50px;
   border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .price-text {
@@ -536,16 +604,88 @@ onMounted(() => {
   color: var(--mall-primary);
   font-size: 13px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+  font-weight: 600;
 }
 
 .sci-table :deep(.el-table__body td) {
   background: transparent;
-  color: #aaa;
+  color: #ccc;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 13px;
+  padding: 12px 0;
 }
 
 .sci-table :deep(.el-table__row:hover) {
   background: rgba(0, 212, 255, 0.05);
+}
+
+.sci-table :deep(.el-table__empty-text) {
+  color: #888;
+}
+
+/* 操作按钮样式 */
+.sci-table :deep(.el-button) {
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+.sci-table :deep(.el-button--primary) {
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--mall-primary);
+}
+
+.sci-table :deep(.el-button--primary:hover) {
+  background: rgba(0, 212, 255, 0.25);
+  border-color: var(--mall-primary);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.sci-table :deep(.el-button--success) {
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--mall-secondary);
+}
+
+.sci-table :deep(.el-button--success:hover) {
+  background: rgba(0, 255, 136, 0.25);
+  border-color: var(--mall-secondary);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.sci-table :deep(.el-button--warning) {
+  background: rgba(255, 170, 0, 0.15);
+  border: 1px solid rgba(255, 170, 0, 0.3);
+  color: #ffaa00;
+}
+
+.sci-table :deep(.el-button--warning:hover) {
+  background: rgba(255, 170, 0, 0.25);
+  border-color: #ffaa00;
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+}
+
+/* 状态标签样式 */
+.sci-table :deep(.el-tag) {
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border: none;
+}
+
+.sci-table :deep(.el-tag--success) {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--mall-secondary);
+}
+
+.sci-table :deep(.el-tag--warning) {
+  background: rgba(255, 170, 0, 0.15);
+  color: #ffaa00;
+}
+
+.sci-table :deep(.el-tag--info) {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--mall-primary);
 }
 </style>

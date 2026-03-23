@@ -10,7 +10,7 @@
     <!-- 主导航 -->
     <div class="main-nav">
       <div class="container">
-        <router-link to="/admin/dashboard" class="logo">
+        <router-link to="/" class="logo">
           <div class="logo-icon">
             <el-icon><Monitor /></el-icon>
           </div>
@@ -24,27 +24,27 @@
         </router-link>
 
         <nav class="nav-links">
-          <router-link to="/admin/dashboard" class="nav-item" active-class="active">
+          <router-link to="/" class="nav-item" active-class="active">
             <el-icon><DataBoard /></el-icon>
             <span>平台概览</span>
           </router-link>
-          <router-link to="/admin/user" class="nav-item" active-class="active">
+          <router-link to="/user" class="nav-item" active-class="active">
             <el-icon><User /></el-icon>
             <span>用户管理</span>
           </router-link>
-          <router-link to="/admin/merchant" class="nav-item" active-class="active">
+          <router-link to="/merchant" class="nav-item" active-class="active">
             <el-icon><Shop /></el-icon>
             <span>商家管理</span>
           </router-link>
-          <router-link to="/admin/product" class="nav-item" active-class="active">
+          <router-link to="/product" class="nav-item" active-class="active">
             <el-icon><Goods /></el-icon>
             <span>商品审核</span>
           </router-link>
-          <router-link to="/admin/order" class="nav-item" active-class="active">
+          <router-link to="/order" class="nav-item" active-class="active">
             <el-icon><List /></el-icon>
             <span>订单监控</span>
           </router-link>
-          <router-link to="/admin/statistic" class="nav-item" active-class="active">
+          <router-link to="/statistic" class="nav-item" active-class="active">
             <el-icon><DataAnalysis /></el-icon>
             <span>数据统计</span>
           </router-link>
@@ -60,7 +60,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="跳转页面 ('/admin/setting')">个人设置</el-dropdown-item>
+                <el-dropdown-item @click="跳转页面 ('/setting')">个人设置</el-dropdown-item>
                 <el-dropdown-item divided @click="处理退出">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -118,7 +118,7 @@ const 处理退出 = () => {
   localStorage.removeItem('adminToken')
   localStorage.removeItem('adminInfo')
   ElMessage.success('已退出登录')
-  router.push('/admin/login')
+  router.push('/login')
 }
 
 // 组件挂载时加载信息

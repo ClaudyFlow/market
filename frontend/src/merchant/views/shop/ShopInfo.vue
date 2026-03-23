@@ -325,26 +325,35 @@ const saveShopInfo = () => {
 <style scoped>
 .page-container {
   padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+  min-height: 100vh;
 }
 
 .page-header {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .page-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
+  gap: 12px;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
 }
 
 .page-title .el-icon {
   color: var(--mall-primary);
-  font-size: 24px;
+  font-size: 26px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
 }
 
 .shop-section {
@@ -385,6 +394,49 @@ const saveShopInfo = () => {
   margin-bottom: 15px;
 }
 
+.shop-form :deep(.el-input__wrapper) {
+  background: rgba(10, 14, 26, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.shop-form :deep(.el-input__wrapper:hover) {
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.shop-form :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--mall-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.shop-form :deep(.el-input__inner) {
+  color: #fff;
+}
+
+.shop-form :deep(.el-textarea__inner) {
+  background: rgba(10, 14, 26, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  color: #fff;
+}
+
+.shop-form :deep(.el-textarea__inner:hover) {
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.shop-form :deep(.el-textarea__inner:focus) {
+  border-color: var(--mall-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.shop-form :deep(.el-select .el-input__wrapper) {
+  background: rgba(10, 14, 26, 0.6);
+}
+
+.shop-form :deep(.el-select__wrapper) {
+  color: #fff;
+}
+
 .logo-uploader,
 .banner-uploader {
   display: flex;
@@ -399,12 +451,14 @@ const saveShopInfo = () => {
   text-align: center;
   cursor: pointer;
   transition: all 0.3s;
+  background: rgba(10, 14, 26, 0.4);
   width: fit-content;
 }
 
 .image-uploader:hover {
   border-color: var(--mall-primary);
   background: rgba(0, 212, 255, 0.05);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
 }
 
 .uploaded-logo {
@@ -412,6 +466,7 @@ const saveShopInfo = () => {
   height: 150px;
   object-fit: cover;
   border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .uploaded-banner {
@@ -419,11 +474,12 @@ const saveShopInfo = () => {
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .uploader-icon {
   font-size: 40px;
-  color: #888;
+  color: var(--mall-primary);
 }
 
 .uploader-tip {

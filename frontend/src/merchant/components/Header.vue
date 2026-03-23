@@ -10,7 +10,7 @@
     <!-- 主导航 -->
     <div class="main-nav">
       <div class="container">
-        <router-link to="/merchant/dashboard" class="logo">
+        <router-link to="/" class="logo">
           <div class="logo-icon">
             <el-icon><Shop /></el-icon>
           </div>
@@ -24,27 +24,27 @@
         </router-link>
 
         <nav class="nav-links">
-          <router-link to="/merchant/dashboard" class="nav-item" active-class="active">
+          <router-link to="/" class="nav-item" active-class="active">
             <el-icon><DataAnalysis /></el-icon>
             <span>首页看板</span>
           </router-link>
-          <router-link to="/merchant/product" class="nav-item" active-class="active">
+          <router-link to="/product" class="nav-item" active-class="active">
             <el-icon><Goods /></el-icon>
             <span>商品管理</span>
           </router-link>
-          <router-link to="/merchant/order" class="nav-item" active-class="active">
+          <router-link to="/order" class="nav-item" active-class="active">
             <el-icon><ShoppingCart /></el-icon>
             <span>订单管理</span>
           </router-link>
-          <router-link to="/merchant/shop" class="nav-item" active-class="active">
+          <router-link to="/shop" class="nav-item" active-class="active">
             <el-icon><Shop /></el-icon>
             <span>店铺管理</span>
           </router-link>
-          <router-link to="/merchant/statistic" class="nav-item" active-class="active">
+          <router-link to="/statistic" class="nav-item" active-class="active">
             <el-icon><TrendCharts /></el-icon>
             <span>数据统计</span>
           </router-link>
-          <router-link to="/merchant/chat" class="nav-item" active-class="active">
+          <router-link to="/chat" class="nav-item" active-class="active">
             <el-icon><ChatDotRound /></el-icon>
             <span>消息中心</span>
           </router-link>
@@ -60,7 +60,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="跳转页面 ('/merchant/shop')">店铺设置</el-dropdown-item>
+                <el-dropdown-item @click="跳转页面 ('/shop')">店铺设置</el-dropdown-item>
                 <el-dropdown-item divided @click="处理退出">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -120,7 +120,7 @@ const 处理退出 = () => {
   localStorage.removeItem('merchantToken')
   localStorage.removeItem('merchantInfo')
   ElMessage.success('已退出登录')
-  router.push('/merchant/login')
+  router.push('/login')
 }
 
 // 组件挂载时加载信息
