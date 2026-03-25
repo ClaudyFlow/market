@@ -2,9 +2,14 @@
   <main class="home-main">
     <section class="mall-home">
       <div class="container">
-        <!-- 左侧：用户面板 -->
-        <div class="user-panel">
-          <UserPanel />
+        <!-- 左侧区域：用户面板 + 下方区域 -->
+        <div class="left-section">
+          <div class="user-panel">
+            <UserPanel />
+          </div>
+          <div class="left-bottom">
+            <QuickStats />
+          </div>
         </div>
         <!-- 中间：轮播图 + 快捷操作 -->
         <div class="banner-section">
@@ -110,6 +115,7 @@ import UserNoticePanel from "@user/components/UserNoticePanel.vue";
 import UserPanel from "@user/components/UserPanel.vue";
 import QuickActionsBar from "@user/components/QuickActionsBar.vue";
 import BannerCarousel from "@user/components/BannerCarousel.vue";
+import QuickStats from "@user/components/QuickStats.vue";
 import { ElMessage } from "element-plus";
 import { 获取进度颜色 } from "@user/util/discount";
 import { Coin, Bell } from '@element-plus/icons-vue'
@@ -640,7 +646,9 @@ onUnmounted(() => {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 0 1%;
+  padding: 15px 2.5%;
+  border-left: 1px solid rgba(0, 212, 255, 0.2);
+  border-right: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 /* 主容器 */
@@ -657,15 +665,28 @@ section.mall-home .container {
   gap: 15px;
 }
 
-/* 左侧用户面板 - 占 2 行高度，全宽全高 */
-.user-panel {
+/* 左侧区域容器 - 占 3 行，内部 3:2 比例 */
+.left-section {
   grid-column: 1;
   grid-row: 1 / 7;
+  display: grid;
+  grid-template-rows: 3fr 2fr;
+  gap: 15px;
+}
+
+/* 用户面板 */
+.user-panel {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: auto auto 1fr auto;
   gap: 15px;
+}
+
+/* 左侧下方区域 */
+.left-bottom {
+  width: 100%;
+  height: 100%;
 }
 
 /* 中间区域 - 轮播图占 2 行，快捷入口占 1 行，全宽全高 */
@@ -684,6 +705,8 @@ section.mall-home .container {
   grid-row: 1;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* 快捷操作栏 - 全宽全高 */
@@ -691,6 +714,7 @@ section.mall-home .container {
   grid-row: 2;
   width: 100%;
   height: 100%;
+  margin: 0;
 }
 
 /* 右侧公告区域容器 */
@@ -711,11 +735,6 @@ article.user-card {
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-}
-
-figure.user-avatar :deep(.el-avatar) {
-  border: 3px solid var(--mall-primary);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
 .user-name {

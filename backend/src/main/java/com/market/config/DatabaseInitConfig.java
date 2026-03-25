@@ -3,6 +3,7 @@ package com.market.config;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
  * 数据库初始化配置
  * 在应用启动时自动创建表结构和初始数据
  */
+@Profile("dev") // 只在 dev  profile 下启用
 @Configuration
 public class DatabaseInitConfig {
 
@@ -67,7 +69,7 @@ public class DatabaseInitConfig {
                 name VARCHAR(200) NOT NULL,
                 description TEXT,
                 image VARCHAR(500),
-                images TEXT[],
+                images VARCHAR(500),
                 category VARCHAR(50),
                 price DECIMAL(10, 2) NOT NULL,
                 stock INTEGER NOT NULL DEFAULT 0,
@@ -156,7 +158,7 @@ public class DatabaseInitConfig {
                 order_id BIGINT REFERENCES "order"(id),
                 score INTEGER NOT NULL CHECK (score >= 1 AND score <= 5),
                 content TEXT,
-                images TEXT[],
+                images VARCHAR(500),
                 reply TEXT,
                 reply_time TIMESTAMP,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

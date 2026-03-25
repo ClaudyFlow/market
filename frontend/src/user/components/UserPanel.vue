@@ -1,15 +1,8 @@
 <template>
   <article class="user-card">
-    <figure class="user-avatar">
-      <el-avatar
-        :size="80"
-        src="https://via.placeholder.com/80x80/00d4ff/fff?text=VIP"
-      >
-        <el-icon size="40"><User /></el-icon>
-      </el-avatar>
-    </figure>
+    <UserAvatar />
     <h3 class="user-name">尊敬的会员</h3>
-    <div class="info-row">
+    <div class="user-info">
       <UserLevel level="8" />
       <VipLevelBadge level-name="普通会员" text-color="#fff9c4" />
       <UserCredit :credit="userStore.userCredit" />
@@ -41,6 +34,7 @@ import { User, Calendar, Coin } from '@element-plus/icons-vue'
 import VipLevelBadge from './VipLevelBadge.vue'
 import UserLevel from './UserLevel.vue'
 import UserCredit from './UserCredit.vue'
+import UserAvatar from './UserAvatar.vue'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
@@ -63,7 +57,7 @@ const goToLottery = () => {
 .user-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto auto auto;
+  grid-template-rows: auto auto auto auto;
   gap: 15px;
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -71,21 +65,11 @@ const goToLottery = () => {
   padding: 20px;
 }
 
-/* 头像单独占一行 */
-.user-avatar {
-  grid-row: 1;
+/* 头像单独占一行，居中 */
+.user-card > :first-child {
   grid-column: 1 / 3;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-figure.user-avatar :deep(.el-avatar) {
-  width: 50%;
-  aspect-ratio: 1 / 1;
-  border: 3px solid var(--mall-primary);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
 /* 用户名称 */
@@ -99,18 +83,21 @@ figure.user-avatar :deep(.el-avatar) {
   text-align: center;
 }
 
-/* 信息行 - 等级、VIP、积分 */
-.info-row {
+/* 用户信息 - 等级、VIP、积分 */
+.user-info {
   grid-row: 3;
   grid-column: 1 / 3;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
-.info-row > * {
+.user-info > * {
   width: 60%;
+  border-radius: 9999px;
 }
 
 /* 签到按钮 */

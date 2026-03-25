@@ -1,6 +1,6 @@
 <template>
   <div class="vip-level-badge">
-    <img :src="icon" alt="" class="level-icon" v-if="icon" />
+    <img v-lazyload="icon" alt="" class="level-icon" v-if="icon" />
     <span class="level-name" :style="{ color: textColor }">{{ levelName }}</span>
   </div>
 </template>
@@ -26,6 +26,7 @@ defineProps<{
   border-radius: 9999px;
   border: 1px solid rgba(255, 223, 0, 0.9);
   box-shadow: 0 0 25px rgba(255, 223, 0, 0.8);
+  white-space: nowrap;
   width: 100%;
 }
 

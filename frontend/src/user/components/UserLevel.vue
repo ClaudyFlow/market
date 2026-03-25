@@ -27,7 +27,8 @@ defineProps<{
   color: #fff;
   box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
   display: inline-block;
-  width: 100%;
   text-align: center;
+  white-space: nowrap;
+  width: 100%;
 }
 </style>

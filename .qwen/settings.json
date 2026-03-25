@@ -4,7 +4,18 @@
       "Bash(npm run *)",
       "Bash(timeout *)",
       "Bash(powershell *)",
-      "Bash(del *)"
+      "Bash(del *)",
+      "Bash(git push)",
+      "Bash(taskkill *)",
+      "Bash(mvn *)",
+      "Bash(netstat *)",
+      "Bash(findstr *)",
+      "Bash(tasklist *)",
+      "Bash(docker-compose *)",
+      "Bash(docker ps *)",
+      "Bash(select-string *)",
+      "Bash(select-object *)",
+      "Bash(psql *)"
     ]
   },
   "$version": 3

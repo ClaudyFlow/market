@@ -48,11 +48,13 @@ const router = useRouter()
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
+  gap: 15px;
   padding: 15px;
   margin: 0;
   background: rgba(26, 31, 58, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
+  box-sizing: border-box;
 }
 
 .action-item {
@@ -61,7 +63,6 @@ const router = useRouter()
   background: rgba(26, 31, 58, 0.6);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 6px;
-  padding: 15px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,11 +70,12 @@ const router = useRouter()
   gap: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  width: 100%;
+  height: 100%;
 }
 
 .action-item:hover {
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
-  border-color: var(--mall-primary);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
 }
@@ -99,36 +101,6 @@ const router = useRouter()
 .action-item.vip-action .el-icon,
 .action-item.vip-action span {
   color: #ffd700;
-}
-
-.action-item.vip-action::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -100%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 249, 196, 0.6),
-    rgba(255, 223, 0, 0.7),
-    rgba(255, 249, 196, 0.6),
-    transparent
-  );
-  transform: skewX(-45deg);
-  animation: shine-slide 5s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-@keyframes shine-slide {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 600%;
-  }
 }
 
 .action-item.vip-action:hover {

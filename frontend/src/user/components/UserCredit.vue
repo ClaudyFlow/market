@@ -19,8 +19,7 @@ defineProps<{
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: auto;
-  min-width: 80px;
+  width: 100%;
   background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.15));
   padding: 6px 12px;
   border-radius: 9999px;

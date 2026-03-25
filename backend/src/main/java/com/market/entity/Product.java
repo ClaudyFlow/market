@@ -35,7 +35,11 @@ public class Product {
     
     @Column(nullable = false)
     private Boolean available = true;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
@@ -87,10 +91,20 @@ public class Product {
     
     public Boolean getAvailable() { return available; }
     public void setAvailable(Boolean available) { this.available = available; }
-    
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    /**
+     * 获取商品图片 URL（别名方法）
+     */
+    public String getImage() {
+        return this.imageUrl;
+    }
 }

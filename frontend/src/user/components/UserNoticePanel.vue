@@ -47,18 +47,6 @@ const notices = ref([
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
-  padding-left: 12px;
-}
-
-.panel-title::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 4px;
-  height: 16px;
-  background: linear-gradient(180deg, #00d4ff, #00ff88);
-  border-radius: 2px;
 }
 
 .panel-title .el-icon {

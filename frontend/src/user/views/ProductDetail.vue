@@ -14,11 +14,11 @@
         <!-- 商品图片 -->
         <div class="product-gallery">
           <div class="main-image">
-            <img :src="商品.image" :alt="商品.name" />
+            <img v-lazyload="商品.image" :alt="商品.name" />
           </div>
           <div class="thumbnail-list">
             <div class="thumbnail" v-for="i in 4" :key="i" :class="{ active: i === 1 }">
-              <img :src="商品.image" alt="" />
+              <img v-lazyload="商品.image" alt="" />
             </div>
           </div>
         </div>

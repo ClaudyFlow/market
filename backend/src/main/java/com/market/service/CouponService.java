@@ -339,7 +339,7 @@ public class CouponService {
         List<Coupon> availableCoupons = new ArrayList<>();
 
         // 获取用户的所有可用优惠券
-        List<UserCoupon> userCoupons = userCouponRepository.findAvailableCoupons(user.getId(), merchantId);
+        List<UserCoupon> userCoupons = userCouponRepository.findAvailableCoupons(user.getId(), merchantId, LocalDateTime.now());
 
         for (UserCoupon userCoupon : userCoupons) {
             Coupon coupon = userCoupon.getCoupon();

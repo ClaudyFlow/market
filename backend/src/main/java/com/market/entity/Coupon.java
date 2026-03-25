@@ -194,7 +194,7 @@ public class Coupon {
             status = "USED_UP";
         } else if (validTo != null && now.isAfter(validTo)) {
             status = "EXPIRED";
-        } else if (!Boolean.TRUE.equals(active)) {
+        } else if (!"ACTIVE".equals(status)) {
             status = "INACTIVE";
         } else {
             status = "ACTIVE";

@@ -551,34 +551,9 @@
   overflow: hidden;
 }
 
-.user-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
-  animation: card-shine 4s linear infinite;
-}
-
-@keyframes card-shine {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .user-card > * {
   position: relative;
   z-index: 1;
-}
-
-.user-avatar {
-  margin-bottom: 16px;
-}
-
-.user-avatar :deep(.el-avatar) {
-  border: 3px solid var(--mall-primary);
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
 }
 
 .user-name {
@@ -614,51 +589,6 @@
 .stat-badge.level {
   background: linear-gradient(135deg, var(--mall-gold), var(--mall-gold-light));
   color: #000;
-}
-
-/* ==================== 快捷操作栏 ==================== */
-
-.quick-actions-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 16px;
-  background: linear-gradient(90deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.05));
-  border-radius: 12px;
-  margin-top: 16px;
-  border: 1px solid rgba(0, 212, 255, 0.15);
-}
-
-.action-item {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 10px;
-  padding: 16px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.action-item:hover {
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
-  border-color: var(--mall-primary);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
-}
-
-.action-item .el-icon {
-  font-size: 32px;
-  color: var(--mall-primary);
-}
-
-.action-item span {
-  font-size: 14px;
-  color: var(--mall-text-secondary);
-  font-weight: 500;
 }
 
 /* ==================== 公告面板 ==================== */

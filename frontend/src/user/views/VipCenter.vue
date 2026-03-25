@@ -4,11 +4,11 @@
     <header class="vip-header">
       <div class="user-info">
         <div class="avatar-wrapper">
-          <el-avatar :size="80" :src="userAvatar" class="user-avatar" />
+          <UserAvatar :size="80" :src="userAvatar" />
         </div>
         <div class="user-details">
           <div class="vip-level-badge">
-            <img :src="currentLevel.icon" alt="" class="level-icon" v-if="currentLevel.icon" />
+            <img v-lazyload="currentLevel.icon" alt="" class="level-icon" v-if="currentLevel.icon" />
             <span class="level-name" :style="{ color: currentLevel.textColor || '#fff9c4' }">{{ currentLevel.name }}</span>
           </div>
           <div class="user-name" style="color: #fff9c4; text-shadow: 0 0 10px rgba(255, 249, 196, 0.6);">{{ userName }}</div>
@@ -62,7 +62,7 @@
           @click="claimGiftHandler(gift)"
         >
           <div class="gift-image">
-            <img :src="gift.image" alt="" />
+            <img v-lazyload="gift.image" alt="" />
             <div class="gift-overlay" v-if="!gift.canClaim && !gift.claimed">
               <el-icon><Lock /></el-icon>
               <span>等级不足</span>
@@ -111,7 +111,7 @@
           @click="claimGiftHandler(gift)"
         >
           <div class="gift-image">
-            <img :src="gift.image" alt="" />
+            <img v-lazyload="gift.image" alt="" />
             <div class="gift-overlay" v-if="!gift.canClaim && !gift.claimed">
               <el-icon><Lock /></el-icon>
               <span>等级不足</span>
@@ -286,15 +286,16 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-  Ticket, Clock, CircleCheck, Lock, Shop, Discount, Truck, 
-  CustomerService, Star, DataAnalysis 
+import {
+  Ticket, Clock, CircleCheck, Lock, Shop, Discount, Truck,
+  CustomerService, Star, DataAnalysis
 } from '@element-plus/icons-vue'
-import { 
-  getVipLevels, 
-  getMyVipInfo, 
-  getDailyGifts, 
-  getMonthlyGifts, 
+import UserAvatar from '@user/components/UserAvatar.vue'
+import {
+  getVipLevels,
+  getMyVipInfo,
+  getDailyGifts,
+  getMonthlyGifts,
   claimGift,
   createRechargeOrder,
   payRechargeOrder,

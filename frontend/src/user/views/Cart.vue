@@ -24,7 +24,7 @@
               </div>
               <div class="col-product">
                 <div class="product-info">
-                  <img :src="item.image" :alt="item.name" />
+                  <img v-lazyload="item.image" :alt="item.name" />
                   <div class="product-name">{{ item.name }}</div>
                 </div>
               </div>

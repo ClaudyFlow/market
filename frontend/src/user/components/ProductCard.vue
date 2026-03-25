@@ -1,7 +1,7 @@
 ﻿<template>
   <article class="product-card" @click="handleClick">
     <div class="sale-image">
-      <img :src="product.image" :alt="product.name" />
+      <img v-lazyload="product.image" :alt="product.name" />
       <FavoriteButton
         :productId="product.id"
         circle

@@ -84,7 +84,7 @@ public class VipService {
         if (nextLevel != null) {
             int required = nextLevel.getGrowthValueRequired();
             int prevRequired = currentLevel.getGrowthValueRequired();
-            int progress Percent = (required - prevRequired) > 0 
+            int progressPercent = (required - prevRequired) > 0
                 ? (int) ((growthValue - prevRequired) * 100 / (required - prevRequired))
                 : 100;
             progress.put("nextLevel", nextLevel);

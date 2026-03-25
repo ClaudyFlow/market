@@ -121,9 +121,11 @@ Thumbs.db
 # IDE and Editor files
 *.suo
 *.ntvs*
+*.iws
 *.njsproj
 *.sln
 *.sw?
+.qwen/
 
 # Test and coverage
 coverage/

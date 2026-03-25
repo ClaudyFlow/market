@@ -15,7 +15,7 @@
             class="favorite-card"
           >
             <div class="favorite-image">
-              <img :src="item.productImage || '/images/product.jpg'" :alt="item.productName" />
+              <img v-lazyload="item.productImage || '/images/product.jpg'" :alt="item.productName" />
               <el-button
                 class="remove-btn"
                 type="danger"

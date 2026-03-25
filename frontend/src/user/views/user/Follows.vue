@@ -15,7 +15,7 @@
             class="follow-card"
           >
             <div class="follow-image">
-              <img :src="item.shopAvatar || '/images/shop.jpg'" :alt="item.shopName" />
+              <img v-lazyload="item.shopAvatar || '/images/shop.jpg'" :alt="item.shopName" />
               <el-button
                 class="remove-btn"
                 type="danger"

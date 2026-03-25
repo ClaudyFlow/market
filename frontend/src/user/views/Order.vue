@@ -27,7 +27,7 @@
           <div class="section-title">商品清单</div>
           <div class="order-items">
             <div class="order-item" v-for="item in 购物车.cartItems" :key="item.id">
-              <img :src="item.image" :alt="item.name" />
+              <img v-lazyload="item.image" :alt="item.name" />
               <div class="item-info">
                 <div class="item-name">{{ item.name }}</div>
                 <div class="item-spec">颜色:{{ item.selectedColor || '默认' }} | 版本:{{ item.selectedVersion || '默认' }}</div>

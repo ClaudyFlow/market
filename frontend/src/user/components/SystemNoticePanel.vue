@@ -14,8 +14,8 @@
         <div class="notice-item">
           <div class="notice-content">
             <div class="notice-title-row">
-              <span class="notice-type" :class="'type-' + note.type">{{ note.type }}</span>
-              <h4 class="notice-title">{{ note.title }}</h4>
+              <span class="notice-type">{{ note.type }}</span>
+              <span class="notice-title">{{ note.title }}</span>
             </div>
             <p class="notice-text">{{ note.content }}</p>
           </div>
@@ -47,28 +47,16 @@ import { announcements } from '@user/data/announcements'
 .notice-title {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
-  justify-content: flex-start;
-  position: relative;
-  padding-left: 12px;
-}
-
-.notice-title::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 4px;
-  height: 16px;
-  background: linear-gradient(180deg, #00d4ff, #00ff88);
-  border-radius: 2px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #00d4ff;
 }
 
 .notice-title .el-icon {
   color: #00d4ff;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .notice-title span {
@@ -120,9 +108,10 @@ import { announcements } from '@user/data/announcements'
 .notice-type {
   font-size: 12px;
   font-weight: bold;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   color: #fff;
+  flex-shrink: 0;
 }
 
 .notice-type.type-活动 {
@@ -141,12 +130,12 @@ import { announcements } from '@user/data/announcements'
   background: linear-gradient(135deg, #00ff88, #00cc6a);
 }
 
-.notice-title h4 {
+.notice-title-row .notice-title {
   font-size: 15px;
   font-weight: bold;
   color: #00d4ff;
   margin: 0;
-  line-height: 2;
+  line-height: 1.5;
 }
 
 .notice-text {
