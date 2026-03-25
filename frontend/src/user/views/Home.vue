@@ -8,7 +8,7 @@
             <UserPanel />
           </div>
           <div class="left-bottom">
-            <QuickStats />
+            <CustomerService />
           </div>
         </div>
         <!-- 中间：轮播图 + 快捷操作 -->
@@ -18,12 +18,14 @@
           <QuickActionsBar />
         </div>
 
-        <!-- 右侧：公告区域 -->
-        <div class="notice-panel">
+        <!-- 右侧：系统通知 + 用户通知 + 用户论坛 -->
+        <div class="right-section">
           <!-- 系统通知 -->
           <SystemNoticePanel />
           <!-- 用户通知 -->
           <UserNoticePanel />
+          <!-- 用户论坛 -->
+          <UserForum />
         </div>
       </div>
     </section>
@@ -115,7 +117,8 @@ import UserNoticePanel from "@user/components/UserNoticePanel.vue";
 import UserPanel from "@user/components/UserPanel.vue";
 import QuickActionsBar from "@user/components/QuickActionsBar.vue";
 import BannerCarousel from "@user/components/BannerCarousel.vue";
-import QuickStats from "@user/components/QuickStats.vue";
+import CustomerService from "@user/components/CustomerService.vue";
+import UserForum from "@user/components/UserForum.vue";
 import { ElMessage } from "element-plus";
 import { 获取进度颜色 } from "@user/util/discount";
 import { Coin, Bell } from '@element-plus/icons-vue'
@@ -665,31 +668,28 @@ section.mall-home .container {
   gap: 15px;
 }
 
-/* 左侧区域容器 - 占 3 行，内部 3:2 比例 */
+/* 左侧区域容器 - 占 3 行，内部 2:1 比例 */
 .left-section {
   grid-column: 1;
   grid-row: 1 / 7;
   display: grid;
-  grid-template-rows: 3fr 2fr;
+  grid-template-rows: 2fr 1fr;
   gap: 15px;
 }
 
-/* 用户面板 */
+/* 用户面板 - 全宽全高 */
 .user-panel {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 15px;
 }
 
-/* 左侧下方区域 */
+/* 左侧下方区域 - 全宽全高 */
 .left-bottom {
   width: 100%;
   height: 100%;
 }
 
-/* 中间区域 - 轮播图占 2 行，快捷入口占 1 行，全宽全高 */
+/* 中间区域 - 轮播图占 2 行，快捷入口占 1 行，内部 2:1 比例 */
 .banner-section {
   grid-column: 2;
   grid-row: 1 / 7;
@@ -717,14 +717,12 @@ section.mall-home .container {
   margin: 0;
 }
 
-/* 右侧公告区域容器 */
-.notice-panel {
+/* 右侧区域容器 - 3 行，高度 1:1:1 */
+.right-section {
   grid-column: 3;
   grid-row: 1 / 7;
-  width: 100%;
-  height: 100%;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   gap: 15px;
 }
 

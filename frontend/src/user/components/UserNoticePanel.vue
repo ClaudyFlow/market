@@ -27,16 +27,17 @@ const notices = ref([
 
 <style scoped>
 .user-notice-panel {
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 0;
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 15px;
-  overflow-y: auto;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .panel-title {

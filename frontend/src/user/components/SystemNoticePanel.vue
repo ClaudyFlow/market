@@ -35,13 +35,14 @@ import { announcements } from '@user/data/announcements'
 
 <style scoped>
 .system-notice {
-  flex: 1;
-  min-height: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 15px;
-  overflow-y: auto;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .notice-title {
@@ -66,7 +67,7 @@ import { announcements } from '@user/data/announcements'
 }
 
 .system-notice :deep(.el-carousel__container) {
-  height: 160px;
+  height: 120px;
 }
 
 .system-notice :deep(.el-carousel__arrow) {

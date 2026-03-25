@@ -55,6 +55,8 @@ const goToLottery = () => {
 <style scoped>
 /* 用户卡片 */
 .user-card {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto auto;
@@ -63,6 +65,7 @@ const goToLottery = () => {
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 /* 头像单独占一行，居中 */
