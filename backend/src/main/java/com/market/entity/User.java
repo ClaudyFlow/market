@@ -64,6 +64,21 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "is_merchant", nullable = false)
+    private Boolean isMerchant = false;
+
+    @Column(name = "shop_name", length = 100)
+    private String shopName;
+
+    @Column(name = "shop_description", length = 500)
+    private String shopDescription;
+
+    @Column(name = "merchant_status", length = 20)
+    private String merchantStatus = "INACTIVE"; // INACTIVE, ACTIVE, BANNED
+
     public User() {}
 
     public User(String name, String email, String passwordHash) {
@@ -98,6 +113,23 @@ public class User implements UserDetails {
 
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
+    public String getAvatar() { return avatarUrl; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public Boolean getIsMerchant() { return isMerchant; }
+    public void setIsMerchant(Boolean isMerchant) { this.isMerchant = isMerchant; }
+
+    public String getShopName() { return shopName; }
+    public void setShopName(String shopName) { this.shopName = shopName; }
+
+    public String getShopDescription() { return shopDescription; }
+    public void setShopDescription(String shopDescription) { this.shopDescription = shopDescription; }
+
+    public String getMerchantStatus() { return merchantStatus; }
+    public void setMerchantStatus(String merchantStatus) { this.merchantStatus = merchantStatus; }
 
     public Integer getCredit() { return credit; }
     public void setCredit(Integer credit) { this.credit = credit; }

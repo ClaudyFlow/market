@@ -246,7 +246,8 @@ onMounted(() => {
 .logo-text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .logo-title {
@@ -255,17 +256,18 @@ onMounted(() => {
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
-  text-align: left;
+  letter-spacing: 4px;
+  white-space: nowrap;
 }
 
 .logo-subtitle {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  gap: 2px;
+  font-size: 11px;
   color: #888;
   letter-spacing: 2px;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .nav-links {

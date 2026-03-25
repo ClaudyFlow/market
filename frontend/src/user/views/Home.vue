@@ -1,178 +1,101 @@
 ﻿<template>
-  <section class="mall-home">
-    <!-- 左侧分类导航 -->
-    <CategoryPanel />
+  <main class="home-main">
+    <section class="mall-home">
+      <div class="container">
+        <!-- 左侧：用户面板 -->
+        <div class="user-panel">
+          <UserPanel />
+        </div>
+        <!-- 中间：轮播图 + 快捷操作 -->
+        <div class="banner-section">
+          <BannerCarousel />
+          <!-- 快捷操作 -->
+          <QuickActionsBar />
+        </div>
 
-    <!-- 中间:轮播图 + 快捷操作 -->
-    <div class="banner-section">
-      <el-carousel height="420px" aria-label="促销轮播">
-        <el-carousel-item v-for="(banner, index) in banners" :key="index">
-          <article class="banner-item" :style="{ background: banner.gradient }">
-            <div class="banner-info">
-              <h2 class="banner-title">{{ banner.title }}</h2>
-              <p class="banner-subtitle">{{ banner.subtitle }}</p>
-              <el-button type="primary" size="large" class="glow-btn">
-                立即查看
-              </el-button>
+        <!-- 右侧：公告区域 -->
+        <div class="notice-panel">
+          <!-- 系统通知 -->
+          <SystemNoticePanel />
+          <!-- 用户通知 -->
+          <UserNoticePanel />
+        </div>
+      </div>
+    </section>
+
+    <!-- 限时特惠 -->
+    <section class="flash-sale-section" aria-label="限时特惠">
+      <div class="container">
+        <header class="section-header">
+          <div class="section-title">
+            <el-icon>
+              <Timer />
+            </el-icon>
+            <h2>限时特惠</h2>
+          </div>
+        </header>
+        <div class="countdown-bar">
+          <div class="cd-text">
+            <span class="cd-label">距离结束还有</span>
+          </div>
+          <div class="cd-time">
+            <span class="cd-item">{{ countdown.hours }}</span>
+            <span class="cd-colon">:</span>
+            <span class="cd-item">{{ countdown.minutes }}</span>
+            <span class="cd-colon">:</span>
+            <span class="cd-item">{{ countdown.seconds }}</span>
+          </div>
+        </div>
+        <div class="sale-grid">
+          <ProductCard v-for="item in flashItems" :key="item.id" :product="item" @click="goToDetail(item.id)"
+            @add-to-cart="addToCart" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 热门推荐 -->
+    <section class="recommended-section" aria-label="热门推荐">
+      <div class="container">
+        <header class="section-header">
+          <div class="section-title">
+            <el-icon>
+              <StarFilled />
+            </el-icon>
+            <h2>热门推荐</h2>
+          </div>
+        </header>
+        <div class="recommend-grid">
+          <ProductCard v-for="item in recommendedItems" :key="item.id" :product="item" @click="goToDetail(item.id)"
+            @add-to-cart="addToCart" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 品牌精选 -->
+    <section class="brand-section" aria-label="品牌精选">
+      <div class="container">
+        <header class="section-header">
+          <div class="section-title">
+            <el-icon>
+              <Shop />
+            </el-icon>
+            <h2>品牌精选</h2>
+          </div>
+        </header>
+        <div class="brand-grid">
+          <article class="brand-card" v-for="brand in brands" :key="brand.name">
+            <div class="brand-content">
+              <div class="brand-logo">{{ brand.name }}</div>
+              <p class="brand-desc">{{ brand.description }}</p>
+            </div>
+            <div class="brand-overlay">
+              <el-button class="brand-btn">进入店铺</el-button>
             </div>
           </article>
-        </el-carousel-item>
-      </el-carousel>
-
-      <!-- 快捷操作 -->
-      <nav class="quick-actions-bar" aria-label="快捷操作">
-        <button class="action-item" @click="router.push('/item')" aria-label="浏览商品">
-          <el-icon><Box /></el-icon>
-          <span>商品</span>
-        </button>
-        <button class="action-item" @click="router.push('/order')" aria-label="查看订单">
-          <el-icon><Document /></el-icon>
-          <span>订单</span>
-        </button>
-        <button
-          class="action-item"
-          @click="router.push('/coupon')"
-          aria-label="查看优惠券"
-        >
-          <el-icon><Ticket /></el-icon>
-          <span>优惠券</span>
-        </button>
-        <button
-          class="action-item"
-          @click="router.push('/address')"
-          aria-label="管理地址"
-        >
-          <el-icon><Location /></el-icon>
-          <span>地址</span>
-        </button>
-      </nav>
-    </div>
-
-    <!-- 右侧用户信息 -->
-    <div class="user-panel" aria-label="用户信息">
-      <article class="user-card">
-        <figure class="user-avatar">
-          <el-avatar
-            :size="80"
-            src="https://via.placeholder.com/80x80/00d4ff/fff?text=VIP"
-          >
-            <el-icon size="40"><User /></el-icon>
-          </el-avatar>
-        </figure>
-        <h3 class="user-name">尊敬的会员</h3>
-        <div class="user-level">
-          <span class="level-badge">LV 8</span>
-        </div>
-        <div class="user-vip">
-          <span class="vip-tag">{{ userStore.vipLevelName }}</span>
-        </div>
-        <div class="user-credit">
-          <span class="credit-tag">
-            <el-icon><Trophy /></el-icon> {{ userStore.userCredit }} 积分
-          </span>
-        </div>
-        <button
-          class="check-in-btn"
-          :class="{ 'checked-in': userStore.hasCheckedIn }"
-          @click="handleCheckIn"
-          :aria-label="userStore.hasCheckedIn ? '已签到' : '立即签到'"
-        >
-          <el-icon><Calendar /></el-icon>
-          <span>{{ userStore.hasCheckedIn ? "已签到" : "立即签到" }}</span>
-          <span class="check-in-reward" v-if="userStore.hasCheckedIn">+10 积分</span>
-        </button>
-        <button
-          class="lottery-btn"
-          @click="goToLottery"
-          aria-label="点击抽奖"
-        >
-          
-          <span><el-icon><Coin /></el-icon>点击抽奖</span>
-        </button>
-      </article>
-
-      <div class="announcement-wrapper">
-        <AnnouncementPanel />
-      </div>
-    </div>
-  </section>
-
-  <!-- 限时特惠 -->
-  <section class="flash-sale-section" aria-label="限时特惠">
-    <div class="container">
-      <header class="section-header">
-        <div class="section-title">
-          <el-icon><Timer /></el-icon>
-          <h2>限时特惠</h2>
-        </div>
-      </header>
-      <div class="countdown-bar">
-        <div class="cd-text">
-          <span class="cd-label">距离结束还有</span>
-        </div>
-        <div class="cd-time">
-          <span class="cd-item">{{ countdown.hours }}</span>
-          <span class="cd-colon">:</span>
-          <span class="cd-item">{{ countdown.minutes }}</span>
-          <span class="cd-colon">:</span>
-          <span class="cd-item">{{ countdown.seconds }}</span>
         </div>
       </div>
-      <div class="sale-grid">
-        <ProductCard
-          v-for="item in flashItems"
-          :key="item.id"
-          :product="item"
-          @click="goToDetail(item.id)"
-          @add-to-cart="addToCart"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- 热门推荐 -->
-  <section class="recommended-section" aria-label="热门推荐">
-    <div class="container">
-      <header class="section-header">
-        <div class="section-title">
-          <el-icon><StarFilled /></el-icon>
-          <h2>热门推荐</h2>
-        </div>
-      </header>
-      <div class="recommend-grid">
-        <ProductCard
-          v-for="item in recommendedItems"
-          :key="item.id"
-          :product="item"
-          @click="goToDetail(item.id)"
-          @add-to-cart="addToCart"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- 品牌精选 -->
-  <section class="brand-section" aria-label="品牌精选">
-    <div class="container">
-      <header class="section-header">
-        <div class="section-title">
-          <el-icon><Shop /></el-icon>
-          <h2>品牌精选</h2>
-        </div>
-      </header>
-      <div class="brand-grid">
-        <article class="brand-card" v-for="brand in brands" :key="brand.name">
-          <div class="brand-content">
-            <div class="brand-logo">{{ brand.name }}</div>
-            <p class="brand-desc">{{ brand.description }}</p>
-          </div>
-          <div class="brand-overlay">
-            <el-button class="brand-btn">进入店铺</el-button>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -180,13 +103,16 @@ import { ref, onMounted, onUnmounted, type Ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@user/stores/cart";
 import { useUserStore } from "@user/stores/user";
-import { banners } from "@user/data/categories";
 import ProductCard from "@user/components/ProductCard.vue";
 import CategoryPanel from "@user/components/CategoryPanel.vue";
-import AnnouncementPanel from "@user/components/AnnouncementPanel.vue";
+import SystemNoticePanel from "@user/components/SystemNoticePanel.vue";
+import UserNoticePanel from "@user/components/UserNoticePanel.vue";
+import UserPanel from "@user/components/UserPanel.vue";
+import QuickActionsBar from "@user/components/QuickActionsBar.vue";
+import BannerCarousel from "@user/components/BannerCarousel.vue";
 import { ElMessage } from "element-plus";
 import { 获取进度颜色 } from "@user/util/discount";
-import { Coin } from '@element-plus/icons-vue'
+import { Coin, Bell } from '@element-plus/icons-vue'
 
 interface Product {
   id: number
@@ -711,85 +637,71 @@ onUnmounted(() => {
 @import "@user/assets/mall-style.css";
 
 .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* 中间横幅区域 */
-section.banner-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 1%;
 }
 
 /* 主容器 */
 section.mall-home {
+  width: 100%;
+  min-height: 600px;
+}
+
+/* 主容器内的 Grid 布局 - 3 列，宽度 2:6:2 */
+section.mall-home .container {
   display: grid;
-  grid-template-columns: 200px 1fr 280px;
-  gap: 10px;
-  padding: 15px 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-  align-items: stretch;
-}
-
-/* 轮播图 */
-.el-carousel {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-  height: 380px;
-}
-
-.banner-item {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.banner-info {
-  text-align: center;
-  color: #fff;
-}
-
-.banner-title {
-  font-size: 42px;
-  margin-bottom: 15px;
-  background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.banner-subtitle {
-  font-size: 20px;
-  margin-bottom: 25px;
-  color: #aaa;
-}
-
-.glow-btn {
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
-  border: none;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-  color: #000;
-  font-weight: bold;
-}
-
-.glow-btn:hover {
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
-}
-
-/* 用户面板 */
-aside.user-panel {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: 2fr 6fr 2fr;
+  grid-template-rows: repeat(6, 1fr);
   gap: 15px;
 }
 
-.announcement-wrapper {
-  margin-top: 20px;
+/* 左侧用户面板 - 占 2 行高度，全宽全高 */
+.user-panel {
+  grid-column: 1;
+  grid-row: 1 / 7;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  gap: 15px;
+}
+
+/* 中间区域 - 轮播图占 2 行，快捷入口占 1 行，全宽全高 */
+.banner-section {
+  grid-column: 2;
+  grid-row: 1 / 7;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  gap: 15px;
+}
+
+/* 轮播图 - 全宽全高 */
+.banner-section .el-carousel {
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* 快捷操作栏 - 全宽全高 */
+.banner-section .quick-actions-bar {
+  grid-row: 2;
+  width: 100%;
+  height: 100%;
+}
+
+/* 右侧公告区域容器 */
+.notice-panel {
+  grid-column: 3;
+  grid-row: 1 / 7;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 15px;
 }
 
 /* 用户卡片 */
@@ -950,57 +862,18 @@ figure.user-avatar :deep(.el-avatar) {
   opacity: 0.8;
 }
 
-/* 快捷操作栏 */
-nav.quick-actions-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 8px;
-  background: linear-gradient(90deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.05));
-  border-radius: 8px;
-  margin-top: 15px;
-}
-
-button.action-item {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 6px;
-  padding: 12px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-button.action-item:hover {
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
-  border-color: var(--mall-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
-}
-
-button.action-item .el-icon {
-  font-size: 28px;
-  color: var(--mall-primary);
-}
-
-button.action-item span {
-  font-size: 14px;
-  color: #ccc;
-}
-
 /* 限时特惠 */
 section.flash-sale-section {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 212, 255, 0.15) 0%,
-    rgba(10, 14, 26, 0.8) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 212, 255, 0.15) 0%,
+      rgba(10, 14, 26, 0.8) 100%);
   padding: 40px 0;
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+section.flash-sale-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .section-header {
@@ -1219,13 +1092,16 @@ article.sale-card:hover {
 
 /* 热门推荐 */
 section.recommended-section {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 212, 255, 0.15) 0%,
-    rgba(10, 14, 26, 0.8) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 212, 255, 0.15) 0%,
+      rgba(10, 14, 26, 0.8) 100%);
   padding: 40px 0;
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+section.recommended-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .recommend-grid {
@@ -1236,13 +1112,16 @@ section.recommended-section {
 
 /* 品牌精选 */
 section.brand-section {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 212, 255, 0.15) 0%,
-    rgba(10, 14, 26, 0.8) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 212, 255, 0.15) 0%,
+      rgba(10, 14, 26, 0.8) 100%);
   padding: 40px 0;
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+section.brand-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .brand-grid {

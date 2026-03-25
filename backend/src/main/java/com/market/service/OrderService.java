@@ -1,131 +1,543 @@
 package com.market.service;
 
 import com.market.entity.*;
-import com.market.repository.OrderRepository;
-import com.market.repository.ProductRepository;
-import com.market.service.CreditService;
+import com.market.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 订单服务类
  */
 @Service
 public class OrderService {
-    
+
     @Autowired
     private OrderRepository orderRepository;
-    
+
     @Autowired
     private ProductRepository productRepository;
-    
+
     @Autowired
-    private CartService cartService;
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     private CreditService creditService;
-    
-    public List<Order> getUserOrders(User user) {
-        return orderRepository.findByUserOrderByCreatedAtDesc(user);
+
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // ==================== 用户端订单服务 ====================
+
+    /**
+     * 获取用户订单列表
+     */
+    public Page<Order> getUserOrders(User user, String status, Pageable pageable) {
+        if (status != null && !status.isEmpty()) {
+            return orderRepository.findByUserAndStatus(user, status, pageable);
+        }
+        return orderRepository.findByUser(user, pageable);
     }
-    
+
+    /**
+     * 获取订单详情
+     */
     public Optional<Order> getOrderById(Long id) {
         return orderRepository.findById(id);
     }
-    
-    public Optional<Order> getOrderByOrderNo(String orderNo) {
-        return orderRepository.findByOrderNo(orderNo);
+
+    /**
+     * 获取订单统计
+     */
+    public Map<String, Object> getUserOrderStats(User user) {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("total", orderRepository.countByUser(user));
+        stats.put("pending", orderRepository.countByUserAndStatus(user, "PENDING"));
+        stats.put("paid", orderRepository.countByUserAndStatus(user, "PAID"));
+        stats.put("shipped", orderRepository.countByUserAndStatus(user, "SHIPPED"));
+        stats.put("completed", orderRepository.countByUserAndStatus(user, "COMPLETED"));
+        stats.put("cancelled", orderRepository.countByUserAndStatus(user, "CANCELLED"));
+        stats.put("refunding", orderRepository.countByUserAndStatus(user, "REFUNDING"));
+        return stats;
     }
-    
+
+    /**
+     * 创建订单
+     */
     @Transactional
-    public Order createOrder(User user, String shippingAddress) {
-        List<CartItem> cartItems = cartService.getCartItems(user);
-        
-        if (cartItems.isEmpty()) {
+    public Order createOrder(User user, List<Map<String, Object>> items, Long addressId, Long couponId) {
+        if (items == null || items.isEmpty()) {
             throw new RuntimeException("购物车为空");
         }
-        
+
         Order order = new Order();
         order.setOrderNo(generateOrderNo());
         order.setUser(user);
-        order.setShippingAddress(shippingAddress);
         order.setStatus("PENDING");
-        
+
         BigDecimal totalAmount = BigDecimal.ZERO;
-        
-        for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
-            Integer quantity = cartItem.getQuantity();
-            
+
+        for (Map<String, Object> itemData : items) {
+            Long productId = Long.valueOf(itemData.get("productId").toString());
+            Integer quantity = Integer.valueOf(itemData.get("quantity").toString());
+
+            Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("商品不存在"));
+
             if (product.getStock() < quantity) {
                 throw new RuntimeException("商品 " + product.getName() + " 库存不足");
             }
-            
+
             OrderItem orderItem = new OrderItem(product, quantity, product.getPrice());
             order.addItem(orderItem);
-            
+
             totalAmount = totalAmount.add(orderItem.getSubtotal());
-            
+
             product.setStock(product.getStock() - quantity);
             productRepository.save(product);
-        }
-        
-        order.setTotalAmount(totalAmount);
-        Order savedOrder = orderRepository.save(order);
-        
-        cartService.clearCart(user);
 
-        int creditToAdd = totalAmount.intValue() / 10;
+            // 设置商户信息
+            if (order.getMerchant() == null && product.getUser() != null) {
+                order.setMerchant(product.getUser());
+            }
+        }
+
+        order.setTotalAmount(totalAmount);
+
+        // 应用优惠券
+        if (couponId != null) {
+            try {
+                couponService.useCoupon(couponId, user);
+                
+                // 计算优惠金额
+                List<Coupon> availableCoupons = couponService.getAvailableCouponsForOrder(
+                    user, 
+                    order.getMerchant() != null ? order.getMerchant().getId() : null,
+                    totalAmount,
+                    items.stream().map(i -> Long.valueOf(i.get("productId").toString())).collect(Collectors.toList()),
+                    new ArrayList<>()
+                );
+                
+                Coupon coupon = availableCoupons.stream()
+                    .filter(c -> c.getId().equals(couponId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("优惠券不可用"));
+                
+                BigDecimal discount = coupon.calculateDiscount(totalAmount);
+                order.setTotalAmount(totalAmount.subtract(discount));
+                
+            } catch (Exception e) {
+                throw new RuntimeException("优惠券使用失败：" + e.getMessage());
+            }
+        }
+
+        Order savedOrder = orderRepository.save(order);
+
+        // 清空购物车
+        cartItemRepository.deleteByUser(user);
+
+        // 奖励积分
+        int creditToAdd = order.getTotalAmount().intValue() / 10;
         if (creditToAdd > 0) {
             creditService.addCredit(user.getId(), creditToAdd, "订单奖励：" + savedOrder.getOrderNo());
         }
-        
+
         return savedOrder;
     }
-    
+
+    /**
+     * 取消订单
+     */
     @Transactional
-    public Order cancelOrder(Long orderId, User user) {
+    public void cancelOrder(Long orderId, User user) {
         Order order = orderRepository.findById(orderId)
             .filter(o -> o.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new RuntimeException("订单不存在"));
-        
+
         if (!"PENDING".equals(order.getStatus())) {
             throw new RuntimeException("只能取消待支付订单");
         }
-        
-        order.setStatus("CANCELLED");
 
+        order.setStatus("CANCELLED");
+        order.setCancelledAt(LocalDateTime.now());
+
+        // 恢复库存
         for (OrderItem item : order.getItem()) {
             Product product = item.getProduct();
             product.setStock(product.getStock() + item.getQuantity());
             productRepository.save(product);
         }
 
-        return orderRepository.save(order);
+        orderRepository.save(order);
     }
-    
+
+    /**
+     * 删除订单
+     */
     @Transactional
-    public Order payOrder(Long orderId, User user) {
+    public void deleteOrder(Long orderId, User user) {
         Order order = orderRepository.findById(orderId)
             .filter(o -> o.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new RuntimeException("订单不存在"));
-        
+
+        if (!"CANCELLED".equals(order.getStatus()) && !"COMPLETED".equals(order.getStatus())) {
+            throw new RuntimeException("只能删除已取消或已完成的订单");
+        }
+
+        orderRepository.delete(order);
+    }
+
+    /**
+     * 支付订单
+     */
+    @Transactional
+    public Order payOrder(Long orderId, User user, String paymentMethod) {
+        Order order = orderRepository.findById(orderId)
+            .filter(o -> o.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
         if (!"PENDING".equals(order.getStatus())) {
             throw new RuntimeException("订单状态不正确");
         }
-        
+
         order.setStatus("PAID");
+        order.setPaymentMethod(paymentMethod);
+        order.setPaidAt(LocalDateTime.now());
+
         return orderRepository.save(order);
     }
-    
+
+    /**
+     * 确认收货
+     */
+    @Transactional
+    public Order confirmReceive(Long orderId, User user) {
+        Order order = orderRepository.findById(orderId)
+            .filter(o -> o.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"SHIPPED".equals(order.getStatus())) {
+            throw new RuntimeException("只能确认已发货的订单");
+        }
+
+        order.setStatus("COMPLETED");
+        order.setCompletedAt(LocalDateTime.now());
+
+        return orderRepository.save(order);
+    }
+
+    /**
+     * 申请退款
+     */
+    @Transactional
+    public void applyRefund(Long orderId, User user, String reason, List<String> images) {
+        Order order = orderRepository.findById(orderId)
+            .filter(o -> o.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"PAID".equals(order.getStatus()) && !"SHIPPED".equals(order.getStatus())) {
+            throw new RuntimeException("订单状态不正确");
+        }
+
+        order.setStatus("REFUNDING");
+        order.setRefundReason(reason);
+        if (images != null && !images.isEmpty()) {
+            order.setRefundImages(String.join(",", images));
+        }
+
+        orderRepository.save(order);
+    }
+
+    /**
+     * 获取物流记录
+     */
+    public List<Map<String, String>> getTrackingRecords(Order order) {
+        List<Map<String, String>> records = new ArrayList<>();
+        
+        if (order.getTrackingNo() == null || order.getTrackingNo().isEmpty()) {
+            return records;
+        }
+
+        // 添加发货记录
+        if (order.getShippedAt() != null) {
+            Map<String, String> record = new HashMap<>();
+            record.put("time", order.getShippedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            record.put("desc", "已发货，物流单号：" + order.getTrackingNo());
+            records.add(record);
+        }
+
+        // TODO: 调用物流公司 API 获取详细物流信息
+
+        return records;
+    }
+
+    // ==================== 商户端订单服务 ====================
+
+    /**
+     * 获取商户订单列表
+     */
+    public Page<Order> getMerchantOrders(User merchant, String status, String orderNo, 
+                                         String productName, LocalDateTime startDate, 
+                                         LocalDateTime endDate, Pageable pageable) {
+        // TODO: 实现复杂查询
+        if (status != null && !status.isEmpty()) {
+            return orderRepository.findByMerchantAndStatus(merchant, status, pageable);
+        }
+        return orderRepository.findByMerchant(merchant, pageable);
+    }
+
+    /**
+     * 获取商户订单统计
+     */
+    public Map<String, Object> getMerchantOrderStats(User merchant) {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("total", orderRepository.countByMerchant(merchant));
+        stats.put("pending", orderRepository.countByMerchantAndStatus(merchant, "PENDING"));
+        stats.put("paid", orderRepository.countByMerchantAndStatus(merchant, "PAID"));
+        stats.put("shipped", orderRepository.countByMerchantAndStatus(merchant, "SHIPPED"));
+        stats.put("completed", orderRepository.countByMerchantAndStatus(merchant, "COMPLETED"));
+        stats.put("cancelled", orderRepository.countByMerchantAndStatus(merchant, "CANCELLED"));
+        stats.put("refunding", orderRepository.countByMerchantAndStatus(merchant, "REFUNDING"));
+        return stats;
+    }
+
+    /**
+     * 判断订单是否属于该商户
+     */
+    public boolean isMerchantOrder(Order order, User merchant) {
+        return order.getMerchant() != null && order.getMerchant().getId().equals(merchant.getId());
+    }
+
+    /**
+     * 发货
+     */
+    @Transactional
+    public Order shipOrder(Long orderId, User merchant, String trackingNo, String carrier, String remark) {
+        Order order = orderRepository.findById(orderId)
+            .filter(o -> isMerchantOrder(o, merchant))
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"PAID".equals(order.getStatus())) {
+            throw new RuntimeException("订单状态不正确");
+        }
+
+        order.setStatus("SHIPPED");
+        order.setTrackingNo(trackingNo);
+        order.setCarrier(carrier);
+        order.setShippedAt(LocalDateTime.now());
+
+        return orderRepository.save(order);
+    }
+
+    /**
+     * 获取退款订单列表
+     */
+    public Page<Order> getRefundOrders(User merchant, Pageable pageable) {
+        return orderRepository.findRefundOrders(merchant.getId(), pageable);
+    }
+
+    /**
+     * 处理退款申请
+     */
+    @Transactional
+    public void handleRefund(Long orderId, User merchant, boolean approved, String reason) {
+        Order order = orderRepository.findById(orderId)
+            .filter(o -> isMerchantOrder(o, merchant))
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"REFUNDING".equals(order.getStatus())) {
+            throw new RuntimeException("订单状态不正确");
+        }
+
+        if (approved) {
+            order.setStatus("REFUNDED");
+            // 恢复库存
+            for (OrderItem item : order.getItem()) {
+                Product product = item.getProduct();
+                product.setStock(product.getStock() + item.getQuantity());
+                productRepository.save(product);
+            }
+            // 退还积分
+            int creditToRefund = order.getTotalAmount().intValue() / 10;
+            if (creditToRefund > 0) {
+                creditService.addCredit(order.getUser().getId(), creditToRefund, "退款：" + order.getOrderNo());
+            }
+        } else {
+            order.setStatus("PAID");
+            order.setRefundReason(reason);
+        }
+
+        orderRepository.save(order);
+    }
+
+    // ==================== 管理端订单服务 ====================
+
+    /**
+     * 获取所有订单列表
+     */
+    public Page<Order> getAllOrders(String orderNo, String status, Long userId, Long merchantId,
+                                    String shopName, String productName, LocalDateTime startDate,
+                                    LocalDateTime endDate, String paymentMethod, Pageable pageable) {
+        return orderRepository.findOrders(orderNo, status, userId, merchantId, shopName, 
+                                          startDate, endDate, pageable);
+    }
+
+    /**
+     * 获取管理端订单统计
+     */
+    public Map<String, Object> getAdminOrderStats() {
+        Map<String, Object> stats = new HashMap<>();
+        
+        List<Order> allOrders = orderRepository.findAll();
+        
+        stats.put("total", allOrders.size());
+        stats.put("totalAmount", allOrders.stream()
+            .map(Order::getTotalAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add));
+        
+        stats.put("pending", allOrders.stream().filter(o -> "PENDING".equals(o.getStatus())).count());
+        stats.put("paid", allOrders.stream().filter(o -> "PAID".equals(o.getStatus())).count());
+        stats.put("shipped", allOrders.stream().filter(o -> "SHIPPED".equals(o.getStatus())).count());
+        stats.put("completed", allOrders.stream().filter(o -> "COMPLETED".equals(o.getStatus())).count());
+        stats.put("cancelled", allOrders.stream().filter(o -> "CANCELLED".equals(o.getStatus())).count());
+        stats.put("refunding", allOrders.stream().filter(o -> "REFUNDING".equals(o.getStatus())).count());
+        
+        LocalDateTime today = LocalDateTime.now().toLocalDate().atStartOfDay();
+        stats.put("todayOrders", allOrders.stream().filter(o -> o.getCreatedAt().isAfter(today)).count());
+        stats.put("todayAmount", allOrders.stream()
+            .filter(o -> o.getCreatedAt().isAfter(today))
+            .map(Order::getTotalAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add));
+        
+        return stats;
+    }
+
+    /**
+     * 获取订单趋势
+     */
+    public List<Map<String, Object>> getOrderTrend(int days) {
+        List<Map<String, Object>> trend = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDateTime dayStart = now.minusDays(i).toLocalDate().atStartOfDay();
+            LocalDateTime dayEnd = dayStart.plusDays(1);
+            
+            List<Order> dayOrders = orderRepository.findAll().stream()
+                .filter(o -> (o.getCreatedAt().isAfter(dayStart) || o.getCreatedAt().isEqual(dayStart)) 
+                          && o.getCreatedAt().isBefore(dayEnd))
+                .collect(Collectors.toList());
+            
+            Map<String, Object> dayData = new HashMap<>();
+            dayData.put("date", dayStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            dayData.put("orders", dayOrders.size());
+            dayData.put("amount", dayOrders.stream()
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+            
+            trend.add(dayData);
+        }
+        
+        return trend;
+    }
+
+    /**
+     * 获取商品排行
+     */
+    public List<Map<String, Object>> getProductRank(String type, int limit) {
+        // TODO: 实现商品排行查询
+        return new ArrayList<>();
+    }
+
+    /**
+     * 获取店铺排行
+     */
+    public List<Map<String, Object>> getShopRank(int limit) {
+        // TODO: 实现店铺排行查询
+        return new ArrayList<>();
+    }
+
+    /**
+     * 更新订单状态
+     */
+    @Transactional
+    public Order updateOrderStatus(Long orderId, String status, String remark) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        order.setStatus(status);
+        
+        switch (status) {
+            case "PAID":
+                order.setPaidAt(LocalDateTime.now());
+                break;
+            case "SHIPPED":
+                order.setShippedAt(LocalDateTime.now());
+                break;
+            case "COMPLETED":
+                order.setCompletedAt(LocalDateTime.now());
+                break;
+            case "CANCELLED":
+                order.setCancelledAt(LocalDateTime.now());
+                break;
+        }
+
+        return orderRepository.save(order);
+    }
+
+    /**
+     * 获取全部退款订单列表
+     */
+    public Page<Order> getRefundOrders(String status, Pageable pageable) {
+        if (status != null && !status.isEmpty()) {
+            // TODO: 实现带状态过滤的查询
+        }
+        return orderRepository.findAllRefundOrders(pageable);
+    }
+
+    /**
+     * 管理端处理退款
+     */
+    @Transactional
+    public void handleRefund(Long orderId, boolean approved, String reason) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"REFUNDING".equals(order.getStatus())) {
+            throw new RuntimeException("订单状态不正确");
+        }
+
+        if (approved) {
+            order.setStatus("REFUNDED");
+            for (OrderItem item : order.getItem()) {
+                Product product = item.getProduct();
+                product.setStock(product.getStock() + item.getQuantity());
+                productRepository.save(product);
+            }
+            int creditToRefund = order.getTotalAmount().intValue() / 10;
+            if (creditToRefund > 0) {
+                creditService.addCredit(order.getUser().getId(), creditToRefund, "退款：" + order.getOrderNo());
+            }
+        } else {
+            order.setStatus("PAID");
+        }
+
+        orderRepository.save(order);
+    }
+
+    // ==================== 工具方法 ====================
+
     private String generateOrderNo() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String timestamp = LocalDateTime.now().format(formatter);

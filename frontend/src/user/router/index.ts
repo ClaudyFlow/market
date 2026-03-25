@@ -158,6 +158,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Lottery',
     component: () => import('@user/views/Lottery.vue'),
     meta: { title: '幸运抽奖' }
+  },
+  {
+    path: '/vip',
+    name: 'VipCenter',
+    component: () => import('@user/views/VipCenter.vue'),
+    meta: { title: 'VIP 会员中心' }
   }
 ]
 

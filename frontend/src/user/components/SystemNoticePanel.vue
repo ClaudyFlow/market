@@ -1,7 +1,7 @@
-﻿<template>
-  <div class="announcement" aria-label="网站公告">
-    <header class="announcement-title">
-      <el-icon><Bell/></el-icon>
+<template>
+  <div class="system-notice" aria-label="系统公告">
+    <header class="notice-title">
+      <el-icon><Bell /></el-icon>
       <span>系统公告</span>
     </header>
     <el-carousel
@@ -34,11 +34,8 @@ import { announcements } from '@user/data/announcements'
 </script>
 
 <style scoped>
-.announcement {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.system-notice {
+  flex: 1;
   min-height: 0;
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -47,7 +44,7 @@ import { announcements } from '@user/data/announcements'
   overflow-y: auto;
 }
 
-.announcement-title {
+.notice-title {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -59,7 +56,7 @@ import { announcements } from '@user/data/announcements'
   padding-left: 12px;
 }
 
-.announcement-title::before {
+.notice-title::before {
   content: '';
   position: absolute;
   left: 0;
@@ -69,31 +66,31 @@ import { announcements } from '@user/data/announcements'
   border-radius: 2px;
 }
 
-.announcement-title .el-icon {
+.notice-title .el-icon {
   color: #00d4ff;
   font-size: 14px;
 }
 
-.announcement-title span {
+.notice-title span {
   color: #00d4ff;
   font-weight: bold;
   font-size: 16px;
 }
 
-.announcement :deep(.el-carousel__container) {
+.system-notice :deep(.el-carousel__container) {
   height: 160px;
 }
 
-.announcement :deep(.el-carousel__arrow) {
+.system-notice :deep(.el-carousel__arrow) {
   font-size: 24px;
   color: #00d4ff;
 }
 
-.announcement :deep(.el-carousel__arrow:hover) {
+.system-notice :deep(.el-carousel__arrow:hover) {
   color: #00ff88;
 }
 
-.announcement :deep(.el-carousel-item) {
+.system-notice :deep(.el-carousel-item) {
   display: flex;
   align-items: center;
   height: 100%;
@@ -144,7 +141,7 @@ import { announcements } from '@user/data/announcements'
   background: linear-gradient(135deg, #00ff88, #00cc6a);
 }
 
-.notice-title {
+.notice-title h4 {
   font-size: 15px;
   font-weight: bold;
   color: #00d4ff;
@@ -171,6 +168,5 @@ import { announcements } from '@user/data/announcements'
 .notice-date {
   font-size: 10px;
   color: #666;
-  
 }
 </style>

@@ -70,7 +70,7 @@
               <el-icon><CircleCheck /></el-icon> 正品保障
             </div>
             <div class="service-item">
-              <el-icon><Truck /></el-icon> 极速配送
+              <el-icon><Van /></el-icon> 极速配送
             </div>
             <div class="service-item">
               <el-icon><RefreshLeft /></el-icon> 7 天无理由退换
@@ -110,20 +110,23 @@
                 <tr><td>保修期</td><td>1 年</td></tr>
               </table>
             </el-tab-pane>
-            <el-tab-pane label="用户评价" name="reviews">
-              <div class="reviews-section">
-                <!-- 评价面板组件 -->
-                <ReviewPanel :productId="商品.id" />
-                <!-- 写评价按钮 -->
-                <div class="write-review-btn">
-                  <el-button type="primary" @click="checkLoginAndReview" :disabled="!isPurchased">
-                    <el-icon><Edit /></el-icon> {{ isPurchased ? '发表评价' : '购买后可评价' }}
-                  </el-button>
-                </div>
-              </div>
-            </el-tab-pane>
           </el-tabs>
         </div>
+      </div>
+
+      <!-- 用户评价 -->
+      <div class="reviews-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <el-icon><ChatDotRound /></el-icon>
+            用户评价
+          </h2>
+          <el-button type="primary" @click="checkLoginAndReview" :disabled="!isPurchased">
+            <el-icon><Edit /></el-icon> {{ isPurchased ? '发表评价' : '购买后可评价' }}
+          </el-button>
+        </div>
+        <!-- 评价面板组件 -->
+        <ReviewPanel :productId="商品.id" />
       </div>
     </div>
   </div>
@@ -134,6 +137,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
 import { ElMessage } from 'element-plus'
+import { ChatDotRound, Edit, ShoppingCart, CreditCard, CircleCheck, Van, RefreshLeft } from '@element-plus/icons-vue'
 import ReviewPanel from '@user/components/ReviewPanel.vue'
 import ReviewForm from '@user/components/ReviewForm.vue'
 import { checkReview } from '@user/api/review'
@@ -536,5 +540,37 @@ const 立即购买 = () => {
 .write-review-btn {
   margin-top: 20px;
   text-align: center;
+}
+
+/* 评价区块 */
+.reviews-section {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--mall-border-light);
+}
+
+.section-header .section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--mall-text-primary);
+}
+
+.section-header .section-title .el-icon {
+  font-size: 24px;
+  color: var(--mall-primary);
 }
 </style>

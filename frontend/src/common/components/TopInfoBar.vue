@@ -25,20 +25,18 @@
           </span>
         </div>
       </slot>
-      <div class="credit-info">
-        <el-icon><Trophy /></el-icon>
-        <span class="credit-count">{{ userCredit }} 积分</span>
-      </div>
+      <UserCredit :credit="userCredit" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Connection, Trophy } from '@element-plus/icons-vue'
+import { Connection } from '@element-plus/icons-vue'
 import TimeInfo from './TimeInfo.vue'
 import LocationInfo from './LocationInfo.vue'
 import StatusDot from './StatusDot.vue'
+import UserCredit from '@user/components/UserCredit.vue'
 
 const props = defineProps({
   // 用户文本
@@ -150,28 +148,5 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.credit-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 136, 0, 0.2));
-  border: 1px solid rgba(255, 136, 0, 0.4);
-  border-radius: 12px;
-  color: #ffa500;
-  font-size: 12px;
-  font-weight: bold;
-  box-shadow: 0 0 8px rgba(255, 136, 0, 0.2);
-}
-
-.credit-info .el-icon {
-  font-size: 14px;
-  color: #ffa500;
-}
-
-.credit-count {
-  color: #ffa500;
 }
 </style>

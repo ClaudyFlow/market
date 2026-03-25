@@ -81,30 +81,31 @@ export const categories = [
   }
 ]
 
+// 轮播图配置 - 太空科幻风格深色背景
 export const banners = [
   {
     title: '双十一狂欢节',
-    subtitle: '全场低至5折',
-    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    subtitle: '全场低至 5 折',
+    gradient: 'linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2a1a5a 100%)'
   },
   {
     title: '新品首发',
     subtitle: '春季新品上市',
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    gradient: 'linear-gradient(135deg, #0d1a2a 0%, #1a3a5a 50%, #0a2a4a 100%)'
   },
   {
     title: '限时秒杀',
-    subtitle: '爆款1折起',
-    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    subtitle: '爆款 1 折起',
+    gradient: 'linear-gradient(135deg, #1a0a2a 0%, #3a1a5a 50%, #2a0a4a 100%)'
   },
   {
     title: '会员专享',
-    subtitle: 'VIP专属优惠',
-    gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    subtitle: 'VIP 专属优惠',
+    gradient: 'linear-gradient(135deg, #0a1a2a 0%, #1a3a4a 50%, #0a2a3a 100%)'
   },
   {
     title: '品质好物',
     subtitle: '精选品牌推荐',
-    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    gradient: 'linear-gradient(135deg, #1a1a2a 0%, #3a3a5a 50%, #2a2a4a 100%)'
   }
 ]

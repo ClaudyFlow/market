@@ -8,7 +8,6 @@
     <template v-else>
       <Header />
       <main class="main-content">
-        <CategoryPanel />
         <div class="page-content">
           <router-view />
         </div>
@@ -22,7 +21,6 @@
 import { computed } from 'vue'
 import Header from '@admin/components/Header.vue'
 import Footer from '@admin/components/Footer.vue'
-import CategoryPanel from '@admin/components/CategoryPanel.vue'
 
 const isLoggedIn = computed(() => {
   return !!localStorage.getItem('admin_token')
@@ -57,10 +55,9 @@ body {
 
 .main-content {
   flex: 1;
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 10px;
-  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;

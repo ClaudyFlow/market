@@ -29,8 +29,8 @@
           <div class="stat-card success">
             <div class="stat-icon"><el-icon><CircleCheck /></el-icon></div>
             <div class="stat-info">
-              <div class="stat-value">{{ couponStats.used }}</div>
-              <div class="stat-label">已使用</div>
+              <div class="stat-value">{{ couponStats.active }}</div>
+              <div class="stat-label">发放中</div>
             </div>
           </div>
         </el-col>
@@ -38,8 +38,8 @@
           <div class="stat-card warning">
             <div class="stat-icon"><el-icon><Clock /></el-icon></div>
             <div class="stat-info">
-              <div class="stat-value">{{ couponStats.unused }}</div>
-              <div class="stat-label">未使用</div>
+              <div class="stat-value">{{ couponStats.usedUp }}</div>
+              <div class="stat-label">已领完</div>
             </div>
           </div>
         </el-col>
@@ -58,25 +58,23 @@
     <!-- 搜索筛选 -->
     <section class="search-bar">
       <el-form :inline="true" :model="filterForm">
-        <el-form-item label="优惠券名称">
-          <el-input v-model="filterForm.name" placeholder="请输入优惠券名称" clearable style="width: 180px" />
-        </el-form-item>
-        <el-form-item label="优惠券类型">
-          <el-select v-model="filterForm.type" placeholder="请选择类型" clearable style="width: 120px">
-            <el-option label="满减券" value="discount" />
-            <el-option label="折扣券" value="percent" />
-            <el-option label="运费券" value="shipping" />
+        <el-form-item label="优惠券状态">
+          <el-select v-model="filterForm.status" placeholder="请选择状态" clearable style="width: 120px">
+            <el-option label="ACTIVE" value="ACTIVE" />
+            <el-option label="INACTIVE" value="INACTIVE" />
+            <el-option label="EXPIRED" value="EXPIRED" />
+            <el-option label="USED_UP" value="USED_UP" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="filterForm.status" placeholder="请选择状态" clearable style="width: 120px">
-            <el-option label="未开始" value="pending" />
-            <el-option label="发放中" value="active" />
-            <el-option label="已过期" value="expired" />
+        <el-form-item label="排序方式">
+          <el-select v-model="filterForm.sortBy" placeholder="选择排序" style="width: 120px">
+            <el-option label="创建时间" value="createdAt" />
+            <el-option label="使用量" value="usedCount" />
+            <el-option label="剩余量" value="remainCount" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="searchCoupons">搜索</el-button>
+          <el-button type="primary" @click="loadCouponList">刷新</el-button>
           <el-button @click="resetFilter">重置</el-button>
         </el-form-item>
       </el-form>
@@ -92,57 +90,51 @@
             <el-tag :type="getTypeTag(row.type)" size="small">{{ getTypeText(row.type) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="value" label="面额" width="100">
+        <el-table-column prop="discountValue" label="优惠金额" width="100">
           <template #default="{ row }">
             <span class="value-text">{{ getFaceValue(row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="threshold" label="使用门槛" width="120">
+        <el-table-column prop="minPurchase" label="使用门槛" width="120">
           <template #default="{ row }">
-            <span v-if="row.threshold > 0">满¥{{ row.threshold }}可用</span>
+            <span v-if="row.minPurchase">满¥{{ row.minPurchase }}</span>
             <span v-else>无门槛</span>
           </template>
         </el-table-column>
-        <el-table-column prop="validDays" label="有效期" width="120">
-          <template #default="{ row }">
-            <span>{{ row.validDays }}天</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="total" label="发放数量" width="100" />
-        <el-table-column prop="used" label="已领取" width="100" />
+        <el-table-column prop="totalCount" label="发放数量" width="100" />
+        <el-table-column prop="usedCount" label="已领取" width="100" />
+        <el-table-column prop="remainCount" label="剩余" width="80" />
         <el-table-column prop="status" label="状态" width="90">
           <template #default="{ row }">
-            <el-tag :type="getStatusType(row.status)" size="small">
-              {{ getStatusText(row.status) }}
-            </el-tag>
+            <el-tag :type="getStatusTag(row.status)" size="small">{{ row.status }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column prop="validTo" label="有效期至" width="160">
+          <template #default="{ row }">
+            <span>{{ formatDate(row.validTo) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" text size="small" @click="editCoupon(row)">编辑</el-button>
-            <el-button
-              v-if="row.status === 'active'"
-              type="warning"
-              text
-              size="small"
-              @click="toggleStatus(row)"
+            <el-button 
+              v-if="row.status === 'ACTIVE'" 
+              type="warning" text size="small" @click="toggleStatus(row, 'INACTIVE')"
             >
               下架
             </el-button>
-            <el-button
-              v-if="row.status === 'pending'"
-              type="success"
-              text
-              size="small"
-              @click="toggleStatus(row)"
+            <el-button 
+              v-if="row.status === 'INACTIVE'" 
+              type="success" text size="small" @click="toggleStatus(row, 'ACTIVE')"
             >
               上架
             </el-button>
-            <el-button type="danger" text size="small" @click="deleteCoupon(row)">删除</el-button>
+            <el-button type="danger" text size="small" @click="deleteCouponItem(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
+      <!-- 分页 -->
       <div class="pagination-bar">
         <el-pagination
           v-model:current-page="pagination.currentPage"
@@ -157,52 +149,52 @@
     </section>
 
     <!-- 创建/编辑对话框 -->
-    <el-dialog
-      v-model="dialog.visible"
-      :title="dialog.title"
-      width="600px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="dialog.visible" :title="dialog.title" width="600px">
       <el-form :model="couponForm" label-width="100px">
         <el-form-item label="优惠券名称" required>
           <el-input v-model="couponForm.name" placeholder="请输入优惠券名称" />
         </el-form-item>
         <el-form-item label="优惠券类型" required>
-          <el-select v-model="couponForm.type" placeholder="请选择类型" style="width: 100%">
-            <el-option label="满减券" value="discount" />
-            <el-option label="折扣券" value="percent" />
-            <el-option label="运费券" value="shipping" />
-          </el-select>
+          <el-radio-group v-model="couponForm.type">
+            <el-radio label="FIXED">满减券</el-radio>
+            <el-radio label="PERCENT">折扣券</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="面额/折扣" required v-if="couponForm.type !== 'shipping'">
-          <el-input
-            v-model="couponForm.value"
-            :placeholder="couponForm.type === 'discount' ? '请输入减免金额' : '请输入折扣率 (如 8 表示 8 折)'"
-            type="number"
-          >
-            <template #append v-if="couponForm.type === 'discount'">元</template>
-            <template #append v-else>折</template>
-          </el-input>
+        <el-form-item label="优惠金额" required>
+          <el-input-number 
+            v-model="couponForm.discountValue" 
+            :min="0" 
+            :precision="2"
+            style="width: 100%"
+          />
+          <span class="form-tip">{{ couponForm.type === 'PERCENT' ? '折扣比例 (1-100)' : '优惠金额 (元)' }}</span>
         </el-form-item>
         <el-form-item label="使用门槛">
-          <el-input-number v-model="couponForm.threshold" :min="0" :precision="2" style="width: 100%">
-            <template #append>元</template>
-          </el-input-number>
+          <el-input-number v-model="couponForm.minPurchase" :min="0" :precision="2" style="width: 100%" />
+          <span class="form-tip">最低消费金额，0 表示无门槛</span>
+        </el-form-item>
+        <el-form-item label="最大优惠" v-if="couponForm.type === 'PERCENT'">
+          <el-input-number v-model="couponForm.maxDiscount" :min="0" :precision="2" style="width: 100%" />
+          <span class="form-tip">折扣券最高抵扣金额</span>
         </el-form-item>
         <el-form-item label="发放数量" required>
-          <el-input-number v-model="couponForm.total" :min="1" style="width: 100%" />
+          <el-input-number v-model="couponForm.totalCount" :min="1" style="width: 100%" />
         </el-form-item>
         <el-form-item label="有效期" required>
-          <el-input-number v-model="couponForm.validDays" :min="1" :max="365" style="width: 100%">
-            <template #append>天</template>
-          </el-input-number>
+          <el-date-picker
+            v-model="couponForm.validPeriod"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            style="width: 100%"
+          />
         </el-form-item>
-        <el-form-item label="适用商品">
-          <el-select v-model="couponForm.applicableProducts" placeholder="选择适用商品" multiple style="width: 100%">
-            <el-option label="全场通用" value="all" />
-            <el-option label="手机数码" value="digital" />
-            <el-option label="电脑办公" value="office" />
-            <el-option label="家用电器" value="appliance" />
+        <el-form-item label="使用范围">
+          <el-select v-model="couponForm.scope" placeholder="选择使用范围" style="width: 100%">
+            <el-option label="全场通用" value="ALL" />
+            <el-option label="指定品类" value="CATEGORY" />
+            <el-option label="指定商品" value="PRODUCT" />
           </el-select>
         </el-form-item>
         <el-form-item label="优惠券描述">
@@ -227,32 +219,27 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Ticket, Plus, CircleCheck, CircleClose, Clock } from '@element-plus/icons-vue'
-
-interface CouponItem {
-  id: number
-  name: string
-  type: string
-  value: number
-  threshold: number
-  validDays: number
-  total: number
-  used: number
-  status: string
-  description?: string
-  applicableProducts?: string[]
-}
+import { 
+  createCoupon, 
+  updateCoupon, 
+  deleteCoupon, 
+  getCouponList, 
+  getCouponStats,
+  toggleCouponStatus,
+  type Coupon 
+} from '@merchant/api/coupon'
 
 interface FilterForm {
-  name: string
-  type: string
   status: string
+  sortBy: string
 }
 
 interface CouponStats {
   total: number
-  used: number
-  unused: number
+  active: number
+  inactive: number
   expired: number
+  usedUp: number
 }
 
 interface Pagination {
@@ -265,33 +252,34 @@ interface Dialog {
   visible: boolean
   title: string
   isEdit: boolean
-  currentCoupon: CouponItem | null
+  currentCoupon: Coupon | null
 }
 
 interface CouponForm {
   name: string
   type: string
-  value: number
-  threshold: number
-  total: number
-  validDays: number
+  discountValue: number
+  minPurchase: number
+  maxDiscount: number
+  totalCount: number
+  scope: string
   description: string
-  applicableProducts: string[]
+  validPeriod: [Date, Date] | null
 }
 
 const loading = ref(false)
-const couponList = ref<CouponItem[]>([])
+const couponList = ref<Coupon[]>([])
 const filterForm = reactive<FilterForm>({
-  name: '',
-  type: '',
-  status: ''
+  status: '',
+  sortBy: 'createdAt'
 })
 
 const couponStats = ref<CouponStats>({
-  total: 58,
-  used: 1256,
-  unused: 3420,
-  expired: 12
+  total: 0,
+  active: 0,
+  inactive: 0,
+  expired: 0,
+  usedUp: 0
 })
 
 const pagination = reactive<Pagination>({
@@ -309,159 +297,247 @@ const dialog = reactive<Dialog>({
 
 const couponForm = reactive<CouponForm>({
   name: '',
-  type: 'discount',
-  value: 10,
-  threshold: 100,
-  total: 1000,
-  validDays: 7,
+  type: 'FIXED',
+  discountValue: 10,
+  minPurchase: 100,
+  maxDiscount: 0,
+  totalCount: 1000,
+  scope: 'ALL',
   description: '',
-  applicableProducts: ['all']
+  validPeriod: null
 })
 
-const mockCouponData: CouponItem[] = [
-  { id: 1, name: '新人专享券', type: 'discount', value: 20, threshold: 100, validDays: 7, total: 1000, used: 856, status: 'active', description: '新用户专享优惠券' },
-  { id: 2, name: '满 200 减 30', type: 'discount', value: 30, threshold: 200, validDays: 15, total: 500, used: 230, status: 'active', description: '全品类通用' },
-  { id: 3, name: '8 折折扣券', type: 'percent', value: 8, threshold: 50, validDays: 10, total: 200, used: 89, status: 'active', description: '数码产品专用' },
-  { id: 4, name: '包邮券', type: 'shipping', value: 0, threshold: 0, validDays: 30, total: 300, used: 81, status: 'active', description: '全场包邮' },
-  { id: 5, name: '满 500 减 80', type: 'discount', value: 80, threshold: 500, validDays: 7, total: 100, used: 0, status: 'pending', description: '大额优惠券' },
-  { id: 6, name: '618 大促券', type: 'discount', value: 50, threshold: 300, validDays: 3, total: 1000, used: 0, status: 'pending', description: '618 活动专用' },
-  { id: 7, name: '春节特惠券', type: 'discount', value: 100, threshold: 800, validDays: 15, total: 200, used: 200, status: 'expired', description: '春节活动已结束' }
-]
-
-const getFaceValue = (row: CouponItem) => {
-  if (row.type === 'shipping') return '包邮'
-  if (row.type === 'percent') return `${row.value}折`
-  return `¥${row.value}`
-}
-
-const getTypeTag = (type: string) => {
-  const map: Record<string, string> = { discount: 'primary', percent: 'success', shipping: 'warning' }
-  return map[type] || 'info'
-}
-
-const getTypeText = (type: string) => {
-  const map: Record<string, string> = { discount: '满减券', percent: '折扣券', shipping: '运费券' }
-  return map[type] || type
-}
-
-const getStatusType = (status: string) => {
-  const map: Record<string, string> = { pending: 'warning', active: 'success', expired: 'info' }
-  return map[status] || 'info'
-}
-
-const getStatusText = (status: string) => {
-  const map: Record<string, string> = { pending: '未开始', active: '发放中', expired: '已过期' }
-  return map[status] || status
-}
-
-const loadCouponList = () => {
+// 加载优惠券列表
+const loadCouponList = async () => {
   loading.value = true
-  setTimeout(() => {
-    couponList.value = mockCouponData
-    pagination.total = mockCouponData.length
+  try {
+    const res = await getCouponList({
+      page: pagination.currentPage,
+      size: pagination.pageSize,
+      status: filterForm.status || undefined,
+      sortBy: filterForm.sortBy
+    })
+    couponList.value = res.data.list
+    pagination.total = res.data.total
+  } catch (error: any) {
+    ElMessage.error(error.message || '加载失败')
+    couponList.value = []
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
+// 加载统计
+const loadStats = async () => {
+  try {
+    const res = await getCouponStats()
+    couponStats.value = res.data
+  } catch (error) {
+    console.error('加载统计失败', error)
+  }
+}
+
+// 刷新
 const searchCoupons = () => {
-  ElMessage.success('搜索功能演示')
+  pagination.currentPage = 1
   loadCouponList()
 }
 
+// 重置筛选
 const resetFilter = () => {
-  filterForm.name = ''
-  filterForm.type = ''
   filterForm.status = ''
+  filterForm.sortBy = 'createdAt'
+  loadCouponList()
 }
 
+// 打开创建对话框
 const openCreateDialog = () => {
   dialog.visible = true
   dialog.title = '创建优惠券'
   dialog.isEdit = false
+  resetForm()
+}
+
+// 重置表单
+const resetForm = () => {
   Object.assign(couponForm, {
     name: '',
-    type: 'discount',
-    value: 10,
-    threshold: 100,
-    total: 1000,
-    validDays: 7,
+    type: 'FIXED',
+    discountValue: 10,
+    minPurchase: 100,
+    maxDiscount: 0,
+    totalCount: 1000,
+    scope: 'ALL',
     description: '',
-    applicableProducts: ['all']
+    validPeriod: null
   })
 }
 
-const editCoupon = (coupon: CouponItem) => {
+// 编辑优惠券
+const editCoupon = (coupon: Coupon) => {
   dialog.visible = true
   dialog.title = '编辑优惠券'
   dialog.isEdit = true
   dialog.currentCoupon = coupon
-  Object.assign(couponForm, { ...coupon })
+  
+  Object.assign(couponForm, {
+    name: coupon.name,
+    type: coupon.type,
+    discountValue: coupon.discountValue,
+    minPurchase: coupon.minPurchase || 0,
+    maxDiscount: coupon.maxDiscount || 0,
+    totalCount: coupon.totalCount,
+    scope: coupon.scope || 'ALL',
+    description: coupon.description || '',
+    validPeriod: coupon.validFrom && coupon.validTo ? [new Date(coupon.validFrom), new Date(coupon.validTo)] : null
+  })
 }
 
-const toggleStatus = (coupon: CouponItem) => {
-  coupon.status = coupon.status === 'active' ? 'pending' : 'active'
-  ElMessage.success(`已${coupon.status === 'active' ? '上架' : '下架'}`)
-}
-
-const deleteCoupon = (coupon: CouponItem) => {
-  ElMessageBox.confirm(`确定要删除优惠券"${coupon.name}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    const index = couponList.value.findIndex(item => item.id === coupon.id)
-    if (index !== -1) {
-      couponList.value.splice(index, 1)
-      ElMessage.success('删除成功')
-    }
-  }).catch(() => {})
-}
-
-const saveCoupon = () => {
+// 保存优惠券
+const saveCoupon = async () => {
   if (!couponForm.name) {
     ElMessage.warning('请输入优惠券名称')
     return
   }
-  ElMessage.success(dialog.isEdit ? '保存成功' : '创建成功')
-  dialog.visible = false
-  loadCouponList()
+  
+  if (!couponForm.validPeriod || couponForm.validPeriod.length !== 2) {
+    ElMessage.warning('请选择有效期')
+    return
+  }
+
+  try {
+    const data: any = {
+      name: couponForm.name,
+      type: couponForm.type,
+      discountValue: couponForm.discountValue,
+      minPurchase: couponForm.minPurchase,
+      totalCount: couponForm.totalCount,
+      scope: couponForm.scope,
+      description: couponForm.description,
+      validFrom: couponForm.validPeriod[0].toISOString(),
+      validTo: couponForm.validPeriod[1].toISOString()
+    }
+
+    if (couponForm.type === 'PERCENT' && couponForm.maxDiscount > 0) {
+      data.maxDiscount = couponForm.maxDiscount
+    }
+
+    if (dialog.isEdit && dialog.currentCoupon) {
+      await updateCoupon(dialog.currentCoupon.id, data)
+      ElMessage.success('更新成功')
+    } else {
+      await createCoupon(data)
+      ElMessage.success('创建成功')
+    }
+
+    dialog.visible = false
+    loadCouponList()
+    loadStats()
+  } catch (error: any) {
+    ElMessage.error(error.message || '操作失败')
+  }
 }
 
+// 删除优惠券
+const deleteCouponItem = async (coupon: Coupon) => {
+  try {
+    await ElMessageBox.confirm(`确定要删除优惠券"${coupon.name}"吗？`, '提示', {
+      type: 'warning'
+    })
+    
+    await deleteCoupon(coupon.id)
+    ElMessage.success('删除成功')
+    loadCouponList()
+    loadStats()
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error(error.message || '删除失败')
+    }
+  }
+}
+
+// 上下架
+const toggleStatus = async (coupon: Coupon, status: string) => {
+  try {
+    await toggleCouponStatus(coupon.id, status)
+    ElMessage.success('操作成功')
+    loadCouponList()
+    loadStats()
+  } catch (error: any) {
+    ElMessage.error(error.message || '操作失败')
+  }
+}
+
+// 工具函数
+const getTypeTag = (type: string) => {
+  const map: Record<string, string> = { FIXED: 'primary', PERCENT: 'success' }
+  return map[type] || 'info'
+}
+
+const getTypeText = (type: string) => {
+  const map: Record<string, string> = { FIXED: '满减券', PERCENT: '折扣券' }
+  return map[type] || type
+}
+
+const getStatusTag = (status: string) => {
+  const map: Record<string, string> = { ACTIVE: 'success', INACTIVE: 'info', EXPIRED: 'danger', USED_UP: 'warning' }
+  return map[status] || 'info'
+}
+
+const getFaceValue = (row: Coupon) => {
+  if (row.type === 'PERCENT') return `${row.discountValue}折`
+  return `¥${row.discountValue}`
+}
+
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return '-'
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('zh-CN')
+}
+
+// 组件挂载时加载数据
 onMounted(() => {
   loadCouponList()
+  loadStats()
 })
 </script>
 
 <style scoped>
 .page-container {
   padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+  min-height: 100vh;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .page-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
+  gap: 12px;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
 }
 
 .page-title .el-icon {
   color: var(--mall-primary);
-  font-size: 24px;
+  font-size: 26px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
 }
 
 .glow-btn {
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  background: linear-gradient(135deg, var(--mall-primary), var(--mall-secondary));
   border: none;
   box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
   color: #000;
@@ -473,8 +549,9 @@ onMounted(() => {
   transform: translateY(-2px);
 }
 
+/* 统计卡片 */
 .stats-cards {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .stat-card {
@@ -482,10 +559,11 @@ onMounted(() => {
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: rgba(26, 31, 58, 0.6);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
   transition: all 0.3s;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
 }
@@ -500,16 +578,10 @@ onMounted(() => {
   background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--glow-color);
-  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
-}
-
 .stat-card.primary { --glow-color: #00d4ff; }
 .stat-card.success { --glow-color: #00ff88; }
 .stat-card.warning { --glow-color: #ffaa00; }
-.stat-card.danger { --glow-color: #ff6666; }
+.stat-card.danger { --glow-color: #ff4444; }
 
 .stat-icon {
   width: 50px;
@@ -525,18 +597,22 @@ onMounted(() => {
 
 .stat-card.primary .stat-icon {
   background: linear-gradient(135deg, #00d4ff, #00a8cc);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
 
 .stat-card.success .stat-icon {
   background: linear-gradient(135deg, #00ff88, #00cc6a);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
 }
 
 .stat-card.warning .stat-icon {
   background: linear-gradient(135deg, #ffaa00, #ff8800);
+  box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
 }
 
 .stat-card.danger .stat-icon {
-  background: linear-gradient(135deg, #ff6666, #ff4444);
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
 }
 
 .stat-info {
@@ -555,6 +631,7 @@ onMounted(() => {
   margin-top: 4px;
 }
 
+/* 搜索栏 */
 .search-bar {
   background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -574,127 +651,77 @@ onMounted(() => {
   font-weight: 500;
 }
 
-.search-bar :deep(.el-input__wrapper) {
-  background: rgba(10, 14, 26, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.15);
-  border-radius: 8px;
-  padding: 8px 12px;
-  transition: all 0.3s;
-}
-
-.search-bar :deep(.el-input__wrapper:hover) {
-  border-color: rgba(0, 212, 255, 0.3);
-}
-
-.search-bar :deep(.el-input__wrapper.is-focus) {
-  border-color: var(--mall-primary);
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-}
-
-.search-bar :deep(.el-input__inner) {
-  color: #fff;
-}
-
-.search-bar :deep(.el-select .el-input__wrapper) {
-  background: rgba(10, 14, 26, 0.6);
-}
-
-.search-bar :deep(.el-select__wrapper) {
-  color: #fff;
-}
-
-.search-bar :deep(.el-button--primary) {
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
-  border: none;
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
-  color: #000;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-}
-
-.search-bar :deep(.el-button--primary:hover) {
-  box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
-  transform: translateY(-2px);
-}
-
+/* 表格区域 */
 .table-section {
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
-  border: 1px solid rgba(0, 212, 255, 0.15);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
+  background: linear-gradient(180deg,
+    rgba(8, 12, 28, 0.98) 0%,
+    rgba(12, 18, 40, 0.95) 50%,
+    rgba(8, 12, 28, 0.98) 100%);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  border-radius: 4px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(0, 150, 255, 0.15),
+    0 0 60px rgba(0, 100, 255, 0.1),
+    inset 0 0 100px rgba(0, 150, 255, 0.05);
 }
 
 .value-text {
-  color: var(--mall-primary);
+  color: #00ffff;
   font-weight: bold;
   font-size: 15px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 200, 255, 0.15);
 }
 
+.form-tip {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* 表格样式 */
 .sci-table :deep(.el-table__header th) {
-  background: rgba(0, 212, 255, 0.08);
-  color: var(--mall-primary);
+  background: linear-gradient(180deg,
+    rgba(0, 100, 180, 0.4) 0%,
+    rgba(0, 50, 100, 0.6) 100%);
+  color: #00ffff;
   font-size: 13px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
-  font-weight: 600;
+  border-bottom: 2px solid rgba(0, 200, 255, 0.6);
+  font-weight: 700;
+  padding: 16px 0;
 }
 
 .sci-table :deep(.el-table__body td) {
-  background: transparent;
-  color: #ccc;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #88aacc !important;
+  border-bottom: 1px solid rgba(0, 150, 200, 0.15);
   font-size: 13px;
-  padding: 12px 0;
+  padding: 14px 0;
 }
 
 .sci-table :deep(.el-table__row:hover) {
-  background: rgba(0, 212, 255, 0.05);
+  background: linear-gradient(90deg,
+    rgba(0, 180, 220, 0.3) 0%,
+    rgba(0, 220, 255, 0.25) 50%,
+    rgba(0, 180, 220, 0.3) 100%) !important;
+  box-shadow:
+    0 0 10px rgba(0, 200, 255, 0.4),
+    0 0 20px rgba(0, 200, 255, 0.2),
+    0 0 30px rgba(0, 200, 255, 0.1);
 }
 
-.sci-table :deep(.el-button) {
-  border-radius: 6px;
-  font-size: 12px;
-  padding: 6px 10px;
-}
-
-.sci-table :deep(.el-button--primary) {
-  background: rgba(0, 212, 255, 0.15);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  color: var(--mall-primary);
-}
-
-.sci-table :deep(.el-button--primary:hover) {
-  background: rgba(0, 212, 255, 0.25);
-  border-color: var(--mall-primary);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-}
-
-.sci-table :deep(.el-tag) {
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 12px;
-  border: none;
-}
-
-.sci-table :deep(.el-tag--success) {
-  background: rgba(0, 255, 136, 0.15);
-  color: var(--mall-secondary);
-}
-
-.sci-table :deep(.el-tag--warning) {
-  background: rgba(255, 170, 0, 0.15);
-  color: #ffaa00;
-}
-
-.sci-table :deep(.el-tag--info) {
-  background: rgba(0, 212, 255, 0.15);
-  color: var(--mall-primary);
+.sci-table :deep(.el-table__row:hover td) {
+  color: #ffffff !important;
+  background: transparent !important;
 }
 </style>

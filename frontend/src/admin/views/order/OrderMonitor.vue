@@ -110,18 +110,20 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" text size="small" @click="viewOrder(row)">详情</el-button>
-            <el-button
-              v-if="row.status === 'refunding'"
-              type="warning"
-              text
-              size="small"
-              @click="intervene(row)"
-            >
-              介入
-            </el-button>
+            <div class="action-buttons">
+              <el-button type="primary" text size="small" @click="viewOrder(row)">详情</el-button>
+              <el-button
+                v-if="row.status === 'refunding'"
+                type="warning"
+                text
+                size="small"
+                @click="intervene(row)"
+              >
+                介入
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -319,10 +321,10 @@ const resetFilter = () => {
 const getStatusType = (status: string) => {
   const map: Record<string, string> = {
     pending: 'warning',
-    paid: 'info',
+    paid: 'primary',
     shipped: 'success',
-    completed: '',
-    cancelled: 'info',
+    completed: 'info',
+    cancelled: 'warning',
     refunding: 'danger'
   }
   return map[status] || 'info'
@@ -556,85 +558,491 @@ onMounted(() => {
   transform: translateY(-2px);
 }
 
-/* 表格区域 */
+/* 表格区域 - 深空科技风格 */
 .table-section {
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
-  border: 1px solid rgba(0, 212, 255, 0.15);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
+  background: linear-gradient(180deg, 
+    rgba(8, 12, 28, 0.98) 0%, 
+    rgba(12, 18, 40, 0.95) 50%,
+    rgba(8, 12, 28, 0.98) 100%);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  border-radius: 4px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(0, 150, 255, 0.15),
+    0 0 60px rgba(0, 100, 255, 0.1),
+    inset 0 0 100px rgba(0, 150, 255, 0.05);
+}
+
+/* 顶部光效装饰线 */
+.table-section .header-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 200, 255, 0.3) 20%,
+    rgba(0, 255, 200, 0.5) 50%,
+    rgba(0, 200, 255, 0.3) 80%,
+    transparent 100%);
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.8);
 }
 
 .price-text {
-  color: var(--mall-primary);
+  color: #00ffff;
   font-weight: bold;
   font-size: 15px;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.8),
+    0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 200, 255, 0.15);
 }
 
+/* 表格样式美化 - 深空科技主题 */
+.sci-table {
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(180deg, 
+    rgba(10, 20, 50, 0.8) 0%, 
+    rgba(5, 15, 40, 0.9) 100%);
+  position: relative;
+  border: 1px solid rgba(0, 180, 255, 0.2);
+  box-shadow: 
+    inset 0 0 60px rgba(0, 150, 255, 0.08),
+    0 0 30px rgba(0, 200, 255, 0.1);
+}
+
+/* 表头样式 - 科技蓝 */
 .sci-table :deep(.el-table__header th) {
-  background: rgba(0, 212, 255, 0.08);
-  color: var(--mall-primary);
+  background: linear-gradient(180deg, 
+    rgba(0, 100, 180, 0.4) 0%, 
+    rgba(0, 50, 100, 0.6) 100%);
+  color: #00ffff;
   font-size: 13px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
-  font-weight: 600;
+  border-bottom: 2px solid rgba(0, 200, 255, 0.6);
+  font-weight: 700;
+  padding: 16px 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
+/* 表格主体样式 */
 .sci-table :deep(.el-table__body td) {
-  background: transparent;
-  color: #ccc;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #88aacc !important;
+  border-bottom: 1px solid rgba(0, 150, 200, 0.15);
   font-size: 13px;
-  padding: 12px 0;
+  padding: 14px 0;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
 }
 
+/* 行悬停效果 - 能量辉光 */
+.sci-table :deep(.el-table__row) {
+  background: transparent !important;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+/* Hover 效果 - 渐变辉光 */
 .sci-table :deep(.el-table__row:hover) {
-  background: rgba(0, 212, 255, 0.05);
+  background: linear-gradient(90deg,
+    rgba(0, 180, 220, 0.3) 0%,
+    rgba(0, 220, 255, 0.25) 50%,
+    rgba(0, 180, 220, 0.3) 100%) !important;
+  box-shadow:
+    0 0 10px rgba(0, 200, 255, 0.4),
+    0 0 20px rgba(0, 200, 255, 0.2),
+    0 0 30px rgba(0, 200, 255, 0.1);
 }
 
+.sci-table :deep(.el-table__row:hover .el-table__cell),
+.sci-table :deep(.el-table__row:hover td),
+.sci-table :deep(.el-table__row:hover .el-table_1),
+.sci-table :deep(.el-table__row:hover .el-table_2) {
+  background: transparent !important;
+}
+
+.sci-table :deep(.el-table__row:hover td) {
+  color: #ffffff !important;
+  background: transparent !important;
+  border-top: 1px solid rgba(0, 200, 255, 0.4) !important;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.4) !important;
+}
+
+.sci-table :deep(.el-table__row:hover td:first-child) {
+  border-left: 2px solid rgba(0, 200, 255, 0.6);
+  padding-left: 12px;
+}
+
+.sci-table :deep(.el-table__row:hover td:last-child) {
+  border-right: 2px solid rgba(0, 200, 255, 0.6);
+  padding-right: 12px;
+}
+
+.sci-table :deep(.el-table__empty-text) {
+  color: #555;
+  font-size: 14px;
+}
+
+/* 操作按钮样式 - 科技风格 */
 .sci-table :deep(.el-button) {
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 12px;
-  padding: 6px 10px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 5px currentColor;
 }
 
 .sci-table :deep(.el-button--primary) {
-  background: rgba(0, 212, 255, 0.15);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  color: var(--mall-primary);
+  background: linear-gradient(180deg, 
+    rgba(0, 150, 200, 0.3) 0%, 
+    rgba(0, 100, 150, 0.4) 100%);
+  border: 1px solid rgba(0, 200, 255, 0.6);
+  color: #00ffff;
+  box-shadow: 
+    0 0 15px rgba(0, 200, 255, 0.3),
+    inset 0 0 20px rgba(0, 200, 255, 0.1);
 }
 
 .sci-table :deep(.el-button--primary:hover) {
-  background: rgba(0, 212, 255, 0.25);
-  border-color: var(--mall-primary);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  background: linear-gradient(180deg, 
+    rgba(0, 200, 255, 0.5) 0%, 
+    rgba(0, 150, 200, 0.6) 100%);
+  border-color: #00ffff;
+  box-shadow: 
+    0 0 25px rgba(0, 200, 255, 0.6),
+    0 0 40px rgba(0, 200, 255, 0.3),
+    inset 0 0 30px rgba(0, 200, 255, 0.2);
+  transform: translateY(-2px);
 }
 
-.sci-table :deep(.el-tag) {
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 12px;
-  border: none;
-}
-
-.sci-table :deep(.el-tag--success) {
-  background: rgba(0, 255, 136, 0.15);
-  color: var(--mall-secondary);
-}
-
-.sci-table :deep(.el-tag--warning) {
-  background: rgba(255, 170, 0, 0.15);
+.sci-table :deep(.el-button--warning) {
+  background: linear-gradient(180deg, 
+    rgba(255, 150, 0, 0.3) 0%, 
+    rgba(200, 100, 0, 0.4) 100%);
+  border: 1px solid rgba(255, 170, 0, 0.6);
   color: #ffaa00;
+  box-shadow: 
+    0 0 15px rgba(255, 170, 0, 0.3),
+    inset 0 0 20px rgba(255, 170, 0, 0.1);
 }
 
-.sci-table :deep(.el-tag--info) {
-  background: rgba(0, 212, 255, 0.15);
-  color: var(--mall-primary);
+.sci-table :deep(.el-button--warning:hover) {
+  background: linear-gradient(180deg, 
+    rgba(255, 170, 0, 0.5) 0%, 
+    rgba(255, 150, 0, 0.6) 100%);
+  border-color: #ffcc00;
+  box-shadow: 
+    0 0 25px rgba(255, 170, 0, 0.6),
+    0 0 40px rgba(255, 170, 0, 0.3),
+    inset 0 0 30px rgba(255, 170, 0, 0.2);
+  transform: translateY(-2px);
 }
-</style>
+
+/* 状态标签样式 - 科技风格 */
+.sci-table :deep(.el-tag) {
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid;
+  text-shadow: 0 0 5px currentColor;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 已发货 - 蓝色 */
+.sci-table :deep(.el-tag--success) {
+  background: linear-gradient(180deg,
+    rgba(0, 150, 200, 0.2) 0%,
+    rgba(0, 100, 150, 0.3) 100%);
+  color: #00ccff;
+  border-color: rgba(0, 200, 255, 0.6);
+  box-shadow:
+    0 0 10px rgba(0, 200, 255, 0.3),
+    inset 0 0 15px rgba(0, 200, 255, 0.1);
+}
+
+.sci-table :deep(.el-tag--success:hover) {
+  background: linear-gradient(180deg,
+    rgba(0, 200, 255, 0.4) 0%,
+    rgba(0, 150, 200, 0.5) 100%);
+  border-color: #00ffff;
+  box-shadow:
+    0 0 20px rgba(0, 200, 255, 0.6),
+    0 0 40px rgba(0, 200, 255, 0.3),
+    inset 0 0 25px rgba(0, 200, 255, 0.2);
+}
+
+/* 已完成 - 绿色 */
+.sci-table :deep(.el-tag--info) {
+  background: linear-gradient(180deg,
+    rgba(0, 200, 100, 0.2) 0%,
+    rgba(0, 150, 80, 0.3) 100%);
+  color: #00ff88;
+  border-color: rgba(0, 255, 136, 0.6);
+  box-shadow:
+    0 0 10px rgba(0, 255, 136, 0.3),
+    inset 0 0 15px rgba(0, 255, 136, 0.1);
+}
+
+.sci-table :deep(.el-tag--info:hover) {
+  background: linear-gradient(180deg,
+    rgba(0, 255, 136, 0.4) 0%,
+    rgba(0, 200, 100, 0.5) 100%);
+  border-color: #00ffaa;
+  box-shadow:
+    0 0 20px rgba(0, 255, 136, 0.6),
+    0 0 40px rgba(0, 255, 136, 0.3),
+    inset 0 0 25px rgba(0, 255, 136, 0.2);
+}
+
+/* 待付款 - 橙色 */
+.sci-table :deep(.el-tag--warning) {
+  background: linear-gradient(180deg,
+    rgba(255, 170, 0, 0.2) 0%,
+    rgba(255, 150, 0, 0.3) 100%);
+  color: #ffaa00;
+  border-color: rgba(255, 170, 0, 0.6);
+  box-shadow:
+    0 0 10px rgba(255, 170, 0, 0.3),
+    inset 0 0 15px rgba(255, 170, 0, 0.1);
+}
+
+.sci-table :deep(.el-tag--warning:hover) {
+  background: linear-gradient(180deg,
+    rgba(255, 170, 0, 0.4) 0%,
+    rgba(255, 150, 0, 0.5) 100%);
+  border-color: #ffcc00;
+  box-shadow:
+    0 0 20px rgba(255, 170, 0, 0.6),
+    0 0 40px rgba(255, 170, 0, 0.3),
+    inset 0 0 25px rgba(255, 170, 0, 0.2);
+}
+
+/* 待发货 - 黄色 (支付方式) */
+.sci-table :deep(.el-tag--primary) {
+  background: linear-gradient(180deg,
+    rgba(255, 200, 0, 0.2) 0%,
+    rgba(255, 180, 0, 0.3) 100%);
+  color: #ffcc00;
+  border-color: rgba(255, 200, 0, 0.6);
+  box-shadow:
+    0 0 10px rgba(255, 200, 0, 0.3),
+    inset 0 0 15px rgba(255, 200, 0, 0.1);
+}
+
+.sci-table :deep(.el-tag--primary:hover) {
+  background: linear-gradient(180deg,
+    rgba(255, 220, 0, 0.4) 0%,
+    rgba(255, 200, 0, 0.5) 100%);
+  border-color: #ffdd00;
+  box-shadow:
+    0 0 20px rgba(255, 200, 0, 0.6),
+    0 0 40px rgba(255, 200, 0, 0.3),
+    inset 0 0 25px rgba(255, 200, 0, 0.2);
+}
+
+/* 退款中 - 红色 */
+.sci-table :deep(.el-tag--danger) {
+  background: linear-gradient(180deg,
+    rgba(255, 80, 80, 0.2) 0%,
+    rgba(200, 50, 50, 0.3) 100%);
+  color: #ff6666;
+  border-color: rgba(255, 100, 100, 0.6);
+  box-shadow:
+    0 0 10px rgba(255, 100, 100, 0.3),
+    inset 0 0 15px rgba(255, 100, 100, 0.1);
+}
+
+.sci-table :deep(.el-tag--danger:hover) {
+  background: linear-gradient(180deg,
+    rgba(255, 100, 100, 0.4) 0%,
+    rgba(255, 80, 80, 0.5) 100%);
+  border-color: #ff8888;
+  box-shadow:
+    0 0 20px rgba(255, 100, 100, 0.6),
+    0 0 40px rgba(255, 100, 100, 0.3),
+    inset 0 0 25px rgba(255, 100, 100, 0.2);
+}
+
+/* 已取消 - 灰色 (使用 el-tag 选择器覆盖) */
+.sci-table :deep(.el-table__cell .el-tag:not(.el-tag--success):not(.el-tag--warning):not(.el-tag--info):not(.el-tag--danger):not(.el-tag--primary)) {
+  background: linear-gradient(180deg,
+    rgba(100, 100, 100, 0.2) 0%,
+    rgba(80, 80, 80, 0.3) 100%);
+  color: #aaaaaa;
+  border-color: rgba(150, 150, 150, 0.6);
+  box-shadow:
+    0 0 10px rgba(150, 150, 150, 0.3),
+    inset 0 0 15px rgba(150, 150, 150, 0.1);
+}
+
+.sci-table :deep(.el-table__cell .el-tag:not(.el-tag--success):not(.el-tag--warning):not(.el-tag--info):not(.el-tag--danger):not(.el-tag--primary):hover) {
+  background: linear-gradient(180deg,
+    rgba(150, 150, 150, 0.4) 0%,
+    rgba(100, 100, 100, 0.5) 100%);
+  border-color: #cccccc;
+  box-shadow:
+    0 0 20px rgba(150, 150, 150, 0.6),
+    0 0 40px rgba(150, 150, 150, 0.3),
+    inset 0 0 25px rgba(150, 150, 150, 0.2);
+}
+
+/* 对话框样式美化 - 科技风格 */
+.sci-descriptions :deep(.el-descriptions__header) {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(0, 200, 255, 0.3);
+}
+
+.sci-descriptions :deep(.el-descriptions__label) {
+  background: linear-gradient(180deg, 
+    rgba(0, 100, 150, 0.3) 0%, 
+    rgba(0, 50, 100, 0.4) 100%);
+  color: #00ffff;
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.sci-descriptions :deep(.el-descriptions__content) {
+  background: rgba(5, 15, 40, 0.6);
+  color: #aaccff;
+  border: 1px solid rgba(0, 150, 200, 0.2);
+}
+
+/* 分页器美化 - 科技风格 */
+.pagination-bar :deep(.el-pagination) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-bar :deep(.el-pagination__total) {
+  color: #6688aa;
+  font-size: 13px;
+}
+
+.pagination-bar :deep(.el-pager li) {
+  background: linear-gradient(180deg, 
+    rgba(0, 100, 150, 0.2) 0%, 
+    rgba(0, 50, 100, 0.3) 100%);
+  border: 1px solid rgba(0, 180, 220, 0.3);
+  border-radius: 4px;
+  color: #6688aa;
+  min-width: 36px;
+  height: 36px;
+  line-height: 36px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 150, 200, 0.1);
+}
+
+.pagination-bar :deep(.el-pager li:hover) {
+  background: linear-gradient(180deg, 
+    rgba(0, 180, 220, 0.4) 0%, 
+    rgba(0, 150, 200, 0.5) 100%);
+  border-color: rgba(0, 200, 255, 0.6);
+  color: #00ffff;
+  box-shadow: 
+    0 0 15px rgba(0, 200, 255, 0.4),
+    0 0 30px rgba(0, 200, 255, 0.2);
+}
+
+.pagination-bar :deep(.el-pager li.is-active) {
+  background: linear-gradient(180deg, 
+    rgba(0, 200, 255, 0.5) 0%, 
+    rgba(0, 150, 200, 0.6) 100%);
+  border-color: #00ffff;
+  color: #ffffff;
+  font-weight: bold;
+  box-shadow: 
+    0 0 20px rgba(0, 200, 255, 0.6),
+    0 0 40px rgba(0, 200, 255, 0.3);
+}
+
+.pagination-bar :deep(.btn-prev),
+.pagination-bar :deep(.btn-next) {
+  background: linear-gradient(180deg, 
+    rgba(0, 100, 150, 0.2) 0%, 
+    rgba(0, 50, 100, 0.3) 100%);
+  border: 1px solid rgba(0, 180, 220, 0.3);
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  transition: all 0.3s ease;
+  color: #6688aa;
+  box-shadow: 0 0 10px rgba(0, 150, 200, 0.1);
+}
+
+.pagination-bar :deep(.btn-prev):not(:disabled):hover,
+.pagination-bar :deep(.btn-next):not(:disabled):hover {
+  background: linear-gradient(180deg, 
+    rgba(0, 180, 220, 0.4) 0%, 
+    rgba(0, 150, 200, 0.5) 100%);
+  border-color: rgba(0, 200, 255, 0.6);
+  color: #00ffff;
+  box-shadow: 
+    0 0 15px rgba(0, 200, 255, 0.4),
+    0 0 30px rgba(0, 200, 255, 0.2);
+}
+
+.pagination-bar :deep(.btn-prev:disabled),
+.pagination-bar :deep(.btn-next:disabled) {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.pagination-bar :deep(.el-pagination__sizes) {
+  margin: 0 8px;
+}
+
+.pagination-bar :deep(.el-select .el-input__wrapper) {
+  background: linear-gradient(180deg, 
+    rgba(0, 100, 150, 0.2) 0%, 
+    rgba(0, 50, 100, 0.3) 100%);
+  border: 1px solid rgba(0, 180, 220, 0.3);
+  border-radius: 4px;
+  padding: 4px 12px;
+  box-shadow: 0 0 10px rgba(0, 150, 200, 0.1);
+}
+
+.pagination-bar :deep(.el-select__placeholder) {
+  color: #6688aa;
+}
+
+.pagination-bar :deep(.el-select__input) {
+  color: #aaccff;
+}
+
+/* 操作按钮样式 */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.action-buttons .el-button {
+  white-space: nowrap;
+  margin: 0;
+  display: inline-flex;
+}
 </style>

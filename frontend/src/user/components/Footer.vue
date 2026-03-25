@@ -69,9 +69,11 @@
 <script setup></script>
 
 <style scoped>
+@import '@user/assets/mall-style.css';
+
 .footer {
-  background: rgba(10, 14, 26, 0.9);
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
+  background: var(--mall-bg-medium);
+  border-top: 1px solid var(--mall-border-light);
   padding: 40px 0 20px;
 }
 
@@ -80,7 +82,7 @@
   justify-content: center;
   gap: 60px;
   padding-bottom: 30px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  border-bottom: 1px solid var(--mall-border-light);
   margin-bottom: 30px;
 }
 
@@ -88,13 +90,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--mall-primary);
+  color: var(--mall-text-secondary);
   font-size: 14px;
 }
 
 .service-item .el-icon {
   font-size: 28px;
-  color: var(--mall-secondary);
+  color: var(--mall-primary);
 }
 
 .footer-links {
@@ -112,19 +114,21 @@
 
 .footer-column h4 {
   font-size: 15px;
-  color: var(--mall-primary);
+  color: var(--mall-text-primary);
   margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .footer-column a {
-  color: #888;
+  color: var(--mall-text-muted);
   text-decoration: none;
   font-size: 13px;
-  transition: color 0.3s;
+  transition: all 0.3s;
 }
 
 .footer-column a:hover {
-  color: var(--mall-secondary);
+  color: var(--mall-primary);
+  padding-left: 5px;
 }
 
 .social-icons {
@@ -133,9 +137,19 @@
   color: var(--mall-primary);
 }
 
+.social-icons .el-icon {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.social-icons .el-icon:hover {
+  color: var(--mall-secondary);
+  transform: scale(1.2);
+}
+
 .copyright {
   text-align: center;
-  color: #666;
+  color: var(--mall-text-muted);
   font-size: 12px;
   line-height: 28px;
 }

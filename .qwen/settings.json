@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(timeout *)",
+      "Bash(powershell *)",
+      "Bash(del *)"
+    ]
+  },
+  "$version": 3
+}
