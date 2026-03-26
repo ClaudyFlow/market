@@ -1,51 +1,39 @@
-// 第1页开始
-
+// 第 1 页开始
 #set page(
   paper: "a4",
   margin: (inside: 25mm, outside: 20mm, top: 35mm, bottom: 30mm),
-  // header: [
-  //   #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
-  //   #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
-  // ],
-  // footer: [
-  //   #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]
-  //   #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]
-  //   #context {
-  //     place(bottom + right, dy: -20mm)[#align(right)[#text(9pt, font: "SimSun")[#counter(page).display()]]]
-  //   }
-  // ],
 )
 
-// 封面标题：标题前间距15mm，标题后间距10mm，水平居中
+// 封面标题：标题前间距 15mm，标题后间距 10mm，水平居中
 
 #v(85mm)
 
 #align(center)[#text(26pt, font: "SimHei")[购物商城系统\
   前端功能介绍]]
 
-// 第1页结束
+// 第 1 页结束
 #pagebreak()
-// 第2页开始
+// 第 2 页开始
 
 // 空白页（无页眉页脚）
 #set page(header: [], footer: [])
 #v(1fr)
 
 
-// 第2页结束
+// 第 2 页结束
 #pagebreak()
-// 第3页开始
+// 第 3 页开始
 
 // 设置罗马数字页码和页眉页脚
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
-    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]
-    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]
+    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]\
+    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]\
     #context {
       place(bottom + right, dy: -20mm)[#align(right)[#text(9pt, font: "SimSun")[#counter(page).display()]]]
     }
@@ -53,7 +41,7 @@
 )
 #counter(page).update(1)
 
-// 目录标题：从页眉线向下距离15mm，水平居中
+// 目录标题：从页眉线向下距离 15mm，水平居中
 #v(15mm)
 
 #align(top + center)[#text(16pt, font: "SimHei")[目录]]
@@ -66,7 +54,7 @@
   indent: 1em,
 )
 
-// 设置目录内容为五号宋体，行距为1.5倍
+// 设置目录内容为五号宋体，行距为 1.5 倍
 #show outline.entry: it => {
   set text(font: "SimSun", size: 10.5pt)
   set block(spacing: 1.5em)
@@ -75,27 +63,27 @@
 
 #outline()
 
-// 第3页结束
+// 第 3 页结束
 #pagebreak()
-// 第4页开始
+// 第 4 页开始
 
 // 设置页眉页脚
 #set page(
   numbering: "I",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
-    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]
-    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]
+    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]\
+    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]\
     #context {
       place(bottom + right, dy: -20mm)[#align(right)[#text(9pt, font: "SimSun")[#counter(page).display()]]]
     }
   ],
 )
 
-// 前言标题：标题前间距15mm，标题后间距10mm，三号黑体居中对齐
+// 前言标题：标题前间距 15mm，标题后间距 10mm，三号黑体居中对齐
 
 #v(15mm)
 
@@ -103,41 +91,41 @@
 
 #v(10mm)
 
-// 前言内容：五号宋体左对齐，首行缩进两个全角空格，行距为1.25倍
+// 前言内容：五号宋体左对齐，首行缩进两个全角空格，行距为 1.25 倍
 #set text(font: "SimSun", size: 10.5pt)
 #set par(leading: 1.25em)
 
 #h(2.0em)本前端功能介绍旨在为开发人员和用户提供详细的购物商城系统前端应用功能说明。\
 #h(2.0em)文档涵盖了技术栈、功能模块、组件架构、数据管理、用户体验特性等多个方面的内容。\
-#h(2.0em)购物商城系统是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用，采用组件化架构，支持完整的电商购物流程。\
+#h(2.0em)购物商城系统是一个基于 Vue#h(0.25em)3 的现代化在线购物商城前端应用，采用组件化架构，支持完整的电商购物流程。\
 #h(2.0em)通过本指南，读者将能够了解前端应用的完整设计理念和实现细节，掌握必要的技术知识，并能够独立进行前端开发和维护工作。\
 #h(2.0em)我们希望本指南能够帮助用户快速理解前端应用的功能特性和技术架构。\
-#h(2.0em)本指南适用于具备一定前端开发基础的人员使用，读者应熟悉HTML、CSS、JavaScript等基础知识。\
+#h(2.0em)本指南适用于具备一定前端开发基础的人员使用，读者应熟悉 HTML、CSS、JavaScript 等基础知识。\
 #h(2.0em)在开始使用前，请仔细阅读本文档，确保理解每个功能模块的设计思想和使用方法。\
 #h(2.0em)如遇到本文档未覆盖的问题或有任何疑问，请及时联系技术支持团队。\
 #h(2.0em)我们将持续更新和完善本指南，以帮助用户更好地使用购物商城系统前端应用。\
 
-// 第4页结束
+// 第 4 页结束
 #pagebreak()
-// 第5页开始
+// 第 5 页开始
 
 // 空白页（无页眉页脚）
 #set page(header: [], footer: [])
 
-// 第5页结束
+// 第 5 页结束
 #pagebreak()
-// 第6页开始
+// 第 6 页开始
 
 // 切换到阿拉伯数字页码，设置页眉页脚
 #set page(
   numbering: "1",
   header: [
-    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]
+    #place(top + center, dy: 25mm)[#text(10.5pt, font: "SimHei")[购物商城系统——前端功能介绍]]\
     #place(top, dy: 30mm)[#line(length: 100%, stroke: 0.5pt)]
   ],
   footer: [
-    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]
-    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]
+    #place(bottom, dy: -25mm)[#line(length: 100%, stroke: 0.5pt)]\
+    #place(bottom + left, dy: -20mm)[#text(9pt, font: "SimSun")[#datetime.today().display()]]\
     #context {
       place(bottom + right, dy: -20mm)[#align(right)[#text(9pt, font: "SimSun")[#counter(page).display()]]]
     }
@@ -145,721 +133,1422 @@
 )
 #counter(page).update(1)
 
-// 正文大标题：标题前间距15mm，标题后间距10mm，三号黑体居中对齐
+// 正文大标题：标题前间距 15mm，标题后间距 10mm，三号黑体居中对齐
 #v(15mm)
 #align(center)[#text(16pt, font: "SimHei")[前端功能介绍]]
 #v(10mm)
 
-// 正文内容：五号宋体左对齐，首行缩进两个全角空格，正文部分的标题是五号黑体，行距为1.25倍
+// 正文内容：五号宋体左对齐，首行缩进两个全角空格，正文部分的标题是五号黑体，行距为 1.25 倍
 // 设置标题编号与标题之间有一个全角空格
 #set heading(numbering: (..nums) => {
   let num = numbering("1.1", ..nums)
-  num + "\u{3000}"
+  [#text(10.5pt, font: "SimHei")[#h(1em)#num#h(1em)]]
 })
 
-// 设置标题字体为五号黑体
-// 一级标题行距为三倍，二级及以下标题行距为两倍
-#show heading.where(level: 1): set text(font: "SimHei", size: 10.5pt)
-#show heading.where(level: 1): set block(spacing: 3em)
-#show heading.where(level: 2): set text(font: "SimHei", size: 10.5pt)
-#show heading.where(level: 2): set block(spacing: 2em)
-#show heading.where(level: 3): set text(font: "SimHei", size: 10.5pt)
-#show heading.where(level: 3): set block(spacing: 2em)
-
 #set text(font: "SimSun", size: 10.5pt)
-#set par(leading: 1.25em)
+#set par(justify: true, first-line-indent: 2em)
+#set block(spacing: 1.25em)
+
+// 正文一级标题：三号黑体，段前段后间距 10mm
+#show heading.where(level: 1): it => {
+  set block(above: 10mm, below: 10mm)
+  set text(font: "SimHei", size: 16pt)
+  it
+}
+
+// 正文二级标题：四号黑体，段前段后间距 5mm
+#show heading.where(level: 2): it => {
+  set block(above: 5mm, below: 5mm)
+  set text(font: "SimHei", size: 14pt)
+  it
+}
+
+// 正文三级标题：小四号黑体，段前段后间距 3mm
+#show heading.where(level: 3): it => {
+  set block(above: 3mm, below: 3mm)
+  set text(font: "SimHei", size: 12pt)
+  it
+}
 
 = 项目概述
 
-#h(2.0em)购物商城系统是一个基于Vue#h(0.25em)3的现代化在线购物商城前端应用。应用采用组件化架构，支持完整的电商购物流程，包括商品浏览、购物车管理、订单查看和用户系统。\
-#h(2.0em)前端应用使用纯JavaScript开发，无需构建工具，直接在浏览器中运行，简化了开发和部署流程。\
+#h(2.0em)购物商城系统是一个基于 Vue#h(0.25em)3 的现代化在线购物商城前端应用。应用采用组件化架构，支持完整的电商购物流程，包括商品浏览、购物车管理、订单查看和用户系统。\
+#h(2.0em)前端应用使用 TypeScript 开发，采用 Vite 构建工具，提供高效的开发体验和优化的生产构建。\
+#h(2.0em)系统包含三个应用端：用户端、管理后台和商家后台，提供完整的电商生态解决方案。\
 #h(2.0em)本前端功能介绍将详细介绍系统的各项功能特性，帮助读者全面了解前端应用的设计和实现。\
 
 = 技术栈
 
 #h(2.0em)前端应用采用了现代化的技术栈，确保应用具有良好的性能和用户体验。\
-#h(2.0em)主要技术包括：\
 
-== 核心框架
+== 核心技术栈
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[前端框架]\
-#h(2.0em)采用Vue#h(0.25em)3框架，使用组合式API进行组件开发，提供灵活的数据绑定和组件复用能力。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)1#h(1.0em)核心技术栈]]
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[开发模式]\
-#h(2.0em)纯前端开发，无需构建工具，直接在浏览器中运行，简化了开发流程。\
+#v(0.5em)
 
-== 界面样式
+#align(center)[#table(
+  columns: (1fr, 1fr, 1fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, center, center, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[分类]]],
+  [#align(center)[#text(9pt, font: "SimSun")[技术]]],
+  [#align(center)[#text(9pt, font: "SimSun")[版本]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[样式技术]\
-#h(2.0em)CSS3#h(0.25em)+#h(0.25em)SCSS样式，支持嵌套规则、变量和混合宏，提高样式开发效率。\
+  [#text(9pt, font: "SimHei")[框架]],
+  [#text(9pt, font: "Times New Roman")[Vue]],
+  [#text(9pt, font: "Times New Roman")[3.4+]],
+  [#text(9pt, font: "SimSun")[组合式 API，响应式框架]],
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[图标库]\
-#h(2.0em)Font#h(0.25em)Awesome#h(0.25em)6，提供丰富的矢量图标，支持自定义颜色和大小。\
+  [#text(9pt, font: "SimHei")[语言]],
+  [#text(9pt, font: "Times New Roman")[TypeScript]],
+  [#text(9pt, font: "Times New Roman")[5.9+]],
+  [#text(9pt, font: "SimSun")[类型安全的 JavaScript 超集]],
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[字体]\
-#h(2.0em)Google#h(0.25em)Fonts-Inter，现代无衬线字体，提供良好的阅读体验。\
+  [#text(9pt, font: "SimHei")[构建]],
+  [#text(9pt, font: "Times New Roman")[Vite]],
+  [#text(9pt, font: "Times New Roman")[5.0+]],
+  [#text(9pt, font: "SimSun")[下一代前端构建工具]],
 
-== 服务器配置
+  [#text(9pt, font: "SimHei")[状态管理]],
+  [#text(9pt, font: "Times New Roman")[Pinia]],
+  [#text(9pt, font: "Times New Roman")[2.1+]],
+  [#text(9pt, font: "SimSun")[Vue 3 官方状态管理库]],
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[Web服务器]\
-#h(2.0em)Nginx静态文件服务，提供高性能的静态资源托管和反向代理功能。\
+  [#text(9pt, font: "SimHei")[路由]],
+  [#text(9pt, font: "Times New Roman")[Vue Router]],
+  [#text(9pt, font: "Times New Roman")[4.2+]],
+  [#text(9pt, font: "SimSun")[官方路由管理器]],
 
-===
-#h(2.0em)#text(font: "SimHei", weight: "bold", size: 10.5pt)[Https支持]\
-#h(2.0em)建议启用Https，保护数据传输安全。\
+  [#text(9pt, font: "SimHei")[UI 库]],
+  [#text(9pt, font: "Times New Roman")[Element Plus]],
+  [#text(9pt, font: "Times New Roman")[2.4+]],
+  [#text(9pt, font: "SimSun")[Vue 3 UI 组件库]],
+
+  [#text(9pt, font: "SimHei")[图标]],
+  [#text(9pt, font: "Times New Roman")[element-plus/icons-vue]],
+  [#text(9pt, font: "Times New Roman")[2.3+]],
+  [#text(9pt, font: "SimSun")[200+ 个矢量图标]],
+
+  [#text(9pt, font: "SimHei")[HTTP]],
+  [#text(9pt, font: "Times New Roman")[Axios]],
+  [#text(9pt, font: "Times New Roman")[1.6+]],
+  [#text(9pt, font: "SimSun")[HTTP 客户端]],
+
+  [#text(9pt, font: "SimHei")[图表]],
+  [#text(9pt, font: "Times New Roman")[ECharts]],
+  [#text(9pt, font: "Times New Roman")[5.5+]],
+  [#text(9pt, font: "SimSun")[数据可视化库]],
+)]
+
+== 与原档差异
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)2#h(1.0em)原文档与实际实现差异]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[项目]]],
+  [#align(center)[#text(9pt, font: "SimSun")[原文档描述]]],
+  [#align(center)[#text(9pt, font: "SimSun")[实际实现]]],
+
+  [#text(9pt, font: "Times New Roman")[构建方式]],
+  [#text(9pt, font: "SimSun")[无构建工具，CDN 引用]],
+  [#text(9pt, font: "SimSun")[Vite 构建，npm 包管理]],
+
+  [#text(9pt, font: "Times New Roman")[开发语言]],
+  [#text(9pt, font: "SimSun")[JavaScript]],
+  [#text(9pt, font: "SimSun")[TypeScript]],
+
+  [#text(9pt, font: "Times New Roman")[状态管理]],
+  [#text(9pt, font: "SimSun")[localStorage]],
+  [#text(9pt, font: "SimSun")[Pinia Store]],
+
+  [#text(9pt, font: "Times New Roman")[UI 框架]],
+  [#text(9pt, font: "SimSun")[无]],
+  [#text(9pt, font: "SimSun")[Element Plus]],
+
+  [#text(9pt, font: "Times New Roman")[路由系统]],
+  [#text(9pt, font: "SimSun")[无]],
+  [#text(9pt, font: "SimSun")[Vue Router]],
+
+  [#text(9pt, font: "Times New Roman")[HTTP 请求]],
+  [#text(9pt, font: "SimSun")[无]],
+  [#text(9pt, font: "SimSun")[Axios]],
+
+  [#text(9pt, font: "Times New Roman")[组件数量]],
+  [#text(9pt, font: "SimSun")[5 个]],
+  [#text(9pt, font: "SimSun")[75+ 个]],
+
+  [#text(9pt, font: "Times New Roman")[应用端]],
+  [#text(9pt, font: "SimSun")[单端]],
+  [#text(9pt, font: "SimSun")[三端（user/admin/merchant）]],
+)]
 
 = 功能模块
 
 #h(2.0em)前端应用包含多个功能模块，每个模块负责特定的业务功能。\
-#h(2.0em)各模块之间通过事件和数据传递实现协同工作。\
+#h(2.0em)系统包含三个应用端：用户端、管理后台和商家后台。\
 
-== 导航系统
+== 用户端功能
 
-#h(2.0em)导航系统是应用的入口，提供全局导航和用户交互功能。\
-#h(2.0em)导航系统包括导航栏和页面切换功能。\
+=== 商品模块
 
-=== 导航栏组件 #h(0.25em)Navbar
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)3#h(1.0em)商品模块功能]]
 
-#h(2.0em)导航栏组件提供以下功能：\
-#h(2.0em)——应用品牌标识展示；\
-#h(2.0em)——全局搜索功能，支持商品名称、描述、分类的模糊搜索；\
-#h(2.0em)——页面导航，包括首页、商品、购物车、订单四个主要页面；\
-#h(2.0em)——用户菜单，包括登录/注册、个人资料、退出登录；\
-#h(2.0em)——购物车数量实时显示。\
+#v(0.5em)
 
-=== 页面切换
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
 
-#h(2.0em)支持四个主要页面间的平滑切换，页面状态保持和URL管理。\
-#h(2.0em)页面切换时保持用户数据和状态，提供流畅的用户体验。\
+  [#text(9pt, font: "SimHei")[商品列表]],
+  [#text(9pt, font: "SimSun")[网格布局展示，支持分页、排序、筛选]],
+  [#text(9pt, font: "Times New Roman")[ProductList.vue]],
 
-== 首页功能
+  [#text(9pt, font: "SimHei")[商品搜索]],
+  [#text(9pt, font: "SimSun")[支持名称、描述、分类的模糊搜索]],
+  [#text(9pt, font: "Times New Roman")[ProductList.vue]],
 
-#h(2.0em)首页是应用的入口页面，展示精选商品和应用特色功能。\
-#h(2.0em)首页设计简洁美观，引导用户快速进入购物流程。\
+  [#text(9pt, font: "SimHei")[商品详情]],
+  [#text(9pt, font: "SimSun")[展示商品详细信息、图片、评价]],
+  [#text(9pt, font: "Times New Roman")[ProductDetail.vue]],
 
-=== 欢迎区域
+  [#text(9pt, font: "SimHei")[商品分类]],
+  [#text(9pt, font: "SimSun")[多级分类展示，点击筛选]],
+  [#text(9pt, font: "Times New Roman")[CategoryPanel.vue]],
 
-#h(2.0em)欢迎区域展示应用欢迎语和宣传文案，提供"浏览商品"快速入口按钮。\
-#h(2.0em)采用渐变背景和动画效果，增强视觉吸引力。\
+  [#text(9pt, font: "SimHei")[商品轮播]],
+  [#text(9pt, font: "SimSun")[首页轮播图展示]],
+  [#text(9pt, font: "Times New Roman")[BannerCarousel.vue]],
+)]
 
-=== 精选商品展示
+=== 购物车模块
 
-#h(2.0em)精选商品轮播展示，展示热门和推荐商品。\
-#h(2.0em)商品卡片包含商品图片、名称、价格和评分信息，支持悬停效果和快速添加到购物车功能。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)4#h(1.0em)购物车模块功能]]
 
-=== 特色功能展示
+#v(0.5em)
 
-#h(2.0em)特色功能展示区域，展示应用的四大特色：\
-#h(2.0em)——快速配送；\
-#h(2.0em)——品质保证；\
-#h(2.0em)——客服支持；\
-#h(2.0em)——优惠活动。\
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
 
-== 商品管理
+  [#text(9pt, font: "SimHei")[购物车管理]],
+  [#text(9pt, font: "SimSun")[添加商品、数量调整、移除商品]],
+  [#text(9pt, font: "Times New Roman")[Cart.vue]],
 
-#h(2.0em)商品管理模块提供商品浏览、筛选和搜索功能。\
-#h(2.0em)用户可以方便地查找和浏览商品。\
+  [#text(9pt, font: "SimHei")[实时计算]],
+  [#text(9pt, font: "SimSun")[商品总价、运费、订单总额]],
+  [#text(9pt, font: "Times New Roman")[cart.ts (Store)]],
 
-=== 商品浏览
+  [#text(9pt, font: "SimHei")[数据持久化]],
+  [#text(9pt, font: "SimSun")[Pinia Store + localStorage]],
+  [#text(9pt, font: "Times New Roman")[cart.ts]],
 
-#h(2.0em)商品采用网格布局展示，响应式设计适配不同屏幕尺寸。\
-#h(2.0em)商品卡片包含以下信息：\
-#h(2.0em)——商品图片；\
-#h(2.0em)——商品名称；\
-#h(2.0em)——商品描述；\
-#h(2.0em)——价格信息；\
-#h(2.0em)——用户评分。\
+  [#text(9pt, font: "SimHei")[快速添加]],
+  [#text(9pt, font: "SimSun")[商品卡片直接添加到购物车]],
+  [#text(9pt, font: "Times New Roman")[ProductCard.vue]],
+)]
 
-=== 商品筛选
+=== 订单模块
 
-#h(2.0em)支持分类筛选，包括：电子产品、服装鞋帽、配饰、家用电器、运动户外五个主要分类。\
-#h(2.0em)支持多种排序方式：\
-#h(2.0em)——最新商品；\
-#h(2.0em)——价格从低到高；\
-#h(2.0em)——价格从高到低；\
-#h(2.0em)——评分最高。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)5#h(1.0em)订单模块功能]]
 
-=== 商品搜索
+#v(0.5em)
 
-#h(2.0em)全局搜索功能，支持商品名称、描述、分类的模糊搜索。\
-#h(2.0em)实时显示搜索结果，提供快速的商品查找体验。\
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
 
-== 购物车系统
+  [#text(9pt, font: "SimHei")[订单创建]],
+  [#text(9pt, font: "SimSun")[从购物车生成订单]],
+  [#text(9pt, font: "Times New Roman")[Order.vue]],
 
-#h(2.0em)购物车系统提供购物车管理和订单创建功能。\
-#h(2.0em)购物车数据保存在本地存储中，页面刷新后自动恢复。\
+  [#text(9pt, font: "SimHei")[订单列表]],
+  [#text(9pt, font: "SimSun")[展示历史订单，支持状态筛选]],
+  [#text(9pt, font: "Times New Roman")[Orders.vue]],
 
-=== 购物车管理
+  [#text(9pt, font: "SimHei")[订单详情]],
+  [#text(9pt, font: "SimSun")[查看订单详细信息]],
+  [#text(9pt, font: "Times New Roman")[OrderDetail.vue]],
 
-#h(2.0em)购物车管理功能包括：\
-#h(2.0em)——添加商品：从商品页面添加到购物车；\
-#h(2.0em)——数量调整：增加/减少商品数量；\
-#h(2.0em)——移除商品：从购物车中删除商品；\
-#h(2.0em)——实时计算：商品总价、运费、订单总额。\
+  [#text(9pt, font: "SimHei")[订单状态]],
+  [#text(9pt, font: "SimSun")[待处理、处理中、已发货、已送达]],
+  [#text(9pt, font: "Times New Roman")[OrderCard.vue]],
 
-=== 购物车状态
+  [#text(9pt, font: "SimHei")[订单操作]],
+  [#text(9pt, font: "SimSun")[取消订单、确认收货]],
+  [#text(9pt, font: "Times New Roman")[Orders.vue]],
+)]
 
-#h(2.0em)购物车商品数量在导航栏实时显示。\
-#h(2.0em)提供空购物车提示，引导用户添加商品。\
-#h(2.0em)购物车数据使用localStorage持久化存储。\
+=== 用户中心模块
 
-== 订单系统
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)6#h(1.0em)用户中心模块功能]]
 
-#h(2.0em)订单系统提供订单查看和管理功能。\
-#h(2.0em)用户可以查看历史订单和订单状态。\
+#v(0.5em)
 
-=== 订单查看
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
 
-#h(2.0em)订单列表展示，支持订单详情查看。\
-#h(2.0em)订单状态跟踪包括：\
-#h(2.0em)——待处理；\
-#h(2.0em)——处理中；\
-#h(2.0em)——已发货；\
-#h(2.0em)——已送达。\
+  [#text(9pt, font: "SimHei")[个人资料]],
+  [#text(9pt, font: "SimSun")[查看和编辑个人信息]],
+  [#text(9pt, font: "Times New Roman")[UserCenter.vue]],
 
-=== 订单创建
+  [#text(9pt, font: "SimHei")[收货地址]],
+  [#text(9pt, font: "SimSun")[地址管理、默认地址设置]],
+  [#text(9pt, font: "Times New Roman")[Address.vue]],
 
-#h(2.0em)从购物车创建订单，订单号自动生成。\
-#h(2.0em)记录订单时间和订单总额，提供完整的订单信息。\
+  [#text(9pt, font: "SimHei")[我的收藏]],
+  [#text(9pt, font: "SimSun")[商品收藏管理]],
+  [#text(9pt, font: "Times New Roman")[Favorites.vue]],
 
-== 用户系统
+  [#text(9pt, font: "SimHei")[我的关注]],
+  [#text(9pt, font: "SimSun")[店铺关注管理]],
+  [#text(9pt, font: "Times New Roman")[Follows.vue]],
 
-#h(2.0em)用户系统提供用户认证和用户信息管理功能。\
-#h(2.0em)支持用户登录、注册和个人资料查看。\
+  [#text(9pt, font: "SimHei")[积分中心]],
+  [#text(9pt, font: "SimSun")[积分查询、签到打卡]],
+  [#text(9pt, font: "Times New Roman")[Credit.vue]],
 
-=== 用户认证
+  [#text(9pt, font: "SimHei")[会员中心]],
+  [#text(9pt, font: "SimSun")[VIP 等级、权益展示]],
+  [#text(9pt, font: "Times New Roman")[VipCenter.vue]],
+)]
 
-#h(2.0em)用户认证功能包括：\
-#h(2.0em)——登录功能：用户名/密码登录；\
-#h(2.0em)——注册功能：新用户注册；\
-#h(2.0em)——退出登录：安全退出。\
+=== 认证模块
 
-=== 用户信息
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)7#h(1.0em)认证模块功能]]
 
-#h(2.0em)用户信息展示，支持个人资料查看。\
-#h(2.0em)用户状态持久化，登录状态在页面刷新后保持。\
+#v(0.5em)
 
-=== 用户菜单
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
 
-#h(2.0em)用户菜单提供以下功能：\
-#h(2.0em)——登录/注册入口；\
-#h(2.0em)——个人资料查看；\
-#h(2.0em)——退出登录功能。\
+  [#text(9pt, font: "SimHei")[用户登录]],
+  [#text(9pt, font: "SimSun")[用户名/密码登录]],
+  [#text(9pt, font: "Times New Roman")[Login.vue]],
 
-== 模态框系统
+  [#text(9pt, font: "SimHei")[用户注册]],
+  [#text(9pt, font: "SimSun")[新用户注册，支持邮箱验证]],
+  [#text(9pt, font: "Times New Roman")[Register.vue]],
 
-#h(2.0em)模态框系统提供登录和注册的弹窗功能。\
-#h(2.0em)模态框支持遮罩层、关闭功能和标题显示。\
+  [#text(9pt, font: "SimHei")[退出登录]],
+  [#text(9pt, font: "SimSun")[安全退出，清除 token]],
+  [#text(9pt, font: "Times New Roman")[Header.vue]],
 
-=== 登录模态框
+  [#text(9pt, font: "SimHei")[权限守卫]],
+  [#text(9pt, font: "SimSun")[未登录跳转登录页]],
+  [#text(9pt, font: "Times New Roman")[router/index.ts]],
+)]
 
-#h(2.0em)登录模态框提供用户名和密码输入功能。\
-#h(2.0em)支持登录验证，提供错误提示信息。\
+=== 积分系统
 
-=== 注册模态框
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)8#h(1.0em)积分系统功能]]
 
-#h(2.0em)注册模态框提供用户名、邮箱、密码和确认密码输入功能。\
-#h(2.0em)支持表单验证，确保数据正确性。\
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[API]]],
+
+  [#text(9pt, font: "SimHei")[积分查询]],
+  [#text(9pt, font: "SimSun")[查看当前积分余额]],
+  [#text(9pt, font: "Times New Roman")[GET /api/credit]],
+
+  [#text(9pt, font: "SimHei")[签到打卡]],
+  [#text(9pt, font: "SimSun")[每日签到获取积分]],
+  [#text(9pt, font: "Times New Roman")[POST /api/credit/checkin]],
+
+  [#text(9pt, font: "SimHei")[积分历史]],
+  [#text(9pt, font: "SimSun")[查看积分变动记录]],
+  [#text(9pt, font: "Times New Roman")[GET /api/credit/history]],
+
+  [#text(9pt, font: "SimHei")[积分兑换]],
+  [#text(9pt, font: "SimSun")[使用积分兑换商品]],
+  [#text(9pt, font: "Times New Roman")[POST /api/credit/redeem]],
+)]
+
+=== VIP 系统
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)9#h(1.0em)VIP 系统功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[API]]],
+
+  [#text(9pt, font: "SimHei")[VIP 等级]],
+  [#text(9pt, font: "SimSun")[展示当前 VIP 等级和进度]],
+  [#text(9pt, font: "Times New Roman")[GET /api/vip/info]],
+
+  [#text(9pt, font: "SimHei")[VIP 权益]],
+  [#text(9pt, font: "SimSun")[展示会员专属权益]],
+  [#text(9pt, font: "Times New Roman")[GET /api/vip/benefits]],
+
+  [#text(9pt, font: "SimHei")[VIP 升级]],
+  [#text(9pt, font: "SimSun")[满足条件自动升级]],
+  [#text(9pt, font: "SimSun")[系统自动处理]],
+
+  [#text(9pt, font: "SimHei")[成长值]],
+  [#text(9pt, font: "SimSun")[展示成长值和升级进度]],
+  [#text(9pt, font: "Times New Roman")[GET /api/vip/info]],
+)]
+
+=== 优惠券系统
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)10#h(1.0em)优惠券系统功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[API]]],
+
+  [#text(9pt, font: "SimHei")[领取优惠券]],
+  [#text(9pt, font: "SimSun")[领取可用优惠券]],
+  [#text(9pt, font: "Times New Roman")[POST /api/coupon/:id/claim]],
+
+  [#text(9pt, font: "SimHei")[我的优惠券]],
+  [#text(9pt, font: "SimSun")[查看已领取优惠券]],
+  [#text(9pt, font: "Times New Roman")[GET /api/coupon/my]],
+
+  [#text(9pt, font: "SimHei")[优惠券使用]],
+  [#text(9pt, font: "SimSun")[下单时使用优惠券]],
+  [#text(9pt, font: "Times New Roman")[POST /api/coupon/:id/use]],
+
+  [#text(9pt, font: "SimHei")[优惠券状态]],
+  [#text(9pt, font: "SimSun")[未使用、已使用、已过期]],
+  [#text(9pt, font: "Times New Roman")[GET /api/coupon/my?status=]],
+)]
+
+=== 收藏与关注
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)11#h(1.0em)收藏与关注功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[API]]],
+
+  [#text(9pt, font: "SimHei")[商品收藏]],
+  [#text(9pt, font: "SimSun")[收藏喜欢的商品]],
+  [#text(9pt, font: "Times New Roman")[POST /api/favorite/:productId]],
+
+  [#text(9pt, font: "SimHei")[收藏列表]],
+  [#text(9pt, font: "SimSun")[查看已收藏商品]],
+  [#text(9pt, font: "Times New Roman")[GET /api/favorite]],
+
+  [#text(9pt, font: "SimHei")[店铺关注]],
+  [#text(9pt, font: "SimSun")[关注喜欢的店铺]],
+  [#text(9pt, font: "Times New Roman")[POST /api/follow/:shopId]],
+
+  [#text(9pt, font: "SimHei")[关注列表]],
+  [#text(9pt, font: "SimSun")[查看已关注店铺]],
+  [#text(9pt, font: "Times New Roman")[GET /api/follow]],
+)]
+
+=== 评价系统
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)12#h(1.0em)评价系统功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[API]]],
+
+  [#text(9pt, font: "SimHei")[商品评价]],
+  [#text(9pt, font: "SimSun")[查看商品评价列表]],
+  [#text(9pt, font: "Times New Roman")[GET /api/review/product/:id]],
+
+  [#text(9pt, font: "SimHei")[发布评价]],
+  [#text(9pt, font: "SimSun")[对已购商品进行评价]],
+  [#text(9pt, font: "Times New Roman")[POST /api/review]],
+
+  [#text(9pt, font: "SimHei")[评价图片]],
+  [#text(9pt, font: "SimSun")[支持上传评价图片]],
+  [#text(9pt, font: "Times New Roman")[POST /api/review]],
+
+  [#text(9pt, font: "SimHei")[评分展示]],
+  [#text(9pt, font: "SimSun")[平均分和评分分布]],
+  [#text(9pt, font: "Times New Roman")[ProductDetail.vue]],
+)]
+
+=== 抽奖活动
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)13#h(1.0em)抽奖活动功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[抽奖转盘]],
+  [#text(9pt, font: "SimSun")[幸运转盘抽奖界面]],
+  [#text(9pt, font: "Times New Roman")[Lottery.vue]],
+
+  [#text(9pt, font: "SimHei")[抽奖记录]],
+  [#text(9pt, font: "SimSun")[查看历史抽奖结果]],
+  [#text(9pt, font: "Times New Roman")[Lottery.vue]],
+
+  [#text(9pt, font: "SimHei")[奖品展示]],
+  [#text(9pt, font: "SimSun")[展示可抽取的奖品]],
+  [#text(9pt, font: "Times New Roman")[Lottery.vue]],
+
+  [#text(9pt, font: "SimHei")[积分消耗]],
+  [#text(9pt, font: "SimSun")[抽奖消耗积分]],
+  [#text(9pt, font: "Times New Roman")[POST /api/lottery/draw]],
+)]
+
+=== 消息通知
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)14#h(1.0em)消息通知功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[组件]]],
+
+  [#text(9pt, font: "SimHei")[系统公告]],
+  [#text(9pt, font: "SimSun")[展示系统公告]],
+  [#text(9pt, font: "Times New Roman")[AnnouncementPanel.vue]],
+
+  [#text(9pt, font: "SimHei")[用户通知]],
+  [#text(9pt, font: "SimSun")[用户专属通知]],
+  [#text(9pt, font: "Times New Roman")[UserNoticePanel.vue]],
+
+  [#text(9pt, font: "SimHei")[消息中心]],
+  [#text(9pt, font: "SimSun")[集中查看各类消息]],
+  [#text(9pt, font: "Times New Roman")[MessageCenter.vue]],
+)]
+
+== 管理后台功能
+
+=== 用户管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)15#h(1.0em)用户管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[用户列表]],
+  [#text(9pt, font: "SimSun")[查看所有用户，支持搜索筛选]],
+  [#text(9pt, font: "Times New Roman")[UserList.vue]],
+
+  [#text(9pt, font: "SimHei")[用户详情]],
+  [#text(9pt, font: "SimSun")[查看用户详细信息]],
+  [#text(9pt, font: "Times New Roman")[UserDetail.vue]],
+
+  [#text(9pt, font: "SimHei")[用户状态]],
+  [#text(9pt, font: "SimSun")[启用/禁用用户账户]],
+  [#text(9pt, font: "Times New Roman")[UserList.vue]],
+
+  [#text(9pt, font: "SimHei")[用户统计]],
+  [#text(9pt, font: "SimSun")[用户数量、活跃度统计]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+)]
+
+=== 商品管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)16#h(1.0em)商品管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[商品审核]],
+  [#text(9pt, font: "SimSun")[审核商家提交的商品]],
+  [#text(9pt, font: "Times New Roman")[ProductAudit.vue]],
+
+  [#text(9pt, font: "SimHei")[商品列表]],
+  [#text(9pt, font: "SimSun")[查看所有商品]],
+  [#text(9pt, font: "Times New Roman")[ProductList.vue]],
+
+  [#text(9pt, font: "SimHei")[商品上下架]],
+  [#text(9pt, font: "SimSun")[控制商品销售状态]],
+  [#text(9pt, font: "Times New Roman")[ProductAudit.vue]],
+
+  [#text(9pt, font: "SimHei")[分类管理]],
+  [#text(9pt, font: "SimSun")[管理商品分类]],
+  [#text(9pt, font: "Times New Roman")[CategoryManage.vue]],
+)]
+
+=== 订单管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)17#h(1.0em)订单管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[订单监控]],
+  [#text(9pt, font: "SimSun")[查看所有订单状态]],
+  [#text(9pt, font: "Times New Roman")[OrderMonitor.vue]],
+
+  [#text(9pt, font: "SimHei")[订单处理]],
+  [#text(9pt, font: "SimSun")[处理异常订单]],
+  [#text(9pt, font: "Times New Roman")[OrderMonitor.vue]],
+
+  [#text(9pt, font: "SimHei")[订单统计]],
+  [#text(9pt, font: "SimSun")[订单数量、金额统计]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+)]
+
+=== 商家管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)18#h(1.0em)商家管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[商家列表]],
+  [#text(9pt, font: "SimSun")[查看所有入驻商家]],
+  [#text(9pt, font: "Times New Roman")[MerchantList.vue]],
+
+  [#text(9pt, font: "SimHei")[商家审核]],
+  [#text(9pt, font: "SimSun")[审核商家入驻申请]],
+  [#text(9pt, font: "Times New Roman")[MerchantList.vue]],
+
+  [#text(9pt, font: "SimHei")[商家状态]],
+  [#text(9pt, font: "SimSun")[启用/禁用商家账户]],
+  [#text(9pt, font: "Times New Roman")[MerchantList.vue]],
+)]
+
+=== 评价管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)19#h(1.0em)评价管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[评价审核]],
+  [#text(9pt, font: "SimSun")[审核用户评价]],
+  [#text(9pt, font: "Times New Roman")[ReviewAudit.vue]],
+
+  [#text(9pt, font: "SimHei")[评价管理]],
+  [#text(9pt, font: "SimSun")[删除违规评价]],
+  [#text(9pt, font: "Times New Roman")[ReviewAudit.vue]],
+)]
+
+=== 优惠券管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)20#h(1.0em)优惠券管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[优惠券列表]],
+  [#text(9pt, font: "SimSun")[查看所有优惠券]],
+  [#text(9pt, font: "Times New Roman")[Coupon.vue]],
+
+  [#text(9pt, font: "SimHei")[创建优惠券]],
+  [#text(9pt, font: "SimSun")[创建新的优惠券]],
+  [#text(9pt, font: "Times New Roman")[Coupon.vue]],
+
+  [#text(9pt, font: "SimHei")[优惠券统计]],
+  [#text(9pt, font: "SimSun")[领取和使用统计]],
+  [#text(9pt, font: "Times New Roman")[Coupon.vue]],
+)]
+
+=== 系统设置
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)21#h(1.0em)系统设置功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[基础设置]],
+  [#text(9pt, font: "SimSun")[网站名称、Logo 等]],
+  [#text(9pt, font: "Times New Roman")[Settings.vue]],
+
+  [#text(9pt, font: "SimHei")[积分设置]],
+  [#text(9pt, font: "SimSun")[签到积分、订单返还比例]],
+  [#text(9pt, font: "Times New Roman")[Settings.vue]],
+
+  [#text(9pt, font: "SimHei")[运费设置]],
+  [#text(9pt, font: "SimSun")[包邮门槛、运费模板]],
+  [#text(9pt, font: "Times New Roman")[Settings.vue]],
+)]
+
+=== 数据统计
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)22#h(1.0em)数据统计功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[销售统计]],
+  [#text(9pt, font: "SimSun")[销售额、订单量图表]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+
+  [#text(9pt, font: "SimHei")[用户分析]],
+  [#text(9pt, font: "SimSun")[用户增长、活跃度]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+
+  [#text(9pt, font: "SimHei")[商品分析]],
+  [#text(9pt, font: "SimSun")[热销商品、库存预警]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+)]
+
+== 商家后台功能
+
+=== 商品管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)23#h(1.0em)商家商品管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[商品列表]],
+  [#text(9pt, font: "SimSun")[查看和管理店铺商品]],
+  [#text(9pt, font: "Times New Roman")[ProductList.vue]],
+
+  [#text(9pt, font: "SimHei")[创建商品]],
+  [#text(9pt, font: "SimSun")[发布新商品]],
+  [#text(9pt, font: "Times New Roman")[ProductEdit.vue]],
+
+  [#text(9pt, font: "SimHei")[编辑商品]],
+  [#text(9pt, font: "SimSun")[修改商品信息]],
+  [#text(9pt, font: "Times New Roman")[ProductEdit.vue]],
+
+  [#text(9pt, font: "SimHei")[商品上下架]],
+  [#text(9pt, font: "SimSun")[控制商品销售状态]],
+  [#text(9pt, font: "Times New Roman")[ProductList.vue]],
+)]
+
+=== 订单管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)24#h(1.0em)商家订单管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[订单列表]],
+  [#text(9pt, font: "SimSun")[查看店铺订单]],
+  [#text(9pt, font: "Times New Roman")[OrderList.vue]],
+
+  [#text(9pt, font: "SimHei")[订单详情]],
+  [#text(9pt, font: "SimSun")[查看订单详细信息]],
+  [#text(9pt, font: "Times New Roman")[OrderDetail.vue]],
+
+  [#text(9pt, font: "SimHei")[订单发货]],
+  [#text(9pt, font: "SimSun")[填写物流信息发货]],
+  [#text(9pt, font: "Times New Roman")[OrderDetail.vue]],
+
+  [#text(9pt, font: "SimHei")[退款处理]],
+  [#text(9pt, font: "SimSun")[处理用户退款申请]],
+  [#text(9pt, font: "Times New Roman")[OrderDetail.vue]],
+)]
+
+=== 评价管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)25#h(1.0em)商家评价管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[评价列表]],
+  [#text(9pt, font: "SimSun")[查看店铺商品评价]],
+  [#text(9pt, font: "Times New Roman")[ReviewList.vue]],
+
+  [#text(9pt, font: "SimHei")[评价回复]],
+  [#text(9pt, font: "SimSun")[回复用户评价]],
+  [#text(9pt, font: "Times New Roman")[ReviewList.vue]],
+)]
+
+=== 店铺管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)26#h(1.0em)店铺管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[店铺信息]],
+  [#text(9pt, font: "SimSun")[编辑店铺基本信息]],
+  [#text(9pt, font: "Times New Roman")[ShopInfo.vue]],
+
+  [#text(9pt, font: "SimHei")[店铺公告]],
+  [#text(9pt, font: "SimSun")[发布店铺公告]],
+  [#text(9pt, font: "Times New Roman")[ShopInfo.vue]],
+)]
+
+=== 优惠券管理
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)27#h(1.0em)商家优惠券管理功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[优惠券列表]],
+  [#text(9pt, font: "SimSun")[查看店铺优惠券]],
+  [#text(9pt, font: "Times New Roman")[CouponList.vue]],
+
+  [#text(9pt, font: "SimHei")[创建优惠券]],
+  [#text(9pt, font: "SimSun")[创建店铺优惠券]],
+  [#text(9pt, font: "Times New Roman")[CouponList.vue]],
+)]
+
+=== 客服聊天
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)28#h(1.0em)客服聊天功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[聊天窗口]],
+  [#text(9pt, font: "SimSun")[与用户实时聊天]],
+  [#text(9pt, font: "Times New Roman")[Chat.vue]],
+
+  [#text(9pt, font: "SimHei")[消息记录]],
+  [#text(9pt, font: "SimSun")[查看历史聊天记录]],
+  [#text(9pt, font: "Times New Roman")[Chat.vue]],
+
+  [#text(9pt, font: "SimHei")[未读消息]],
+  [#text(9pt, font: "SimSun")[显示未读消息数量]],
+  [#text(9pt, font: "Times New Roman")[Chat.vue]],
+)]
+
+=== 数据统计
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)29#h(1.0em)商家数据统计功能]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[功能]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
+  [#align(center)[#text(9pt, font: "SimSun")[页面/组件]]],
+
+  [#text(9pt, font: "SimHei")[销售统计]],
+  [#text(9pt, font: "SimSun")[店铺销售数据图表]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+
+  [#text(9pt, font: "SimHei")[商品分析]],
+  [#text(9pt, font: "SimSun")[商品销量排行]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+
+  [#text(9pt, font: "SimHei")[订单分析]],
+  [#text(9pt, font: "SimSun")[订单状态分布]],
+  [#text(9pt, font: "Times New Roman")[Statistics.vue]],
+)]
 
 = 组件架构
 
 #h(2.0em)前端应用采用组件化架构，将应用拆分为多个可复用的组件。\
-#h(2.0em)每个组件负责特定的功能，通过Props和Events进行数据传递和交互。\
+#h(2.0em)系统包含 75+ 个组件，分布在三个应用端和公共模块中。\
 
-== 核心组件
+== 组件统计
 
-#h(2.0em)前端应用包含五个核心组件，每个组件都有特定的功能和职责。\
-#h(2.0em)组件之间通过父子关系进行通信，实现应用的完整功能。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)30#h(1.0em)组件统计]]
 
-=== ProductCard商品卡片组件
+#v(0.5em)
 
-#h(2.0em)商品卡片组件用于显示单个商品信息。\
-#h(2.0em)组件特性包括悬停效果和添加到购物车按钮。\
-#h(2.0em)组件支持商品对象和是否显示分类属性，以及添加到购物车事件。\
-CartItem购物车商品组件
+#align(center)[#table(
+  columns: (1fr, 1fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, center, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[应用端]]],
+  [#align(center)[#text(9pt, font: "SimSun")[组件数量]]],
+  [#align(center)[#text(9pt, font: "SimSun")[说明]]],
 
-#h(2.0em)购物车商品组件用于显示购物车中的单个商品。\
-#h(2.0em)组件特性包括数量调整和移除功能。\
-#h(2.0em)组件支持购物车商品对象属性，以及更新数量和移除商品事件。\
+  [#text(9pt, font: "SimHei")[用户端]],
+  [#text(9pt, font: "Times New Roman")[35+]],
+  [#text(9pt, font: "SimSun")[商品、购物车、订单、用户中心等]],
 
-=== OrderCard订单卡片组件
+  [#text(9pt, font: "SimHei")[管理后台]],
+  [#text(9pt, font: "Times New Roman")[20+]],
+  [#text(9pt, font: "SimSun")[用户管理、商品审核、数据统计等]],
 
-#h(2.0em)订单卡片组件用于显示单个订单信息。\
-#h(2.0em)组件特性包括订单状态显示和详情查看。\
-#h(2.0em)组件支持订单对象属性，以及查看详情事件。\
+  [#text(9pt, font: "SimHei")[商家后台]],
+  [#text(9pt, font: "Times New Roman")[20+]],
+  [#text(9pt, font: "SimSun")[商品管理、订单处理、客服聊天等]],
 
-=== Modal模态框组件
+  [#text(9pt, font: "SimHei")[公共组件]],
+  [#text(9pt, font: "Times New Roman")[10+]],
+  [#text(9pt, font: "SimSun")[Loading、状态指示、时间显示等]],
 
-#h(2.0em)模态框组件是通用的弹窗容器。\
-#h(2.0em)组件特性包括遮罩层、关闭功能和标题显示。\
-#h(2.0em)组件支持显示状态和标题属性，以及关闭事件。\
+  [#text(9pt, font: "SimHei", weight: "bold")[总计]],
+  [#text(9pt, font: "Times New Roman", weight: "bold")[75+]],
+  [#text(9pt, font: "SimSun")[]],
+)]
 
-=== Navbar导航栏组件
+== 用户端核心组件
 
-#h(2.0em)导航栏组件提供应用导航功能。\
-#h(2.0em)组件特性包括搜索、用户菜单和购物车计数。\
-#h(2.0em)组件支持活动标签、购物车数量、登录状态和用户属性，以及标签切换、搜索、登录、注册、查看资料和退出事件。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)31#h(1.0em)用户端核心组件]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[组件名]]],
+  [#align(center)[#text(9pt, font: "SimSun")[文件路径]]],
+  [#align(center)[#text(9pt, font: "SimSun")[功能说明]]],
+
+  [#text(9pt, font: "SimHei")[Header]],
+  [#text(9pt, font: "Times New Roman")[user/components/Header.vue]],
+  [#text(9pt, font: "SimSun")[顶部导航栏]],
+
+  [#text(9pt, font: "SimHei")[Footer]],
+  [#text(9pt, font: "Times New Roman")[user/components/Footer.vue]],
+  [#text(9pt, font: "SimSun")[页脚信息]],
+
+  [#text(9pt, font: "SimHei")[ProductCard]],
+  [#text(9pt, font: "Times New Roman")[user/components/ProductCard.vue]],
+  [#text(9pt, font: "SimSun")[商品卡片]],
+
+  [#text(9pt, font: "SimHei")[BannerCarousel]],
+  [#text(9pt, font: "Times New Roman")[user/components/BannerCarousel.vue]],
+  [#text(9pt, font: "SimSun")[轮播图]],
+
+  [#text(9pt, font: "SimHei")[CategoryPanel]],
+  [#text(9pt, font: "Times New Roman")[user/components/CategoryPanel.vue]],
+  [#text(9pt, font: "SimSun")[分类面板]],
+
+  [#text(9pt, font: "SimHei")[FavoriteButton]],
+  [#text(9pt, font: "Times New Roman")[user/components/FavoriteButton.vue]],
+  [#text(9pt, font: "SimSun")[收藏按钮]],
+
+  [#text(9pt, font: "SimHei")[FollowButton]],
+  [#text(9pt, font: "Times New Roman")[user/components/FollowButton.vue]],
+  [#text(9pt, font: "SimSun")[关注按钮]],
+
+  [#text(9pt, font: "SimHei")[RatingStars]],
+  [#text(9pt, font: "Times New Roman")[user/components/RatingStars.vue]],
+  [#text(9pt, font: "SimSun")[评分星星]],
+
+  [#text(9pt, font: "SimHei")[ReviewForm]],
+  [#text(9pt, font: "Times New Roman")[user/components/ReviewForm.vue]],
+  [#text(9pt, font: "SimSun")[评价表单]],
+
+  [#text(9pt, font: "SimHei")[ReviewPanel]],
+  [#text(9pt, font: "Times New Roman")[user/components/ReviewPanel.vue]],
+  [#text(9pt, font: "SimSun")[评价列表]],
+
+  [#text(9pt, font: "SimHei")[UserAvatar]],
+  [#text(9pt, font: "Times New Roman")[user/components/UserAvatar.vue]],
+  [#text(9pt, font: "SimSun")[用户头像]],
+
+  [#text(9pt, font: "SimHei")[UserCredit]],
+  [#text(9pt, font: "Times New Roman")[user/components/UserCredit.vue]],
+  [#text(9pt, font: "SimSun")[用户积分]],
+
+  [#text(9pt, font: "SimHei")[UserLevel]],
+  [#text(9pt, font: "Times New Roman")[user/components/UserLevel.vue]],
+  [#text(9pt, font: "SimSun")[用户等级]],
+
+  [#text(9pt, font: "SimHei")[VipLevelBadge]],
+  [#text(9pt, font: "Times New Roman")[user/components/VipLevelBadge.vue]],
+  [#text(9pt, font: "SimSun")[VIP 徽章]],
+
+  [#text(9pt, font: "SimHei")[CustomerService]],
+  [#text(9pt, font: "Times New Roman")[user/components/CustomerService.vue]],
+  [#text(9pt, font: "SimSun")[客服浮窗]],
+)]
+
+== 管理后台核心组件
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)32#h(1.0em)管理后台核心组件]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[组件名]]],
+  [#align(center)[#text(9pt, font: "SimSun")[文件路径]]],
+  [#align(center)[#text(9pt, font: "SimSun")[功能说明]]],
+
+  [#text(9pt, font: "SimHei")[Header]],
+  [#text(9pt, font: "Times New Roman")[admin/components/Header.vue]],
+  [#text(9pt, font: "SimSun")[顶部导航栏]],
+
+  [#text(9pt, font: "SimHei")[Footer]],
+  [#text(9pt, font: "Times New Roman")[admin/components/Footer.vue]],
+  [#text(9pt, font: "SimSun")[页脚信息]],
+
+  [#text(9pt, font: "SimHei")[CategoryPanel]],
+  [#text(9pt, font: "Times New Roman")[admin/components/CategoryPanel.vue]],
+  [#text(9pt, font: "SimSun")[分类面板]],
+)]
+
+== 商家后台核心组件
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)33#h(1.0em)商家后台核心组件]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[组件名]]],
+  [#align(center)[#text(9pt, font: "SimSun")[文件路径]]],
+  [#align(center)[#text(9pt, font: "SimSun")[功能说明]]],
+
+  [#text(9pt, font: "SimHei")[Header]],
+  [#text(9pt, font: "Times New Roman")[merchant/components/Header.vue]],
+  [#text(9pt, font: "SimSun")[顶部导航栏]],
+
+  [#text(9pt, font: "SimHei")[Footer]],
+  [#text(9pt, font: "Times New Roman")[merchant/components/Footer.vue]],
+  [#text(9pt, font: "SimSun")[页脚信息]],
+
+  [#text(9pt, font: "SimHei")[CategoryPanel]],
+  [#text(9pt, font: "Times New Roman")[merchant/components/CategoryPanel.vue]],
+  [#text(9pt, font: "SimSun")[分类面板]],
+)]
+
+== 公共组件
+
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)34#h(1.0em)公共组件]]
+
+#v(0.5em)
+
+#align(center)[#table(
+  columns: (1fr, 2fr, 2fr),
+  stroke: 0.5pt,
+  align: (left, left, left),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[组件名]]],
+  [#align(center)[#text(9pt, font: "SimSun")[文件路径]]],
+  [#align(center)[#text(9pt, font: "SimSun")[功能说明]]],
+
+  [#text(9pt, font: "SimHei")[Loading]],
+  [#text(9pt, font: "Times New Roman")[common/components/Loading.vue]],
+  [#text(9pt, font: "SimSun")[加载动画]],
+
+  [#text(9pt, font: "SimHei")[LoadingDot]],
+  [#text(9pt, font: "Times New Roman")[common/components/LoadingDot.vue]],
+  [#text(9pt, font: "SimSun")[加载点]],
+
+  [#text(9pt, font: "SimHei")[StatusDot]],
+  [#text(9pt, font: "Times New Roman")[common/components/StatusDot.vue]],
+  [#text(9pt, font: "SimSun")[状态指示点]],
+
+  [#text(9pt, font: "SimHei")[TimeInfo]],
+  [#text(9pt, font: "Times New Roman")[common/components/TimeInfo.vue]],
+  [#text(9pt, font: "SimSun")[时间信息]],
+
+  [#text(9pt, font: "SimHei")[LocationInfo]],
+  [#text(9pt, font: "Times New Roman")[common/components/LocationInfo.vue]],
+  [#text(9pt, font: "SimSun")[位置信息]],
+
+  [#text(9pt, font: "SimHei")[TopInfoBar]],
+  [#text(9pt, font: "Times New Roman")[common/components/TopInfoBar.vue]],
+  [#text(9pt, font: "SimSun")[顶部信息栏]],
+)]
+
+== 组件通信方式
+
+```typescript
+// 1. Props 向下传递
+<ChildComponent :product="productData" @@add-to-cart="handleAddToCart" />
+
+// 2. Events 向上传递
+emit('add-to-cart', product)
+
+// 3. Pinia Store 全局状态
+const cartStore = useCartStore()
+cartStore.addToCart(product)
+
+// 4. 路由参数
+route.params.id
+route.query.keyword
+```
 
 = 数据管理
 
-#h(2.0em)前端应用使用本地存储和响应式数据管理应用状态。\
-#h(2.0em)数据管理确保应用状态的一致性和持久性。\
+== Pinia Store
 
-== 本地存储
+=== 购物车 Store
 
-#h(2.0em)购物车数据和用户数据保存在localStorage中。\
-#h(2.0em)页面刷新后自动恢复数据，提供良好的用户体验。\
+```typescript
+// user/stores/cart.ts
+export const useCartStore = defineStore('cart', () => {
+  const cartItems = ref<CartItem[]>([])
+  const totalCount = computed(() => ...)
+  const totalPrice = computed(() => ...)
 
-=== 数据持久化
+  // 方法：addToCart, removeFromCart, updateQuantity, clearCart
+  return { cartItems, totalCount, totalPrice, ... }
+})
+```
 
-#h(2.0em)购物车数据持久化存储，确保购物车内容不会丢失。\
-#h(2.0em)用户登录状态和用户信息持久化，保持用户登录状态。\
+=== 用户 Store
 
-=== 数据恢复
+```typescript
+// user/stores/user.ts
+export const useUserStore = defineStore('user', () => {
+  const userInfo = ref<UserInfo | null>(null)
+  const token = ref('')
+  const isLoggedIn = computed(() => !!token.value)
 
-#h(2.0em)页面刷新后自动恢复购物车和用户数据。\
-#h(2.0em)提供数据一致性保证。\
+  // 方法：login, register, logout, fetchUserInfo
+  return { userInfo, token, isLoggedIn, ... }
+})
+```
 
-== 响应式数据
+== 数据持久化
 
-#h(2.0em)应用使用Vue#h(0.25em)3的响应式系统管理应用状态。\
-#h(2.0em)数据变化自动更新界面，提供流畅的用户体验。\
+```typescript
+// token 持久化
+localStorage.setItem('token', token)
 
-=== 商品数据
+// 用户信息持久化
+localStorage.setItem('user', JSON.stringify(userInfo))
 
-#h(2.0em)提供八个示例商品，包括不同分类的商品。\
-#h(2.0em)商品数据包含商品名称、描述、价格、分类、图片和评分信息。\
+// 页面加载时恢复
+const savedToken = localStorage.getItem('token')
+if (savedToken) {
+  token.value = savedToken
+  fetchUserInfo()
+}
+```
 
-=== 购物车数据
+== API 请求封装
 
-#h(2.0em)实时计算购物车总价和数量。\
-#h(2.0em)支持商品数量调整和移除操作。\
+```typescript
+// common/api/request.ts
+const request = axios.create({
+  baseURL: '/api',
+  timeout: 15000
+})
 
-=== 订单数据
+// 请求拦截器：自动添加 token
+request.interceptors.request.use(config => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = 'Bearer ' + token
+  }
+  return config
+})
 
-#h(2.0em)历史订单记录，包含订单号、时间、状态和商品信息。\
-#h(2.0em)支持订单详情查看。\
+// 响应拦截器：统一错误处理
+request.interceptors.response.use(
+  response => response.data,
+  error => {
+    if (error.response?.status === 401) {
+      // 未授权，跳转登录
+    }
+    return Promise.reject(error)
+  }
+)
+```
 
-=== 用户数据
+= 路由系统
 
-#h(2.0em)当前用户信息，包括用户名和登录状态。\
-#h(2.0em)用户数据持久化存储。\
+== 路由守卫
 
-= 用户体验特性
+```typescript
+// 权限守卫
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isLoggedIn()) {
+    next('/login')
+  } else {
+    next()
+  }
+})
+```
 
-#h(2.0em)前端应用注重用户体验，提供丰富的交互和视觉效果。\
-#h(2.0em)用户体验特性包括响应式设计、视觉效果和交互反馈。\
+== 路由配置
+
+```typescript
+// 用户端路由
+const routes = [
+  { path: '/', component: Home },
+  { path: '/products', component: ProductList },
+  { path: '/product/:id', component: ProductDetail },
+  { path: '/cart', component: Cart },
+  { path: '/order', component: Order },
+  { path: '/login', component: Login },
+  { path: '/user', component: UserCenter, meta: { requiresAuth: true } },
+  // ...
+]
+```
+
+= UI/UX 特性
 
 == 响应式设计
 
 #h(2.0em)应用支持桌面、平板、手机多设备。\
-#h(2.0em)自适应布局，自动调整界面元素位置和大小。\
-#h(2.0em)触摸友好的交互，支持手势操作。\
-
-=== 多设备支持
-
-#h(2.0em)桌面端：大屏幕显示，支持鼠标操作。\
-#h(2.0em)平板端：中等屏幕，支持触摸操作。\
-#h(2.0em)手机端：小屏幕显示，支持单手操作。\
-
-=== 自适应布局
-
-#h(2.0em)使用媒体查询实现自适应布局。\
-#h(2.0em)根据屏幕尺寸调整布局和字体大小。\
+#h(2.0em)使用 Element Plus 响应式栅格系统。\
+#h(2.0em)自适应布局和字体大小。\
 
 == 视觉效果
 
-#h(2.0em)应用提供丰富的视觉效果，增强用户体验。\
-#h(2.0em)视觉效果包括渐变背景、阴影效果和过渡动画。\
+#h(2.0em)渐变背景和阴影效果。\
+#h(2.0em)卡片悬停动画。\
+#h(2.0em)按钮交互反馈。\
+#h(2.0em)平滑过渡动画。\
 
-=== 渐变背景和阴影
+== 加载状态
 
-#h(2.0em)使用渐变背景和阴影效果，增强视觉层次感。\
-#h(2.0em)提供现代感的界面设计。\
-
-=== 平滑动画
-
-#h(2.0em)页面切换和元素显示使用平滑的过渡动画。\
-#h(2.0em)提供流畅的用户体验。\
-
-=== 卡片悬停效果
-
-#h(2.0em)商品卡片悬停时显示阴影和缩放效果。\
-#h(2.0em)提供直观的交互反馈。\
-
-=== 按钮交互反馈
-
-#h(2.0em)按钮悬停和点击时提供视觉反馈。\
-#h(2.0em)增强交互体验。\
+#h(2.0em)Loading 组件全局加载提示。\
+#h(2.0em)骨架屏占位。\
+#h(2.0em)按钮 loading 状态。\
 
 == 交互反馈
 
-#h(2.0em)应用提供丰富的交互反馈，帮助用户理解操作结果。\
-#h(2.0em)交互反馈包括操作提示、错误信息和加载状态。\
+#h(2.0em)Element Plus Message 消息提示。\
+#h(2.0em)Modal 确认对话框。\
+#h(2.0em)表单验证实时反馈。\
 
-=== 操作提示
+= 性能优化
 
-#h(2.0em)操作成功时显示提示信息。\
-#h(2.0em)使用友好的提示语言。\
+== 构建优化
 
-=== 错误信息
+#h(2.0em)Vite 快速构建。\
+#h(2.0em)代码分割和懒加载。\
+#h(2.0em)静态资源压缩。\
 
-#h(2.0em)操作失败时显示错误信息。\
-#h(2.0em)提供明确的错误原因和解决建议。\
+== 运行时优化
 
-=== 加载状态
+#h(2.0em)组件按需加载。\
+#h(2.0em)图片懒加载。\
+#h(2.0em)虚拟滚动长列表。\
 
-#h(2.0em)数据加载时显示加载状态指示器。\
-#h(2.0em)避免用户误以为应用卡死。\
+== 缓存策略
 
-=== 表单验证
-
-#h(2.0em)表单提交前进行验证，提供实时验证反馈。\
-#h(2.0em)确保数据正确性。\
-
-= 性能特性
-
-#h(2.0em)前端应用注重性能优化，提供快速流畅的用户体验。\
-#h(2.0em)性能特性包括前端优化和代码优化。\
-
-== 前端优化
-
-#h(2.0em)前端应用采用多种优化技术提高性能。\
-#h(2.0em)优化技术包括组件懒加载、图片懒加载和数据缓存。\
-
-=== 组件懒加载
-
-#h(2.0em)按需加载组件，减少初始加载时间。\
-#h(2.0em)提高应用启动速度。\
-
-=== 图片懒加载
-
-#h(2.0em)图片按需加载，减少网络请求。\
-#h(2.0em)提高页面加载速度。\
-
-=== 数据缓存
-
-#h(2.0em)使用localStorage缓存数据，减少重复请求。\
-#h(2.0em)提高数据访问速度。\
-
-=== 本地存储优化
-
-#h(2.0em)优化localStorage使用，减少存储空间占用。\
-#h(2.0em)提高存储性能。\
-
-== 代码优化
-
-#h(2.0em)前端应用代码经过优化，提高代码质量和执行效率。\
-#h(2.0em)代码优化包括组件复用和代码分割。\
-
-=== 组件复用
-
-#h(2.0em)设计可复用的组件，减少代码重复。\
-#h(2.0em)提高开发效率。\
-
-=== 代码分割
-
-#h(2.0em)按功能分割代码，减少单个文件大小。\
-#h(2.0em)提高代码可维护性。\
-
-=== 按需加载
-
-#h(2.0em)按需加载代码和资源，减少初始加载量。\
-#h(2.0em)提高应用启动速度。\
-
-=== 性能监控
-
-#h(2.0em)监控应用性能，及时发现性能问题。\
-#h(2.0em)持续优化应用性能。\
+#h(2.0em)API 响应缓存。\
+#h(2.0em)静态资源 CDN。\
+#h(2.0em)localStorage 数据缓存。\
 
 = 浏览器兼容性
 
-#h(2.0em)前端应用支持主流现代浏览器，提供良好的跨浏览器体验。\
-#h(2.0em)不支持IE浏览器。\
+#align(center)[#text(10.5pt, font: "SimHei")[表#h(0.25em)35#h(1.0em)浏览器兼容性]]
 
-== 现代浏览器
+#v(0.5em)
 
-#h(2.0em)应用支持以下现代浏览器：\
-#h(2.0em)——Chrome#h(0.25em)90及以上；\
-#h(2.0em)——Firefox#h(0.25em)88及以上；\
-#h(2.0em)——Safari#h(0.25em)14及以上；\
-#h(2.0em)——Edge#h(0.25em)90及以上。\
+#align(center)[#table(
+  columns: (1fr, 1fr),
+  stroke: 0.5pt,
+  align: (left, center),
+  fill: (x, y) => rgb("ffffff"),
+  [#align(center)[#text(9pt, font: "SimSun")[浏览器]]],
+  [#align(center)[#text(9pt, font: "SimSun")[最低版本]]],
 
-== 移动浏览器
+  [#text(9pt, font: "Times New Roman")[Chrome]],
+  [#text(9pt, font: "Times New Roman")[90+]],
 
-#h(2.0em)应用支持以下移动浏览器：\
-#h(2.0em)——iOS#h(0.25em)Safari；\
-#h(2.0em)——Chrome#h(0.25em)for#h(0.25em)Android。\
+  [#text(9pt, font: "Times New Roman")[Firefox]],
+  [#text(9pt, font: "Times New Roman")[88+]],
 
-== IE兼容性
+  [#text(9pt, font: "Times New Roman")[Safari]],
+  [#text(9pt, font: "Times New Roman")[14+]],
 
-#h(2.0em)应用不支持IE浏览器。\
-#h(2.0em)建议用户使用现代浏览器以获得最佳体验。\
+  [#text(9pt, font: "Times New Roman")[Edge]],
+  [#text(9pt, font: "Times New Roman")[90+]],
 
-= 部署要求
-
-#h(2.0em)前端应用部署需要满足一定的服务器和配置要求。\
-#h(2.0em)部署要求包括服务器要求和文件结构。\
-
-== 服务器要求
-
-#h(2.0em)应用需要以下服务器环境：\
-#h(2.0em)——Web服务器：Nginx#h(0.25em)1.18及以上或Apache#h(0.25em)2.4及以上；\
-#h(2.0em)——静态文件服务：支持HTML5#h(0.25em)History#h(0.25em)API；\
-#h(2.0em)——Https支持：建议启用Https。\
-
-=== Nginx配置
-
-#h(2.0em)配置Nginx指向frontend/nginx/html目录。\
-#h(2.0em)配置反向代理和静态文件服务。\
-
-=== Https配置
-
-#h(2.0em)申请SSL证书，配置Https访问。\
-#h(2.0em)保护数据传输安全。\
-
-== 文件结构
-
-#h(2.0em)前端应用的文件结构如下：\
-#h(2.0em)#h(0.5em)frontend/nginx/html\
-#h(2.0em)├──#h(0.5em)index.html#h(1.0em)主页面\
-#h(2.0em)├──#h(0.5em)main.js#h(1.0em)Vue主应用\
-#h(2.0em)├──#h(0.5em)styles.css#h(1.0em)样式文件\
-#h(2.0em)├──#h(0.5em)components/Vue#h(1.0em)组件目录\
-#h(2.0em)└──#h(0.5em)favicon.ico#h(1.0em)网站图标\
-
-=== 目录说明
-
-#h(2.0em)index.html：应用主页面，包含HTML结构和资源引用。\
-#h(2.0em)main.js：Vue主应用文件，包含应用初始化和路由配置。\
-#h(2.0em)styles.css：全局样式文件，包含应用样式定义。\
-#h(2.0em)components/：Vue组件目录，包含所有组件文件。\
-#h(2.0em)favicon.ico：网站图标文件。\
-
-= 开发指南
-
-#h(2.0em)本章节为开发人员提供前端应用的开发指南。\
-#h(2.0em)开发指南包括环境设置、开发工具和测试方法。\
-
-== 环境设置
-
-#h(2.0em)开发环境需要以下步骤：\
-#h(2.0em)——安装Nginx服务器；\
-#h(2.0em)——配置Nginx指向frontend/nginx/html目录；\
-#h(2.0em)——启动Nginx服务；\
-#h(2.0em)——访问http://localhost。\
-
-=== Nginx安装
-
-#h(2.0em)从Nginx官网下载安装包，按照安装向导完成安装。\
-#h(2.0em)配置nginx.conf文件，指向应用目录。\
-
-=== 服务启动
-
-#h(2.0em)使用服务管理器或命令行启动Nginx服务。\
-#h(2.0em)验证服务是否正常启动。\
-
-== 开发工具
-
-#h(2.0em)推荐使用以下开发工具：\
-#h(2.0em)——代码编辑器：VS#h(0.25em)Code、WebStorm；\
-#h(2.0em)——浏览器开发者工具：Chrome#h(0.25em)DevTools；\
-#h(2.0em)——Vue#h(0.25em)DevTools扩展：Vue调试工具。\
-
-=== 代码编辑器
-
-#h(2.0em)推荐使用VS#h(0.25em)Code或WebStorm作为代码编辑器。\
-#h(2.0em)提供语法高亮、代码补全和调试功能。\
-
-=== 浏览器工具
-
-#h(2.0em)使用浏览器开发者工具进行调试和性能分析。\
-#h(2.0em)使用Vue#h(0.25em)DevTools扩展调试Vue应用。\
-
-== 测试方法
-
-#h(2.0em)推荐使用以下测试方法：\
-#h(2.0em)——功能测试：手动测试所有核心功能；\
-#h(2.0em)——兼容性测试：在不同浏览器和设备上测试；\
-#h(2.0em)——性能测试：使用Lighthouse进行性能评估。\
-
-=== 功能测试
-
-#h(2.0em)测试所有核心功能，包括商品浏览、购物车、订单和用户系统。\
-#h(2.0em)确保功能正常运行。\
-
-=== 兼容性测试
-
-#h(2.0em)在不同浏览器和设备上测试应用。\
-#h(2.0em)确保应用在各种环境下正常工作。\
-
-=== 性能测试
-
-#h(2.0em)使用Lighthouse进行性能评估。\
-#h(2.0em)优化应用性能，提高用户体验。\
-
-= 未来扩展计划
-
-#h(2.0em)本章节介绍前端应用的未来扩展计划。\
-#h(2.0em)扩展计划包括短期、中期和长期计划。\
-
-== 短期计划
-
-#h(2.0em)短期内计划添加以下功能：\
-#h(2.0em)——添加商品详情页面；\
-#h(2.0em)——实现商品评论功能；\
-#h(2.0em)——添加商品收藏功能；\
-#h(2.0em)——实现优惠券系统。\
-
-=== 商品详情
-
-#h(2.0em)设计商品详情页面，展示商品的详细信息。\
-#h(2.0em)包括商品图片、描述、规格和评价。\
-
-=== 评论功能
-
-#h(2.0em)实现商品评论功能，允许用户发表评论。\
-#h(2.0em)支持评论评分和回复。\
-
-=== 收藏功能
-
-#h(2.0em)添加商品收藏功能，允许用户收藏喜欢的商品。\
-#h(2.0em)提供收藏列表查看和管理。\
-
-=== 优惠券
-
-#h(2.0em)实现优惠券系统，支持优惠券发放和使用。\
-#h(2.0em)提供优惠券管理和查询功能。\
-
-== 中期计划
-
-#h(2.0em)中期内计划添加以下功能：\
-#h(2.0em)——集成支付网关；\
-#h(2.0em)——实现实时聊天客服；\
-#h(2.0em)——添加商品推荐算法；\
-#h(2.0em)——多语言支持。\
-
-=== 支付集成
-
-#h(2.0em)集成支付网关，支持在线支付。\
-#h(2.0em)支持多种支付方式，包括支付宝和微信支付。\
-
-=== 聊天客服
-
-#h(2.0em)实现实时聊天客服功能。\
-#h(2.0em)支持用户与客服的实时沟通。\
-
-=== 推荐算法
-
-#h(2.0em)添加商品推荐算法，根据用户喜好推荐商品。\
-#h(2.0em)提高用户购物体验和转化率。\
-
-=== 多语言
-
-#h(2.0em)实现多语言支持，支持中英文切换。\
-#h(2.0em)扩大用户群体。\
-
-== 长期计划
-
-#h(2.0em)长期内计划添加以下功能：\
-#h(2.0em)——PWA支持（离线访问）；\
-#h(2.0em)——原生应用打包；\
-#h(2.0em)——社交分享功能；\
-#h(2.0em)——数据分析仪表板。\
-
-=== PWA支持
-
-#h(2.0em)实现PWA支持，支持离线访问。\
-#h(2.0em)提供应用安装功能。\
-
-=== 原生应用
-
-#h(2.0em)将应用打包为原生应用，支持iOS和Android。\
-#h(2.0em)提供更好的移动端体验。\
-
-=== 社交分享
-
-#h(2.0em)添加社交分享功能，支持分享到社交媒体。\
-#h(2.0em)提高应用曝光度。\
-
-=== 数据分析
-
-#h(2.0em)实现数据分析仪表板，展示应用运营数据。\
-#h(2.0em)支持数据可视化和报表导出。\
-
-= 常见问题
-
-#h(2.0em)本章列出了使用过程中可能遇到的常见问题及解决方案。\
-#h(2.0em)遇到问题时，可以先参考本章内容，如无法解决，请联系技术支持。\
-
-== 功能问题
-
-#h(2.0em)列出用户可能遇到的功能性问题及解决方法。\
-
-=== 购物车数据丢失
-
-#h(2.0em)购物车数据保存在本地存储中，清除浏览器数据会导致购物车数据丢失。\
-#h(2.0em)建议用户定期检查购物车，及时结算订单。\
-
-=== 登录状态失效
-
-#h(2.0em)登录状态保存在本地存储中，清除浏览器数据会导致登录状态失效。\
-#h(2.0em)用户需要重新登录。\
-
-=== 商品图片无法显示
-
-#h(2.0em)检查网络连接，确保图片资源可以正常访问。\
-#h(2.0em)如仍无法显示，请联系技术支持。\
-
-== 兼容性问题
-
-#h(2.0em)列出不同浏览器和设备的兼容性问题及解决方法。\
-
-=== IE浏览器不支持
-
-#h(2.0em)应用不支持IE浏览器。\
-#h(2.0em)建议用户使用Chrome、Firefox或Edge等现代浏览器。\
-
-=== 移动端显示异常
-
-#h(2.0em)检查浏览器版本，确保使用支持的浏览器版本。\
-#h(2.0em)如仍无法正常显示，请联系技术支持。\
-
-== 性能问题
-
-#h(2.0em)列出可能遇到的性能问题及解决方法。\
-
-=== 页面加载缓慢
-
-#h(2.0em)检查网络连接，确保网络通畅。\
-#h(2.0em)清除浏览器缓存，重新加载页面。\
-
-=== 应用卡顿
-
-#h(2.0em)检查浏览器版本，确保使用支持的浏览器版本。\
-#h(2.0em)关闭其他占用资源的标签页和程序。\
+  [#text(9pt, font: "Times New Roman")[IE]],
+  [#text(9pt, font: "SimSun")[不支持]],
+)]
 
 = 版本历史
 
-#h(2.0em)记录前端应用的版本历史，包括新增功能、修复问题、性能优化等。\
-
-== 版本1.0.0
+== 版本#h(0.25em)1.0.0
 
 #h(2.0em)系统初始版本，实现基本的电商功能。\
 #h(2.0em)包括商品浏览、购物车、订单和用户系统。\
 
-== 版本1.1.0
+== 版本#h(0.25em)1.1.0
 
 #h(2.0em)优化系统性能，修复已知问题。\
 #h(2.0em)改进用户界面，提升用户体验。\
 
-== 版本2.0.0
+== 版本#h(0.25em)2.0.0
 
 #h(2.0em)重构系统架构，新增会员功能和优惠活动功能。\
 #h(2.0em)优化组件结构，提高代码可维护性。\
@@ -869,18 +1558,6 @@ CartItem购物车商品组件
 // 版本历史结束，添加水平居中的分割线
 #align(center)[#line(length: 25%, stroke: 0.5pt)]
 
-// 第6页结束
-#pagebreak()
-// 第7页开始
+#v(2.0em)
 
-// 空白页（无页眉页脚）
-#set page(header: [], footer: [])
-
-// 第7页结束
-#pagebreak()
-// 第8页开始
-
-// 空白页（无页眉页脚）
-#set page(header: [], footer: [])
-
-// 第8页结束
+#align(center)[#text(9pt, font: "SimSun")[文档版本：v1.1.0    更新日期：2026-03-26]]
