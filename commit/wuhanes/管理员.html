@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物系统管理员界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #35424a;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #35424a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #35424a;
+            color: white;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #35424a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>购物系统管理员界面</h1>
+</header>
+
+<nav>
+    <a href="#view-products">查看商品</a>
+    <a href="#add-product">添加商品</a>
+    <a href="#manage-orders">管理订单</a>
+</nav>
+
+<div class="container">
+
+    <section id="view-products">
+        <h2>查看商品</h2>
+        <table>
+            <tr>
+                <th>商品ID</th>
+                <th>商品名称</th>
+                <th>价格</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>商品A</td>
+                <td>100.00</td>
+                <td><button>编辑</button> <button>删除</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>商品B</td>
+                <td>150.00</td>
+                <td><button>编辑</button> <button>删除</button></td>
+            </tr>
+            <!-- 可以在这里添加更多商品 -->
+        </table>
+    </section>
+
+    <section id="add-product">
+        <h2>添加商品</h2>
+        <form>
+            <label for="product-name">商品名称:</label><br>
+            <input type="text" id="product-name" name="product-name" required><br><br>
+            <label for="product-price">价格:</label><br>
+            <input type="number" id="product-price" name="product-price" required step="0.01"><br><br>
+            <button type="submit">添加商品</button>
+        </form>
+    </section>
+
+    <section id="manage-orders">
+        <h2>管理订单</h2>
+        <table>
+            <tr>
+                <th>订单ID</th>
+                <th>客户姓名</th>
+                <th>总价</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>101</td>
+                <td>用户1</td>
+                <td>250.00</td>
+                <td>已发货</td>
+                <td><button>查看</button> <button>取消</button></td>
+            </tr>
+            <tr>
+                <td>102</td>
+                <td>用户2</td>
+                <td>300.00</td>
+                <td>待处理</td>
+                <td><button>查看</button> <button>取消</button></td>
+            </tr>
+            <!-- 可以在这里添加更多订单 -->
+        </table>
+    </section>
+
+</div>
+
+</body>
+</html>

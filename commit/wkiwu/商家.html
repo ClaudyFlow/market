@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商家界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>商家管理界面</h1>
+</header>
+
+<nav>
+    <a href="#product-management">产品管理</a>
+    <a href="#order-management">订单管理</a>
+    <a href="#account-settings">账户设置</a>
+</nav>
+
+<div class="container">
+
+    <section id="product-management">
+        <h2>产品管理</h2>
+        <table>
+            <tr>
+                <th>产品ID</th>
+                <th>产品名称</th>
+                <th>价格</th>
+                <th>库存</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>产品A</td>
+                <td>100.00</td>
+                <td>50</td>
+                <td><button>编辑</button> <button>删除</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>产品B</td>
+                <td>150.00</td>
+                <td>30</td>
+                <td><button>编辑</button> <button>删除</button></td>
+            </tr>
+            <!-- 可以在这里添加更多产品 -->
+        </table>
+
+        <h3>添加新产品</h3>
+        <form>
+            <label for="product-name">产品名称:</label>
+            <input type="text" id="product-name" name="product-name" required>
+
+            <label for="product-price">价格:</label>
+            <input type="number" id="product-price" name="product-price" required step="0.01">
+
+            <label for="product-stock">库存:</label>
+            <input type="number" id="product-stock" name="product-stock" required>
+
+            <button type="submit">添加产品</button>
+        </form>
+    </section>
+
+    <section id="order-management">
+        <h2>订单管理</h2>
+        <table>
+            <tr>
+                <th>订单ID</th>
+                <th>客户姓名</th>
+                <th>总价</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>101</td>
+                <td>用户1</td>
+                <td>250.00</td>
+                <td>已发货</td>
+                <td><button>查看</button> <button>取消</button></td>
+            </tr>
+            <tr>
+                <td>102</td>
+                <td>用户2</td>
+                <td>300.00</td>
+                <td>待处理</td>
+                <td><button>查看</button> <button>取消</button></td>
+            </tr>
+            <!-- 可以在这里添加更多订单 -->
+        </table>
+    </section>
+
+    <section id="account-settings">
+        <h2>账户设置</h2>
+        <form>
+            <label for="business-name">商家名称:</label>
+            <input type="text" id="business-name" name="business-name" required>
+
+            <label for="email">邮箱:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">联系电话:</label>
+            <input type="text" id="phone" name="phone" required>
+
+            <button type="submit">更新信息</button>
+        </form>
+    </section>
+
+</div>
+
+</body>
+</html>
