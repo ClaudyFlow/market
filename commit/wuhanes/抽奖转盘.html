@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商场购物狂欢抽奖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        /* 页面背景 - 商场喜庆风格 */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 标题样式 */
+        .title {
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* 转盘外层容器 */
+        .wheel-container {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            margin-bottom: 40px;
+        }
+
+        /* 抽奖转盘 */
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border: 8px solid #fff;
+            transition: transform 4s ease-in-out;
+        }
+
+        /* 转盘奖项分区 */
+        .wheel-section {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 8个奖项分区角度 */
+        .section-1 { transform: rotate(0deg); background: #ff4757; }
+        .section-2 { transform: rotate(45deg); background: #ffa502; }
+        .section-3 { transform: rotate(90deg); background: #ff6348; }
+        .section-4 { transform: rotate(135deg); background: #1e90ff; }
+        .section-5 { transform: rotate(180deg); background: #3742fa; }
+        .section-6 { transform: rotate(225deg); background: #a55eea; }
+        .section-7 { transform: rotate(270deg); background: #2ed573; }
+        .section-8 { transform: rotate(315deg); background: #ff7675; }
+
+        /* 奖项文字位置 */
+        .wheel-section span {
+            position: absolute;
+            transform-origin: center;
+            transform: rotate(22.5deg) translateY(-130px);
+        }
+
+        /* 转盘中心 */
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        /* 抽奖指针 */
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 60px;
+            z-index: 20;
+            filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
+        }
+
+        /* 抽奖按钮 */
+        .draw-btn {
+            padding: 15px 50px;
+            font-size: 22px;
+            font-weight: bold;
+            background: #ff3838;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(255,56,56,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .draw-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(255,56,56,0.5);
+        }
+
+        .draw-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 中奖提示弹窗 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: modalShow 0.3s ease;
+        }
+
+        @keyframes modalShow {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            font-size: 28px;
+            color: #ff3838;
+            margin-bottom: 20px;
+        }
+
+        .modal-prize {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            padding: 10px 30px;
+            background: #1e90ff;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 底部商城装饰 */
+        .mall-footer {
+            margin-top: 30px;
+            color: #fff;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 450px) {
+            .wheel-container {
+                width: 320px;
+                height: 320px;
+            }
+            .title {
+                font-size: 26px;
+            }
+            .wheel-section span {
+                transform: rotate(22.5deg) translateY(-105px);
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">🛍️ 商场购物狂欢抽奖 🛍️</h1>
+
+    <!-- 抽奖转盘 -->
+    <div class="wheel-container">
+        <img src="https://cdn.jsdelivr.net/gh/linshuhaiblog/images/pointer.png" alt="指针" class="pointer">
+        <div class="wheel" id="wheel">
+            <div class="wheel-section section-1"><span>一等奖</span></div>
+            <div class="wheel-section section-2"><span>50元券</span></div>
+            <div class="wheel-section section-3"><span>谢谢参与</span></div>
+            <div class="wheel-section section-4"><span>100元券</span></div>
+            <div class="wheel-section section-5"><span>二等奖</span></div>
+            <div class="wheel-section section-6"><span>20元券</span></div>
+            <div class="wheel-section section-7"><span>三等奖</span></div>
+            <div class="wheel-section section-8"><span>免单券</span></div>
+            <div class="wheel-center"></div>
+        </div>
+    </div>
+
+    <!-- 抽奖按钮 -->
+    <button class="draw-btn" id="drawBtn">开始抽奖</button>
+
+    <!-- 中奖弹窗 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">🎉 恭喜中奖 🎉</h2>
+            <p class="modal-prize" id="prizeResult"></p>
+            <button class="close-btn" id="closeBtn">确定</button>
+        </div>
+    </div>
+
+    <!-- 底部文字 -->
+    <div class="mall-footer">
+        购物满200元即可参与抽奖 | 100%中奖
+    </div>
+
+    <script>
+        const wheel = document.getElementById('wheel');
+        const drawBtn = document.getElementById('drawBtn');
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+        const prizeResult = document.getElementById('prizeResult');
+
+        // 奖项列表（与转盘分区对应）
+        const prizes = [
+            '一等奖：iPhone 15',
+            '50元商场代金券',
+            '谢谢参与',
+            '100元商场代金券',
+            '二等奖：品牌家电',
+            '20元商场代金券',
+            '三等奖：精美礼品',
+            '免单券（最高免500元）'
+        ];
+
+        let isRotating = false;
+
+        // 抽奖功能
+        drawBtn.addEventListener('click', () => {
+            if (isRotating) return;
+            isRotating = true;
+            drawBtn.disabled = true;
+
+            // 随机角度：5-8圈 + 随机奖项位置
+            const randomDeg = Math.floor(2000 + Math.random() * 1500);
+            wheel.style.transform = `rotate(${randomDeg}deg)`;
+
+            // 抽奖结束后显示结果
+            setTimeout(() => {
+                isRotating = false;
+                drawBtn.disabled = false;
+                
+                // 计算中奖奖项
+                const deg = randomDeg % 360;
+                const prizeIndex = Math.floor(deg / 45);
+                const finalPrize = prizes[7 - prizeIndex]; // 修正指针指向
+                
+                // 显示中奖弹窗
+                prizeResult.innerText = finalPrize;
+                modal.style.display = 'flex';
+            }, 4000);
+        });
+
+        // 关闭弹窗
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
