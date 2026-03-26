@@ -7,7 +7,7 @@
           <div class="user-panel">
             <UserPanel />
           </div>
-          <div class="left-bottom">
+          <div class="left-bottom" @click="goToCustomerService" style="cursor: pointer;">
             <CustomerService />
           </div>
         </div>
@@ -25,7 +25,9 @@
           <!-- 用户通知 -->
           <UserNoticePanel />
           <!-- 用户论坛 -->
-          <UserForum />
+          <div @click="goToForum" style="cursor: pointer;">
+            <UserForum />
+          </div>
         </div>
       </div>
     </section>
@@ -630,6 +632,14 @@ const goToDetail = (id: number) => {
 const addToCart = (item: Product) => {
   cartStore.addToCart({ ...item, quantity: 1 })
   ElMessage.success("已加入购物车")
+}
+
+const goToCustomerService = () => {
+  router.push('/service')
+}
+
+const goToForum = () => {
+  router.push('/forum')
 }
 
 onMounted(() => {

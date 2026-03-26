@@ -164,6 +164,36 @@ const routes: RouteRecordRaw[] = [
     name: 'VipCenter',
     component: () => import('@user/views/VipCenter.vue'),
     meta: { title: 'VIP 会员中心' }
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: () => import('@user/views/Forum.vue'),
+    meta: { title: '用户论坛' }
+  },
+  {
+    path: '/forum/:id',
+    name: 'ForumDetail',
+    component: () => import('@user/views/Forum.vue'),
+    meta: { title: '话题详情' }
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: () => import('@user/views/CustomerService.vue'),
+    meta: { title: '在线客服' }
+  },
+  {
+    path: '/faq',
+    name: 'FAQ',
+    component: () => import('@user/views/CustomerService.vue'),
+    meta: { title: '常见问题' }
+  },
+  {
+    path: '/service',
+    name: 'CustomerService',
+    component: () => import('@user/views/CustomerService.vue'),
+    meta: { title: '客服中心' }
   }
 ]
 
