@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>购物系统面包屑导航</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    .breadcrumb {
+      margin: 20px auto;
+      padding: 0;
+      max-width: 960px;
+    }
+    .breadcrumb-list {
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+    }
+    .breadcrumb-item:not(:last-child) {
+      border-right: 1px solid #e5e7eb;
+    }
+    .breadcrumb-item a {
+      display: inline-block;
+      padding: 10px 12px;
+      color: #2563eb;
+      text-decoration: none;
+    }
+    .breadcrumb-item a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb-item .current {
+      display: inline-block;
+      padding: 10px 12px;
+      color: #111827;
+      font-weight: 600;
+      background: #f9fafb;
+    }
+    .breadcrumb-separator {
+      margin: 0 8px;
+      color: #9ca3af;
+      user-select: none;
+    }
+    .content {
+      max-width: 960px;
+      margin: 1rem auto;
+      background: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+  </style>
+</head>
+<body>
+  <nav aria-label="Breadcrumb" class="breadcrumb">
+    <ol class="breadcrumb-list">
+      <li class="breadcrumb-item"><a href="#">首页</a><span class="breadcrumb-separator">›</span></li>
+      <li class="breadcrumb-item"><a href="#">全部商品</a><span class="breadcrumb-separator">›</span></li>
+      <li class="breadcrumb-item"><a href="#">电子数码</a><span class="breadcrumb-separator">›</span></li>
+      <li class="breadcrumb-item"><a href="#">手机</a><span class="breadcrumb-separator">›</span></li>
+      <li class="breadcrumb-item"><span class="current">iPhone 15</span></li>
+    </ol>
+  </nav>
+
+  <section class="content">
+    <h1>商品详情</h1>
+    <p>当前位于 “iPhone 15” 页面，面包屑导航示例已成功生成。</p>
+    <p>您可以将链接替换为实际路由地址，或JavaScript动态生成结构。</p>
+  </section>
+</body>
+</html>

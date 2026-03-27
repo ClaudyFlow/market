@@ -8,18 +8,32 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
         .slot-machine {
             width: 600px;
             margin: 40px auto;
             text-align: center;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: none;
-            padding-bottom: 32px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+            padding: 40px 30px 32px;
+            border: 3px solid #e9ecef;
+            position: relative;
+        }
+        .slot-machine::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ffd700, #ffb300, #ff8c00);
+            border-radius: 28px;
+            z-index: -1;
         }
         .slot-row-wrapper {
             position: relative;
@@ -41,38 +55,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #222;
-            border-radius: 10px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 15px;
             overflow: hidden;
-            padding: 10px 0;
+            padding: 15px 0;
             width: auto;
             margin: 0 auto;
             position: relative;
+            border: 2px solid #ffd700;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2);
         }
         .slot-symbol {
-            width: 128px;
-            height: 120px;
+            width: 160px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4em;
+            font-size: 1.1em;
             color: #fff;
             opacity: 0.5;
             margin: 0 2px;
             border-radius: 8px;
-            background: #333;
+            background: linear-gradient(135deg, #333 0%, #555 100%);
             transition: opacity 0.2s, color 0.2s, background 0.2s;
-            font-family: 'Consolas', 'Menlo', 'Monaco', 'monospace';
+            font-family: 'Arial', sans-serif;
             box-sizing: border-box;
+            padding: 5px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.2;
+            flex-shrink: 0;
         }
         .slot-symbol.active {
             opacity: 1;
-            color: #ffd700;
-            background: linear-gradient(180deg, #fffbe6 0%, #ffe066 60%, #ffd700 100%);
+            color: #2c3e50;
+            background: linear-gradient(180deg, #ffd700 0%, #ffb300 50%, #ff8c00 100%);
             font-weight: bold;
-            box-shadow: 0 0 32px 12px #ffe066, 0 0 24px #ffd700, 0 0 0 4px #fffbe6 inset, 0 0 0 8px #ffd70033;
-            border: 2.5px solid #ffd700;
-            transform: scale(1.22);
+            box-shadow: 0 0 20px 5px #ffd700, 0 0 15px #ffb300, 0 0 0 2px #fff inset, 0 0 0 4px #ffd70033;
+            border: 3px solid #ffd700;
+            transform: scale(1.1);
             z-index: 3;
             transition: 
                 opacity 0.2s, 
@@ -134,7 +157,7 @@
     </div>
 
     <script>
-        const symbols = ['🍒', '🍋', '🔔', '⭐', '🍀', '7️⃣'];
+        const symbols = ['iPhone 15', 'MacBook Pro', 'AirPods Pro', 'iPad Air', 'Apple Watch', '谢谢参与', '谢谢参与', '谢谢参与'];
         const visibleCount = 9;
         const pointerIndex = 4;
         let row = [];
@@ -200,8 +223,8 @@
         }
 
         function checkResult() {
-            result = row[14] === '7️⃣';
-            resultText.textContent = result ? '恭喜中奖！' : '很遗憾，未中奖';
+            result = row[14] !== '谢谢参与';
+            resultText.textContent = result ? `恭喜中奖！获得 ${row[14]}！` : '很遗憾，未中奖';
             resultDiv.style.display = 'block';
         }
 
