@@ -7,7 +7,7 @@
     </header>
     <div class="forum-content">
       <div class="topic-list">
-        <div v-for="topic in topics" :key="topic.id" class="topic-item" @click="viewTopic(topic.id)">
+        <button v-for="topic in topics" :key="topic.id" class="topic-item" @click="viewTopic(topic.id)" type="button">
           <div class="topic-main">
             <div class="topic-title">{{ topic.title }}</div>
             <div class="topic-meta">
@@ -21,7 +21,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </section>
@@ -100,6 +100,9 @@ const viewTopic = (id: number) => {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 212, 255, 0.3) transparent;
   padding-right: 3px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .topic-list::-webkit-scrollbar {
@@ -127,8 +130,12 @@ const viewTopic = (id: number) => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  cursor: pointer;
   transition: all 0.3s;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  width: 100%;
 }
 
 .topic-item:hover {
