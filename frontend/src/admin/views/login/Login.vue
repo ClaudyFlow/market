@@ -225,7 +225,7 @@ const handleLogin = async () => {
 
 .login-header {
   text-align: center;
-  margin-bottom: 40px;
+  
 }
 
 .logo-wrapper {
@@ -257,22 +257,22 @@ const handleLogin = async () => {
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: 0;
+  
 }
 
 .logo-subtitle {
   font-size: 13px;
   color: #888;
   letter-spacing: 2px;
-  margin: 0;
+  
 }
 
 .login-form {
-  margin-top: 30px;
+  
 }
 
 .login-form :deep(.el-form-item) {
-  margin-bottom: 24px;
+  
 }
 
 .login-form :deep(.el-input__wrapper) {
@@ -325,7 +325,7 @@ const handleLogin = async () => {
 }
 
 .login-footer {
-  margin-top: 30px;
+  
   text-align: center;
 }
 

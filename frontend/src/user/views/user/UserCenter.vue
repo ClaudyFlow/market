@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="user-center-page">
     <div class="container">
       <h1 class="page-title">个人中心</h1>
@@ -93,13 +93,13 @@ import { Document, StarFilled, UserFilled, Location, Trophy, Ticket } from '@ele
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  
 }
 
 .page-title {
   color: var(--mall-text-primary);
   font-size: 32px;
-  margin-bottom: 40px;
+  
   text-align: center;
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
@@ -150,7 +150,7 @@ import { Document, StarFilled, UserFilled, Location, Trophy, Ticket } from '@ele
   background: linear-gradient(135deg, var(--mall-primary), var(--mall-secondary));
   color: #fff;
   font-size: 24px;
-  margin-right: 20px;
+  
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
 }
@@ -187,7 +187,7 @@ import { Document, StarFilled, UserFilled, Location, Trophy, Ticket } from '@ele
   flex-direction: column;
   gap: 8px;
   flex: 1;
-  margin-left: 16px;
+  
 }
 
 .vip-title {
@@ -205,7 +205,7 @@ import { Document, StarFilled, UserFilled, Location, Trophy, Ticket } from '@ele
 .vip-info {
   display: flex;
   gap: 24px;
-  margin: 0;
+  
 }
 
 .vip-info .info-item {

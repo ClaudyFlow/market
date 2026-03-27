@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">
@@ -186,208 +186,13 @@
         </div>
       </div>
 
-      <el-form :model="auditForm" label-width="80px" style="margin-top: 20px">
-        <el-form-item label="审核意见">
-          <el-input
-            v-model="auditForm.comment"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入审核意见"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <el-button @click="auditDialog.visible = false">取消</el-button>
-        <el-button type="danger" @click="handleAudit('rejected')">拒绝</el-button>
-        <el-button type="primary" @click="handleAudit('approved')">通过</el-button>
-      </template>
-    </el-dialog>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Shop, CircleCheck, CircleClose, Clock } from '@element-plus/icons-vue'
-
-interface MerchantItem {
-  id: number
-  shopName: string
-  ownerName: string
-  phone: string
-  category: string
-  joinTime: string
-  status: string
-  logo?: string
-  description?: string
-  businessLicense?: string
-  license?: string
-}
-
-interface FilterForm {
-  merchantId: string
-  shopName: string
-  status: string
-  dateRange: [Date, Date] | null
-}
-
-interface MerchantStats {
-  total: number
-  approved: number
-  pending: number
-  rejected: number
-}
-
-interface Pagination {
-  currentPage: number
-  pageSize: number
-  total: number
-}
-
-interface Dialog {
-  visible: boolean
-}
-
-interface AuditForm {
-  comment: string
-}
-
-const loading = ref(false)
-const merchantList = ref<MerchantItem[]>([])
-const filterForm = reactive<FilterForm>({
-  merchantId: '',
-  shopName: '',
-  status: '',
-  dateRange: null
-})
-
-const merchantStats = ref<MerchantStats>({
-  total: 356,
-  approved: 298,
-  pending: 35,
-  rejected: 23
-})
-
-const pagination = reactive<Pagination>({
-  currentPage: 1,
-  pageSize: 10,
-  total: 0
-})
-
-const auditDialog = reactive<Dialog>({
-  visible: false
-})
-
-const auditForm = reactive<AuditForm>({
-  comment: ''
-})
-
-const currentMerchant = ref<MerchantItem | null>(null)
-
-const mockMerchantData: MerchantItem[] = [
-  { id: 2001, shopName: '品质优选店', ownerName: '张三', phone: '138****1234', category: '手机数码', joinTime: '2026-01-15', status: 'approved', logo: '', description: '专注品质商品', businessLicense: '', license: '' },
-  { id: 2002, shopName: '时尚衣橱', ownerName: '李四', phone: '139****5678', category: '服装鞋包', joinTime: '2026-01-20', status: 'approved', logo: '', description: '时尚女装', businessLicense: '', license: '' },
-  { id: 2003, shopName: '数码港湾', ownerName: '王五', phone: '137****9012', category: '电脑办公', joinTime: '2026-02-01', status: 'pending', logo: '', description: '电脑配件', businessLicense: '', license: '' },
-  { id: 2004, shopName: '家居生活馆', ownerName: '赵六', phone: '136****3456', category: '家居家装', joinTime: '2026-02-10', status: 'pending', logo: '', description: '家居用品', businessLicense: '', license: '' },
-  { id: 2005, shopName: '美妆小屋', ownerName: '钱七', phone: '135****7890', category: '美妆护肤', joinTime: '2026-02-15', status: 'rejected', logo: '', description: '进口美妆', businessLicense: '', license: '' },
-  { id: 2006, shopName: '食品专营店', ownerName: '孙八', phone: '134****2345', category: '食品生鲜', joinTime: '2026-02-20', status: 'approved', logo: '', description: '进口食品', businessLicense: '', license: '' },
-  { id: 2007, shopName: '电器城', ownerName: '周九', phone: '133****6789', category: '家用电器', joinTime: '2026-03-01', status: 'banned', logo: '', description: '家用电器', businessLicense: '', license: '' },
-  { id: 2008, shopName: '图书文具店', ownerName: '吴十', phone: '132****0123', category: '图书文具', joinTime: '2026-03-05', status: 'pending', logo: '', description: '图书文具', businessLicense: '', license: '' }
-]
-
-const loadMerchantList = () => {
-  loading.value = true
-  setTimeout(() => {
-    merchantList.value = mockMerchantData
-    pagination.total = mockMerchantData.length
-    loading.value = false
-  }, 500)
-}
-
-const searchMerchants = () => {
-  ElMessage.success('搜索功能演示')
-  loadMerchantList()
-}
-
-const resetFilter = () => {
-  filterForm.merchantId = ''
-  filterForm.shopName = ''
-  filterForm.status = ''
-  filterForm.dateRange = null
-}
-
-const getStatusType = (status: string) => {
-  const map: Record<string, string> = { pending: 'warning', approved: 'success', rejected: 'danger', banned: 'info' }
-  return map[status] || 'info'
-}
-
-const getStatusText = (status: string) => {
-  const map: Record<string, string> = { pending: '待审核', approved: '已通过', rejected: '已拒绝', banned: '已封禁' }
-  return map[status] || status
-}
-
-const viewMerchant = (merchant: MerchantItem) => {
-  currentMerchant.value = merchant
-  auditDialog.visible = true
-  auditForm.comment = ''
-}
-
-const approveMerchant = (merchant: MerchantItem) => {
-  ElMessageBox.confirm(`确定要通过商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'success'
-  }).then(() => {
-    merchant.status = 'approved'
-    ElMessage.success('审核通过')
-  }).catch(() => {})
-}
-
-const rejectMerchant = (merchant: MerchantItem) => {
-  ElMessageBox.confirm(`确定要拒绝商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    merchant.status = 'rejected'
-    ElMessage.success('已拒绝')
-  }).catch(() => {})
-}
-
-const banMerchant = (merchant: MerchantItem) => {
-  ElMessageBox.confirm(`确定要封禁商家"${merchant.shopName}"吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'error'
-  }).then(() => {
-    merchant.status = 'banned'
-    ElMessage.success('已封禁')
-  }).catch(() => {})
-}
-
-const handleAudit = (result: string) => {
-  if (currentMerchant.value) {
-    currentMerchant.value.status = result
-    ElMessage.success(result === 'approved' ? '审核通过' : '已拒绝')
-    auditDialog.visible = false
-  }
-}
-
-onMounted(() => {
-  loadMerchantList()
-})
-</script>
-
-<style scoped>
-.page-container {
-  padding: 20px;
+      <el-form :model="auditForm" label-width="80px" style="
   background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
   min-height: 100vh;
 }
 
 .page-header {
-  margin-bottom: 25px;
+  
   padding: 20px;
   background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -411,7 +216,7 @@ onMounted(() => {
 }
 
 .stats-cards {
-  margin-bottom: 25px;
+  
 }
 
 .stat-card {
@@ -494,7 +299,7 @@ onMounted(() => {
 .stat-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 /* 搜索栏优化 */
@@ -503,13 +308,13 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 20px;
+  
   box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
 }
 
 .search-bar :deep(.el-form-item) {
-  margin-bottom: 0;
-  margin-right: 15px;
+  
+  
 }
 
 .search-bar :deep(.el-form-item__label) {
@@ -578,7 +383,7 @@ onMounted(() => {
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  
   display: flex;
   justify-content: flex-end;
 }
@@ -602,12 +407,12 @@ onMounted(() => {
 }
 
 .cert-section {
-  margin-top: 20px;
+  
 }
 
 .cert-section h4 {
   color: var(--mall-primary);
-  margin-bottom: 15px;
+  
   font-size: 14px;
 }
 

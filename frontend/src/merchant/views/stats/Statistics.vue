@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">
@@ -161,7 +161,7 @@
                 </div>
               </div>
             </div>
-            <div class="chart-container" ref="visitorChartRef" style="height: 200px; margin-top: 20px;"></div>
+            <div class="chart-container" ref="visitorChartRef" style="height: 200px; "></div>
           </div>
         </el-col>
       </el-row>
@@ -373,7 +373,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -393,7 +393,7 @@ onMounted(() => {
 }
 
 .stats-cards {
-  margin-bottom: 20px;
+  
 }
 
 .stat-card {
@@ -472,7 +472,7 @@ onMounted(() => {
 .stat-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 .stat-trend {
@@ -481,11 +481,11 @@ onMounted(() => {
   gap: 4px;
   font-size: 12px;
   color: #00ff88;
-  margin-top: 6px;
+  
 }
 
 .chart-section {
-  margin-bottom: 15px;
+  
 }
 
 .chart-card {
@@ -499,7 +499,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -618,7 +618,7 @@ onMounted(() => {
 .visitor-label {
   font-size: 12px;
   color: #888;
-  margin-bottom: 8px;
+  
 }
 
 .visitor-value {
@@ -632,7 +632,7 @@ onMounted(() => {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  margin-top: 6px;
+  
 }
 
 .visitor-trend.up {

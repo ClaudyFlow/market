@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <h1>地址管理</h1>
   </div>

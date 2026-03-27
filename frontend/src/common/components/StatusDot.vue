@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <span class="status-dot" :class="status" :title="statusText" aria-label="状态指示">
     <span class="dot"></span>
   </span>
@@ -32,7 +32,7 @@ const statusText = computed(() => statusTextMap[props.status] || '')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 4px;
+  
 }
 
 .dot {

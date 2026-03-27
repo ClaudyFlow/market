@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <span class="loading-dot" :class="{ loading }" aria-label="加载中">
     <span class="dot"></span>
   </span>
@@ -18,7 +18,7 @@ defineProps({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 4px;
+  
 }
 
 .dot {

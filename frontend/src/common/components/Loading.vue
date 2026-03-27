@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="loading-container">
     <div class="loading-spinner"></div>
     <p v-if="message">{{ message }}</p>

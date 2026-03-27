@@ -42,7 +42,7 @@ import { banners } from "@user/data/categories";
 
 .banner-title {
   font-size: 42px;
-  margin-bottom: 15px;
+  
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -50,7 +50,7 @@ import { banners } from "@user/data/categories";
 
 .banner-subtitle {
   font-size: 20px;
-  margin-bottom: 25px;
+  
   color: #aaa;
 }
 

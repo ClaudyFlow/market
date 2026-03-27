@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <article class="product-card" @click="handleClick">
     <div class="sale-image">
       <img v-lazyload="product.image" :alt="product.name" />
@@ -197,7 +197,7 @@ const 获取进度颜色 = getProgressColor
 .item-name {
   font-size: 14px;
   color: #fff;
-  margin-bottom: 8px;
+  
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -206,7 +206,7 @@ const 获取进度颜色 = getProgressColor
 }
 
 .item-meta {
-  margin-bottom: 8px;
+  
 }
 
 .item-rating {
@@ -232,7 +232,7 @@ const 获取进度颜色 = getProgressColor
   border-radius: 4px;
   font-size: 11px;
   font-weight: bold;
-  margin-bottom: 8px;
+  
 }
 
 .item-type-tag.digital {
@@ -260,7 +260,7 @@ const 获取进度颜色 = getProgressColor
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 10px;
+  
 }
 
 .price-wrapper {
@@ -303,7 +303,7 @@ const 获取进度颜色 = getProgressColor
 }
 
 .progress-container {
-  margin-bottom: 8px;
+  
 }
 
 .progress-container :deep(.el-progress__text) {
@@ -323,7 +323,7 @@ const 获取进度颜色 = getProgressColor
 }
 
 .sale-action {
-  margin-top: 10px;
+  
 }
 
 .sale-action .el-button {

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="review-form-overlay" @click="handleOverlayClick">
     <div class="review-form-modal" @click.stop>
       <div class="review-form-header">
@@ -156,7 +156,7 @@ onMounted(() => {
 }
 
 .review-form-header h3 {
-  margin: 0;
+  
   color: #fff;
   font-size: 18px;
 }
@@ -190,7 +190,7 @@ onMounted(() => {
   padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  margin-bottom: 20px;
+  
 }
 
 .product-image {
@@ -220,18 +220,18 @@ onMounted(() => {
 }
 
 .form-group {
-  margin-bottom: 20px;
+  
 }
 
 .form-group label {
   display: block;
   color: #888;
   font-size: 14px;
-  margin-bottom: 10px;
+  
 }
 
 .rating-text {
-  margin-left: 10px;
+  
   color: var(--mall-accent);
   font-size: 14px;
 }
@@ -259,7 +259,7 @@ textarea:focus {
   text-align: right;
   color: #666;
   font-size: 12px;
-  margin-top: 6px;
+  
 }
 
 .review-form-footer {

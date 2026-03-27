@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="app-container">
     <Header />
     <main class="main-content">
@@ -17,7 +17,7 @@ import Footer from '@user/components/Footer.vue'
 @import '@user/assets/mall-style.css';
 
 * {
-  margin: 0;
+  
   padding: 0;
   box-sizing: border-box;
 }

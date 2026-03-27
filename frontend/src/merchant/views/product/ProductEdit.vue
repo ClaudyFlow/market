@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <h1>编辑商品</h1>
   </div>

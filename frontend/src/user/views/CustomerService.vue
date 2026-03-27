@@ -250,7 +250,7 @@ const sendMessage = () => {
 
 .page-header h1 {
   font-size: 22px;
-  margin: 0;
+  
   color: #fff;
 }
 
@@ -316,14 +316,14 @@ const sendMessage = () => {
 
 .service-card h3 {
   font-size: 16px;
-  margin: 0;
+  
   color: #fff;
 }
 
 .service-card p {
   font-size: 12px;
   color: #888;
-  margin: 0;
+  
 }
 
 .faq-section,
@@ -338,7 +338,7 @@ const sendMessage = () => {
 .feedback-section h2 {
   font-size: 18px;
   color: var(--mall-primary);
-  margin: 0 0 20px 0;
+  
 }
 
 .faq-answer {
@@ -348,7 +348,7 @@ const sendMessage = () => {
 }
 
 .faq-answer p {
-  margin: 8px 0;
+  
   font-size: 14px;
   color: #ccc;
   line-height: 1.6;

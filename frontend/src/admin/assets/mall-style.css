@@ -42,7 +42,7 @@
 
 /* 全局样式重置 */
 * {
-  margin: 0;
+  
   padding: 0;
   box-sizing: border-box;
 }
@@ -129,7 +129,7 @@ body {
 .stat-card .label {
   font-size: 12px;
   color: var(--mall-text-secondary);
-  margin-top: 8px;
+  
 }
 
 /* 商品类型标签 */
@@ -139,7 +139,7 @@ body {
   border-radius: 4px;
   font-size: 11px;
   font-weight: bold;
-  margin: 6px 0;
+  
 }
 
 .item-type-tag.digital { background: rgba(0,212,255,0.8); color: #fff; }

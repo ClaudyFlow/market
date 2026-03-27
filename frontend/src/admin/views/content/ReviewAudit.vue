@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <h1>评价审核</h1>
   </div>

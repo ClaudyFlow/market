@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="order-page">
     <div class="container">
       <h1 class="page-title">订单确认</h1>
@@ -146,14 +146,14 @@ const 提交订单 = () => {
 
 .container {
   max-width: 1000px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
 .page-title {
   font-size: 28px;
   color: #fff;
-  margin-bottom: 25px;
+  
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -167,7 +167,7 @@ const 提交订单 = () => {
 }
 
 .order-section {
-  margin-bottom: 25px;
+  
   padding-bottom: 25px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
@@ -180,7 +180,7 @@ const 提交订单 = () => {
   font-size: 16px;
   font-weight: bold;
   color: var(--mall-primary);
-  margin-bottom: 15px;
+  
 }
 
 /* 收货地址 */
@@ -222,13 +222,13 @@ const 提交订单 = () => {
 }
 
 .address-header {
-  margin-bottom: 10px;
+  
 }
 
 .address-header .name {
   font-weight: bold;
   color: #fff;
-  margin-right: 10px;
+  
 }
 
 .address-header .phone {
@@ -287,7 +287,7 @@ const 提交订单 = () => {
 .item-name {
   font-size: 14px;
   color: #333;
-  margin-bottom: 5px;
+  
 }
 
 .item-spec {

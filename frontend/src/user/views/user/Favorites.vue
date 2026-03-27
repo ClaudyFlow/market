@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="favorites-page">
     <div class="container">
       <h1 class="page-title">
@@ -174,13 +174,13 @@ onMounted(() => {
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  
 }
 
 .page-title {
   font-size: 28px;
   color: #fff;
-  margin-bottom: 30px;
+  
   display: flex;
   align-items: center;
   gap: 12px;
@@ -258,7 +258,7 @@ onMounted(() => {
 .product-name {
   font-size: 14px;
   color: #fff;
-  margin-bottom: 12px;
+  
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -269,7 +269,7 @@ onMounted(() => {
 }
 
 .product-price {
-  margin-bottom: 12px;
+  
 }
 
 .product-price .price {
@@ -279,7 +279,7 @@ onMounted(() => {
 }
 
 .favorite-meta {
-  margin-bottom: 16px;
+  
 }
 
 .favorite-time {

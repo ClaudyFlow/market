@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <!-- 页面标题栏 -->
     <header class="page-header">
@@ -377,7 +377,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  
   padding: 20px;
   background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -421,13 +421,13 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 20px;
+  
   box-shadow: 0 4px 20px rgba(0, 212, 255, 0.08);
 }
 
 .search-bar :deep(.el-form-item) {
-  margin-bottom: 0;
-  margin-right: 15px;
+  
+  
 }
 
 .search-bar :deep(.el-form-item__label) {
@@ -511,7 +511,7 @@ onMounted(() => {
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  
   display: flex;
   justify-content: flex-end;
 }

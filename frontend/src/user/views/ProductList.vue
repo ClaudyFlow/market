@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="product-list">
     <div class="container">
       <!-- 筛选栏 -->
@@ -187,7 +187,7 @@ watch([selectedCategory, priceRange, sortBy], () => {
 
 .container {
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -196,18 +196,18 @@ watch([selectedCategory, priceRange, sortBy], () => {
   background: linear-gradient(90deg, rgba(0,212,255,0.1), rgba(0,255,136,0.05));
   padding: 20px 30px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  
   border: 1px solid rgba(0,212,255,0.15);
 }
 
 .filter-item {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  
 }
 
 .filter-item:last-child {
-  margin-bottom: 0;
+  
 }
 
 .filter-label {
@@ -225,7 +225,7 @@ watch([selectedCategory, priceRange, sortBy], () => {
 
 /* 分页 */
 .pagination {
-  margin-top: 30px;
+  
   display: flex;
   justify-content: center;
 }

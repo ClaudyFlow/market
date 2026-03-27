@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="app-container">
     <!-- 未登录时只显示路由内容（登录页） -->
     <template v-if="!isLoggedIn">
@@ -31,7 +31,7 @@ const isLoggedIn = computed(() => {
 @import '@admin/assets/mall-style.css';
 
 * {
-  margin: 0;
+  
   padding: 0;
   box-sizing: border-box;
 }
@@ -59,7 +59,7 @@ body {
   flex-direction: column;
   padding: 20px;
   max-width: 1400px;
-  margin: 0 auto;
+  
   width: 100%;
 }
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <header class="header">
     <!-- 顶部信息栏 -->
     <div class="top-info">
@@ -181,7 +181,7 @@ onMounted(() => {
   align-items: center;
   position: relative;
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -220,7 +220,7 @@ onMounted(() => {
   align-items: center;
   gap: 40px;
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -355,7 +355,7 @@ onMounted(() => {
   color: var(--mall-primary);
   cursor: pointer;
   transition: all 0.3s;
-  margin-left: 15px;
+  
 }
 
 .cart-icon:hover {

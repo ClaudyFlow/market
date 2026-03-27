@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <aside class="category-panel" aria-label="管理分类">
     <header class="category-header">
       <el-icon><Menu /></el-icon>
@@ -78,7 +78,7 @@ aside.category-panel {
 }
 
 .category-menu :deep(.el-icon) {
-  margin-right: 10px;
+  
   color: #ccc;
 }
 

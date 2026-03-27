@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="product-detail">
     <div class="container">
       <!-- 面包屑 -->
@@ -98,7 +98,7 @@
           <el-tabs v-model="当前标签">
             <el-tab-pane label="商品详情" name="detail">
               <div class="detail-content-text">
-                <img :src="商品.image" alt="商品详情图" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;" />
+                <img :src="商品.image" alt="商品详情图" style="width: 100%; max-width: 800px; display: block; " />
                 <p style="text-align: center; color: #999; padding: 40px;">商品详情图片展示区域</p>
               </div>
             </el-tab-pane>
@@ -214,12 +214,12 @@ const 立即购买 = () => {
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
 .breadcrumb {
-  margin-bottom: 20px;
+  
   font-size: 13px;
   color: #888;
 }
@@ -234,7 +234,7 @@ const 立即购买 = () => {
 }
 
 .breadcrumb span {
-  margin: 0 10px;
+  
   color: #666;
 }
 
@@ -247,7 +247,7 @@ const 立即购买 = () => {
   border: 1px solid rgba(0,212,255,0.2);
   padding: 30px;
   border-radius: 12px;
-  margin-bottom: 20px;
+  
 }
 
 /* 商品图片 */
@@ -257,7 +257,7 @@ const 立即购买 = () => {
 }
 
 .main-image {
-  margin-bottom: 15px;
+  
 }
 
 .main-image img {
@@ -304,20 +304,20 @@ const 立即购买 = () => {
 .product-title {
   font-size: 20px;
   color: #fff;
-  margin-bottom: 10px;
+  
 }
 
 .product-subtitle {
   font-size: 14px;
   color: #888;
-  margin-bottom: 20px;
+  
 }
 
 .price-section {
   background: rgba(0,0,0,0.2);
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 25px;
+  
   border: 1px solid rgba(0,212,255,0.1);
 }
 
@@ -325,7 +325,7 @@ const 立即购买 = () => {
   color: var(--mall-accent);
   font-size: 32px;
   font-weight: bold;
-  margin-right: 15px;
+  
 }
 
 .original-price {
@@ -336,13 +336,13 @@ const 立即购买 = () => {
 
 /* 规格选择 */
 .product-specs {
-  margin-bottom: 30px;
+  
 }
 
 .spec-item {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  
 }
 
 .spec-label {
@@ -355,7 +355,7 @@ const 立即购买 = () => {
 .action-buttons {
   display: flex;
   gap: 15px;
-  margin-bottom: 25px;
+  
 }
 
 .action-buttons .el-button {
@@ -396,7 +396,7 @@ const 立即购买 = () => {
   border: 1px solid rgba(0,212,255,0.2);
   border-radius: 12px;
   padding: 20px;
-  margin-top: 30px;
+  
   box-shadow: 0 0 20px rgba(0,212,255,0.1);
 }
 
@@ -408,7 +408,7 @@ const 立即购买 = () => {
 }
 
 .detail-tabs :deep(.el-tabs__header) {
-  margin-bottom: 20px;
+  
 }
 
 .detail-tabs :deep(.el-tabs__item) {
@@ -416,7 +416,7 @@ const 立即购买 = () => {
   font-size: 16px;
   font-weight: 500;
   border-radius: 8px;
-  margin: 0 8px;
+  
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(0,212,255,0.1);
   transition: all 0.3s ease;
@@ -487,7 +487,7 @@ const 立即购买 = () => {
   padding: 20px;
   background: rgba(0,0,0,0.2);
   border-radius: 8px;
-  margin-bottom: 20px;
+  
 }
 
 .rating-score {
@@ -528,7 +528,7 @@ const 立即购买 = () => {
 }
 
 .review-content p {
-  margin-top: 8px;
+  
   color: #ccc;
 }
 
@@ -538,7 +538,7 @@ const 立即购买 = () => {
 }
 
 .write-review-btn {
-  margin-top: 20px;
+  
   text-align: center;
 }
 
@@ -548,14 +548,14 @@ const 立即购买 = () => {
   border: 1px solid var(--mall-border);
   border-radius: 12px;
   padding: 24px;
-  margin-top: 20px;
+  
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  
   padding-bottom: 16px;
   border-bottom: 1px solid var(--mall-border-light);
 }

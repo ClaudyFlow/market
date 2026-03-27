@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="位置信息">
     <el-icon class="位置图标"><Location /></el-icon>
     <span class="位置文本">{{ locationText }}</span>
