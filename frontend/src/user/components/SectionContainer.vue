@@ -18,9 +18,9 @@ defineProps<{
   padding: 3% 2%;
 }
 
-/* 首页主布局 - 3 列 2:6:2 */
+/* 首页主布局 - 3 列 1:2:1 */
 .mall-home-container {
-  grid-template-columns: 2fr 6fr 2fr !important;
+  grid-template-columns: 1fr 2fr 1fr !important;
   grid-template-rows: repeat(6, 1fr);
 }
 </style>
