@@ -5,22 +5,22 @@
       <h3>客服中心</h3>
     </header>
     <div class="service-content">
-      <div class="service-item" @click="contactOnline">
+      <button class="service-item" type="button" @click="contactOnline">
         <el-icon><ChatDotRound /></el-icon>
         <span>在线客服</span>
-      </div>
-      <div class="service-item" @click="contactPhone">
+      </button>
+      <button class="service-item" type="button" @click="contactPhone">
         <el-icon><Phone /></el-icon>
         <span>电话咨询</span>
-      </div>
-      <div class="service-item" @click="contactEmail">
+      </button>
+      <button class="service-item" type="button" @click="contactEmail">
         <el-icon><Message /></el-icon>
         <span>邮件联系</span>
-      </div>
-      <div class="service-item" @click="viewFAQ">
+      </button>
+      <button class="service-item" type="button" @click="viewFAQ">
         <el-icon><QuestionFilled /></el-icon>
         <span>常见问题</span>
-      </div>
+      </button>
     </div>
   </section>
 </template>
@@ -96,6 +96,12 @@ const viewFAQ = () => {
   gap: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  padding: 10px;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  text-align: center;
 }
 
 .service-item:hover {

@@ -7,9 +7,9 @@
           <div class="user-panel">
             <UserPanel />
           </div>
-          <div class="left-bottom" @click="goToCustomerService" style="cursor: pointer;">
+          <button class="left-bottom" type="button" @click="goToCustomerService">
             <CustomerService />
-          </div>
+          </button>
         </div>
         <!-- 中间：轮播图 + 快捷操作 -->
         <div class="banner-section">
@@ -25,9 +25,9 @@
           <!-- 用户通知 -->
           <UserNoticePanel />
           <!-- 用户论坛 -->
-          <div @click="goToForum" style="cursor: pointer;">
+          <button class="forum-btn" type="button" @click="goToForum">
             <UserForum />
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -697,6 +697,23 @@ section.mall-home .container {
 .left-bottom {
   width: 100%;
   height: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* 论坛按钮 - 全宽全高 */
+.forum-btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
 }
 
 /* 中间区域 - 轮播图占 2 行，快捷入口占 1 行，内部 2:1 比例 */
