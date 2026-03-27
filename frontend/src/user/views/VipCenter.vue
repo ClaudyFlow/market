@@ -513,7 +513,7 @@ onMounted(() => {
 .vip-center {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  
   min-height: 100vh;
   background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
 }
@@ -523,7 +523,7 @@ onMounted(() => {
   position: relative;
   border-radius: 20px;
   padding: 30px;
-  margin-bottom: 20px;
+  
   overflow: hidden;
   background: linear-gradient(135deg, #e6c24a 0%, #c9a227 50%, #b8952a 100%);
   border: 2px solid rgba(255, 249, 196, 0.9);
@@ -647,7 +647,7 @@ onMounted(() => {
 .progress-title {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  
   font-size: 18px;
   font-weight: bold;
   color: #fff9c4;
@@ -670,7 +670,7 @@ onMounted(() => {
 }
 
 .progress-tip {
-  margin-top: 12px;
+  
   font-size: 12px;
   color: #fff9c4;
   text-align: center;
@@ -714,7 +714,7 @@ section {
   background: linear-gradient(135deg, #e6c24a, #c9a227);
   border-radius: 16px;
   padding: 24px;
-  margin-bottom: 20px;
+  
   border: 1px solid rgba(230, 194, 74, 0.9);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), 0 0 35px rgba(230, 194, 74, 0.5);
 }
@@ -723,7 +723,7 @@ section {
   font-size: 20px;
   font-weight: bold;
   color: #fff9c4;
-  margin-bottom: 20px;
+  
   display: flex;
   align-items: center;
   gap: 10px;
@@ -734,7 +734,7 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  
 }
 
 /* 权益网格 */
@@ -781,7 +781,7 @@ section {
 .benefit-icon {
   width: 56px;
   height: 56px;
-  margin: 0 auto 12px;
+  
   background: linear-gradient(135deg, #ffd700, #daa520, #c9a227);
   border-radius: 50%;
   display: flex;
@@ -794,7 +794,7 @@ section {
 .benefit-label {
   font-size: 13px;
   color: #fff9c4;
-  margin-bottom: 6px;
+  
   font-weight: 600;
   text-shadow: 0 0 10px rgba(255, 249, 196, 0.8);
 }
@@ -894,7 +894,7 @@ section {
   font-size: 14px;
   font-weight: bold;
   color: #fff9c4;
-  margin-bottom: 8px;
+  
   text-shadow: 0 0 15px rgba(255, 249, 196, 0.8);
 }
 
@@ -904,7 +904,7 @@ section {
   gap: 4px;
   color: #fff9c4;
   font-size: 13px;
-  margin-bottom: 8px;
+  
   text-shadow: 0 0 10px rgba(255, 249, 196, 0.6);
 }
 
@@ -922,13 +922,13 @@ section {
 
 .claim-btn {
   width: 100%;
-  margin-top: 8px;
+  
 }
 
 /* 充值区域 */
 .recharge-desc {
   color: #fff9c4;
-  margin-bottom: 20px;
+  
   font-size: 14px;
   text-align: center;
   text-shadow: 0 0 10px rgba(255, 249, 196, 0.6);
@@ -938,7 +938,7 @@ section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 24px;
+  
 }
 
 .recharge-card {
@@ -984,7 +984,7 @@ section {
   font-size: 24px;
   font-weight: bold;
   color: #fff9c4;
-  margin-bottom: 8px;
+  
   text-shadow: 0 0 15px rgba(255, 249, 196, 0.8);
   position: relative;
   z-index: 1;
@@ -1080,7 +1080,7 @@ section {
   font-size: 15px;
   font-weight: bold;
   color: #fff9c4;
-  margin-bottom: 8px;
+  
   text-shadow: 0 0 15px rgba(255, 249, 196, 0.8);
 }
 
@@ -1113,14 +1113,14 @@ section {
   font-size: 24px;
   font-weight: bold;
   color: #fff9c4;
-  margin-bottom: 10px;
+  
   text-shadow: 0 0 15px rgba(255, 249, 196, 0.8);
 }
 
 .confirm-growth {
   font-size: 16px;
   color: #fff9c4;
-  margin-bottom: 20px;
+  
   text-shadow: 0 0 15px rgba(255, 249, 196, 0.8);
 }
 </style>

@@ -50,7 +50,7 @@ const router = useRouter()
   grid-template-rows: repeat(2, 1fr);
   gap: 15px;
   padding: 15px;
-  margin: 0;
+  
   background: rgba(26, 31, 58, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="auth-page">
     <div class="auth-container">
       <div class="auth-card">
@@ -267,13 +267,13 @@ const handleRegister = async () => {
 }
 
 .auth-tabs {
-  margin-bottom: 30px;
+  
 }
 
 .auth-tabs :deep(.el-tabs__header) {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  
 }
 
 .auth-tabs :deep(.el-tabs__item) {
@@ -292,7 +292,7 @@ const handleRegister = async () => {
 }
 
 .auth-form {
-  margin-top: 20px;
+  
 }
 
 .submit-btn {
@@ -301,7 +301,7 @@ const handleRegister = async () => {
   border: none;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 10px;
+  
 }
 
 .submit-btn:hover {

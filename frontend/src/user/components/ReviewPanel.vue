@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="review-panel">
     <!-- 评分汇总 -->
     <div class="review-summary" v-if="ratingInfo">
@@ -132,14 +132,14 @@ onMounted(() => {
   padding: 20px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  margin-bottom: 20px;
+  
 }
 
 .rating-score {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 20px;
+  
 }
 
 .score {

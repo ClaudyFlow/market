@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="时间显示容器 time-display">
     <!-- 内容区域:标签列 + 状态列 + UTC 列 + 时差列 + 年月日周时分列 -->
     <div class="内容区域">

@@ -49,7 +49,7 @@ import { announcements } from '@user/data/announcements'
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  
   font-size: 16px;
   font-weight: bold;
   color: #00d4ff;
@@ -135,7 +135,7 @@ import { announcements } from '@user/data/announcements'
   font-size: 15px;
   font-weight: bold;
   color: #00d4ff;
-  margin: 0;
+  
   line-height: 1.5;
 }
 
@@ -143,7 +143,7 @@ import { announcements } from '@user/data/announcements'
   font-size: 13px;
   color: #aaa;
   line-height: 1.5;
-  margin: 0;
+  
   text-align: justify;
   text-indent: 2em;
 }
@@ -152,7 +152,7 @@ import { announcements } from '@user/data/announcements'
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  margin-top: auto;
+  
 }
 
 .notice-date {

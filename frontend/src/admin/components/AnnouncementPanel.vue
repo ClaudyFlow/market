@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="announcement" aria-label="平台公告">
     <header class="announcement-title">
       <el-icon><Bell /></el-icon>
@@ -82,7 +82,7 @@ const 公告列表:公告类型 [] = [
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 8px;
+  
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
   justify-content: flex-start;
@@ -159,7 +159,7 @@ const 公告列表:公告类型 [] = [
   font-size: 13px;
   font-weight: bold;
   color: #00d4ff;
-  margin: 0;
+  
   line-height: 2;
 }
 
@@ -167,7 +167,7 @@ const 公告列表:公告类型 [] = [
   font-size: 11px;
   color: #aaa;
   line-height: 1.5;
-  margin: 0;
+  
   text-align: justify;
   text-indent: 2em;
 }
@@ -176,7 +176,7 @@ const 公告列表:公告类型 [] = [
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  margin-top: auto;
+  
 }
 
 .notice-date {

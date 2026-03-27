@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <h1>客服聊天</h1>
   </div>

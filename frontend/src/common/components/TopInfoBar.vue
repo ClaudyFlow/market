@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="top-info-bar" aria-label="顶部信息栏">
     <!-- 左侧:地址和在线人数 -->
     <div class="left-section">

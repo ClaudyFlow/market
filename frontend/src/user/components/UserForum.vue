@@ -73,7 +73,7 @@ const viewTopic = (id: number) => {
 
 .forum-header h3 {
   font-size: 14px;
-  margin: 0;
+  
   flex: 1;
 }
 
@@ -101,7 +101,7 @@ const viewTopic = (id: number) => {
   scrollbar-color: rgba(0, 212, 255, 0.3) transparent;
   padding-right: 3px;
   padding: 0;
-  margin: 0;
+  
   list-style: none;
 }
 
@@ -150,7 +150,7 @@ const viewTopic = (id: number) => {
 .topic-title {
   font-size: 12px;
   color: #fff;
-  margin-bottom: 4px;
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -176,7 +176,7 @@ const viewTopic = (id: number) => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-left: auto;
+  
 }
 
 .topic-stats-inline .el-icon {

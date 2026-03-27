@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="announcement" aria-label="网站公告">
     <header class="announcement-title">
       <el-icon><Bell/></el-icon>
@@ -51,7 +51,7 @@ import { announcements } from '@user/data/announcements'
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 8px;
+  
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
   justify-content: flex-start;
@@ -148,7 +148,7 @@ import { announcements } from '@user/data/announcements'
   font-size: 15px;
   font-weight: bold;
   color: #00d4ff;
-  margin: 0;
+  
   line-height: 2;
 }
 
@@ -156,7 +156,7 @@ import { announcements } from '@user/data/announcements'
   font-size: 13px;
   color: #aaa;
   line-height: 1.5;
-  margin: 0;
+  
   text-align: justify;
   text-indent: 2em;
 }
@@ -165,7 +165,7 @@ import { announcements } from '@user/data/announcements'
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  margin-top: auto;
+  
 }
 
 .notice-date {

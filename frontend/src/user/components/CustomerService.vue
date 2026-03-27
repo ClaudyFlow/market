@@ -71,7 +71,7 @@ const viewFAQ = () => {
 
 .service-header h3 {
   font-size: 16px;
-  margin: 0;
+  
 }
 
 .service-header .el-icon {
@@ -97,7 +97,7 @@ const viewFAQ = () => {
   cursor: pointer;
   transition: all 0.3s;
   padding: 10px;
-  margin: 0;
+  
   font: inherit;
   color: inherit;
   width: 100%;

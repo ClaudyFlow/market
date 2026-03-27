@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">
@@ -176,205 +176,11 @@
         </el-descriptions-item>
       </el-descriptions>
 
-      <el-form :model="auditForm" label-width="80px" style="margin-top: 20px" v-if="currentProduct?.status === 'pending'">
-        <el-form-item label="审核意见">
-          <el-input
-            v-model="auditForm.comment"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入审核意见（拒绝时必填）"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer v-if="currentProduct?.status === 'pending'">
-        <el-button @click="detailDialog.visible = false">取消</el-button>
-        <el-button type="danger" @click="handleAudit('rejected')">拒绝</el-button>
-        <el-button type="primary" @click="handleAudit('approved')">通过</el-button>
-      </template>
-    </el-dialog>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { DocumentChecked, Goods, CircleCheck, CircleClose, Clock } from '@element-plus/icons-vue'
-
-interface ProductItem {
-  id: number
-  name: string
-  shopName: string
-  category: string
-  price: number
-  stock: number
-  submitTime: string
-  status: string
-  image?: string
-  description?: string
-  rejectReason?: string
-}
-
-interface FilterForm {
-  productId: string
-  productName: string
-  shopName: string
-  status: string
-}
-
-interface AuditStats {
-  total: number
-  approved: number
-  pending: number
-  rejected: number
-}
-
-interface Pagination {
-  currentPage: number
-  pageSize: number
-  total: number
-}
-
-interface Dialog {
-  visible: boolean
-}
-
-interface AuditForm {
-  comment: string
-}
-
-const loading = ref(false)
-const productList = ref<ProductItem[]>([])
-const filterForm = reactive<FilterForm>({
-  productId: '',
-  productName: '',
-  shopName: '',
-  status: ''
-})
-
-const auditStats = ref<AuditStats>({
-  total: 1256,
-  approved: 986,
-  pending: 156,
-  rejected: 114
-})
-
-const pagination = reactive<Pagination>({
-  currentPage: 1,
-  pageSize: 10,
-  total: 0
-})
-
-const detailDialog = reactive<Dialog>({
-  visible: false
-})
-
-const auditForm = reactive<AuditForm>({
-  comment: ''
-})
-
-const currentProduct = ref<ProductItem | null>(null)
-
-const mockProductData: ProductItem[] = [
-  { id: 3001, name: '无线蓝牙耳机 Pro', shopName: '品质优选店', category: '手机数码', price: 299, stock: 500, submitTime: '2026-03-18 10:30', status: 'pending', image: '', description: '高品质无线蓝牙耳机，降噪设计' },
-  { id: 3002, name: '智能手环 5', shopName: '数码港湾', category: '手机数码', price: 199, stock: 300, submitTime: '2026-03-18 09:15', status: 'pending', image: '', description: '运动健康监测，长续航' },
-  { id: 3003, name: '机械键盘 RGB', shopName: '电脑配件店', category: '电脑办公', price: 459, stock: 200, submitTime: '2026-03-17 16:45', status: 'approved', image: '', description: 'Cherry 轴体，RGB 背光' },
-  { id: 3004, name: '空气净化器 Max', shopName: '电器城', category: '家用电器', price: 1299, stock: 100, submitTime: '2026-03-17 14:20', status: 'approved', image: '', description: '大空间净化，静音设计' },
-  { id: 3005, name: '假冒品牌手表', shopName: '可疑店铺', category: '服装鞋包', price: 99, stock: 1000, submitTime: '2026-03-17 11:00', status: 'rejected', image: '', description: '品牌手表', rejectReason: '涉嫌假冒品牌，拒绝上架' },
-  { id: 3006, name: '护肤套装', shopName: '美妆小屋', category: '美妆护肤', price: 599, stock: 150, submitTime: '2026-03-16 20:30', status: 'pending', image: '', description: '进口护肤套装' },
-  { id: 3007, name: '智能手表', shopName: '品质优选店', category: '手机数码', price: 999, stock: 80, submitTime: '2026-03-16 15:10', status: 'approved', image: '', description: '多功能智能手表' },
-  { id: 3008, name: '办公椅 人体工学', shopName: '家居生活馆', category: '电脑办公', price: 799, stock: 50, submitTime: '2026-03-16 10:00', status: 'pending', image: '', description: '人体工学设计，舒适久坐' }
-]
-
-const loadProductList = () => {
-  loading.value = true
-  setTimeout(() => {
-    productList.value = mockProductData
-    pagination.total = mockProductData.length
-    loading.value = false
-  }, 500)
-}
-
-const searchProducts = () => {
-  ElMessage.success('搜索功能演示')
-  loadProductList()
-}
-
-const resetFilter = () => {
-  filterForm.productId = ''
-  filterForm.productName = ''
-  filterForm.shopName = ''
-  filterForm.status = ''
-}
-
-const getStatusType = (status: string) => {
-  const map: Record<string, string> = { pending: 'warning', approved: 'success', rejected: 'danger' }
-  return map[status] || 'info'
-}
-
-const getStatusText = (status: string) => {
-  const map: Record<string, string> = { pending: '待审核', approved: '已通过', rejected: '已拒绝' }
-  return map[status] || status
-}
-
-const viewProduct = (product: ProductItem) => {
-  currentProduct.value = product
-  detailDialog.visible = true
-  auditForm.comment = ''
-}
-
-const approveProduct = (product: ProductItem) => {
-  ElMessageBox.confirm(`确定要通过商品"${product.name}"的审核吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'success'
-  }).then(() => {
-    product.status = 'approved'
-    ElMessage.success('审核通过')
-  }).catch(() => {})
-}
-
-const rejectProduct = (product: ProductItem) => {
-  ElMessageBox.prompt('请输入拒绝原因', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /.+/,
-    inputErrorMessage: '请输入拒绝原因'
-  }).then(({ value }) => {
-    product.status = 'rejected'
-    product.rejectReason = value
-    ElMessage.success('已拒绝')
-  }).catch(() => {})
-}
-
-const handleAudit = (result: string) => {
-  if (currentProduct.value) {
-    if (result === 'rejected' && !auditForm.comment) {
-      ElMessage.warning('请填写拒绝原因')
-      return
-    }
-    currentProduct.value.status = result
-    if (result === 'rejected') {
-      currentProduct.value.rejectReason = auditForm.comment
-    }
-    ElMessage.success(result === 'approved' ? '审核通过' : '已拒绝')
-    detailDialog.visible = false
-    loadProductList()
-  }
-}
-
-onMounted(() => {
-  loadProductList()
-})
-</script>
-
-<style scoped>
-.page-container {
-  padding: 20px;
+      <el-form :model="auditForm" label-width="80px" style="
 }
 
 .page-header {
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -394,7 +200,7 @@ onMounted(() => {
 }
 
 .stats-cards {
-  margin-bottom: 20px;
+  
 }
 
 .stat-card {
@@ -472,7 +278,7 @@ onMounted(() => {
 .stat-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 .search-bar {
@@ -480,11 +286,11 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
   padding: 15px 20px;
-  margin-bottom: 20px;
+  
 }
 
 .search-bar :deep(.el-form-item) {
-  margin-bottom: 0;
+  
 }
 
 .search-bar :deep(.el-form-item__label) {
@@ -512,7 +318,7 @@ onMounted(() => {
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  
   display: flex;
   justify-content: flex-end;
 }

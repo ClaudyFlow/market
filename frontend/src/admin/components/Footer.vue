@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <footer class="footer">
     <div class="container">
       <!-- 服务承诺 -->
@@ -75,7 +75,7 @@ import { CircleCheck, Van, RefreshLeft, Headset, ChatDotRound, VideoCamera, Shar
   background: rgba(10, 14, 26, 0.9);
   border-top: 1px solid rgba(0, 212, 255, 0.2);
   padding: 40px 0 20px;
-  margin-top: 40px;
+  
 }
 
 .service-bar {
@@ -84,7 +84,7 @@ import { CircleCheck, Van, RefreshLeft, Headset, ChatDotRound, VideoCamera, Shar
   gap: 60px;
   padding-bottom: 30px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-  margin-bottom: 30px;
+  
 }
 
 .service-item {
@@ -104,7 +104,7 @@ import { CircleCheck, Van, RefreshLeft, Headset, ChatDotRound, VideoCamera, Shar
   display: flex;
   justify-content: center;
   gap: 80px;
-  margin-bottom: 30px;
+  
 }
 
 .footer-column {
@@ -116,7 +116,7 @@ import { CircleCheck, Van, RefreshLeft, Headset, ChatDotRound, VideoCamera, Shar
 .footer-column h4 {
   font-size: 15px;
   color: var(--mall-primary);
-  margin-bottom: 5px;
+  
 }
 
 .footer-column a {
@@ -144,6 +144,6 @@ import { CircleCheck, Van, RefreshLeft, Headset, ChatDotRound, VideoCamera, Shar
 }
 
 .copyright p {
-  margin: 5px 0;
+  
 }
 </style>

@@ -44,7 +44,7 @@ const notices = ref([
   font-size: 16px;
   font-weight: bold;
   color: #00d4ff;
-  margin: 0;
+  
   display: flex;
   align-items: center;
   gap: 8px;

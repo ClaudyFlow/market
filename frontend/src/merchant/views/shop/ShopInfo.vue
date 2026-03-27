@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">
@@ -333,7 +333,7 @@ const saveShopInfo = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  
   padding: 20px;
   background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(26, 31, 58, 0.7));
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -360,7 +360,7 @@ const saveShopInfo = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: 30px;
+  
 }
 
 .info-card {
@@ -374,7 +374,7 @@ const saveShopInfo = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -391,7 +391,7 @@ const saveShopInfo = () => {
 }
 
 .shop-form :deep(.el-form-item) {
-  margin-bottom: 15px;
+  
 }
 
 .shop-form :deep(.el-input__wrapper) {
@@ -499,7 +499,7 @@ const saveShopInfo = () => {
 }
 
 .cert-upload-row {
-  margin-top: 15px;
+  
   display: flex;
   gap: 10px;
 }
@@ -548,7 +548,7 @@ const saveShopInfo = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -581,14 +581,14 @@ const saveShopInfo = () => {
 .data-label {
   font-size: 13px;
   color: #888;
-  margin-bottom: 10px;
+  
 }
 
 .data-value {
   font-size: 28px;
   font-weight: bold;
   color: var(--mall-primary);
-  margin-bottom: 10px;
+  
 }
 
 .data-trend {

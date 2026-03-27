@@ -306,7 +306,7 @@ onMounted(() => {
 }
 
 .page-header {
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -326,7 +326,7 @@ onMounted(() => {
 }
 
 .stats-cards {
-  margin-bottom: 20px;
+  
 }
 
 .stat-card {
@@ -404,7 +404,7 @@ onMounted(() => {
 .stat-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 .search-bar {
@@ -412,11 +412,11 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
   padding: 15px 20px;
-  margin-bottom: 20px;
+  
 }
 
 .search-bar :deep(.el-form-item) {
-  margin-bottom: 0;
+  
 }
 
 .search-bar :deep(.el-form-item__label) {
@@ -461,7 +461,7 @@ onMounted(() => {
 }
 
 .pagination-bar {
-  margin-top: 20px;
+  
   display: flex;
   justify-content: flex-end;
 }
@@ -489,14 +489,14 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 20px;
+  
 }
 
 .review-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  
 }
 
 .review-meta {
@@ -512,6 +512,6 @@ onMounted(() => {
 .review-content {
   color: #aaa;
   line-height: 1.6;
-  margin: 0;
+  
 }
 </style>

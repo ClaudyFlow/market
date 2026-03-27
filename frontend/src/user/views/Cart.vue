@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="cart-page">
     <div class="container">
       <h1 class="page-title">我的购物车</h1>
@@ -146,14 +146,14 @@ const 去结算 = () => {
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
 .page-title {
   font-size: 28px;
   color: #fff;
-  margin-bottom: 25px;
+  
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -165,7 +165,7 @@ const 去结算 = () => {
   border: 1px solid rgba(0,212,255,0.2);
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 20px;
+  
 }
 
 .cart-header {

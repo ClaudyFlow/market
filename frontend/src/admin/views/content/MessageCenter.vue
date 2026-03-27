@@ -352,7 +352,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -372,7 +372,7 @@ onMounted(() => {
 }
 
 .message-section {
-  margin-top: 10px;
+  
 }
 
 .category-card {
@@ -446,7 +446,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -504,7 +504,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  
 }
 
 .message-title {
@@ -521,7 +521,7 @@ onMounted(() => {
 .message-summary {
   font-size: 13px;
   color: #888;
-  margin: 0 0 10px 0;
+  
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -548,14 +548,14 @@ onMounted(() => {
 }
 
 .detail-header {
-  margin-bottom: 15px;
+  
 }
 
 .detail-title {
   font-size: 18px;
   font-weight: bold;
   color: #fff;
-  margin: 0 0 10px 0;
+  
 }
 
 .detail-time {
@@ -570,12 +570,12 @@ onMounted(() => {
 }
 
 .detail-actions {
-  margin-top: 20px;
+  
   text-align: center;
 }
 
 :deep(.el-empty) {
-  margin-top: 50px;
+  
 }
 
 :deep(.el-empty__description) {

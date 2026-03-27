@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <footer class="footer">
     <div class="container">
       <!-- 服务承诺 -->
@@ -83,7 +83,7 @@
   gap: 60px;
   padding-bottom: 30px;
   border-bottom: 1px solid var(--mall-border-light);
-  margin-bottom: 30px;
+  
 }
 
 .service-item {
@@ -103,7 +103,7 @@
   display: flex;
   justify-content: center;
   gap: 80px;
-  margin-bottom: 30px;
+  
 }
 
 .footer-column {
@@ -115,7 +115,7 @@
 .footer-column h4 {
   font-size: 15px;
   color: var(--mall-text-primary);
-  margin-bottom: 5px;
+  
   font-weight: bold;
 }
 
@@ -155,6 +155,6 @@
 }
 
 .copyright p {
-  margin: 5px 0;
+  
 }
 </style>

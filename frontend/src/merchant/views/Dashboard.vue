@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <!-- 第一部分:轮播图 + 商家信息 -->
   <section class="mall-home">
     <!-- 中间:轮播图 + 快捷操作 -->
@@ -320,7 +320,7 @@ section.mall-home {
 
 .banner-title {
   font-size: 42px;
-  margin-bottom: 15px;
+  
   background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -328,7 +328,7 @@ section.mall-home {
 
 .banner-subtitle {
   font-size: 20px;
-  margin-bottom: 25px;
+  
   color: #aaa;
 }
 
@@ -395,13 +395,13 @@ section.mall-home {
 }
 
 .user-avatar {
-  margin-bottom: 15px;
+  
 }
 
 .user-name {
   font-size: 16px;
   color: #fff;
-  margin-bottom: 10px;
+  
 }
 
 .level-badge {
@@ -415,7 +415,7 @@ section.mall-home {
 }
 
 .user-vip {
-  margin: 10px 0;
+  
 }
 
 .vip-tag {
@@ -429,7 +429,7 @@ section.mall-home {
 }
 
 .user-stats {
-  margin: 8px 0;
+  
 }
 
 .stats-tag {
@@ -459,7 +459,7 @@ section.mall-home {
 
 .stats-row {
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -542,7 +542,7 @@ section.mall-home {
 .stats-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 /* 内容区域 */
@@ -552,7 +552,7 @@ section.mall-home {
 
 .container {
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -567,7 +567,7 @@ section.mall-home {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -627,7 +627,7 @@ section.mall-home {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
   overflow: hidden;
-  margin-left: 10px;
+  
 }
 
 .status-bar-inner {
@@ -688,10 +688,10 @@ section.mall-home {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* 区块标题 */
+/* 区块标题
 .section-header {
-  margin-bottom: 20px;
-}
+  
+} */
 
 .section-title {
   display: flex;

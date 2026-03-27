@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="lottery-page">
     <div class="lottery-container">
       <h1 class="page-title">🎰 幸运抽奖 🎰</h1>
@@ -402,14 +402,14 @@ onMounted(() => {
 
 .lottery-container {
   max-width: 1200px;
-  margin: 0 auto;
+  
 }
 
 .page-title {
   text-align: center;
   color: #00d4ff;
   font-size: 32px;
-  margin-bottom: 30px;
+  
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
@@ -417,7 +417,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   gap: 30px;
-  margin-bottom: 30px;
+  
 }
 
 .credit-display,
@@ -448,7 +448,7 @@ onMounted(() => {
   border: 3px solid #00d4ff;
   border-radius: 16px;
   padding: 10px;
-  margin: 0 auto 30px auto;
+  
   box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
   width: calc(140px * 7 + 10px * 6 + 20px);
 }
@@ -527,7 +527,7 @@ onMounted(() => {
 
 .draw-section {
   text-align: center;
-  margin-bottom: 40px;
+  
 }
 
 .draw-button {
@@ -558,13 +558,13 @@ onMounted(() => {
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 16px;
   padding: 20px;
-  margin-bottom: 30px;
+  
 }
 
 .section-title {
   color: #00d4ff;
   font-size: 20px;
-  margin-bottom: 20px;
+  
   text-align: center;
 }
 
@@ -590,13 +590,13 @@ onMounted(() => {
 
 .prize-icon {
   font-size: 40px;
-  margin-bottom: 8px;
+  
 }
 
 .prize-name {
   color: #fff;
   font-size: 14px;
-  margin-bottom: 8px;
+  
 }
 
 .prize-type {
@@ -618,12 +618,12 @@ onMounted(() => {
 
 /* 签到测试转盘 */
 .checkin-test-section {
-  margin-bottom: 30px;
+  
   width: 100%;
 }
 
 .checkin-carousel {
-  margin-bottom: 15px;
+  
   width: 100%;
   max-width: 100%;
 }
@@ -736,14 +736,14 @@ onMounted(() => {
 .day-number {
   color: #00d4ff;
   font-size: 14px;
-  margin-bottom: 5px;
+  
 }
 
 .day-credit {
   color: #ffd700;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 8px;
+  
 }
 
 .day-status {
@@ -773,13 +773,13 @@ onMounted(() => {
 
 .result-icon {
   font-size: 80px;
-  margin-bottom: 20px;
+  
 }
 
 .result-name {
   font-size: 24px;
   color: #00d4ff;
-  margin-bottom: 10px;
+  
   font-weight: bold;
 }
 

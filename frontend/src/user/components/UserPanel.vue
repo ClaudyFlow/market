@@ -82,7 +82,7 @@ const goToLottery = () => {
   font-size: 18px;
   font-weight: bold;
   color: #fff;
-  margin: 0;
+  
   text-align: center;
 }
 
@@ -155,7 +155,7 @@ const goToLottery = () => {
   border-radius: 10px;
   font-size: 11px;
   font-weight: bold;
-  margin-left: 5px;
+  
 }
 
 /* 抽奖按钮 */

@@ -252,7 +252,7 @@ const submitTopic = () => {
 
 .page-header h1 {
   font-size: 22px;
-  margin: 0;
+  
   color: #fff;
 }
 
@@ -275,7 +275,7 @@ const submitTopic = () => {
 .sidebar-section h3 {
   font-size: 14px;
   color: var(--mall-primary);
-  margin: 0 0 12px 0;
+  
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -446,7 +446,7 @@ const submitTopic = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  
 }
 
 .topic-title {
@@ -462,7 +462,7 @@ const submitTopic = () => {
 .topic-excerpt {
   font-size: 13px;
   color: #888;
-  margin-bottom: 12px;
+  
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -492,7 +492,7 @@ const submitTopic = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
+  
 }
 
 .topic-meta .stats .el-icon {

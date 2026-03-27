@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <header class="header">
     <!-- 顶部信息栏 -->
     <div class="top-info">
@@ -151,7 +151,7 @@ onMounted(() => {
   align-items: center;
   position: relative;
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 
@@ -165,7 +165,7 @@ onMounted(() => {
   align-items: center;
   gap: 30px;
   max-width: 1400px;
-  margin: 0 auto;
+  
   padding: 0 20px;
 }
 

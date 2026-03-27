@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="follows-page">
     <div class="container">
       <h1 class="page-title">
@@ -153,13 +153,13 @@ onMounted(() => {
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  
 }
 
 .page-title {
   color: #fff;
   font-size: 28px;
-  margin-bottom: 30px;
+  
   display: flex;
   align-items: center;
   gap: 10px;
@@ -222,7 +222,7 @@ onMounted(() => {
 .shop-name {
   font-size: 16px;
   color: #333;
-  margin-bottom: 12px;
+  
   font-weight: 600;
 }
 
@@ -230,7 +230,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  
 }
 
 .follow-time {

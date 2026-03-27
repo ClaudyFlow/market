@@ -399,7 +399,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
@@ -419,7 +419,7 @@ onMounted(() => {
 }
 
 .stats-cards {
-  margin-bottom: 20px;
+  
 }
 
 .stat-card {
@@ -498,7 +498,7 @@ onMounted(() => {
 .stat-label {
   font-size: 13px;
   color: #888;
-  margin-top: 4px;
+  
 }
 
 .stat-trend {
@@ -507,11 +507,11 @@ onMounted(() => {
   gap: 4px;
   font-size: 12px;
   color: #00ff88;
-  margin-top: 6px;
+  
 }
 
 .chart-section {
-  margin-bottom: 15px;
+  
 }
 
 .chart-card {
@@ -525,7 +525,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
 }
@@ -547,7 +547,7 @@ onMounted(() => {
 }
 
 .rank-section {
-  margin-top: 15px;
+  
 }
 
 .rank-card {
