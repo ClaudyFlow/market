@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .slot-machine {
+            width: 600px;
+            margin: 40px auto;
+            text-align: center;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: none;
+            padding-bottom: 32px;
+        }
+        .slot-row-wrapper {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        .pointer {
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%) translateY(-100%);
+            font-size: 2em;
+            color: #e74c3c;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .slot-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 10px 0;
+            width: auto;
+            margin: 0 auto;
+            position: relative;
+        }
+        .slot-symbol {
+            width: 128px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            color: #fff;
+            opacity: 0.5;
+            margin: 0 2px;
+            border-radius: 8px;
+            background: #333;
+            transition: opacity 0.2s, color 0.2s, background 0.2s;
+            font-family: 'Consolas', 'Menlo', 'Monaco', 'monospace';
+            box-sizing: border-box;
+        }
+        .slot-symbol.active {
+            opacity: 1;
+            color: #ffd700;
+            background: linear-gradient(180deg, #fffbe6 0%, #ffe066 60%, #ffd700 100%);
+            font-weight: bold;
+            box-shadow: 0 0 32px 12px #ffe066, 0 0 24px #ffd700, 0 0 0 4px #fffbe6 inset, 0 0 0 8px #ffd70033;
+            border: 2.5px solid #ffd700;
+            transform: scale(1.22);
+            z-index: 3;
+            transition: 
+                opacity 0.2s, 
+                color 0.2s, 
+                background 0.2s, 
+                box-shadow 0.2s, 
+                border 0.2s, 
+                transform 0.18s cubic-bezier(.4,1.4,.6,1);
+        }
+        .slot-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .spin-btn {
+            font-size: 1.6em;
+            padding: 0.5em 2.2em;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffb300 100%);
+            color: #a00;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 2px 12px #ffd70055;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        .spin-btn:disabled {
+            background: #eee;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .result {
+            font-size: 1.3em;
+            margin-top: 0;
+            margin-bottom: 0;
+            color: #b80000;
+            font-weight: bold;
+            min-height: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>抽奖系统</h1>
+    <div class="slot-machine">
+        <div class="slot-header">
+            <button class="spin-btn" id="spinBtn">开始抽奖</button>
+            <div id="result" class="result" style="display: none;">
+                <span id="resultText"></span>
+            </div>
+        </div>
+        <div class="slot-row-wrapper">
+            <div class="pointer">▼</div>
+            <div class="slot-row" id="slotRow"></div>
+        </div>
+    </div>
+
+    <script>
+        const symbols = ['🍒', '🍋', '🔔', '⭐', '🍀', '7️⃣'];
+        const visibleCount = 9;
+        const pointerIndex = 4;
+        let row = [];
+        let spinning = false;
+        let result = null;
+        let intervalId = null;
+        let finalIndex = 0;
+
+        const spinBtn = document.getElementById('spinBtn');
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const slotRow = document.getElementById('slotRow');
+
+        function resetRow() {
+            row = Array(visibleCount + 20).fill().map(() => symbols[Math.floor(Math.random() * symbols.length)]);
+            renderRow();
+        }
+
+        function renderRow() {
+            slotRow.innerHTML = '';
+            row.forEach((symbol, idx) => {
+                const div = document.createElement('div');
+                div.className = 'slot-symbol' + (idx === 14 ? ' active' : '');
+                div.textContent = symbol;
+                slotRow.appendChild(div);
+            });
+        }
+
+        function spin() {
+            if (spinning) return;
+            spinning = true;
+            spinBtn.disabled = true;
+            resultDiv.style.display = 'none';
+            result = null;
+            resetRow();
+            let total = row.length;
+            let currentOffset = 0;
+            finalIndex = Math.floor(Math.random() * (total - visibleCount)) + pointerIndex;
+            let speed = 60;
+            let step = 0;
+            clearInterval(intervalId);
+            intervalId = setInterval(() => {
+                if (step < 30) {
+                    speed = 60;
+                } else if (step < 50) {
+                    speed = 100;
+                } else {
+                    speed = 180;
+                }
+                if (currentOffset < finalIndex - pointerIndex) {
+                    currentOffset++;
+                    row.push(symbols[Math.floor(Math.random() * symbols.length)]);
+                    row.shift();
+                    renderRow();
+                    step++;
+                } else {
+                    clearInterval(intervalId);
+                    spinning = false;
+                    spinBtn.disabled = false;
+                    checkResult();
+                }
+            }, speed);
+        }
+
+        function checkResult() {
+            result = row[14] === '7️⃣';
+            resultText.textContent = result ? '恭喜中奖！' : '很遗憾，未中奖';
+            resultDiv.style.display = 'block';
+        }
+
+        spinBtn.addEventListener('click', spin);
+        resetRow();
+    </script>
+</body>
+</html>
