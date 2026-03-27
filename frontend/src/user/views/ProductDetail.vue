@@ -1,15 +1,6 @@
 <template>
   <div class="product-detail">
     <div class="container">
-      <!-- 面包屑 -->
-      <div class="breadcrumb">
-        <router-link to="/">首页</router-link>
-        <span>/</span>
-        <router-link to="/product">商品列表</router-link>
-        <span>/</span>
-        <span>{{ 商品.name }}</span>
-      </div>
-
       <div class="detail-content">
         <!-- 商品图片 -->
         <div class="product-gallery">
@@ -214,28 +205,7 @@ const 立即购买 = () => {
 
 .container {
   max-width: 1200px;
-  
   padding: 0 20px;
-}
-
-.breadcrumb {
-  
-  font-size: 13px;
-  color: #888;
-}
-
-.breadcrumb a {
-  color: var(--mall-primary);
-  text-decoration: none;
-}
-
-.breadcrumb a:hover {
-  color: var(--mall-secondary);
-}
-
-.breadcrumb span {
-  
-  color: #666;
 }
 
 /* 详情内容 */

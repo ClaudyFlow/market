@@ -175,7 +175,7 @@ const 获取进度颜色 = getProgressColor
   position: relative;
   padding: 20px;
   background: rgba(0, 0, 0, 0.3);
-  height: 200px;
+  aspect-ratio: 16 / 9;
 }
 
 .sale-image img {
