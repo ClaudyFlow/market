@@ -115,12 +115,20 @@ const routes: RouteRecordRaw[] = [
     redirect: '/login?tab=register',
     meta: { title: '注册' }
   },
+  
   {
     path: '/user',
-    name: 'UserCenter',
-    component: () => import('@user/views/user/UserCenter.vue'),
+    name: 'UserLayout', // 名字改为 UserLayout
+    // 修改1:组件指向刚才新建的 UserLayout.vue
+    component: () => import('@user/views/user/UserLayout.vue'), 
     meta: { title: '用户中心' },
     children: [
+      {
+        path: '', // 修改2:空路径，代表访问 /user 时默认显示 UserCenter
+        name: 'UserCenter',
+        component: () => import('@user/views/user/UserCenter.vue'),
+        meta: { title: '个人中心' }
+      },
       {
         path: 'order',
         name: 'UserOrder',
@@ -153,6 +161,7 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+
   {
     path: '/lottery',
     name: 'Lottery',
