@@ -1,15 +1,24 @@
 <template>
   <SectionContainer>
     <SectionHeader :icon="Shop">品牌精选</SectionHeader>
-    <article class="brand-card" v-for="brand in brands" :key="brand.name">
-      <div class="brand-content">
-        <div class="brand-logo">{{ brand.name }}</div>
-        <p class="brand-desc">{{ brand.description }}</p>
-      </div>
-      <div class="brand-overlay">
-        <el-button class="brand-btn">进入店铺</el-button>
-      </div>
-    </article>
+    
+    <!-- 修改点：使用 router-link 包裹卡片，实现点击跳转 -->
+    <router-link 
+      v-for="brand in brands" 
+      :key="brand.name"
+      :to="{ name: 'Shop', query: { brand: brand.name } }" 
+      class="brand-card-link"
+    >
+      <article class="brand-card">
+        <div class="brand-content">
+          <div class="brand-logo">{{ brand.name }}</div>
+          <p class="brand-desc">{{ brand.description }}</p>
+        </div>
+        <div class="brand-overlay">
+          <el-button class="brand-btn">进入店铺</el-button>
+        </div>
+      </article>
+    </router-link>
   </SectionContainer>
 </template>
 
@@ -45,6 +54,13 @@ const brands = ref<Brand[]>([
 </script>
 
 <style scoped>
+/* 新增：链接样式，去除下划线并占满宽度 */
+.brand-card-link {
+  text-decoration: none;
+  display: block;
+  /* 如果 SectionContainer 没有设置 grid，可能需要在这里设置 width: 100% 或 flex 属性 */
+}
+
 /* 品牌卡片 */
 article.brand-card {
   background: rgba(26, 31, 58, 0.8);
@@ -61,11 +77,13 @@ article.brand-card {
   justify-content: center;
   align-items: center;
   gap: 8px;
+  height: 100%; /* 确保卡片填满链接容器 */
 }
 
 article.brand-card:hover {
   transform: translateY(-5px);
   border-color: var(--mall-primary);
+  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
 }
 
 .brand-content {
@@ -84,24 +102,24 @@ article.brand-card:hover {
   transition: all 0.3s;
   height: 0;
   overflow: hidden;
-  
 }
 
 article.brand-card:hover .brand-overlay {
   opacity: 1;
   height: auto;
+  padding-top: 10px;
 }
 
 .brand-logo {
   font-size: 22px;
   font-weight: bold;
   color: var(--mall-primary);
-  
 }
 
 .brand-desc {
   font-size: 13px;
   color: #888;
+  margin: 0; /* 重置默认 margin */
 }
 
 .brand-btn {
@@ -112,6 +130,7 @@ article.brand-card:hover .brand-overlay {
   padding: 8px 25px;
   border-radius: 6px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .brand-btn:hover {
