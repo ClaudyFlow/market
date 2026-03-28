@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 适配移动端 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商场公告 - XX购物系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        /* 页面整体样式 */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #ff5a00;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 16px;
+        }
+
+        .nav-menu a:hover {
+            text-decoration: underline;
+        }
+
+        /* 公告标题区域 */
+        .notice-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .notice-title h2 {
+            font-size: 28px;
+            color: #ff5a00;
+            position: relative;
+            display: inline-block;
+        }
+
+        .notice-title h2::after {
+            content: "";
+            width: 60%;
+            height: 3px;
+            background-color: #ff5a00;
+            position: absolute;
+            bottom: -8px;
+            left: 20%;
+        }
+
+        /* 公告列表主体 */
+        .notice-list {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        /* 单条公告样式 */
+        .notice-item {
+            padding: 18px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 重要公告高亮 */
+        .important {
+            background-color: #fff5e6;
+            border-left: 5px solid #ff5a00;
+            padding-left: 15px;
+            border-radius: 5px;
+        }
+
+        .notice-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .notice-title-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notice-time {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .notice-content {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 14px;
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        /* 响应式适配手机 */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .notice-title h2 {
+                font-size: 24px;
+            }
+
+            .notice-head {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">XX商场购物系统</div>
+                <div class="nav-menu">
+                    <a href="#">首页</a>
+                    <a href="#">商品</a>
+                    <a href="#">公告</a>
+                    <a href="#">我的</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 公告主体 -->
+    <div class="container">
+        <div class="notice-title">
+            <h2>系统公告</h2>
+        </div>
+
+        <div class="notice-list">
+            <!-- 重要公告 -->
+            <div class="notice-item important">
+                <div class="notice-head">
+                    <div class="notice-title-text">【重要】3月春季促销活动通知</div>
+                    <div class="notice-time">2026-03-28</div>
+                </div>
+                <div class="notice-content">
+                    尊敬的顾客：3月28日-4月10日，全场服饰、鞋包、家居品类低至5折，会员额外享95折优惠！活动期间订单量较大，发货可能延迟1-2天，敬请谅解。
+                </div>
+            </div>
+
+            <div class="notice-item">
+                <div class="notice-head">
+                    <div class="notice-title-text">系统维护通知</div>
+                    <div class="notice-time">2026-03-25</div>
+                </div>
+                <div class="notice-content">
+                    本系统将于3月30日 00:00-02:00进行服务器维护，维护期间可能无法登录、下单、支付，请您提前做好准备，给您带来不便敬请谅解。
+                </div>
+            </div>
+
+            <div class="notice-item">
+                <div class="notice-head">
+                    <div class="notice-title-text">新用户注册福利说明</div>
+                    <div class="notice-time">2026-03-20</div>
+                </div>
+                <div class="notice-content">
+                    新用户注册即送50元新人礼包，包含满100减20、满200减30优惠券，有效期7天，可在个人中心查看使用。
+                </div>
+            </div>
+
+            <div class="notice-item">
+                <div class="notice-head">
+                    <div class="notice-title-text">物流配送范围更新</div>
+                    <div class="notice-time">2026-03-15</div>
+                </div>
+                <div class="notice-content">
+                    即日起新增新疆、西藏、内蒙古偏远地区配送服务，部分商品需补运费差价，详情可咨询在线客服。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        XX商场购物系统 © 2026 版权所有
+    </div>
+</body>
+</html>
