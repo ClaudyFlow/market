@@ -177,7 +177,7 @@
     <!-- 充值记录 -->
     <section class="records-section">
       <h2 class="section-title">充值记录</h2>
-      <el-table :data="rechargeRecords" class="sci-table" style="width: 100%">
+      <el-table :data="rechargeRecords" class="sci-table" style="width: 100%" :max-width="'100%'">
         <el-table-column prop="orderNo" label="订单号" width="180">
           <template #default="{ row }">
             <span>{{ row.orderNo }}</span>
@@ -211,7 +211,7 @@
     <!-- VIP 等级说明 -->
     <section class="levels-section">
       <h2 class="section-title">VIP 等级说明</h2>
-      <el-table :data="vipLevels" class="sci-table level-table" style="width: 100%">
+      <el-table :data="vipLevels" class="sci-table level-table" style="width: 100%" :max-width="'100%'">
         <el-table-column prop="level" label="等级" width="80">
           <template #default="{ row }">
             <span>{{ row.level }}</span>
@@ -512,8 +512,7 @@ onMounted(() => {
 <style scoped>
 .vip-center {
   padding: 20px;
-  max-width: 1200px;
-  
+  width: 100%;
   min-height: 100vh;
   background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
 }
@@ -711,10 +710,10 @@ onMounted(() => {
 
 /* 通用区块样式 */
 section {
+  width: 100%;
   background: linear-gradient(135deg, #e6c24a, #c9a227);
   border-radius: 16px;
   padding: 24px;
-  
   border: 1px solid rgba(230, 194, 74, 0.9);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), 0 0 35px rgba(230, 194, 74, 0.5);
 }

@@ -96,6 +96,16 @@
               {{ loading ? '注册中...' : '注册' }}
             </el-button>
           </el-form-item>
+
+          <el-form-item>
+            <div class="agreement-tip">
+              <el-checkbox v-model="agreeAgreement" />
+              <span>登录/注册即表示同意</span>
+              <router-link to="/agreement" target="_blank" class="link">《用户协议》</router-link>
+              <span>和</span>
+              <router-link to="/privacy" target="_blank" class="link">《隐私政策》</router-link>
+            </div>
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -114,6 +124,7 @@ const activeTab = ref('login')
 const loginFormRef = ref()
 const registerFormRef = ref()
 const loading = ref(false)
+const agreeAgreement = ref(true)
 
 // 监听路由参数,如果是 /register 则自动切换到注册标签
 if (route.query.tab === 'register' || route.path === '/register') {
@@ -306,5 +317,22 @@ const handleRegister = async () => {
 
 .submit-btn:hover {
   box-shadow: 0 0 20px rgba(0,212,255,0.5);
+}
+
+.agreement-tip {
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+  width: 100%;
+}
+
+.agreement-tip .link {
+  color: #00d4ff;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+.agreement-tip .link:hover {
+  text-decoration: underline;
 }
 </style>

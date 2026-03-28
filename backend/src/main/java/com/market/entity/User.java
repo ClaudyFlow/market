@@ -68,6 +68,12 @@ public class User implements UserDetails {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    /**
+     * 用户简介
+     */
+    @Column(name = "bio", length = 500)
+    private String bio;
+
     @Column(name = "is_merchant", nullable = false)
     private Boolean isMerchant = false;
 
@@ -132,6 +138,9 @@ public class User implements UserDetails {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 
     public Boolean getIsMerchant() { return isMerchant; }
     public void setIsMerchant(Boolean isMerchant) { this.isMerchant = isMerchant; }
