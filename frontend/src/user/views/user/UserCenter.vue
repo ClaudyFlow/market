@@ -5,9 +5,16 @@
 
       <div class="user-menu">
         <div class="menu-grid">
-          <router-link to="/user/order" class="menu-item">
+          <router-link to="/user/orders" class="menu-item">
             <div class="menu-icon">
               <el-icon><Document /></el-icon>
+            </div>
+            <span class="menu-text">订单中心</span>
+          </router-link>
+
+          <router-link to="/user/order" class="menu-item">
+            <div class="menu-icon">
+              <el-icon><List /></el-icon>
             </div>
             <span class="menu-text">我的订单</span>
           </router-link>
@@ -79,7 +86,7 @@
 </template>
 
 <script setup>
-import { Document, StarFilled, UserFilled, Location, Trophy, Ticket } from '@element-plus/icons-vue'
+import { Document, StarFilled, UserFilled, Location, Trophy, Ticket, List } from '@element-plus/icons-vue'
 </script>
 
 <style scoped>
