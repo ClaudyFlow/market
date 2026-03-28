@@ -9,8 +9,20 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 import Header from '@user/components/Header.vue'
 import Footer from '@user/components/Footer.vue'
+
+const route = useRoute()
+
+// 路由切换时滚动到顶部
+watch(
+  () => route.path,
+  () => {
+    window.scrollTo(0, 0)
+  }
+)
 </script>
 
 <style>
