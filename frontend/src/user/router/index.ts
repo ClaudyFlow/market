@@ -91,6 +91,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@user/views/ProductDetail.vue'),
     meta: { title: '商品详情' }
   },
+
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: () => import('@user/views/user/Shop.vue'),  //店铺route
+    meta: { title: '店铺详情' }
+  },
+
   {
     path: '/cart',
     name: 'Cart',
