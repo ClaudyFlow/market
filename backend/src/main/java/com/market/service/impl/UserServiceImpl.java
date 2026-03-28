@@ -8,11 +8,16 @@ import com.market.repository.UserRepository;
 import com.market.security.JwtService;
 import com.market.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务实现类
@@ -216,7 +221,191 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    
+    @Override
+    public Page<User> getAllUsers(String userId, String userName, String phone, String status,
+                                  LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        List<User> allUsers = userRepository.findAll().stream()
+            .filter(u -> userId == null || userId.isEmpty() || u.getId().toString().contains(userId))
+            .filter(u -> userName == null || userName.isEmpty() || u.getName().toLowerCase().contains(userName.toLowerCase()))
+            .filter(u -> phone == null || phone.isEmpty() || (u.getPhone() != null && u.getPhone().contains(phone)))
+            .filter(u -> status == null || status.isEmpty() || u.getStatus().equals(status))
+            .filter(u -> startDate == null || u.getCreatedAt().isAfter(startDate))
+            .filter(u -> endDate == null || u.getCreatedAt().isBefore(endDate))
+            .sorted(Comparator.comparing(User::getCreatedAt).reversed())
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset() * pageable.getPageSize();
+        int end = Math.min(start + pageable.getPageSize(), allUsers.size());
+        List<User> pageContent = allUsers.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, allUsers.size());
+    }
+
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        if (userRepository.existsByName(user.getName())) {
+            throw new RuntimeException("用户名已存在");
+        }
+        if (user.getEmail() != null && userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("邮箱已被使用");
+        }
+        if (user.getPasswordHash() != null) {
+            user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(Long id, Map<String, Object> updates) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("用户不存在"));
+
+        if (updates.containsKey("name")) {
+            user.setName((String) updates.get("name"));
+        }
+        if (updates.containsKey("email")) {
+            user.setEmail((String) updates.get("email"));
+        }
+        if (updates.containsKey("phone")) {
+            user.setPhone((String) updates.get("phone"));
+        }
+        if (updates.containsKey("avatar")) {
+            user.setAvatarUrl((String) updates.get("avatar"));
+        }
+        if (updates.containsKey("avatarUrl")) {
+            user.setAvatarUrl((String) updates.get("avatarUrl"));
+        }
+        if (updates.containsKey("credit")) {
+            user.setCredit((Integer) updates.get("credit"));
+        }
+        if (updates.containsKey("status")) {
+            user.setStatus((String) updates.get("status"));
+        }
+        if (updates.containsKey("vipLevel")) {
+            user.setVipLevel((Integer) updates.get("vipLevel"));
+        }
+        if (updates.containsKey("growthValue")) {
+            user.setGrowthValue((Integer) updates.get("growthValue"));
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public User banUser(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("用户不存在"));
+        user.setStatus("BANNED");
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User unbanUser(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("用户不存在"));
+        user.setStatus("ACTIVE");
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Map<String, Object> getUserStats() {
+        List<User> allUsers = userRepository.findAll();
+        long totalUsers = allUsers.size();
+        long activeUsers = allUsers.stream().filter(u -> "ACTIVE".equals(u.getStatus())).count();
+        long bannedUsers = allUsers.stream().filter(u -> "BANNED".equals(u.getStatus())).count();
+
+        LocalDateTime todayStart = LocalDateTime.now().toLocalDate().atStartOfDay();
+        long todayNewUsers = allUsers.stream()
+            .filter(u -> u.getCreatedAt().isAfter(todayStart))
+            .count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("total", totalUsers);
+        stats.put("active", activeUsers);
+        stats.put("banned", bannedUsers);
+        stats.put("todayNew", todayNewUsers);
+
+        return stats;
+    }
+
+    @Override
+    public Page<User> getAllMerchants(String merchantId, String shopName, String status,
+                                      LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        List<User> allMerchants = userRepository.findAll().stream()
+            .filter(u -> u.getIsMerchant() != null && u.getIsMerchant())
+            .filter(u -> merchantId == null || merchantId.isEmpty() || u.getId().toString().contains(merchantId))
+            .filter(u -> shopName == null || shopName.isEmpty() || 
+                (u.getShopName() != null && u.getShopName().toLowerCase().contains(shopName.toLowerCase())))
+            .filter(u -> status == null || status.isEmpty() || u.getMerchantStatus().equals(status))
+            .filter(u -> startDate == null || u.getCreatedAt().isAfter(startDate))
+            .filter(u -> endDate == null || u.getCreatedAt().isBefore(endDate))
+            .sorted(Comparator.comparing(User::getCreatedAt).reversed())
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset() * pageable.getPageSize();
+        int end = Math.min(start + pageable.getPageSize(), allMerchants.size());
+        List<User> pageContent = allMerchants.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, allMerchants.size());
+    }
+
+    @Override
+    @Transactional
+    public User banMerchant(Long id) {
+        User merchant = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("商家不存在"));
+        merchant.setMerchantStatus("BANNED");
+        merchant.setStatus("BANNED");
+        merchant.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(merchant);
+    }
+
+    @Override
+    @Transactional
+    public User unbanMerchant(Long id) {
+        User merchant = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("商家不存在"));
+        merchant.setMerchantStatus("ACTIVE");
+        merchant.setStatus("ACTIVE");
+        merchant.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(merchant);
+    }
+
+    @Override
+    public Map<String, Object> getMerchantStats() {
+        List<User> allMerchants = userRepository.findAll().stream()
+            .filter(u -> u.getIsMerchant() != null && u.getIsMerchant())
+            .collect(Collectors.toList());
+
+        long totalMerchants = allMerchants.size();
+        long approvedMerchants = allMerchants.stream()
+            .filter(u -> "ACTIVE".equals(u.getMerchantStatus())).count();
+        long pendingMerchants = allMerchants.stream()
+            .filter(u -> "PENDING".equals(u.getMerchantStatus()) || "INACTIVE".equals(u.getMerchantStatus())).count();
+        long rejectedMerchants = allMerchants.stream()
+            .filter(u -> "REJECTED".equals(u.getMerchantStatus())).count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("total", totalMerchants);
+        stats.put("approved", approvedMerchants);
+        stats.put("pending", pendingMerchants);
+        stats.put("rejected", rejectedMerchants);
+
+        return stats;
+    }
 
     /**
      * 检查今日是否已签到

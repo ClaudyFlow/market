@@ -5,9 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户实体类
@@ -79,6 +80,19 @@ public class User implements UserDetails {
     @Column(name = "merchant_status", length = 20)
     private String merchantStatus = "INACTIVE"; // INACTIVE, ACTIVE, BANNED
 
+    @Column(name = "status", length = 20)
+    private String status = "ACTIVE"; // ACTIVE, BANNED
+
+    @Column(name = "role", length = 20)
+    private String role = "USER"; // USER, MERCHANT, ADMIN
+
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vip_info_id")
+    private VipInfo vipInfo;
+
     public User() {}
 
     public User(String name, String email, String passwordHash) {
@@ -131,6 +145,12 @@ public class User implements UserDetails {
     public String getMerchantStatus() { return merchantStatus; }
     public void setMerchantStatus(String merchantStatus) { this.merchantStatus = merchantStatus; }
 
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
     public Integer getCredit() { return credit; }
     public void setCredit(Integer credit) { this.credit = credit; }
 
@@ -165,10 +185,24 @@ public class User implements UserDetails {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
+    public LocalDateTime getLastLoginAt() { return lastLoginAt; }
+    public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
+
+    public VipInfo getVipInfo() { return vipInfo; }
+    public void setVipInfo(VipInfo vipInfo) { this.vipInfo = vipInfo; }
+
     // Spring Security 接口实现
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if ("ADMIN".equals(this.role)) {
+            authorities.add(() -> "ROLE_ADMIN");
+        }
+        if ("MERCHANT".equals(this.role)) {
+            authorities.add(() -> "ROLE_MERCHANT");
+        }
+        authorities.add(() -> "ROLE_USER");
+        return authorities;
     }
 
     @Override
