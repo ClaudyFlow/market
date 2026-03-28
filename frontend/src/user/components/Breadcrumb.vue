@@ -40,25 +40,38 @@ const routeNameMap: Record<string, string> = {
   '/sale': '限时特惠',
   '/vip': 'VIP 中心',
   '/service': '客服中心',
-  '/forum': '用户论坛'
+  '/forum': '用户论坛',
+  '/coupon': '优惠券中心',
+  '/agreement': '用户协议',
+  '/privacy': '隐私政策'
 }
 
 // 自动生成面包屑
 const breadcrumbItems = computed(() => {
   const paths = route.path.split('/').filter(Boolean)
   const items = []
-  
+
   let currentPath = ''
   for (let i = 0; i < paths.length; i++) {
     currentPath += '/' + paths[i]
     const isLast = i === paths.length - 1
-    
+
+    // 特殊处理商品详情页面
+    if (currentPath.startsWith('/item/') && currentPath !== '/item') {
+      const productId = currentPath.split('/item/')[1]
+      items.push({
+        name: `商品${productId}`,
+        to: undefined
+      })
+      break
+    }
+
     items.push({
       name: routeNameMap[currentPath] || paths[i],
       to: isLast ? undefined : currentPath
     })
   }
-  
+
   return items
 })
 </script>

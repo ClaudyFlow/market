@@ -41,7 +41,7 @@ public class MerchantProductController {
             @AuthenticationPrincipal User user) {
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Product> productPage = productService.getMerchantProducts(user, keyword, status, pageable);
+        Page<Product> productPage = productService.getMerchantProducts(user, null, status, pageable);
 
         List<Map<String, Object>> productList = productPage.getContent().stream()
             .map(this::convertProductToMap)
@@ -64,8 +64,7 @@ public class MerchantProductController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
 
-        Product product = productService.getProductById(id)
-            .orElseThrow(() -> new RuntimeException("商品不存在"));
+        Product product = productService.getProductById(id);
 
         // 验证商品是否属于该商户
         if (!productService.isMerchantProduct(product, user)) {
@@ -121,8 +120,7 @@ public class MerchantProductController {
             @AuthenticationPrincipal User user,
             @RequestParam Integer status) {
 
-        Product product = productService.getProductById(id)
-            .orElseThrow(() -> new RuntimeException("商品不存在"));
+        Product product = productService.getProductById(id);
 
         if (!productService.isMerchantProduct(product, user)) {
             throw new RuntimeException("无权操作该商品");

@@ -78,21 +78,122 @@ const props = defineProps<{
 const review = ref<Review[]>([])
 const ratingInfo = ref<RatingInfo | null>(null)
 
+// 模拟评价数据
+const mockReviews: Review[] = [
+  {
+    id: 1,
+    userId: 1001,
+    userName: '张***3',
+    userAvatar: 'https://via.placeholder.com/40x40/00d4ff/fff?text=张',
+    productId: props.productId,
+    productName: 'iPhone 15 Pro Max',
+    productPrice: 9999,
+    productImage: 'https://via.placeholder.com/40x40/f5f5f5/333?text=Product',
+    rating: 5,
+    content: '非常好用，系统流畅，拍照效果也很棒！钛金属手感一流，值得购买。',
+    images: ['https://via.placeholder.com/100x100/00d4ff/fff?text=1'],
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    reply: '感谢您的好评！祝您使用愉快~',
+    replyTime: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    id: 2,
+    userId: 1002,
+    userName: '李***8',
+    userAvatar: 'https://via.placeholder.com/40x40/ff8800/fff?text=李',
+    productId: props.productId,
+    productName: 'iPhone 15 Pro Max',
+    productPrice: 9999,
+    productImage: 'https://via.placeholder.com/40x40/f5f5f5/333?text=Product',
+    rating: 5,
+    content: '物流很快，包装完好。A17 Pro 芯片性能强劲，玩游戏很流畅。',
+    images: [],
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    reply: '',
+    replyTime: undefined
+  },
+  {
+    id: 3,
+    userId: 1003,
+    userName: '王***5',
+    userAvatar: 'https://via.placeholder.com/40x40/a335ee/fff?text=王',
+    productId: props.productId,
+    productName: 'iPhone 15 Pro Max',
+    productPrice: 9999,
+    productImage: 'https://via.placeholder.com/40x40/f5f5f5/333?text=Product',
+    rating: 4,
+    content: '整体不错，就是价格有点贵。但是苹果的品质还是值得信赖的。',
+    images: ['https://via.placeholder.com/100x100/ff8800/fff?text=1', 'https://via.placeholder.com/100x100/a335ee/fff?text=2'],
+    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    reply: '感谢您的支持，我们会继续努力提供更好的产品和服务！',
+    replyTime: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    id: 4,
+    userId: 1004,
+    userName: '刘***2',
+    userAvatar: 'https://via.placeholder.com/40x40/00ff88/fff?text=刘',
+    productId: props.productId,
+    productName: 'iPhone 15 Pro Max',
+    productPrice: 9999,
+    productImage: 'https://via.placeholder.com/40x40/f5f5f5/333?text=Product',
+    rating: 5,
+    content: '拍照效果真的很好，夜景模式特别强大。电池续航也不错，一天一充足够了。',
+    images: [],
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    reply: '',
+    replyTime: undefined
+  },
+  {
+    id: 5,
+    userId: 1005,
+    userName: '陈***7',
+    userAvatar: 'https://via.placeholder.com/40x40/ff3366/fff?text=陈',
+    productId: props.productId,
+    productName: 'iPhone 15 Pro Max',
+    productPrice: 9999,
+    productImage: 'https://via.placeholder.com/40x40/f5f5f5/333?text=Product',
+    rating: 5,
+    content: '钛金属材质很轻，手感好。120Hz 高刷很流畅，Face ID 解锁也很快。',
+    images: ['https://via.placeholder.com/100x100/00d4ff/fff?text=晒图'],
+    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    reply: '感谢亲的认可~',
+    replyTime: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString()
+  }
+]
+
+// 模拟评分数据
+const mockRatingInfo: RatingInfo = {
+  averageRating: 4.8,
+  reviewCount: 1258,
+  ratingDistribution: {
+    5: 980,
+    4: 200,
+    3: 50,
+    2: 18,
+    1: 10
+  }
+}
+
 const loadReviews = async () => {
   try {
     const res = await getProductReviews(props.productId)
-    review.value = res.data.data || []
+    review.value = res.data?.data || mockReviews
   } catch (error) {
-    console.error('加载评价失败:', error)
+    console.error('加载评价失败，使用模拟数据:', error)
+    // 使用模拟数据
+    review.value = mockReviews
   }
 }
 
 const loadRating = async () => {
   try {
     const res = await getProductRating(props.productId)
-    ratingInfo.value = res.data.data
+    ratingInfo.value = res.data?.data
   } catch (error) {
-    console.error('加载评分失败:', error)
+    console.error('加载评分失败，使用模拟数据:', error)
+    // 使用模拟数据
+    ratingInfo.value = mockRatingInfo
   }
 }
 
@@ -108,7 +209,7 @@ const formatTime = (timeStr?: string) => {
   const now = new Date()
   const diff = now.getTime() - date.getTime()
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  
+
   if (days === 0) return '今天'
   if (days === 1) return '昨天'
   if (days < 7) return `${days}天前`

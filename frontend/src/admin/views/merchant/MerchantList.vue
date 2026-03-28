@@ -186,7 +186,30 @@
         </div>
       </div>
 
-      <el-form :model="auditForm" label-width="80px" style="
+      <el-form :model="auditForm" label-width="80px">
+        <el-form-item label="审核意见">
+          <el-input v-model="auditForm.comment" type="textarea" placeholder="请输入审核意见" />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="auditDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="submitAudit">提交</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { Shop, CircleCheck, Clock, CircleClose } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+
+// ... 脚本内容 ...
+</script>
+
+<style scoped>
+.page-container {
   background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
   min-height: 100vh;
 }

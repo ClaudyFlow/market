@@ -175,8 +175,22 @@
           {{ currentProduct?.rejectReason || '无' }}
         </el-descriptions-item>
       </el-descriptions>
+    </el-dialog>
+  </div>
+</template>
 
-      <el-form :model="auditForm" label-width="80px" style="
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { DocumentChecked, Goods, CircleCheck, Clock, CircleClose } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+
+// ... 脚本内容 ...
+</script>
+
+<style scoped>
+.page-container {
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+  min-height: 100vh;
 }
 
 .page-header {

@@ -217,7 +217,7 @@ const 立即购买 = () => {
   border: 1px solid rgba(0,212,255,0.2);
   padding: 30px;
   border-radius: 12px;
-  
+
 }
 
 /* 商品图片 */

@@ -209,6 +209,24 @@ const routes: RouteRecordRaw[] = [
     name: 'CustomerService',
     component: () => import('@user/views/CustomerService.vue'),
     meta: { title: '客服中心' }
+  },
+  {
+    path: '/coupon',
+    name: 'Coupon',
+    component: () => import('@user/views/Coupon.vue'),
+    meta: { title: '优惠券中心' }
+  },
+  {
+    path: '/agreement',
+    name: 'UserAgreement',
+    component: () => import('@user/views/UserAgreement.vue'),
+    meta: { title: '用户协议' }
+  },
+  {
+    path: '/privacy',
+    name: 'PrivacyPolicy',
+    component: () => import('@user/views/PrivacyPolicy.vue'),
+    meta: { title: '隐私政策' }
   }
 ]
 

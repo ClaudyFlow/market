@@ -60,6 +60,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Setting',
     component: () => import('@admin/views/system/Settings.vue'),
     meta: { title: '平台设置', requiresAuth: true }
+  },
+  {
+    path: '/coupon',
+    name: 'Coupon',
+    component: () => import('@admin/views/marketing/Coupon.vue'),
+    meta: { title: '优惠券管理', requiresAuth: true }
   }
 ]
 

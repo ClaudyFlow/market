@@ -1,39 +1,54 @@
 package com.market.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.market.common.Result;
+import com.market.entity.User;
+import com.market.service.StatisticsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 首页控制器 - 提供 API 欢迎信息
+ * 首页数据统计控制器
  */
-@Controller
-@RequestMapping("/")
+@RestController
+@RequestMapping("/api/home")
+@CrossOrigin(origins = "*")
 public class HomeController {
 
-    @GetMapping("/")
-    @ResponseBody
-    public Map<String, Object> index() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("message", "欢迎使用市场平台 API");
-        result.put("version", "1.0.0");
-        result.put("endpoints", new String[]{
-            "/api/auth - 认证接口",
-            "/api/product - 商品接口",
-            "/api/cart - 购物车接口",
-            "/api/order - 订单接口",
-            "/api/user - 用户接口"
-        });
-        return result;
+    @Autowired
+    private StatisticsService statisticsService;
+
+    /**
+     * 获取首页数据
+     */
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> getHomeStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 获取平台统计
+        Map<String, Object> platformStats = statisticsService.getPlatformStats();
+        stats.putAll(platformStats);
+
+        return Result.success(stats);
     }
 
-    @GetMapping("/api")
-    @ResponseBody
-    public Map<String, Object> apiInfo() {
-        return index();
+    /**
+     * 获取用户个人统计
+     */
+    @GetMapping("/user/stats")
+    public Result<Map<String, Object>> getUserStats(@AuthenticationPrincipal User user) {
+        Map<String, Object> stats = new HashMap<>();
+
+        stats.put("userId", user.getId());
+        stats.put("userName", user.getName());
+        stats.put("credit", user.getCredit());
+        stats.put("vipLevel", user.getVipLevel());
+        stats.put("growthValue", user.getGrowthValue());
+
+        return Result.success(stats);
     }
 }

@@ -50,7 +50,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     long countByUser(User user);
     long countByUserAndStatus(User user, String status);
-    
+
     long countByMerchant(User merchant);
     long countByMerchantAndStatus(User merchant, String status);
+
+    /**
+     * 统计指定状态的订单数量
+     */
+    long countByStatus(String status);
+
+    /**
+     * 统计总订单数
+     */
+    @Query("SELECT COUNT(o) FROM Order o")
+    long countTotal();
 }
