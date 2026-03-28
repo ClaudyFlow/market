@@ -26,7 +26,16 @@
             <el-icon :size="32"><Ticket /></el-icon>
           </div>
           <div class="card-content">
-            <div class="card-label">已抽次数</div>
+            <div class="card-label">今日抽奖</div>
+            <div class="card-value">{{ dailyDrawCount }} / {{ maxDailyDraws }}</div>
+          </div>
+        </div>
+        <div class="info-card times-card">
+          <div class="card-icon">
+            <el-icon :size="32"><Star /></el-icon>
+          </div>
+          <div class="card-content">
+            <div class="card-label">总抽奖次数</div>
             <div class="card-value">{{ drawCount }}</div>
           </div>
         </div>
@@ -213,6 +222,8 @@ watch(() => userStore.userCredit, (newVal) => {
 
 const isDrawing = ref(false)
 const drawCount = ref(0)
+const dailyDrawCount = ref(0) // 每日抽奖次数
+const maxDailyDraws = 10 // 每日最多抽奖次数
 
 const reelItems = ref([])
 const itemWidth = 130 // 每个奖品卡片的宽度
@@ -229,6 +240,18 @@ const displayItems = ref([
   { icon: '🎫', name: '优惠券' },
   { icon: '🎧', name: '耳机' }
 ])
+
+// 奖品配置（带概率）
+const prizeConfig = [
+  { id: 1, name: '10 积分', type: 1, icon: '💰', probability: 0.35 },
+  { id: 2, name: '50 积分', type: 1, icon: '💰', probability: 0.25 },
+  { id: 3, name: '100 积分', type: 1, icon: '💰', probability: 0.15 },
+  { id: 4, name: '200 积分', type: 1, icon: '💰', probability: 0.10 },
+  { id: 5, name: '500 积分', type: 1, icon: '💰', probability: 0.05 },
+  { id: 6, name: '优惠券', type: 1, icon: '🎫', probability: 0.05 },
+  { id: 7, name: '蓝牙耳机', type: 2, icon: '🎧', probability: 0.03 },
+  { id: 8, name: '机械键盘', type: 2, icon: '⌨️', probability: 0.02 }
+]
 
 const prizes = ref<any[]>([
   { id: 1, name: '10 积分', type: 1 },
@@ -269,7 +292,73 @@ const resetCheckin = () => {
     day.available = i === 0
     day.current = i === 0
   })
+  saveCheckinState()
   ElMessage.success('签到已重置')
+}
+
+// 保存签到状态到 localStorage
+const saveCheckinState = () => {
+  const state = {
+    checkinDays: checkinDays,
+    lastCheckinDate: new Date().toDateString()
+  }
+  localStorage.setItem('lotteryCheckin', JSON.stringify(state))
+}
+
+// 加载签到状态
+const loadCheckinState = () => {
+  const saved = localStorage.getItem('lotteryCheckin')
+  if (saved) {
+    try {
+      const state = JSON.parse(saved)
+      const today = new Date().toDateString()
+      
+      // 如果是新的一天，重置签到
+      if (state.lastCheckinDate !== today) {
+        resetCheckin()
+      } else {
+        // 恢复之前的签到状态
+        state.checkinDays.forEach((day: any, i: number) => {
+          if (i < checkinDays.length) {
+            checkinDays[i].completed = day.completed
+            checkinDays[i].available = day.available
+            checkinDays[i].current = day.current
+          }
+        })
+      }
+    } catch (e) {
+      console.error('加载签到状态失败', e)
+    }
+  }
+}
+
+// 保存每日抽奖次数
+const saveDailyDrawCount = () => {
+  const today = new Date().toDateString()
+  localStorage.setItem('dailyDrawCount', JSON.stringify({
+    count: dailyDrawCount.value,
+    date: today
+  }))
+}
+
+// 加载每日抽奖次数
+const loadDailyDrawCount = () => {
+  const saved = localStorage.getItem('dailyDrawCount')
+  if (saved) {
+    try {
+      const data = JSON.parse(saved)
+      const today = new Date().toDateString()
+      
+      if (data.date === today) {
+        dailyDrawCount.value = data.count
+      } else {
+        dailyDrawCount.value = 0 // 新的一天，重置次数
+      }
+    } catch (e) {
+      console.error('加载抽奖次数失败', e)
+      dailyDrawCount.value = 0
+    }
+  }
 }
 
 const handleCheckin = async (index: number) => {
@@ -286,6 +375,9 @@ const handleCheckin = async (index: number) => {
     day.completed = true
     const earnedCredits = day.credit
     userCredit.value += earnedCredits
+    
+    // 保存签到状态
+    saveCheckinState()
     
     ElMessage.success({
       message: `签到成功！获得 ${earnedCredits} 积分`,
@@ -331,6 +423,21 @@ const initReelItems = () => {
   reelItems.value = items
 }
 
+// 根据概率随机选择奖品
+const drawPrize = () => {
+  const random = Math.random()
+  let cumulative = 0
+  
+  for (const prize of prizeConfig) {
+    cumulative += prize.probability
+    if (random <= cumulative) {
+      return prize
+    }
+  }
+  
+  return prizeConfig[0] // 默认返回 10 积分
+}
+
 // 开始转动动画（文字快速变化）
 const startSpinningAnimation = () => {
   const allIcons = ['💰', '🎫', '🎧', '📱', '⌚', '🎁', '🎰', '⭐']
@@ -357,6 +464,11 @@ const handleDraw = async () => {
     ElMessage.warning('积分不足，快去赚取积分吧！')
     return
   }
+  
+  if (dailyDrawCount.value >= maxDailyDraws) {
+    ElMessage.warning('今日抽奖次数已用完，明天再来吧！')
+    return
+  }
 
   isDrawing.value = true
   
@@ -364,23 +476,16 @@ const handleDraw = async () => {
     // 开始转动动画（文字快速变化）
     startSpinningAnimation()
     
-    // 随机生成奖品 (0-7 对应 8 个奖品)
-    const prizeTypes = [
-      { id: 1, name: '10 积分', type: 1, icon: '💰' },
-      { id: 2, name: '50 积分', type: 1, icon: '💰' },
-      { id: 3, name: '100 积分', type: 1, icon: '💰' },
-      { id: 4, name: '200 积分', type: 1, icon: '💰' },
-      { id: 5, name: '500 积分', type: 1, icon: '💰' },
-      { id: 6, name: '优惠券', type: 1, icon: '🎫' },
-      { id: 7, name: '蓝牙耳机', type: 2, icon: '🎧' },
-      { id: 8, name: '机械键盘', type: 2, icon: '⌨️' }
-    ]
-    const randomIndex = Math.floor(Math.random() * prizeTypes.length)
-    const res = prizeTypes[randomIndex]
+    // 根据概率抽取奖品
+    const res = drawPrize()
     
     // 扣除积分
     userCredit.value -= 100
     drawCount.value++
+    dailyDrawCount.value++
+    
+    // 保存每日抽奖次数
+    saveDailyDrawCount()
 
     // 3 秒后停止并显示结果
     setTimeout(() => {
@@ -403,7 +508,7 @@ const handleDraw = async () => {
       lastPrize.value = res.name
       resultMessage.value = res.type === 1 
         ? `获得${res.name}，已自动存入账户` 
-        : '🎉 实物奖品请联系客服领取'
+        : '🎉 实物奖品请前往用户中心填写收货地址'
       resultDialogVisible.value = true
       
       // 添加记录
@@ -464,6 +569,8 @@ onMounted(() => {
   initReelItems()
   loadRecords()
   loadUserCredit()
+  loadCheckinState() // 加载签到状态
+  loadDailyDrawCount() // 加载每日抽奖次数
 })
 </script>
 
@@ -506,10 +613,10 @@ onMounted(() => {
 /* 用户信息卡片 */
 .user-info-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 30px;
-  max-width: 500px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
 }
