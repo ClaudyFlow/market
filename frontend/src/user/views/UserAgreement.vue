@@ -147,31 +147,32 @@
 <style scoped>
 .agreement-page {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(10, 14, 26, 0.9) 100%);
   padding: 40px 20px;
 }
 
 .container {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: rgba(26, 31, 58, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
 }
 
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: #111827;
+  color: #fff;
   text-align: center;
   margin-bottom: 32px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.3);
 }
 
 .content {
-  color: #374151;
+  color: #ccc;
   line-height: 1.8;
 }
 
@@ -182,7 +183,7 @@
 .content h2 {
   font-size: 20px;
   font-weight: 600;
-  color: #111827;
+  color: #00d4ff;
   margin-bottom: 16px;
   padding-left: 12px;
   border-left: 4px solid #00d4ff;
@@ -204,9 +205,9 @@
 
 .note {
   padding: 16px;
-  border-left: 4px solid #3b82f6;
-  background: #eff6ff;
-  color: #1d4ed8;
+  border-left: 4px solid #00d4ff;
+  background: rgba(0, 212, 255, 0.1);
+  color: #00d4ff;
   margin-bottom: 32px;
   border-radius: 4px;
   font-weight: 500;
@@ -225,9 +226,9 @@
 .update-time {
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
-  color: #6b7280;
+  color: #888;
   font-size: 14px;
 }
 
