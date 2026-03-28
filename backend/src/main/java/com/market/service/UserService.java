@@ -4,6 +4,12 @@ import com.market.dto.AuthResponse;
 import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
 import com.market.entity.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * 用户服务接口
@@ -49,4 +55,61 @@ public interface UserService {
      * 添加积分
      */
     boolean addCredit(Long userId, Integer amount);
+
+    /**
+     * 获取所有用户（分页）
+     */
+    Page<User> getAllUsers(String userId, String userName, String phone, String status,
+                           LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    /**
+     * 创建用户
+     */
+    User createUser(User user);
+
+    /**
+     * 更新用户
+     */
+    User updateUser(Long id, Map<String, Object> updates);
+
+    /**
+     * 删除用户
+     */
+    void deleteUser(Long id);
+
+    /**
+     * 封禁用户
+     */
+    User banUser(Long id);
+
+    /**
+     * 解封用户
+     */
+    User unbanUser(Long id);
+
+    /**
+     * 获取用户统计
+     */
+    Map<String, Object> getUserStats();
+
+    /**
+     * 获取所有商家（分页）
+     */
+    Page<User> getAllMerchants(String merchantId, String shopName, String status,
+                               LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    /**
+     * 封禁商家
+     */
+    User banMerchant(Long id);
+
+    /**
+     * 解封商家
+     */
+    User unbanMerchant(Long id);
+
+    /**
+     * 获取商家统计
+     */
+    Map<String, Object> getMerchantStats();
 }
