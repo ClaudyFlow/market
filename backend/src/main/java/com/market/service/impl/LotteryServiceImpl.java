@@ -31,7 +31,10 @@ public class LotteryServiceImpl implements LotteryService {
 
     // 每抽 10 次必出保底奖品
     private static final int GUARANTEED_INTERVAL = 10;
-    
+
+    // 每天抽奖次数限制
+    private static final int DAILY_DRAW_LIMIT = 3;
+
     // 保底奖品名称
     private static final List<String> GUARANTEED_PRIZES = Arrays.asList("抽纸（一袋）", "洗衣液（一瓶）");
 
@@ -39,6 +42,20 @@ public class LotteryServiceImpl implements LotteryService {
     @Transactional
     public LotteryResult draw(User user) {
         LotteryResult result = new LotteryResult();
+
+        // 检查是否为测试模式（测试模式下无抽奖次数限制）
+        boolean isTestMode = "test".equals(System.getProperty("spring.profiles.active"));
+
+        // 检查当天抽奖次数是否超过限制（测试模式除外）
+        if (!isTestMode) {
+            Long todayDraws = recordRepository.countTodayByUserId(user.getId());
+            if (todayDraws >= DAILY_DRAW_LIMIT) {
+                result.setSuccess(false);
+                result.setMessage("每天只能抽奖 " + DAILY_DRAW_LIMIT + " 次，您今天已经抽过 " + todayDraws + " 次了");
+                result.setRemainingCredit(user.getCredit());
+                return result;
+            }
+        }
 
         // 检查积分是否足够
         if (user.getCredit() < 100) {
