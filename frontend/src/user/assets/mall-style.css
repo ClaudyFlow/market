@@ -1,47 +1,47 @@
-/* 购物商城 - 太空科幻主题风格 */
+/* 购物商城 - 蓝黑炫酷主题风格 */
 :root {
-  /* 主色调 - 明亮科技色系 */
+  /* 主色调 - 蓝黑科技色系 */
   --mall-primary: #00d4ff;
   --mall-primary-light: #66e5ff;
   --mall-primary-dark: #0099cc;
-  
+
   --mall-secondary: #00ff88;
   --mall-secondary-light: #66ffaa;
   --mall-secondary-dark: #00cc66;
-  
-  --mall-accent: #ff6600;
-  --mall-accent-light: #ff9933;
-  --mall-accent-dark: #cc5200;
-  
-  --mall-purple: #a335ee;
-  --mall-purple-light: #c066ff;
-  --mall-purple-dark: #8020c0;
-  
+
+  --mall-accent: #00b4ff;
+  --mall-accent-light: #33c4ff;
+  --mall-accent-dark: #0088cc;
+
+  --mall-purple: #7b2cbf;
+  --mall-purple-light: #9d4edd;
+  --mall-purple-dark: #5a189a;
+
   --mall-gold: #ffd700;
   --mall-gold-light: #ffea00;
   --mall-gold-dark: #ccaa00;
-  
-  --mall-pink: #ff3366;
-  --mall-pink-light: #ff6699;
-  --mall-pink-dark: #cc2040;
 
-  /* 背景色 - 深空渐变 */
-  --mall-bg-dark: #0a0e1a;
-  --mall-bg-medium: #1a1f3a;
-  --mall-bg-light: #2a3055;
-  --mall-bg-card: rgba(26, 31, 58, 0.85);
-  
-  /* 边框和阴影 */
-  --mall-border: rgba(0, 212, 255, 0.3);
-  --mall-border-light: rgba(0, 212, 255, 0.15);
-  --mall-glow: rgba(0, 212, 255, 0.5);
-  --mall-glow-strong: rgba(0, 212, 255, 0.8);
-  
+  --mall-pink: #ff006e;
+  --mall-pink-light: #ff3385;
+  --mall-pink-dark: #cc0058;
+
+  /* 背景色 - 深蓝黑渐变 */
+  --mall-bg-dark: #000810;
+  --mall-bg-medium: #001020;
+  --mall-bg-light: #001830;
+  --mall-bg-card: rgba(0, 16, 32, 0.85);
+
+  /* 边框和阴影 - 蓝色发光效果 */
+  --mall-border: rgba(0, 212, 255, 0.4);
+  --mall-border-light: rgba(0, 212, 255, 0.2);
+  --mall-glow: rgba(0, 212, 255, 0.6);
+  --mall-glow-strong: rgba(0, 212, 255, 0.9);
+
   /* 文字颜色 */
   --mall-text-primary: #ffffff;
-  --mall-text-secondary: #cccccc;
-  --mall-text-muted: #888888;
-  
+  --mall-text-secondary: #b0d4ff;
+  --mall-text-muted: #6688aa;
+
   /* VIP 等级颜色 */
   --vip-1: #888888;
   --vip-1-glow: rgba(136, 136, 136, 0.5);
@@ -108,6 +108,82 @@
   box-shadow: 0 0 20px var(--mall-glow),
               0 0 40px var(--mall-glow),
               0 0 60px var(--mall-glow-strong);
+}
+
+/* 炫酷发光动画 */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--mall-glow),
+                0 0 40px var(--mall-glow),
+                0 0 60px var(--mall-glow-strong);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--mall-glow),
+                0 0 60px var(--mall-glow),
+                0 0 90px var(--mall-glow-strong),
+                0 0 120px var(--mall-primary);
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% {
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 0 10px var(--mall-glow);
+  }
+  50% {
+    border-color: rgba(0, 212, 255, 0.9);
+    box-shadow: 0 0 20px var(--mall-glow),
+                0 0 40px var(--mall-primary);
+  }
+}
+
+@keyframes text-glow {
+  0%, 100% {
+    text-shadow: 0 0 10px var(--mall-primary),
+                 0 0 20px var(--mall-primary);
+  }
+  50% {
+    text-shadow: 0 0 20px var(--mall-primary),
+                 0 0 40px var(--mall-primary),
+                 0 0 60px var(--mall-glow-strong);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.glow-animation {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.border-glow-animation {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+.text-glow-animation {
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+.float-animation {
+  animation: float-up 3s ease-in-out infinite;
 }
 
 /* 卡片通用样式 */

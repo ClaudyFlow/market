@@ -149,17 +149,20 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@user/assets/mall-style.css';
+
 .notice-center {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background: linear-gradient(180deg, rgba(0,212,255,0.1) 0%, rgba(0,8,16,0.95) 100%);
 }
 
 /* 顶部导航 */
 .header {
-  background-color: #ff5a00;
-  color: white;
+  background: linear-gradient(90deg, rgba(0,16,32,0.95) 0%, rgba(0,32,64,0.9) 100%);
+  color: #fff;
   padding: 15px 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,212,255,0.3);
+  box-shadow: 0 0 20px rgba(0,212,255,0.2);
 }
 
 .nav {
@@ -174,6 +177,8 @@ onMounted(() => {
 .logo {
   font-size: 22px;
   font-weight: bold;
+  color: var(--mall-primary);
+  text-shadow: 0 0 10px var(--mall-glow);
 }
 
 .nav-menu {
@@ -182,14 +187,19 @@ onMounted(() => {
 }
 
 .nav-menu a {
-  color: white;
+  color: var(--mall-text-secondary);
   text-decoration: none;
   font-size: 16px;
+  transition: all 0.3s;
+  padding: 6px 12px;
+  border-radius: 4px;
 }
 
 .nav-menu a:hover,
 .nav-menu a.active {
-  text-decoration: underline;
+  color: var(--mall-primary);
+  background: rgba(0,212,255,0.1);
+  box-shadow: 0 0 10px rgba(0,212,255,0.2);
 }
 
 /* 公告标题区域 */
@@ -200,30 +210,33 @@ onMounted(() => {
 
 .notice-title h2 {
   font-size: 28px;
-  color: #ff5a00;
+  color: var(--mall-primary);
   position: relative;
   display: inline-block;
   display: flex;
   align-items: center;
   gap: 10px;
+  text-shadow: 0 0 10px var(--mall-glow);
 }
 
 .notice-title h2::after {
   content: "";
   width: 60%;
   height: 3px;
-  background-color: #ff5a00;
+  background: linear-gradient(90deg, transparent, var(--mall-primary), transparent);
   position: absolute;
   bottom: -8px;
   left: 20%;
+  box-shadow: 0 0 10px var(--mall-primary);
 }
 
 /* 公告列表主体 */
 .notice-list {
-  background: white;
-  border-radius: 10px;
+  background: rgba(0,16,32,0.8);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 0 30px rgba(0,212,255,0.1);
   margin-bottom: 40px;
   max-width: 1200px;
   margin-left: auto;
@@ -233,7 +246,7 @@ onMounted(() => {
 /* 单条公告样式 */
 .notice-item {
   padding: 18px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -243,15 +256,17 @@ onMounted(() => {
 }
 
 .notice-item:hover {
-  background-color: #f9f9f9;
+  background: rgba(0,212,255,0.05);
+  padding-left: 10px;
 }
 
 /* 重要公告高亮 */
 .notice-item.important {
-  background-color: #fff5e6;
-  border-left: 5px solid #ff5a00;
+  background: rgba(255,170,0,0.1);
+  border-left: 5px solid #ffd700;
   padding-left: 15px;
   border-radius: 5px;
+  box-shadow: 0 0 15px rgba(255,215,0,0.2);
 }
 
 .notice-head {
@@ -265,7 +280,7 @@ onMounted(() => {
 .notice-title-text {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -273,13 +288,13 @@ onMounted(() => {
 
 .notice-time {
   font-size: 14px;
-  color: #999;
+  color: #888;
   white-space: nowrap;
 }
 
 .notice-content {
   font-size: 15px;
-  color: #666;
+  color: #aaa;
   line-height: 1.8;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -305,19 +320,19 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 20px;
 }
 
 .detail-time {
-  color: #999;
+  color: #888;
   font-size: 14px;
 }
 
 .detail-content {
   font-size: 16px;
   line-height: 2;
-  color: #333;
+  color: #ccc;
   white-space: pre-wrap;
 }
 

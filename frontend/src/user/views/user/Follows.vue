@@ -179,16 +179,17 @@ onMounted(() => {
 }
 
 .follow-card {
-  background: #fff;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.15);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
 }
 
 .follow-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--mall-primary);
+  box-shadow: 0 8px 24px rgba(0,212,255,0.2);
 }
 
 .follow-image {

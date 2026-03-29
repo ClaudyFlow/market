@@ -255,9 +255,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@user/assets/mall-style.css';
+
 .coupon-page {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: linear-gradient(180deg, rgba(0,212,255,0.15) 0%, rgba(10,14,26,0.8) 100%);
   padding: 20px;
 }
 
@@ -269,19 +271,22 @@ onMounted(() => {
 .page-title {
   font-size: 28px;
   font-weight: 600;
-  color: #1f2937;
+  color: #fff;
   margin-bottom: 24px;
   text-align: center;
+  background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* 选项卡 */
 .tab-container {
   display: flex;
-  background: white;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.2);
   border-radius: 12px;
   padding: 4px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .tab-item {
@@ -290,18 +295,18 @@ onMounted(() => {
   padding: 12px;
   cursor: pointer;
   border-radius: 8px;
-  color: #6b7280;
+  color: #aaa;
   font-weight: 500;
   transition: all 0.3s;
 }
 
 .tab-item:hover {
-  background: #f3f4f6;
+  background: rgba(0,212,255,0.1);
 }
 
 .tab-item.active {
-  background: linear-gradient(135deg, #00d4ff 0%, #1a2a4a 100%);
-  color: white;
+  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  color: #000;
 }
 
 /* 可领取区域 */
@@ -312,7 +317,7 @@ onMounted(() => {
 .section-title {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: #fff;
   margin-bottom: 16px;
 }
 
@@ -324,16 +329,17 @@ onMounted(() => {
 
 .coupon-card {
   display: flex;
-  background: white;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.15);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s;
 }
 
 .coupon-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--mall-primary);
+  box-shadow: 0 8px 16px rgba(0,212,255,0.2);
 }
 
 .coupon-card.claimable {
@@ -347,13 +353,13 @@ onMounted(() => {
 
 .coupon-left {
   width: 140px;
-  background: linear-gradient(135deg, #00d4ff 0%, #1a2a4a 100%);
+  background: linear-gradient(135deg, #00d4ff, #00ff88);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  color: white;
+  color: #000;
 }
 
 .coupon-amount {
@@ -388,18 +394,18 @@ onMounted(() => {
 .coupon-name {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: #fff;
 }
 
 .coupon-desc {
   font-size: 14px;
-  color: #6b7280;
+  color: #aaa;
   margin: 8px 0;
 }
 
 .coupon-info {
   font-size: 12px;
-  color: #9ca3af;
+  color: #888;
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
@@ -407,7 +413,8 @@ onMounted(() => {
 
 .loading,
 .empty-state {
-  background: white;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.2);
   border-radius: 12px;
   padding: 40px;
   text-align: center;
