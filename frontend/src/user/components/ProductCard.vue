@@ -157,18 +157,35 @@ const 获取进度颜色 = getProgressColor
 
 <style scoped>
 .product-card {
-  background: rgba(26, 31, 58, 0.8);
-  border: 1px solid rgba(0, 212, 255, 0.15);
+  background: rgba(0,16,32,0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.product-card:hover::before {
+  left: 100%;
 }
 
 .product-card:hover {
   transform: translateY(-8px);
   border-color: var(--mall-primary);
-  box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3),
+              0 0 20px rgba(0, 255, 136, 0.2);
 }
 
 .sale-image {
@@ -333,17 +350,20 @@ const 获取进度颜色 = getProgressColor
   color: #000;
   font-weight: bold;
   box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 .sale-action .el-button:hover {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.8),
+              0 0 50px rgba(0, 255, 136, 0.4);
+  transform: translateY(-2px);
 }
 
 .sale-action .sold-out-btn {
   width: 100%;
-  background: #cccccc;
+  background: #444444;
   border: none;
-  color: #000000;
+  color: #888888;
   cursor: default;
   box-shadow: none;
   pointer-events: none;

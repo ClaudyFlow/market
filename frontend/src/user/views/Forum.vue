@@ -315,16 +315,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@user/assets/mall-style.css';
+
 .forum-page {
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background: linear-gradient(180deg, rgba(0,212,255,0.1) 0%, rgba(0,8,16,0.95) 100%);
 }
 
 /* 顶部导航栏 */
 .header {
-  background-color: #ff7a45;
+  background: linear-gradient(90deg, rgba(0,16,32,0.95) 0%, rgba(0,32,64,0.9) 100%);
   padding: 12px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0,212,255,0.3);
+  box-shadow: 0 0 20px rgba(0,212,255,0.2);
 }
 
 .nav {
@@ -336,10 +339,17 @@ onMounted(() => {
 }
 
 .logo {
-  color: white;
+  color: var(--mall-primary);
   font-size: 24px;
   font-weight: bold;
   text-decoration: none;
+  text-shadow: 0 0 10px var(--mall-glow);
+  transition: all 0.3s;
+}
+
+.logo:hover {
+  text-shadow: 0 0 20px var(--mall-glow),
+               0 0 40px var(--mall-primary);
 }
 
 .search-box {
@@ -351,25 +361,39 @@ onMounted(() => {
   flex: 1;
   height: 36px;
   padding: 0 12px;
-  border: none;
+  border: 1px solid rgba(0,212,255,0.3);
   border-radius: 4px 0 0 4px;
   outline: none;
   font-size: 14px;
+  background: rgba(0,16,32,0.8);
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  border-color: var(--mall-primary);
+  box-shadow: 0 0 10px var(--mall-glow);
+}
+
+.search-input::placeholder {
+  color: #6688aa;
 }
 
 .search-btn {
   width: 80px;
   height: 36px;
-  background-color: #ff8a5c;
-  color: white;
+  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  color: #000;
   border: none;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  font-weight: bold;
 }
 
 .search-btn:hover {
-  background-color: #ff6a2f;
+  background: linear-gradient(135deg, #00ff88, #00d4ff);
+  box-shadow: 0 0 15px var(--mall-glow);
 }
 
 .nav-menu {
@@ -378,14 +402,20 @@ onMounted(() => {
 }
 
 .nav-menu a {
-  color: white;
+  color: var(--mall-text-secondary);
   text-decoration: none;
   font-size: 15px;
   cursor: pointer;
+  transition: all 0.3s;
+  padding: 6px 12px;
+  border-radius: 4px;
 }
 
-.nav-menu a:hover {
-  text-decoration: underline;
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: var(--mall-primary);
+  background: rgba(0,212,255,0.1);
+  box-shadow: 0 0 10px rgba(0,212,255,0.2);
 }
 
 /* 主体容器 */
@@ -399,10 +429,10 @@ onMounted(() => {
 /* 左侧帖子列表 */
 .post-list {
   flex: 3;
-  background: white;
-  border-radius: 4px;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .list-title {
@@ -410,8 +440,8 @@ onMounted(() => {
   font-weight: bold;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #ff7a45;
-  color: #ff7a45;
+  border-bottom: 2px solid rgba(0,212,255,0.3);
+  color: var(--mall-primary);
 }
 
 .posts {
@@ -423,13 +453,13 @@ onMounted(() => {
 .post-item {
   display: flex;
   padding: 15px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .post-item:hover {
-  background-color: #fafafa;
+  background: rgba(0,212,255,0.05);
 }
 
 .post-item:last-child {
@@ -452,7 +482,7 @@ onMounted(() => {
 
 .post-title {
   font-size: 16px;
-  color: #ff7a45;
+  color: var(--mall-primary);
   text-decoration: none;
   font-weight: 500;
   display: block;
@@ -465,7 +495,7 @@ onMounted(() => {
 
 .post-excerpt {
   font-size: 14px;
-  color: #666;
+  color: #aaa;
   margin: 8px 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -476,7 +506,7 @@ onMounted(() => {
 
 .post-info {
   font-size: 12px;
-  color: #999;
+  color: #888;
   margin-top: 8px;
   display: flex;
   gap: 15px;
@@ -505,10 +535,10 @@ onMounted(() => {
 }
 
 .side-box {
-  background: white;
-  border-radius: 4px;
+  background: rgba(26,31,58,0.8);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 12px;
   padding: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .side-title {
@@ -516,15 +546,15 @@ onMounted(() => {
   font-weight: bold;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
-  color: #ff7a45;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: var(--mall-primary);
 }
 
 .publish-btn {
   width: 100%;
   height: 40px;
-  background-color: #ff7a45;
-  color: white;
+  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  color: #000;
   border: none;
   border-radius: 4px;
   font-size: 15px;
@@ -538,7 +568,7 @@ onMounted(() => {
 }
 
 .publish-btn:hover {
-  background-color: #ff6a2f;
+  background: linear-gradient(135deg, #00ff88, #00d4ff);
 }
 
 /* 热门榜单 */
@@ -549,7 +579,7 @@ onMounted(() => {
 
 .hot-list li {
   padding: 8px 0;
-  border-bottom: 1px dashed #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -560,7 +590,7 @@ onMounted(() => {
 }
 
 .hot-list a {
-  color: #333;
+  color: #ccc;
   text-decoration: none;
   font-size: 14px;
   flex: 1;
@@ -570,7 +600,7 @@ onMounted(() => {
 }
 
 .hot-list a:hover {
-  color: #ff7a45;
+  color: var(--mall-primary);
 }
 
 .hot-rank {
@@ -590,7 +620,7 @@ onMounted(() => {
 .hot-rank.rank-2 { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); }
 .hot-rank.rank-3 { background: linear-gradient(135deg, #cd7f32, #a0522d); }
 .hot-rank.rank-4,
-.hot-rank.rank-5 { background: #999; }
+.hot-rank.rank-5 { background: #666; }
 
 /* 标签云 */
 .tag-cloud {
