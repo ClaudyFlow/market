@@ -1,5 +1,6 @@
 package com.market.service;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -11,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnProperty(name = "spring.data.redis.host", havingValue = "localhost", matchIfMissing = false)
 public class RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;

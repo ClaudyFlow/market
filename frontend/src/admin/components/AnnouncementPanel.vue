@@ -1,7 +1,7 @@
 <template>
   <div class="announcement" aria-label="平台公告">
     <header class="announcement-title">
-      <el-icon><Bell /></el-icon>
+      <i class="fas fa-bell"></i>
       <span>平台公告</span>
     </header>
     <el-carousel
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { Bell } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 
 interface 公告类型 {
   类型:string
@@ -82,13 +82,13 @@ const 公告列表:公告类型 [] = [
   display: flex;
   align-items: center;
   gap: 6px;
-  
+
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.15);
   justify-content: flex-start;
 }
 
-.announcement-title .el-icon {
+.announcement-title i {
   color: #00d4ff;
   font-size: 14px;
 }

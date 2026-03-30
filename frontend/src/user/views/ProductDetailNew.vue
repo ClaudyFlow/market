@@ -63,7 +63,7 @@
             <div class="promotion-label">促销</div>
             <div class="promotion-list">
               <div v-for="(promo, idx) in product.promotions" :key="idx" class="promotion-item">
-                <el-icon><Ticket /></el-icon>
+                <i class="fas fa-ticket-alt"></i>
                 <span>{{ promo }}</span>
               </div>
             </div>
@@ -133,52 +133,49 @@
           <!-- 服务承诺 -->
           <div class="service-promise">
             <div class="service-item">
-              <el-icon><CircleCheck /></el-icon>
+              <i class="fas fa-check-circle"></i>
               <span>正品保障</span>
             </div>
             <div class="service-item">
-              <el-icon><Van /></el-icon>
+              <i class="fas fa-truck"></i>
               <span>极速配送</span>
             </div>
             <div class="service-item">
-              <el-icon><RefreshLeft /></el-icon>
+              <i class="fas fa-undo"></i>
               <span>7 天无理由</span>
             </div>
           </div>
 
           <!-- 操作按钮 -->
           <div class="action-buttons">
-            <el-button 
-              type="warning" 
-              size="large" 
+            <el-button
+              type="warning"
+              size="large"
               class="buy-now-btn"
               @click="buyNow"
               :disabled="product.stock === 0"
             >
-              <el-icon><CreditCard /></el-icon> 立即购买
+              <i class="fas fa-credit-card"></i> 立即购买
             </el-button>
-            <el-button 
-              type="danger" 
-              size="large" 
+            <el-button
+              type="danger"
+              size="large"
               class="add-cart-btn"
               @click="addToCart"
               :disabled="product.stock === 0"
             >
-              <el-icon><ShoppingCart /></el-icon> 加入购物车
+              <i class="fas fa-shopping-cart"></i> 加入购物车
             </el-button>
           </div>
 
           <!-- 收藏和分享 -->
           <div class="social-actions">
             <el-button text @click="toggleFavorite">
-              <el-icon :color="isFavorited ? '#ff4757' : '#999'">
-                <Star v-if="!isFavorited" />
-                <StarFilled v-else />
-              </el-icon>
+              <i :class="isFavorited ? 'fas fa-star' : 'far fa-star'" :style="{ color: isFavorited ? '#ff4757' : '#999' }"></i>
               {{ isFavorited ? '已收藏' : '收藏' }}
             </el-button>
             <el-button text @click="shareProduct">
-              <el-icon><Share /></el-icon> 分享
+              <i class="fas fa-share-alt"></i> 分享
             </el-button>
           </div>
         </div>
@@ -189,7 +186,7 @@
         <el-tabs v-model="activeTab">
           <el-tab-pane name="detail">
             <template #label>
-              <span><el-icon><Document /></el-icon> 商品详情</span>
+              <span><i class="fas fa-file-alt"></i> 商品详情</span>
             </template>
             <div class="tab-content detail-content">
               <div class="detail-images">
@@ -201,7 +198,7 @@
 
           <el-tab-pane name="specs">
             <template #label>
-              <span><el-icon><Setting /></el-icon> 规格参数</span>
+              <span><i class="fas fa-cog"></i> 规格参数</span>
             </template>
             <div class="tab-content specs-content">
               <table class="specs-table">
@@ -215,7 +212,7 @@
 
           <el-tab-pane name="reviews">
             <template #label>
-              <span><el-icon><ChatDotRound /></el-icon> 商品评价 ({{ reviewCount }})</span>
+              <span><i class="fas fa-comments"></i> 商品评价 ({{ reviewCount }})</span>
             </template>
             <div class="tab-content reviews-content">
               <!-- 评价统计 -->
@@ -264,12 +261,54 @@
               <!-- 发表评价按钮 -->
               <div class="write-review-btn" v-if="isPurchased">
                 <el-button type="primary" @click="showReviewDialog = true">
-                  <el-icon><Edit /></el-icon> 发表评价
+                  <i class="fas fa-pen-to-square"></i> 发表评价
                 </el-button>
               </div>
             </div>
           </el-tab-pane>
         </el-tabs>
+      </div>
+
+      <!-- 常用标签区域 -->
+      <div class="common-tags-section">
+        <div class="tag-title">
+          <i class="fas fa-tags"></i>
+          <span>常用标签</span>
+        </div>
+        <div class="tag-list">
+          <div class="tag-item">
+            <i class="fab fa-github"></i>
+            <span>GitHub</span>
+          </div>
+          <div class="tag-item">
+            <i class="fas fa-code-branch"></i>
+            <span>Gitee</span>
+          </div>
+          <div class="tag-item">
+            <i class="fab fa-vuejs"></i>
+            <span>Vue3</span>
+          </div>
+          <div class="tag-item">
+            <i class="fab fa-node"></i>
+            <span>Node.js</span>
+          </div>
+          <div class="tag-item">
+            <i class="fas fa-database"></i>
+            <span>PostgreSQL</span>
+          </div>
+          <div class="tag-item">
+            <i class="fab fa-docker"></i>
+            <span>Docker</span>
+          </div>
+          <div class="tag-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Spring Security</span>
+          </div>
+          <div class="tag-item">
+            <i class="fas fa-rocket"></i>
+            <span>性能优化</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -278,22 +317,22 @@
       <div class="floating-actions">
         <div class="floating-item" @click="toggleFavorite">
           <el-badge :value="favoriteCount" :hidden="favoriteCount === 0">
-            <el-icon :size="24"><Star /></el-icon>
+            <i :class="isFavorited ? 'fas fa-star' : 'far fa-star'" style="font-size: 24px;"></i>
           </el-badge>
           <span>收藏</span>
         </div>
         <div class="floating-item" @click="scrollToTop">
-          <el-icon :size="24"><Top /></el-icon>
+          <i class="fas fa-arrow-up" style="font-size: 24px;"></i>
           <span>顶部</span>
         </div>
         <div class="floating-item cart" @click="addToCart">
           <el-badge :value="cartCount" :hidden="cartCount === 0">
-            <el-icon :size="24"><ShoppingCart /></el-icon>
+            <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
           </el-badge>
           <span>购物车</span>
         </div>
         <div class="floating-item buy" @click="buyNow">
-          <el-icon :size="24"><CreditCard /></el-icon>
+          <i class="fas fa-credit-card" style="font-size: 24px;"></i>
           <span>立即购买</span>
         </div>
       </div>
@@ -312,13 +351,14 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import {
-  ShoppingCart, CreditCard, Star, StarFilled, Share, CircleCheck, Van,
-  RefreshLeft, Ticket, Document, Setting, ChatDotRound, Edit, Top
-} from '@element-plus/icons-vue'
+import { useCartStore } from '@user/stores/cart'
 import ReviewFormWithImages from '@user/components/ReviewFormWithImages.vue'
+
+const route = useRoute()
+const router = useRouter()
+const cartStore = useCartStore()
 
 // 定义商品接口
 interface Product {
@@ -368,7 +408,6 @@ interface SelectedSpecs {
   version: string
 }
 
-const route = useRoute()
 const productId = route.params.id as string
 
 // 商品数据（模拟，实际从 API 获取）
@@ -530,6 +569,18 @@ const addToCart = (): void => {
     ElMessage.warning('请选择颜色')
     return
   }
+  
+  // 添加到购物车 store
+  cartStore.addToCart({
+    id: Number(product.value.id),
+    name: product.value.name,
+    price: product.value.price,
+    quantity: quantity.value,
+    image: product.value.images[0],
+    selected: true,
+    specs: { ...selectedSpecs }
+  })
+  
   ElMessage.success('已加入购物车')
   cartCount.value++
 }
@@ -540,7 +591,15 @@ const buyNow = (): void => {
     ElMessage.warning('请选择颜色')
     return
   }
-  ElMessage.success('跳转结算页...')
+  // 跳转到支付页面
+  router.push({
+    path: '/payment',
+    query: {
+      productName: product.value.name,
+      quantity: quantity.value,
+      amount: product.value.price * quantity.value
+    }
+  })
 }
 
 // 收藏
@@ -965,6 +1024,72 @@ onMounted(async (): Promise<void> => {
 .tab-content {
   padding: 30px 20px;
   min-height: 400px;
+}
+
+/* 常用标签区域 */
+.common-tags-section {
+  background: rgba(26,31,58,0.8);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0,212,255,0.2);
+}
+
+.tag-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,212,255,0.2);
+}
+
+.tag-title i {
+  color: #00d4ff;
+  font-size: 20px;
+}
+
+.tag-title span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tag-item:hover {
+  background: rgba(0,212,255,0.2);
+  border-color: #00d4ff;
+  box-shadow: 0 0 15px rgba(0,212,255,0.3);
+  transform: translateY(-2px);
+}
+
+.tag-item i {
+  color: #00d4ff;
+  font-size: 18px;
+}
+
+.tag-item span {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
 }
 
 /* 商品详情 */

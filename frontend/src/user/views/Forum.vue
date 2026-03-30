@@ -97,7 +97,7 @@
             class="mt-2"
           />
           <button class="publish-btn" @click="publishPost">
-            <el-icon><Plus /></el-icon> 发布帖子
+            <i class="fas fa-plus"></i> 发布帖子
           </button>
         </div>
 
@@ -170,9 +170,9 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import request from '@/common/api/request'
 

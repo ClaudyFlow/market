@@ -5,6 +5,7 @@ import com.market.service.EmailValidatorService;
 import com.market.service.VerificationCodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
+@ConditionalOnProperty(name = "spring.mail.enabled", havingValue = "true", matchIfMissing = false)
 public class EmailController {
 
     private static final Logger log = LoggerFactory.getLogger(EmailController.class);

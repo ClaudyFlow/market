@@ -126,12 +126,29 @@ const 继续购物 = () => {
   路由.push('/products')
 }
 
+// 别名用于模板
+const continueShopping = 继续购物
+
 const 去结算 = () => {
   if (已选数量.value === 0) {
     ElMessage.warning('请选择要结算的商品')
     return
   }
-  路由.push('/order')
+  console.log('跳转支付页面', {
+    path: '/payment',
+    query: {
+      amount: 已选总额.value.toFixed(2),
+      quantity: 已选数量.value
+    }
+  })
+  // 跳转到支付页面
+  路由.push({
+    path: '/payment',
+    query: {
+      amount: 已选总额.value.toFixed(2),
+      quantity: 已选数量.value
+    }
+  })
 }
 </script>
 
@@ -165,15 +182,15 @@ const 去结算 = () => {
   border: 1px solid rgba(0,212,255,0.2);
   border-radius: 12px;
   overflow: hidden;
-  
+  margin-bottom: 20px;
 }
 
 .cart-header {
   display: flex;
-  background: linear-gradient(90deg, rgba(0,212,255,0.3), transparent);
+  background: rgba(0,212,255,0.15);
   padding: 15px 20px;
   font-size: 14px;
-  color: var(--mall-primary);
+  color: #fff;
   font-weight: bold;
 }
 
@@ -187,10 +204,11 @@ const 去结算 = () => {
   border-bottom: 1px solid rgba(255,255,255,0.05);
   align-items: center;
   transition: all 0.3s;
+  background: rgba(255,255,255,0.02);
 }
 
 .cart-item:hover {
-  background: rgba(0,212,255,0.05);
+  background: rgba(0,212,255,0.08);
 }
 
 .cart-item:last-child {

@@ -1,6 +1,6 @@
 <template>
   <SectionContainer>
-    <SectionHeader :icon="StarFilled">热门推荐</SectionHeader>
+    <SectionHeader icon="fas fa-star">热门推荐</SectionHeader>
     <div class="recommend-grid">
       <ProductCard v-for="item in recommendedItems" :key="item.id" :product="item" @click="goToDetail(item.id)"
         @add-to-cart="addToCart" />
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { StarFilled } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import { useCartStore } from "@user/stores/cart";
 import ProductCard from "@user/components/ProductCard.vue";
 import SectionHeader from "@user/components/SectionHeader.vue";

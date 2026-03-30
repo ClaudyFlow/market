@@ -1,7 +1,7 @@
 <template>
   <section class="user-forum" aria-label="用户论坛">
     <header class="forum-header">
-      <el-icon><Comment /></el-icon>
+      <i class="fas fa-comment"></i>
       <h3>用户论坛</h3>
       <el-button text size="small" @click="viewAll">查看全部</el-button>
     </header>
@@ -14,9 +14,9 @@
               <span class="topic-author">{{ topic.author }}</span>
               <span class="topic-time">{{ topic.time }}</span>
               <span class="topic-stats-inline">
-                <el-icon><ChatLineSquare /></el-icon>
+                <i class="fas fa-comment-alt"></i>
                 <span>{{ topic.replies }}</span>
-                <el-icon><View /></el-icon>
+                <i class="fas fa-eye"></i>
                 <span>{{ topic.views }}</span>
               </span>
             </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { Comment, ChatLineSquare, View } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -77,7 +77,7 @@ const viewTopic = (id: number) => {
   flex: 1;
 }
 
-.forum-header .el-icon {
+.forum-header i {
   font-size: 16px;
 }
 
@@ -179,7 +179,7 @@ const viewTopic = (id: number) => {
   
 }
 
-.topic-stats-inline .el-icon {
+.topic-stats-inline i {
   font-size: 13px;
 }
 

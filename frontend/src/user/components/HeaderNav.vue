@@ -3,7 +3,7 @@
     <div class="container">
       <router-link to="/" class="logo">
         <div class="logo-icon">
-          <el-icon size="32"><ShoppingCart /></el-icon>
+          <i class="fas fa-shopping-cart"></i>
         </div>
         <div class="logo-text">
           <span class="logo-title">购物商城</span>
@@ -16,91 +16,68 @@
 
       <nav class="nav-links">
         <router-link to="/" class="nav-item" active-class="active">
-          <el-icon><HomeFilled /></el-icon>
+          <i class="fas fa-home"></i>
           <span>首页</span>
         </router-link>
         <router-link to="/item" class="nav-item" active-class="active">
-          <el-icon><Box /></el-icon>
+          <i class="fas fa-box"></i>
           <span>全部商品</span>
         </router-link>
-        <router-link to="/lottery" class="nav-item" active-class="active">
-          <el-icon><Star /></el-icon>
-          <span>幸运抽奖</span>
-        </router-link>
-        <router-link to="/digital" class="nav-item" active-class="active">
-          <el-icon><Cellphone /></el-icon>
-          <span>数码电器</span>
-        </router-link>
-        <router-link to="/fashion" class="nav-item" active-class="active">
-          <el-icon><ShoppingBag /></el-icon>
-          <span>服饰鞋包</span>
-        </router-link>
-        <router-link to="/home" class="nav-item" active-class="active">
-          <el-icon><House /></el-icon>
-          <span>家居家装</span>
-        </router-link>
         <router-link to="/sale" class="nav-item" active-class="active">
-          <el-icon><Timer /></el-icon>
+          <i class="fas fa-clock"></i>
           <span>限时特惠</span>
+        </router-link>
+        <router-link to="/lottery" class="nav-item" active-class="active">
+          <i class="fas fa-star"></i>
+          <span>幸运抽奖</span>
         </router-link>
       </nav>
 
-      <div class="search-box">
-        <el-input
-          v-model="searchKeyword"
+      <!-- 使用新的搜索框组件（紧凑模式） -->
+      <div class="search-cart-wrapper">
+        <SearchBar 
+          compact 
+          :showHotTags="false" 
+          :showHistory="false"
           placeholder="搜索商品..."
-          size="small"
-          round
-          @keyup.enter="handleSearch"
-        >
-          <template #append>
-            <el-button @click="handleSearch" round>
-              <el-icon><Search /></el-icon>
-            </el-button>
-          </template>
-        </el-input>
-      </div>
-
-      <div class="cart-icon" @click="router.push('/cart')">
-        <el-icon size="22"><ShoppingCart /></el-icon>
-        <span class="cart-count" v-if="购物车数量 > 0">{{ 购物车数量 }}</span>
+        />
+        <!-- 购物车标签 -->
+        <div class="cart-tab" @click="router.push('/cart')" role="button" tabindex="0">
+          <div class="cart-tab-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-tab-count" v-if="购物车数量 > 0">{{ 购物车数量 > 99 ? '99+' : 购物车数量 }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
-import { ShoppingCart, HomeFilled, Box, Star, Cellphone, ShoppingBag, House, Timer, Search } from '@element-plus/icons-vue'
+import SearchBar from './SearchBar.vue'
 
 const router = useRouter()
 const cartStore = useCartStore()
 
-const searchKeyword = ref('')
-
 // 购物车数量
 const 购物车数量 = computed(() => cartStore.totalCount)
-
-const handleSearch = () => {
-  if (searchKeyword.value.trim()) {
-    router.push({ path: '/item', query: { keyword: searchKeyword.value } })
-  }
-}
 </script>
 
 <style scoped>
 .main-nav {
-  padding: 15px 0;
+  padding: 1% 0;
 }
 
 .main-nav > .container {
   display: flex;
   align-items: center;
-  gap: 40px;
-  max-width: 1400px;
-  padding: 0 20px;
+  gap: 20px;
+  width: 100%;
+  padding: 0 2%;
+  height: 70px;
 }
 
 .logo {
@@ -120,6 +97,11 @@ const handleSearch = () => {
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 20px rgba(0,212,255,0.5);
+}
+
+.logo-icon i {
+  color: #000;
+  font-size: 28px;
 }
 
 .logo-text {
@@ -195,34 +177,44 @@ const handleSearch = () => {
   box-shadow: 0 0 15px rgba(0,212,255,0.3);
 }
 
-.nav-item .el-icon {
+.nav-item i {
   font-size: 18px;
 }
 
-.search-box {
-  width: 250px;
+/* 搜索购物车包装器 */
+.search-cart-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 500px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
-.search-box :deep(.el-input__wrapper) {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(0,212,255,0.3);
-}
-
-.search-box :deep(.el-input__inner) {
-  color: #fff;
-}
-
-.search-box :deep(.el-input-group__append) {
-  background: var(--mall-primary);
-  color: #000;
+.search-cart-wrapper :deep(.search-bar-component) {
+  padding: 0;
+  background: transparent;
   border: none;
+  flex: 1;
 }
 
-.search-box :deep(.el-input-group__append:hover) {
-  background: var(--mall-secondary);
+/* 购物车标签 */
+.cart-tab {
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.cart-icon {
+.cart-tab:hover {
+  transform: scale(1.05);
+}
+
+.cart-tab:focus {
+  outline: 2px solid #00d4ff;
+  outline-offset: 2px;
+}
+
+.cart-tab-icon {
   position: relative;
   width: 45px;
   height: 45px;
@@ -232,18 +224,21 @@ const handleSearch = () => {
   align-items: center;
   justify-content: center;
   color: var(--mall-primary);
-  cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.cart-icon:hover {
+.cart-tab:hover .cart-tab-icon {
   background: linear-gradient(135deg, #00d4ff, #00ff88);
   color: #000;
   box-shadow: 0 0 20px rgba(0,212,255,0.5);
-  transform: scale(1.1);
 }
 
-.cart-count {
+.cart-tab-icon i {
+  font-size: 20px;
+}
+
+.cart-tab-count {
   position: absolute;
   top: -5px;
   right: -5px;
@@ -254,5 +249,9 @@ const handleSearch = () => {
   border-radius: 10px;
   font-weight: bold;
   border: 2px solid #1a2a4a;
+  min-width: 18px;
+  text-align: center;
 }
+
+/* 购物车图标包装器（已移除） */
 </style>

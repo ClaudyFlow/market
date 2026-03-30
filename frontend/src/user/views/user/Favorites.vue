@@ -2,7 +2,7 @@
   <div class="favorites-page">
     <div class="container">
       <h1 class="page-title">
-        <el-icon><StarFilled /></el-icon>
+        <i class="fas fa-star"></i>
         我的收藏
       </h1>
 
@@ -23,7 +23,7 @@
                 circle
                 @click="removeFavorite(item.productId)"
               >
-                <el-icon><Close /></el-icon>
+                <i class="fas fa-times"></i>
               </el-button>
             </div>
             <div class="favorite-info">
@@ -33,7 +33,7 @@
               </div>
               <div class="favorite-meta">
                 <span class="favorite-time">
-                  <el-icon><Clock /></el-icon>
+                  <i class="fas fa-clock"></i>
                   {{ 格式化时间 (item.createdAt) }}
                 </span>
               </div>
@@ -66,9 +66,9 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { StarFilled, Close, Clock } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFavorites, removeFavorite } from '@user/api/favorite'
 import { addToCart as apiAddToCart } from '@user/api/cart'
@@ -186,7 +186,7 @@ onMounted(() => {
   gap: 12px;
 }
 
-.page-title .el-icon {
+.page-title i {
   color: var(--mall-warning);
   font-size: 32px;
 }
@@ -290,7 +290,7 @@ onMounted(() => {
   color: #888;
 }
 
-.favorite-time .el-icon {
+.favorite-time i {
   font-size: 14px;
 }
 

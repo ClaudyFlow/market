@@ -49,7 +49,7 @@
             </div>
           </div>
           <div class="stat-card info">
-            <div class="stat-icon"><el-icon><TrendCharts /></el-icon></div>
+            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
             <div class="stat-info">
               <div class="stat-value">¥{{ stats.todaySales || 0 }}</div>
               <div class="stat-label">今日销售</div>
@@ -74,7 +74,7 @@
         <div class="section-header">
           <h2>商品管理</h2>
           <el-button type="primary" @click="openProductDialog">
-            <el-icon><Plus /></el-icon> 添加商品
+            <i class="fas fa-plus"></i> 添加商品
           </el-button>
         </div>
         <el-table :data="products" style="width: 100%" v-loading="loading">
@@ -210,7 +210,7 @@
         <div class="section-header">
           <h2>公告管理</h2>
           <el-button type="primary" @click="openNoticeDialog">
-            <el-icon><Plus /></el-icon> 发布公告
+            <i class="fas fa-plus"></i> 发布公告
           </el-button>
         </div>
         <el-table :data="notices" style="width: 100%" v-loading="loading">
@@ -289,7 +289,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { User, Shop, Document, TrendCharts, Plus } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/common/api/request'
 

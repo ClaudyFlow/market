@@ -36,11 +36,11 @@ public class AdminProductController {
     public Result<Map<String, Object>> getAuditProductList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Integer status,
             @RequestParam(required = false) Long merchantId) {
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Product> productPage = productService.getAuditProducts(keyword, merchantId, pageable);
+        Page<Product> productPage = productService.getAuditProducts(status, merchantId, pageable);
 
         List<Map<String, Object>> productList = productPage.getContent().stream()
             .map(this::convertProductToMap)

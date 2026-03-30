@@ -29,7 +29,7 @@
             />
           </div>
           <div class="progress-tip" v-if="nextLevel">
-            <el-icon><TrendCharts /></el-icon>
+            <i class="fas fa-chart-line"></i>
             <span>再获得 {{ remainingGrowth }} 成长值可升级至 {{ nextLevel.name }}</span>
           </div>
         </div>
@@ -39,7 +39,7 @@
       <div class="benefits-grid">
         <div class="benefit-item" v-for="benefit in benefitsList" :key="benefit.label">
           <div class="benefit-icon">
-            <el-icon :size="28"><component :is="benefit.icon" /></el-icon>
+            <i :class="getIconClass(benefit.icon)"></i>
           </div>
           <div class="benefit-label">{{ benefit.label }}</div>
           <div class="benefit-value">{{ benefit.value }}</div>
@@ -64,22 +64,22 @@
           <div class="gift-image">
             <img v-lazyload="gift.image" alt="" />
             <div class="gift-overlay" v-if="!gift.canClaim && !gift.claimed">
-              <el-icon><Lock /></el-icon>
+              <i class="fas fa-lock"></i>
               <span>等级不足</span>
             </div>
           </div>
           <div class="gift-info">
             <div class="gift-name">{{ gift.name }}</div>
             <div class="gift-reward">
-              <el-icon><Ticket /></el-icon>
+              <i class="fas fa-ticket-alt"></i>
               <span>+{{ gift.creditReward }} 积分</span>
             </div>
             <div class="gift-status" v-if="gift.remainingSeconds !== undefined && gift.remainingSeconds > 0">
-              <el-icon><Clock /></el-icon>
+              <i class="fas fa-clock"></i>
               <span>{{ formatCountdown(gift.remainingSeconds) }}</span>
             </div>
             <div class="gift-status claimed" v-else-if="gift.claimed">
-              <el-icon><CircleCheck /></el-icon>
+              <i class="fas fa-check-circle"></i>
               <span>已领取</span>
             </div>
             <el-button 
@@ -113,22 +113,22 @@
           <div class="gift-image">
             <img v-lazyload="gift.image" alt="" />
             <div class="gift-overlay" v-if="!gift.canClaim && !gift.claimed">
-              <el-icon><Lock /></el-icon>
+              <i class="fas fa-lock"></i>
               <span>等级不足</span>
             </div>
           </div>
           <div class="gift-info">
             <div class="gift-name">{{ gift.name }}</div>
             <div class="gift-reward">
-              <el-icon><Ticket /></el-icon>
+              <i class="fas fa-ticket-alt"></i>
               <span>+{{ gift.creditReward }} 积分</span>
             </div>
             <div class="gift-status" v-if="gift.remainingDays !== undefined && gift.remainingDays > 0">
-              <el-icon><Clock /></el-icon>
+              <i class="fas fa-clock"></i>
               <span>可领取：{{ gift.nextAvailable ? formatDate(gift.nextAvailable) : '-' }}</span>
             </div>
             <div class="gift-status claimed" v-else-if="gift.claimed">
-              <el-icon><CircleCheck /></el-icon>
+              <i class="fas fa-check-circle"></i>
               <span>已领取</span>
             </div>
             <el-button 
@@ -284,12 +284,9 @@
 </template>
 
 <script setup lang="ts">
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {
-  Ticket, Clock, CircleCheck, Lock, Shop, Discount, Truck,
-  CustomerService, Star, DataAnalysis
-} from '@element-plus/icons-vue'
 import UserAvatar from '@user/components/UserAvatar.vue'
 import {
   getVipLevels,
@@ -353,6 +350,56 @@ const rechargeOptions = [
 const selectedAmount = ref<number | null>(null)
 const selectedPaymentMethod = ref('ALIPAY')
 const rechargeDialog = reactive({ visible: false })
+
+// 获取 Font Awesome 图标类名
+const getIconClass = (iconName: string): string => {
+  const iconMap: Record<string, string> = {
+    Discount: 'fas fa-percent',
+    Ticket: 'fas fa-ticket-alt',
+    Truck: 'fas fa-truck',
+    CustomerService: 'fas fa-headset',
+    Star: 'fas fa-star',
+    Shop: 'fas fa-shop',
+    DataAnalysis: 'fas fa-chart-line',
+    TrendCharts: 'fas fa-chart-line',
+    Lock: 'fas fa-lock',
+    Clock: 'fas fa-clock',
+    CircleCheck: 'fas fa-check-circle',
+    Bell: 'fas fa-bell',
+    User: 'fas fa-user',
+    Setting: 'fas fa-cog',
+    Document: 'fas fa-file-alt',
+    Location: 'fas fa-map-marker-alt',
+    ShoppingCart: 'fas fa-shopping-cart',
+    CreditCard: 'fas fa-credit-card',
+    Plus: 'fas fa-plus',
+    Close: 'fas fa-times',
+    ArrowLeft: 'fas fa-arrow-left',
+    RefreshLeft: 'fas fa-undo',
+    Top: 'fas fa-arrow-up',
+    Check: 'fas fa-check',
+    InfoFilled: 'fas fa-info-circle',
+    Loading: 'fas fa-spinner fa-spin',
+    Edit: 'fas fa-pen-to-square',
+    Share: 'fas fa-share-alt',
+    Van: 'fas fa-truck',
+    Trophy: 'fas fa-trophy',
+    Coin: 'fas fa-coins',
+    MagicStick: 'fas fa-wand-magic-sparkles',
+    Present: 'fas fa-gift',
+    ChatDotRound: 'fas fa-comments',
+    Comment: 'fas fa-comment',
+    Message: 'fas fa-message',
+    Phone: 'fas fa-phone',
+    Headset: 'fas fa-headset',
+    QuestionFilled: 'fas fa-question-circle',
+    Menu: 'fas fa-bars',
+    Download: 'fas fa-download',
+    Monitor: 'fas fa-monitor',
+    Money: 'fas fa-money-bill'
+  }
+  return iconMap[iconName] || 'fas fa-circle'
+}
 
 // 权益列表
 const benefitsList = computed(() => {
@@ -679,7 +726,7 @@ onMounted(() => {
   gap: 6px;
 }
 
-.progress-tip .el-icon {
+.progress-tip i {
   color: #fff9c4;
   filter: drop-shadow(0 0 8px rgba(255, 249, 196, 0.8));
 }

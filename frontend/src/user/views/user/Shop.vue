@@ -5,7 +5,7 @@
       <div class="banner-content">
         <!-- 返回按钮 -->
         <div class="back-btn" @click="goBack">
-          <el-icon><ArrowLeft /></el-icon> 返回
+          <i class="fas fa-arrow-left"></i> 返回
         </div>
         
         <div class="shop-logo-area">
@@ -36,12 +36,12 @@
               <span class="stat-label">评分</span>
             </div>
           </div>
-          <el-button 
-            :type="isFollowed ? 'success' : 'primary'" 
+          <el-button
+            :type="isFollowed ? 'success' : 'primary'"
             class="follow-btn"
             @click="toggleFollow"
           >
-            <el-icon><Star /></el-icon>
+            <i class="fas fa-star"></i>
             {{ isFollowed ? '已关注' : '关注店铺' }}
           </el-button>
         </div>
@@ -52,16 +52,16 @@
     <nav class="shop-nav">
       <div class="nav-content">
         <router-link to="/" class="nav-item">
-          <el-icon><HomeFilled /></el-icon> 首页
+          <i class="fas fa-home"></i> 首页
         </router-link>
         <a href="javascript:;" class="nav-item active">
-          <el-icon><ShoppingBag /></el-icon> 全部宝贝
+          <i class="fas fa-shopping-bag"></i> 全部宝贝
         </a>
         <a href="javascript:;" class="nav-item">
-          <el-icon><FolderOpened /></el-icon> 店铺分类
+          <i class="fas fa-folder-open"></i> 店铺分类
         </a>
         <a href="javascript:;" class="nav-item">
-          <el-icon><ChatDotRound /></el-icon> 联系我们
+          <i class="fas fa-comments"></i> 联系我们
         </a>
       </div>
     </nav>
@@ -89,7 +89,7 @@
             <h3 class="sidebar-title">联系客服</h3>
             <div class="service-area">
               <el-button class="service-btn" @click="openChat">
-                <el-icon><ChatLineRound /></el-icon> 在线咨询
+                <i class="fas fa-comment-dots"></i> 在线咨询
               </el-button>
               <p class="service-time">工作时间：9:00-22:00</p>
             </div>
@@ -112,7 +112,7 @@
           <!-- 悬浮工具栏 -->
           <div class="float-tools">
             <div class="tool-item" @click="scrollToTop">
-              <el-icon><Top /></el-icon>
+              <i class="fas fa-arrow-up"></i>
               <span>顶部</span>
             </div>
           </div>
@@ -131,7 +131,7 @@
                 @keyup.enter="handleSearch"
               >
                 <template #prefix>
-                  <el-icon><Search /></el-icon>
+                  <i class="fas fa-search"></i>
                 </template>
                 <template #append>
                   <el-button @click="handleSearch">搜索</el-button>
@@ -167,7 +167,7 @@
                 <img :src="product.image" :alt="product.name" />
                 <div class="product-overlay">
                   <el-button circle size="small">
-                    <el-icon><View /></el-icon>
+                    <i class="fas fa-eye"></i>
                   </el-button>
                 </div>
               </div>
@@ -176,7 +176,7 @@
                 <p class="product-desc">{{ product.description }}</p>
                 <div class="product-meta">
                   <span class="rating">
-                    <el-icon><StarFilled /></el-icon> {{ product.rating }}
+                    <i class="fas fa-star"></i> {{ product.rating }}
                   </span>
                   <span class="sales">销量 {{ product.sales }}</span>
                 </div>
@@ -191,7 +191,7 @@
                   <span class="stock-text">仅剩{{ product.remaining }}件</span>
                 </div>
                 <el-button class="add-cart-btn" @click.stop="addToCart(product)">
-                  <el-icon><ShoppingCart /></el-icon> 加入购物车
+                  <i class="fas fa-shopping-cart"></i> 加入购物车
                 </el-button>
               </div>
             </div>
@@ -216,13 +216,9 @@
 </template>
 
 <script setup lang="ts">
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { 
-  Star, StarFilled, HomeFilled, ShoppingBag, FolderOpened, 
-  ChatDotRound, Search, ShoppingCart, ChatLineRound, Top, 
-  View, ArrowLeft
-} from '@element-plus/icons-vue';
 import SectionContainer from "@user/components/SectionContainer.vue";
 import { ElMessage } from 'element-plus';
 import { useCartStore } from "@user/stores/cart";

@@ -8,7 +8,11 @@
         <div class="machine-header">
           <div class="chance-info">
             <el-icon><Ticket /></el-icon>
-            <span>剩余免费次数：<strong>{{ freeChance }}</strong> 次</span>
+            <span>每日可抽 <strong>3</strong> 次</span>
+          </div>
+          <div class="chance-info today-chance">
+            <el-icon><Clock /></el-icon>
+            <span>今日还可抽 <strong>{{ freeChance }}</strong> 次</span>
           </div>
           <div class="credit-info">
             <el-icon><Coin /></el-icon>
@@ -93,7 +97,7 @@
         <ul class="rules-list">
           <li>
             <el-icon><Check /></el-icon>
-            每日可免费抽奖 <strong>{{ freeChance }}</strong> 次
+            每日可抽奖 <strong>3</strong> 次，今日还可抽奖 <strong>{{ freeChance }}</strong> 次
           </li>
           <li>
             <el-icon><Coin /></el-icon>
@@ -154,9 +158,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-  Ticket, Coin, MagicStick, Loading, Present, Document, 
-  Trophy, Check, CircleCheck, InfoFilled 
+import {
+  Ticket, Coin, MagicStick, Loading, Present, Document,
+  Trophy, Check, CircleCheck, InfoFilled, Clock
 } from '@element-plus/icons-vue'
 import request from '@user/api/request'
 import { useUserStore } from '@common/stores/user'
@@ -448,6 +452,10 @@ onMounted(() => {
 .credit-info strong {
   color: #00ff88;
   font-size: 18px;
+}
+
+.today-chance strong {
+  color: #ffd700;
 }
 
 /* 抽奖显示区域 */

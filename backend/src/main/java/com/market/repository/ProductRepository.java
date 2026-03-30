@@ -39,7 +39,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /**
      * 搜索商品
      */
-    @Query("SELECT p FROM Product p WHERE p.status = 'ON_SALE' AND " +
+    @Query("SELECT p FROM Product p WHERE p.status = 1 AND " +
            "(p.name LIKE %:keyword% OR p.description LIKE %:keyword% OR p.category LIKE %:keyword%) " +
            "ORDER BY p.createdAt DESC")
     Page<Product> searchProducts(@Param("keyword") String keyword, Pageable pageable);
@@ -57,12 +57,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /**
      * 按分类和状态获取商品
      */
-    Page<Product> findByCategoryAndStatus(String category, String status, Pageable pageable);
+    Page<Product> findByCategoryAndStatus(String category, Integer status, Pageable pageable);
 
     /**
      * 统计商品数量
      */
-    long countByStatus(String status);
+    long countByStatus(Integer status);
 
     /**
      * 统计可售商品数量
@@ -72,5 +72,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /**
      * 按状态获取商品
      */
-    Page<Product> findByStatus(String status, Pageable pageable);
+    Page<Product> findByStatus(Integer status, Pageable pageable);
 }
