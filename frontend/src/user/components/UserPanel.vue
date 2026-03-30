@@ -13,7 +13,7 @@
       @click="handleCheckIn"
       :aria-label="userStore.hasCheckedIn ? '已签到' : '立即签到'"
     >
-      <el-icon><Calendar /></el-icon>
+      <i class="far fa-calendar-alt"></i>
       <span>{{ userStore.hasCheckedIn ? "已签到" : "立即签到" }}</span>
       <span class="check-in-reward" v-if="userStore.hasCheckedIn">+10 积分</span>
     </button>
@@ -22,7 +22,7 @@
       @click="goToLottery"
       aria-label="点击抽奖"
     >
-      <span><el-icon><Coin /></el-icon>点击抽奖</span>
+      <span><i class="fas fa-coins"></i>点击抽奖</span>
     </button>
   </article>
 </template>
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@user/stores/user'
-import { User, Calendar, Coin } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import VipLevelBadge from './VipLevelBadge.vue'
 import UserLevel from './UserLevel.vue'
 import UserCredit from './UserCredit.vue'
@@ -144,7 +144,7 @@ const goToLottery = () => {
   transform: none;
 }
 
-.check-in-btn .el-icon {
+.check-in-btn i {
   font-size: 18px;
 }
 
@@ -185,7 +185,7 @@ const goToLottery = () => {
   transform: translateY(-2px);
 }
 
-.lottery-btn .el-icon {
+.lottery-btn i {
   font-size: 20px;
 }
 </style>

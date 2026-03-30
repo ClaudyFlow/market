@@ -16,7 +16,7 @@
     <!-- 公告标题区域 -->
     <div class="notice-title">
       <h2>
-        <el-icon><Bell /></el-icon>
+        <i class="fas fa-bell"></i>
         系统公告
       </h2>
     </div>
@@ -89,8 +89,8 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
-import { Bell } from '@element-plus/icons-vue'
 import request from '@/common/api/request'
 
 const notices = ref([])

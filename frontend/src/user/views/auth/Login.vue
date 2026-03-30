@@ -222,6 +222,13 @@ const handleRegister = async () => {
 
     loading.value = true
     try {
+      // 前端验证密码一致性
+      if (registerForm.password !== registerForm.confirmPassword) {
+        ElMessage.error('两次输入的密码不一致')
+        return
+      }
+
+      // 发送包含 confirmPassword 的字段到后端
       const payload = {
         name: registerForm.name,
         password: registerForm.password,

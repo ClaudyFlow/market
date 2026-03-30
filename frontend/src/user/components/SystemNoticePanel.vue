@@ -1,7 +1,7 @@
 <template>
   <div class="system-notice" aria-label="系统公告">
     <header class="notice-title">
-      <el-icon><Bell /></el-icon>
+      <i class="fas fa-bell"></i>
       <span>系统公告</span>
     </header>
     <el-carousel
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Bell } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import { announcements } from '@user/data/announcements'
 </script>
 
@@ -55,7 +55,7 @@ import { announcements } from '@user/data/announcements'
   color: #00d4ff;
 }
 
-.notice-title .el-icon {
+.notice-title i {
   color: #00d4ff;
   font-size: 18px;
 }

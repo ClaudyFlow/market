@@ -3,7 +3,7 @@
     <!-- 页面标题 -->
     <header class="page-header">
       <h1 class="page-title">
-        <el-icon><List /></el-icon>
+        <i class="fas fa-list"></i>
         我的订单
       </h1>
     </header>
@@ -13,7 +13,7 @@
       <el-row :gutter="15">
         <el-col :span="6">
           <div class="stat-card primary" @click="筛选订单状态 ('')">
-            <div class="stat-icon"><el-icon><List /></el-icon></div>
+            <div class="stat-icon"><i class="fas fa-list"></i></div>
             <div class="stat-info">
               <div class="stat-value">{{ 订单统计.全部 }}</div>
               <div class="stat-label">全部订单</div>
@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="6">
           <div class="stat-card warning" @click="筛选订单状态 ('pending')">
-            <div class="stat-icon"><el-icon><Clock /></el-icon></div>
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
             <div class="stat-info">
               <div class="stat-value">{{ 订单统计.待付款 }}</div>
               <div class="stat-label">待付款</div>
@@ -31,7 +31,7 @@
         </el-col>
         <el-col :span="6">
           <div class="stat-card info" @click="筛选订单状态 ('paid')">
-            <div class="stat-icon"><el-icon><ShoppingCart /></el-icon></div>
+            <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
             <div class="stat-info">
               <div class="stat-value">{{ 订单统计.待发货 }}</div>
               <div class="stat-label">待发货</div>
@@ -40,7 +40,7 @@
         </el-col>
         <el-col :span="6">
           <div class="stat-card success" @click="筛选订单状态 ('completed')">
-            <div class="stat-icon"><el-icon><CircleCheck /></el-icon></div>
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
             <div class="stat-info">
               <div class="stat-value">{{ 订单统计.已完成 }}</div>
               <div class="stat-label">已完成</div>
@@ -194,9 +194,9 @@
 </template>
 
 <script setup lang="ts">
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { List, Clock, ShoppingCart, CircleCheck } from '@element-plus/icons-vue'
 
 interface 订单项 {
   orderNo: string
@@ -379,7 +379,7 @@ onMounted(() => {
   color: #fff;
 }
 
-.page-title .el-icon {
+.page-title i {
   color: var(--mall-primary);
   font-size: 26px;
   filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));

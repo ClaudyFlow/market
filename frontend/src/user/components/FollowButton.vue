@@ -7,17 +7,14 @@
     :loading="loading"
     @click.stop="handleToggleFollow"
   >
-    <el-icon>
-      <User v-if="!isFollowed" />
-      <UserFilled v-else />
-    </el-icon>
+    <i :class="isFollowed ? 'fas fa-user-check' : 'fas fa-user'"></i>
     <span v-if="!circle && showText">{{ isFollowed ? '已关注' : '关注' }}</span>
   </el-button>
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, onMounted, watch } from 'vue'
-import { User, UserFilled } from '@element-plus/icons-vue'
 import { toggleFollow, checkFollow } from '@user/api/follow'
 import { ElMessage } from 'element-plus'
 

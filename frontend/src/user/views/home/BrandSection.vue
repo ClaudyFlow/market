@@ -1,12 +1,12 @@
 <template>
   <SectionContainer>
-    <SectionHeader :icon="Shop">品牌精选</SectionHeader>
-    
+    <SectionHeader icon="fas fa-shop">品牌精选</SectionHeader>
+
     <!-- 修改点：使用 router-link 包裹卡片，实现点击跳转 -->
-    <router-link 
-      v-for="brand in brands" 
+    <router-link
+      v-for="brand in brands"
       :key="brand.name"
-      :to="{ name: 'Shop', query: { brand: brand.name } }" 
+      :to="{ name: 'Shop', query: { brand: brand.name } }"
       class="brand-card-link"
     >
       <article class="brand-card">
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Shop } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import SectionHeader from "@user/components/SectionHeader.vue";
 import SectionContainer from "@user/components/SectionContainer.vue";
 

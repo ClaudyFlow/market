@@ -4,10 +4,10 @@
       <div class="page-header">
         <div style="display: flex; align-items: center;">
           <el-button class="back-btn" @click="goBack" circle>
-            <el-icon><ArrowLeft /></el-icon>
+            <i class="fas fa-arrow-left"></i>
           </el-button>
           <h2 class="sub-title">
-            <el-icon><Document /></el-icon>
+            <i class="fas fa-file-alt"></i>
             订单中心
           </h2>
         </div>
@@ -112,9 +112,9 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Document, ArrowLeft } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/common/utils/api'
 

@@ -5,7 +5,7 @@
       <div class="page-header">
         <h1 class="page-title">地址管理</h1>
         <el-button type="primary" class="add-btn" @click="handleAdd">
-          <el-icon><Plus /></el-icon> 新增收货地址
+          <i class="fas fa-plus"></i> 新增收货地址
         </el-button>
       </div>
 
@@ -26,7 +26,7 @@
           </div>
 
           <div class="card-body">
-            <el-icon class="location-icon"><Location /></el-icon>
+            <i class="fas fa-map-marker-alt location-icon"></i>
             <span class="full-address">{{ item.region }} {{ item.detail }}</span>
           </div>
 
@@ -96,9 +96,9 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Location } from '@element-plus/icons-vue'
 
 // --- 1. 数据管理 ---
 const addressList = ref([])

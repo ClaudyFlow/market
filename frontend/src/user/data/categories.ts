@@ -1,83 +1,69 @@
-﻿import {
-  Grid,
-  Monitor,
-  ShoppingBag,
-  House,
-  Timer,
-  MagicStick,
-  Food,
-  Notebook,
-  Van,
-  Star,
-  Stamp,
-  Trophy
-} from '@element-plus/icons-vue'
-
+﻿// Font Awesome 图标直接使用类名，无需导入
 export const categories = [
   {
     name: '全部商品',
     path: '/item',
-    icon: Grid
+    icon: 'fas fa-th'
   },
   {
     name: '数码电器',
     path: '/digital',
-    icon: Monitor
+    icon: 'fas fa-desktop'
   },
   {
     name: '服饰鞋包',
     path: '/fashion',
-    icon: ShoppingBag
+    icon: 'fas fa-shopping-bag'
   },
   {
     name: '家居家装',
     path: '/home',
-    icon: House
+    icon: 'fas fa-home'
   },
   {
     name: '美妆护肤',
     path: '/beauty',
-    icon: MagicStick
+    icon: 'fas fa-wand-magic-sparkles'
   },
   {
     name: '食品生鲜',
     path: '/food',
-    icon: Food
+    icon: 'fas fa-utensils'
   },
   {
     name: '图书文具',
     path: '/books',
-    icon: Notebook
+    icon: 'fas fa-book'
   },
   {
     name: '母婴用品',
     path: '/baby',
-    icon: Van
+    icon: 'fas fa-baby-carriage'
   },
   {
     name: '运动户外',
     path: '/sports',
-    icon: Trophy
+    icon: 'fas fa-trophy'
   },
   {
     name: '珠宝首饰',
     path: '/jewelry',
-    icon: Stamp
+    icon: 'fas fa-gem'
   },
   {
     name: '限时特惠',
     path: '/sale',
-    icon: Timer
+    icon: 'fas fa-clock'
   },
   {
     name: '新品上市',
     path: '/new',
-    icon: Star
+    icon: 'far fa-star'
   },
   {
     name: '热销爆款',
     path: '/hot',
-    icon: Trophy
+    icon: 'fas fa-fire'
   }
 ]
 

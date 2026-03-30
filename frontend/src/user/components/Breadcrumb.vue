@@ -78,15 +78,18 @@ const breadcrumbItems = computed(() => {
 
 <style scoped>
 .breadcrumb {
-  background: linear-gradient(90deg, 
-    rgba(0, 212, 255, 0.1) 0%, 
+  background: linear-gradient(90deg,
+    rgba(0, 212, 255, 0.1) 0%,
     rgba(0, 255, 136, 0.05) 50%,
     rgba(0, 212, 255, 0.1) 100%);
   border-top: 1px solid rgba(0, 212, 255, 0.2);
   border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-  padding: 12px 0;
+  padding: 0;
   position: relative;
   overflow: hidden;
+  height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .breadcrumb::before {
@@ -109,11 +112,12 @@ const breadcrumbItems = computed(() => {
 }
 
 .breadcrumb .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
+  padding: 0 2%;
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
 }
 
 .breadcrumb :deep(.el-breadcrumb__inner) {

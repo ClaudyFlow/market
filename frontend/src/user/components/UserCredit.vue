@@ -1,12 +1,12 @@
 <template>
   <div class="user-credit">
-    <el-icon><Trophy /></el-icon>
+    <i class="fas fa-trophy"></i>
     <span>{{ credit }} 积分</span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Trophy } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 
 defineProps<{
   credit?: number | string
@@ -33,7 +33,7 @@ defineProps<{
   color: var(--mall-primary);
 }
 
-.user-credit .el-icon {
+.user-credit i {
   font-size: 18px;
   color: var(--mall-primary);
 }

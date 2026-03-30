@@ -6,17 +6,14 @@
     class="favorite-btn"
     @click.stop="handleToggleFavorite"
   >
-    <el-icon>
-      <Star v-if="!isFavorited" />
-      <StarFilled v-else />
-    </el-icon>
+    <i :class="isFavorited ? 'fas fa-star' : 'far fa-star'"></i>
     <span v-if="!circle && showText">{{ isFavorited ? '已收藏' : '收藏' }}</span>
   </el-button>
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, onMounted, watch } from 'vue'
-import { Star, StarFilled } from '@element-plus/icons-vue'
 import { toggleFavorite, checkFavorite } from '@user/api/favorite'
 import { ElMessage } from 'element-plus'
 

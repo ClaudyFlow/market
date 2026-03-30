@@ -2,7 +2,7 @@
   <div class="follows-page">
     <div class="container">
       <h1 class="page-title">
-        <el-icon><UserFilled /></el-icon>
+        <i class="fas fa-user"></i>
         我的关注
       </h1>
 
@@ -23,14 +23,14 @@
                 circle
                 @click="removeFollow(item.shopId)"
               >
-                <el-icon><Close /></el-icon>
+                <i class="fas fa-times"></i>
               </el-button>
             </div>
             <div class="follow-info">
               <h3 class="shop-name">{{ item.shopName }}</h3>
               <div class="follow-meta">
                 <span class="follow-time">
-                  <el-icon><Clock /></el-icon>
+                  <i class="fas fa-clock"></i>
                   {{ 格式化时间 (item.createdAt) }}
                 </span>
               </div>
@@ -57,9 +57,9 @@
 </template>
 
 <script setup>
+// Font Awesome 图标直接使用类名，无需导入
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { UserFilled, Close, Clock } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFollows, removeFollow as removeFollowApi } from '@user/api/follow'
 

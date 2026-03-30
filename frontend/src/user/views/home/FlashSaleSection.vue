@@ -1,6 +1,6 @@
 <template>
   <SectionContainer>
-    <SectionHeader :icon="Timer">限时特惠</SectionHeader>
+    <SectionHeader icon="fas fa-clock">限时特惠</SectionHeader>
     <div class="countdown-bar">
       <div class="cd-text">
         <span class="cd-label">距离结束还有</span>
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, type Ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { Timer } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import { useCartStore } from "@user/stores/cart";
 import ProductCard from "@user/components/ProductCard.vue";
 import SectionHeader from "@user/components/SectionHeader.vue";

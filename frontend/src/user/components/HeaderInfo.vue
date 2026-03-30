@@ -1,15 +1,21 @@
 <template>
   <div class="top-info">
     <div class="container">
-      <TopInfoBar user-text="尊敬的会员" :user-credit="用户积分">
+      <TopInfoBar user-text="尊敬的会员" :user-credit="0">
         <template #user-info>
           <div class="user-info">
-            <span class="username" @click="handleAuthClick" style="cursor: pointer;">
-              <el-avatar :size="24" :src="isLoggedIn && currentUser?.avatarUrl ? currentUser.avatarUrl : `https://via.placeholder.com/24x24/00d4ff/fff?text=${userDisplayName ? userDisplayName[0].toUpperCase() : 'U'}`">
+            <div class="user-profile" @click="handleAuthClick" style="cursor: pointer;">
+              <el-avatar :size="32" :src="isLoggedIn && currentUser?.avatarUrl ? currentUser.avatarUrl : `https://via.placeholder.com/32x32/00d4ff/fff?text=${userDisplayName ? userDisplayName[0].toUpperCase() : 'U'}`">
                 <el-icon v-if="!isLoggedIn"><User /></el-icon>
               </el-avatar>
-              <span class="auth-text">{{ isLoggedIn && userDisplayName ? userDisplayName : '登录/注册' }}</span>
-            </span>
+              <div class="user-details">
+                <span class="user-name">{{ isLoggedIn && userDisplayName ? userDisplayName : '登录/注册' }}</span>
+                <div class="user-status">
+                  <span class="status-dot" :class="{ 'online': isLoggedIn }"></span>
+                  <span class="status-text">{{ isLoggedIn ? '已连接' : '未登录' }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </template>
       </TopInfoBar>
@@ -74,7 +80,7 @@ onMounted(() => {
 /* 顶部信息栏 */
 .top-info {
   background: rgba(10,14,26,1);
-  padding: 8px 0;
+  padding: 0;
   font-size: 13px;
 }
 
@@ -83,8 +89,9 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   position: relative;
-  max-width: 1400px;
-  padding: 0 20px;
+  width: 100%;
+  padding: 0 2%;
+  height: 40px;
 }
 
 .user-info {
@@ -93,22 +100,67 @@ onMounted(() => {
   gap: 12px;
 }
 
-.username {
+.user-profile {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #fff;
+  gap: 10px;
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
-.username:hover {
-  color: var(--mall-primary);
-  text-shadow: 0 0 10px rgba(0,212,255,0.5);
+.user-profile:hover {
+  transform: translateX(4px);
 }
 
-.auth-text {
-  font-weight: 500;
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  font-weight: 600;
   font-size: 14px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #888;
+  transition: all 0.3s ease;
+}
+
+.status-dot.online {
+  background-color: #00ff88;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.status-text {
+  font-size: 12px;
+  color: #888;
+}
+
+.status-dot.online + .status-text {
+  color: #00ff88;
 }
 </style>

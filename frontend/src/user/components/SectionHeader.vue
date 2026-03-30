@@ -1,9 +1,7 @@
 <template>
   <header class="section-header">
     <div class="section-title">
-      <el-icon v-if="icon">
-        <component :is="icon" />
-      </el-icon>
+      <i v-if="icon" :class="icon"></i>
       <h2><slot /></h2>
     </div>
     <slot name="extra" />
@@ -12,7 +10,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  icon?: any
+  icon?: string
 }>()
 </script>
 
@@ -41,7 +39,7 @@ defineProps<{
   -webkit-text-fill-color: transparent;
 }
 
-.section-title .el-icon {
+.section-title i {
   font-size: 28px;
   color: var(--mall-accent);
 }

@@ -27,14 +27,14 @@ public class ProductService {
      * 获取商品列表
      */
     public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findByStatus("ON_SALE", pageable);
+        return productRepository.findByStatus(1, pageable);
     }
 
     /**
      * 按分类获取商品
      */
     public Page<Product> getProductsByCategory(String category, Pageable pageable) {
-        return productRepository.findByCategoryAndStatus(category, "ON_SALE", pageable);
+        return productRepository.findByCategoryAndStatus(category, 1, pageable);
     }
 
     /**
@@ -173,7 +173,7 @@ public class ProductService {
     /**
      * 获取待审核商品
      */
-    public Page<Product> getAuditProducts(String status, Long merchantId, Pageable pageable) {
+    public Page<Product> getAuditProducts(Integer status, Long merchantId, Pageable pageable) {
         return productRepository.findByStatus(status, pageable);
     }
 

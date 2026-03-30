@@ -7,56 +7,56 @@
         <div class="menu-grid">
           <router-link to="/user/orders" class="menu-item">
             <div class="menu-icon">
-              <el-icon><Document /></el-icon>
+              <i class="fas fa-file-alt"></i>
             </div>
             <span class="menu-text">订单中心</span>
           </router-link>
 
           <router-link to="/user/order" class="menu-item">
             <div class="menu-icon">
-              <el-icon><List /></el-icon>
+              <i class="fas fa-list"></i>
             </div>
             <span class="menu-text">我的订单</span>
           </router-link>
 
           <router-link to="/user/favorite" class="menu-item">
             <div class="menu-icon">
-              <el-icon><StarFilled /></el-icon>
+              <i class="fas fa-star"></i>
             </div>
             <span class="menu-text">我的收藏</span>
           </router-link>
 
           <router-link to="/user/follow" class="menu-item">
             <div class="menu-icon">
-              <el-icon><UserFilled /></el-icon>
+              <i class="fas fa-user-friends"></i>
             </div>
             <span class="menu-text">我的关注</span>
           </router-link>
 
           <router-link to="/user/address" class="menu-item">
             <div class="menu-icon">
-              <el-icon><Location /></el-icon>
+              <i class="fas fa-map-marker-alt"></i>
             </div>
             <span class="menu-text">地址管理</span>
           </router-link>
 
           <router-link to="/user/credit" class="menu-item">
             <div class="menu-icon">
-              <el-icon><Trophy /></el-icon>
+              <i class="fas fa-trophy"></i>
             </div>
             <span class="menu-text">我的积分</span>
           </router-link>
 
           <router-link to="/user/coupon" class="menu-item">
             <div class="menu-icon">
-              <el-icon><Ticket /></el-icon>
+              <i class="fas fa-ticket-alt"></i>
             </div>
             <span class="menu-text">优惠券</span>
           </router-link>
 
           <router-link to="/vip" class="menu-item vip-card">
             <div class="menu-icon">
-              <el-icon><StarFilled /></el-icon>
+              <i class="fas fa-crown"></i>
             </div>
             <div class="vip-content">
               <div class="vip-title">
@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import { Document, StarFilled, UserFilled, Location, Trophy, Ticket, List } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 </script>
 
 <style scoped>

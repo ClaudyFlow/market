@@ -1,12 +1,12 @@
 <template>
   <div class="user-notice-panel">
     <h4 class="panel-title">
-      <el-icon><Bell /></el-icon>
+      <i class="fas fa-bell"></i>
       <span>我的通知</span>
     </h4>
     <div class="notice-list">
       <div class="notice-item" v-for="(notice, index) in notices" :key="index">
-        <el-icon><Bell /></el-icon>
+        <i class="fas fa-bell"></i>
         <span>{{ notice }}</span>
       </div>
     </div>
@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
+// Font Awesome 图标直接使用类名，无需导入
 import { ref } from 'vue'
-import { Bell } from '@element-plus/icons-vue'
 
 const notices = ref([
   '您的订单已发货，请注意查收',
@@ -50,7 +50,7 @@ const notices = ref([
   gap: 8px;
 }
 
-.panel-title .el-icon {
+.panel-title i {
   color: #00d4ff;
   font-size: 18px;
 }
@@ -77,7 +77,7 @@ const notices = ref([
   border-bottom: none;
 }
 
-.notice-item .el-icon {
+.notice-item i {
   color: #00d4ff;
   font-size: 16px;
 }

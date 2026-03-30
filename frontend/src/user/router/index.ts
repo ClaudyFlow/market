@@ -112,6 +112,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '订单确认' }
   },
   {
+    path: '/payment',
+    name: 'Payment',
+    component: () => import('@user/views/PaymentPage.vue'),
+    meta: { title: '订单支付' }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@user/views/auth/Login.vue'),

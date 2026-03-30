@@ -1,6 +1,6 @@
 <template>
   <div class="位置信息">
-    <el-icon class="位置图标"><Location /></el-icon>
+    <i class="位置图标 fas fa-map-marker-alt"></i>
     <span class="位置文本">{{ locationText }}</span>
     <StatusDot :status="status" />
   </div>
@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { Location } from "@element-plus/icons-vue"
+// Font Awesome 图标直接使用类名，无需导入
 import StatusDot from "./StatusDot.vue"
 
 type LocationStatus = 'loading' | 'stuck' | 'success' | 'timeout' | 'error'

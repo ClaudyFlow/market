@@ -1,7 +1,7 @@
 <template>
   <div class="customer-service-page">
     <header class="page-header">
-      <el-icon><Headset /></el-icon>
+      <i class="fas fa-headset"></i>
       <h1>客服中心</h1>
     </header>
 
@@ -9,7 +9,7 @@
       <div class="service-cards">
         <div class="service-card" @click="contactOnline">
           <div class="card-icon">
-            <el-icon :size="48"><ChatDotRound /></el-icon>
+            <i class="fas fa-comments"></i>
           </div>
           <h3>在线客服</h3>
           <p>7x24 小时在线，即时回复</p>
@@ -18,7 +18,7 @@
 
         <div class="service-card" @click="contactPhone">
           <div class="card-icon phone">
-            <el-icon :size="48"><Phone /></el-icon>
+            <i class="fas fa-phone"></i>
           </div>
           <h3>电话咨询</h3>
           <p>工作日 9:00-18:00</p>
@@ -27,7 +27,7 @@
 
         <div class="service-card" @click="contactEmail">
           <div class="card-icon email">
-            <el-icon :size="48"><Message /></el-icon>
+            <i class="fas fa-message"></i>
           </div>
           <h3>邮件联系</h3>
           <p>24 小时内回复</p>
@@ -36,7 +36,7 @@
 
         <div class="service-card" @click="viewFAQ">
           <div class="card-icon faq">
-            <el-icon :size="48"><QuestionFilled /></el-icon>
+            <i class="fas fa-question-circle"></i>
           </div>
           <h3>常见问题</h3>
           <p>快速找到答案</p>
@@ -141,9 +141,9 @@
 </template>
 
 <script setup lang="ts">
+// Font Awesome 图标直接使用类名，无需导入
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Headset, ChatDotRound, Phone, Message, QuestionFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
@@ -243,7 +243,7 @@ const sendMessage = () => {
   background: rgba(0, 212, 255, 0.05);
 }
 
-.page-header .el-icon {
+.page-header i {
   font-size: 28px;
   color: var(--mall-primary);
 }

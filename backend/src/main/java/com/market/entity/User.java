@@ -95,8 +95,7 @@ public class User implements UserDetails {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vip_info_id")
+    @Transient
     private VipInfo vipInfo;
 
     public User() {}

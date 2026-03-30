@@ -4,7 +4,7 @@
     <div class="left-section">
       <LocationInfo />
       <div class="online-info">
-        <el-icon><Connection /></el-icon>
+        <i class="fas fa-wifi"></i>
         <span class="online-count">在线人数 {{ onlineCount.toLocaleString() }}</span>
         <StatusDot status="success" />
       </div>
@@ -15,7 +15,7 @@
       <TimeInfo />
     </div>
 
-    <!-- 右侧:用户信息和积分 -->
+    <!-- 右侧:用户信息 -->
     <div class="right-section">
       <slot name="user-info">
         <div class="user-info">
@@ -25,14 +25,14 @@
           </span>
         </div>
       </slot>
-      <UserCredit :credit="userCredit" />
+      <UserCredit v-if="userCredit > 0" :credit="userCredit" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Connection } from '@element-plus/icons-vue'
+// Font Awesome 图标直接使用类名，无需导入
 import TimeInfo from './TimeInfo.vue'
 import LocationInfo from './LocationInfo.vue'
 import StatusDot from './StatusDot.vue'
