@@ -2,6 +2,7 @@ package com.market.service;
 
 import com.market.dto.*;
 import com.market.entity.ProductReview;
+import com.market.entity.User;
 import com.market.entity.UserFavorite;
 import com.market.entity.UserFollow;
 import org.springframework.data.domain.Page;
@@ -270,6 +271,42 @@ public interface UserAccountService {
      * @return 是否成功
      */
     boolean replyToReview(Long reviewId, String reply);
+
+    /**
+     * 获取商家所有商品评价
+     *
+     * @param merchant 商家用户
+     * @param pageable 分页参数
+     * @return 评价列表分页
+     */
+    Page<ProductReview> getMerchantAllReviews(User merchant, Pageable pageable);
+
+    /**
+     * 获取商家指定商品的评价
+     *
+     * @param merchant 商家用户
+     * @param productId 商品 ID
+     * @param pageable 分页参数
+     * @return 评价列表分页
+     */
+    Page<ProductReview> getMerchantProductReviews(User merchant, Long productId, Pageable pageable);
+
+    /**
+     * 商家回复评价
+     *
+     * @param reviewId 评价 ID
+     * @param merchant 商家用户
+     * @param content 回复内容
+     */
+    void replyMerchantReview(Long reviewId, User merchant, String content);
+
+    /**
+     * 获取商家评价统计
+     *
+     * @param merchant 商家用户
+     * @return 统计信息
+     */
+    Map<String, Object> getMerchantReviewStats(User merchant);
 
     /**
      * 审核评价

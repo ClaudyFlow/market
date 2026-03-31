@@ -39,6 +39,11 @@
           <span class="menu-text">优惠券</span>
         </div>
 
+        <div class="menu-item" @click="navigateTo('/user/settings')">
+          <div class="menu-icon"><el-icon><Setting /></el-icon></div>
+          <span class="menu-text">设置</span>
+        </div>
+
         <div class="menu-item vip-card" @click="navigateTo('/user/vip')">
           <div class="menu-icon"><el-icon><Star /></el-icon></div>
           <div class="vip-content">
@@ -70,7 +75,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { User, Document, Star, Location, Trophy, Ticket } from '@element-plus/icons-vue'
+import { User, Document, Star, Location, Trophy, Ticket, Setting } from '@element-plus/icons-vue'
 import { useUserStore } from '@/common/stores/user'
 import request from '@/common/api/request'
 

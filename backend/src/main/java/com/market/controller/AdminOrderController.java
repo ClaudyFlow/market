@@ -4,6 +4,7 @@ import com.market.common.Result;
 import com.market.entity.Order;
 import com.market.entity.User;
 import com.market.service.OrderService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,6 +86,80 @@ public class AdminOrderController {
     }
 
     /**
+     * 获取商品销量排行
+     */
+    @GetMapping("/rank/product")
+    public Result<List<Map<String, Object>>> getProductRank(
+            @RequestParam(defaultValue = "10") Integer limit) {
+        List<Map<String, Object>> rank = orderService.getProductSalesRank(limit);
+        return Result.success(rank);
+    }
+
+    /**
+     * 获取店铺销量排行
+     */
+    @GetMapping("/rank/shop")
+    public Result<List<Map<String, Object>>> getShopRank(
+            @RequestParam(defaultValue = "10") Integer limit) {
+        List<Map<String, Object>> rank = orderService.getShopSalesRank(limit);
+        return Result.success(rank);
+    }
+
+    /**
+     * 获取退款申请列表
+     */
+    @GetMapping("/refund/list")
+    public Result<Map<String, Object>> getRefundList(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) String status) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Order> refundPage = orderService.getRefundOrders(status, pageable);
+
+        List<Map<String, Object>> orderList = refundPage.getContent().stream()
+            .map(this::convertOrderToMap)
+            .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", orderList);
+        response.put("total", refundPage.getTotalElements());
+        response.put("page", page);
+        response.put("size", size);
+
+        return Result.success(response);
+    }
+
+    /**
+     * 处理退款申请
+     */
+    @PostMapping("/{id}/refund")
+    public Result<Void> handleRefund(
+            @PathVariable Long id,
+            @RequestParam Boolean approved,
+            @RequestParam(required = false) String reason) {
+
+        orderService.handleRefund(id, approved, reason);
+        return Result.success();
+    }
+
+    /**
+     * 导出订单
+     */
+    @GetMapping("/export")
+    public void exportOrders(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String orderNo,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            HttpServletResponse response) throws Exception {
+
+        // TODO: 实现订单导出功能
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=orders.xlsx");
+    }
+
+    /**
      * 获取订单趋势
      */
     @GetMapping("/trend")
@@ -108,17 +183,6 @@ public class AdminOrderController {
     }
 
     /**
-     * 获取店铺排行
-     */
-    @GetMapping("/shop/rank")
-    public Result<List<Map<String, Object>>> getShopRank(
-            @RequestParam(defaultValue = "10") Integer limit) {
-        
-        List<Map<String, Object>> rank = orderService.getShopRank(limit);
-        return Result.success(rank);
-    }
-
-    /**
      * 更新订单状态
      */
     @PutMapping("/{id}/status")
@@ -129,44 +193,6 @@ public class AdminOrderController {
         
         Order order = orderService.updateOrderStatus(id, status, remark);
         return Result.success(order);
-    }
-
-    /**
-     * 获取退款申请列表
-     */
-    @GetMapping("/refund/list")
-    public Result<Map<String, Object>> getRefundList(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false) String status) {
-        
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Order> refundPage = orderService.getRefundOrders(status, pageable);
-        
-        List<Map<String, Object>> orderList = refundPage.getContent().stream()
-            .map(this::convertOrderToMap)
-            .collect(Collectors.toList());
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("list", orderList);
-        response.put("total", refundPage.getTotalElements());
-        response.put("page", page);
-        response.put("size", size);
-        
-        return Result.success(response);
-    }
-
-    /**
-     * 处理退款申请
-     */
-    @PostMapping("/{id}/refund")
-    public Result<Void> handleRefund(
-            @PathVariable Long id,
-            @RequestParam Boolean approved,
-            @RequestParam(required = false) String reason) {
-        
-        orderService.handleRefund(id, approved, reason);
-        return Result.success();
     }
 
     /**

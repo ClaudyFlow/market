@@ -178,6 +178,12 @@ const routes: RouteRecordRaw[] = [
         name: 'UserFollow',
         component: () => import('@user/views/user/Follows.vue'),
         meta: { title: '我的关注' }
+      },
+      {
+        path: 'settings',
+        name: 'UserSettings',
+        component: () => import('@user/views/Settings.vue'),
+        meta: { title: '设置' }
       }
     ]
   },

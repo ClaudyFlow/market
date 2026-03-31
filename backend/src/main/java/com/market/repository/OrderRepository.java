@@ -64,4 +64,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
     @Query("SELECT COUNT(o) FROM Order o")
     long countTotal();
+
+    /**
+     * 查询商品销量排行
+     */
+    @Query("SELECT oi.product.id, oi.product.name, oi.product.imageUrl, SUM(oi.quantity), SUM(oi.price * oi.quantity) " +
+           "FROM OrderItem oi GROUP BY oi.product.id ORDER BY SUM(oi.quantity) DESC")
+    List<Object[]> findProductSalesRank(int limit);
+
+    /**
+     * 查询店铺销量排行
+     */
+    @Query("SELECT m.id, m.shopName, SUM(o.totalAmount) " +
+           "FROM Order o JOIN o.merchant m WHERE o.status = 'COMPLETED' " +
+           "GROUP BY m.id ORDER BY SUM(o.totalAmount) DESC")
+    List<Object[]> findShopSalesRank(int limit);
 }

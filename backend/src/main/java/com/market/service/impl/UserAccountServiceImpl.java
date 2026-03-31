@@ -1,10 +1,12 @@
 package com.market.service.impl;
 
 import com.market.dto.*;
+import com.market.entity.Product;
 import com.market.entity.ProductReview;
 import com.market.entity.User;
 import com.market.entity.UserFavorite;
 import com.market.entity.UserFollow;
+import com.market.repository.ProductRepository;
 import com.market.repository.ProductReviewRepository;
 import com.market.repository.UserFavoriteRepository;
 import com.market.repository.UserFollowRepository;
@@ -43,6 +45,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -294,6 +299,10 @@ public class UserAccountServiceImpl implements UserAccountService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
 
+        // 获取商品以设置商家 ID
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("商品不存在"));
+
         ProductReview review = new ProductReview();
         review.setUserId(userId);
         review.setUserName(user.getName());
@@ -303,6 +312,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         review.setRating(rating);
         review.setContent(content);
         review.setImages(images);
+        review.setMerchantId(product.getMerchant() != null ? product.getMerchant().getId() : null);
         review.setStatus("PENDING"); // 待审核
 
         return productReviewRepository.save(review);
@@ -424,5 +434,54 @@ public class UserAccountServiceImpl implements UserAccountService {
         response.setCreatedAt(user.getCreatedAt());
         response.setLastLoginAt(user.getLastLoginAt());
         return response;
+    }
+
+    @Override
+    public Page<ProductReview> getMerchantAllReviews(User merchant, Pageable pageable) {
+        // 获取商家所有商品的评价
+        return productReviewRepository.findByMerchantId(merchant.getId(), pageable);
+    }
+
+    @Override
+    public Page<ProductReview> getMerchantProductReviews(User merchant, Long productId, Pageable pageable) {
+        // 获取商家指定商品的评价
+        return productReviewRepository.findByMerchantIdAndProductId(merchant.getId(), productId, pageable);
+    }
+
+    @Override
+    public void replyMerchantReview(Long reviewId, User merchant, String content) {
+        ProductReview review = productReviewRepository.findById(reviewId)
+            .filter(r -> r.getMerchantId() != null && r.getMerchantId().equals(merchant.getId()))
+            .orElseThrow(() -> new RuntimeException("评价不存在或无权回复"));
+
+        review.setMerchantReply(content);
+        review.setReplyTime(LocalDateTime.now());
+        productReviewRepository.save(review);
+    }
+
+    @Override
+    public Map<String, Object> getMerchantReviewStats(User merchant) {
+        Map<String, Object> stats = new HashMap<>();
+        List<ProductReview> reviews = productReviewRepository.findByMerchantId(merchant.getId());
+
+        int total = reviews.size();
+        double averageRating = reviews.stream()
+            .filter(r -> r.getRating() != null)
+            .mapToInt(ProductReview::getRating)
+            .average()
+            .orElse(0.0);
+        long pendingReply = reviews.stream()
+            .filter(r -> r.getMerchantReply() == null || r.getMerchantReply().isEmpty())
+            .count();
+        long lowScore = reviews.stream()
+            .filter(r -> r.getRating() != null && r.getRating() <= 3)
+            .count();
+
+        stats.put("total", total);
+        stats.put("averageScore", String.format("%.1f", averageRating));
+        stats.put("pendingReply", pendingReply);
+        stats.put("lowScore", lowScore);
+
+        return stats;
     }
 }

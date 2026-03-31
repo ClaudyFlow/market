@@ -70,6 +70,24 @@ public class AdminProductController {
     }
 
     /**
+     * 获取商品详情
+     */
+    @GetMapping("/{id}")
+    public Result<Product> getProductDetail(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        return Result.success(product);
+    }
+
+    /**
+     * 删除商品
+     */
+    @DeleteMapping("/{id}")
+    public Result<Void> removeProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return Result.success();
+    }
+
+    /**
      * 获取商品审核统计
      */
     @GetMapping("/audit/stats")

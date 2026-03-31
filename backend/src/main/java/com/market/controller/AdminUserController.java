@@ -68,7 +68,6 @@ public class AdminUserController {
         if (user == null) {
             throw new RuntimeException("用户不存在");
         }
-
         return Result.success(convertUserToMap(user));
     }
 

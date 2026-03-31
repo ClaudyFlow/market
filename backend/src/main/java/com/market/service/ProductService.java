@@ -144,6 +144,14 @@ public class ProductService {
     }
 
     /**
+     * 管理员删除商品
+     */
+    @Transactional
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    /**
      * 审核商品
      */
     @Transactional

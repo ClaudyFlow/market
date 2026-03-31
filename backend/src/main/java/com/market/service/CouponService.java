@@ -170,6 +170,51 @@ public class CouponService {
     }
 
     /**
+     * 获取商家优惠券统计
+     */
+    public Map<String, Object> getMerchantCouponStats(User merchant) {
+        Map<String, Object> stats = new HashMap<>();
+        List<Coupon> coupons = couponRepository.findByMerchantId(merchant.getId());
+
+        int total = coupons.size();
+        int active = 0;
+        int inactive = 0;
+        int expired = 0;
+        int usedUp = 0;
+        BigDecimal totalDiscount = BigDecimal.ZERO;
+
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Coupon coupon : coupons) {
+            if ("ACTIVE".equals(coupon.getStatus())) {
+                active++;
+            } else if ("INACTIVE".equals(coupon.getStatus())) {
+                inactive++;
+            }
+            if (coupon.getValidTo() != null && coupon.getValidTo().isBefore(now)) {
+                expired++;
+            }
+            if (coupon.getRemainCount() == 0) {
+                usedUp++;
+            }
+            // 计算已使用的优惠金额
+            if (coupon.getUsedCount() > 0 && coupon.getDiscountValue() != null) {
+                totalDiscount = totalDiscount.add(coupon.getDiscountValue().multiply(new BigDecimal(coupon.getUsedCount())));
+            }
+        }
+
+        stats.put("total", total);
+        stats.put("active", active);
+        stats.put("inactive", inactive);
+        stats.put("expired", expired);
+        stats.put("usedUp", usedUp);
+        stats.put("totalDiscount", totalDiscount);
+        stats.put("redemptionRate", total > 0 ? String.format("%.2f", (total - inactive) * 100.0 / total) : "0.00");
+
+        return stats;
+    }
+
+    /**
      * 上下架优惠券
      */
     @Transactional
