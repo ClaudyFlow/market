@@ -33,6 +33,9 @@ public class ChatMessage {
     private MessageType type = MessageType.TEXT;
 
     @Column(nullable = false)
+    private Integer status = 1000; // 消息状态码：1000-发送中，2000-已发送，3000-已送达，4000-已读，5000-失败
+
+    @Column(nullable = false)
     private Boolean isRead = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -74,6 +77,9 @@ public class ChatMessage {
 
     public MessageType getType() { return type; }
     public void setType(MessageType type) { this.type = type; }
+
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 
     public Boolean getIsRead() { return isRead; }
     public void setIsRead(Boolean isRead) { this.isRead = isRead; }

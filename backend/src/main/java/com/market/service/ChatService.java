@@ -38,6 +38,7 @@ public class ChatService {
             request.getContent(),
             ChatMessage.MessageType.valueOf(request.getType())
         );
+        message.setStatus(2000); // 已发送
         message = chatMessageRepository.save(message);
 
         // 通过 WebSocket 推送消息给接收者
@@ -92,6 +93,7 @@ public class ChatService {
             message.getReceiverId(),
             message.getContent(),
             message.getType().name(),
+            message.getStatus(),
             message.getIsRead(),
             message.getCreatedAt()
         );

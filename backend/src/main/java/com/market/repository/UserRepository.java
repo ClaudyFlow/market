@@ -151,4 +151,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Query("SELECT u FROM User u WHERE u.isMerchant = true")
     List<User> findMerchants();
+
+    /**
+     * 检查店铺名称是否存在
+     *
+     * @param shopName 要检查的店铺名称
+     * @return 如果店铺名称已存在返回 true
+     */
+    boolean existsByShopName(String shopName);
 }

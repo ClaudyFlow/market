@@ -1,0 +1,494 @@
+# 消息状态码系统文档
+
+## 📋 概述
+
+消息状态码系统用于客服聊天场景中，通过数字状态码（1000-9999）精确标识消息的类型和状态，覆盖订单、支付、物流、售后等电商全业务流程。
+
+## 🎯 设计理念
+
+- **数字编码**：使用 4 位数字，便于记忆和扩展
+- **分类清晰**：按业务领域划分状态码范围
+- **向前兼容**：预留扩展空间，支持未来业务增长
+- **工具完善**：提供状态描述、颜色、图标等辅助函数
+
+## 📊 状态码分布
+
+| 分类 | 状态码范围 | 数量 | 说明 |
+|------|-----------|------|------|
+| **基础消息** | 1000-1999 | 1000 个 | 发送、送达、已读、失败 |
+| **订单消息** | 6000-6499 | 500 个 | 订单全流程状态 |
+| **支付消息** | 6500-6799 | 300 个 | 支付、退款状态 |
+| **物流消息** | 6800-6999 | 200 个 | 物流配送状态 |
+| **售后消息** | 7000-7999 | 1000 个 | 退货、换货、维修、投诉 |
+| **促销消息** | 8000-8299 | 300 个 | 优惠券、促销活动 |
+| **VIP 消息** | 8300-8599 | 300 个 | 会员状态、积分 |
+| **系统消息** | 8600-8999 | 400 个 | 系统通知、账户安全 |
+| **预留扩展** | 9000-9999 | 1000 个 | 自定义消息 |
+
+## 🔢 详细状态码定义
+
+### 基础消息状态 (1000-1999)
+
+| 状态码 | 名称 | 说明 | 颜色 | 图标 |
+|--------|------|------|------|------|
+| 1000 | SENDING | 发送中 | #909399 | loading |
+| 1001 | SENDING_RETRY | 发送中（重试） | #909399 | loading |
+| 1002 | QUEUED | 排队中 | #909399 | loading |
+| 2000 | SENT | 已发送 | #67c23a | check |
+| 2001 | SENT_TO_SERVER | 已发送到服务器 | #67c23a | check |
+| 3000 | DELIVERED | 已送达 | #409eff | circle-check |
+| 3001 | DELIVERED_TO_PHONE | 已送达手机 | #409eff | circle-check |
+| 4000 | READ | 已读 | #e6a23c | view |
+| 4001 | READ_BY_USER | 用户已读 | #e6a23c | view |
+| 4002 | READ_BY_SYSTEM | 系统已读 | #e6a23c | view |
+| 5000 | FAILED | 发送失败 | #f56c6c | warning |
+| 5001 | FAILED_NETWORK | 网络错误 | #f56c6c | warning |
+| 5002 | FAILED_TIMEOUT | 超时 | #f56c6c | warning |
+| 5003 | FAILED_REJECTED | 被拒绝 | #f56c6c | warning |
+| 5004 | EXPIRED | 已过期 | #f56c6c | warning |
+| 5005 | DELETED | 已删除 | #f56c6c | warning |
+
+### 订单消息状态 (6000-6499)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 6000 | ORDER_CREATED | 订单已创建 |
+| 6001 | ORDER_PENDING | 订单待处理 |
+| 6002 | ORDER_CONFIRMED | 订单已确认 |
+| 6003 | ORDER_PROCESSING | 订单处理中 |
+| 6004 | ORDER_PACKING | 订单打包中 |
+| 6005 | ORDER_SHIPPED | 订单已发货 |
+| 6006 | ORDER_DELIVERING | 订单配送中 |
+| 6007 | ORDER_DELIVERED | 订单已送达 |
+| 6008 | ORDER_COMPLETED | 订单已完成 |
+| 6009 | ORDER_CANCELLED | 订单已取消 |
+| 6010 | ORDER_CLOSED | 订单已关闭 |
+| 6100 | ORDER_MODIFYING | 订单修改中 |
+| 6101 | ORDER_MODIFIED | 订单已修改 |
+| 6102 | ORDER_MODIFY_REJECTED | 订单修改被拒绝 |
+| 6200 | ORDER_ABNORMAL | 订单异常 |
+| 6201 | ORDER_ADDRESS_ERROR | 地址错误 |
+| 6202 | ORDER_PHONE_ERROR | 电话错误 |
+| 6203 | ORDER_PAYMENT_ERROR | 支付错误 |
+| 6204 | ORDER_STOCK_ERROR | 库存不足 |
+| 6205 | ORDER_LOGISTICS_ERROR | 物流异常 |
+
+### 支付消息状态 (6500-6799)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 6500 | PAYMENT_PENDING | 待支付 |
+| 6501 | PAYMENT_PROCESSING | 支付处理中 |
+| 6502 | PAYMENT_SUCCESS | 支付成功 |
+| 6503 | PAYMENT_FAILED | 支付失败 |
+| 6504 | PAYMENT_TIMEOUT | 支付超时 |
+| 6505 | PAYMENT_CANCELLED | 支付已取消 |
+| 6506 | PAYMENT_REFUNDED | 已退款 |
+| 6507 | PAYMENT_REFUNDING | 退款处理中 |
+| 6508 | PAYMENT_PARTIAL_REFUND | 部分退款 |
+
+### 物流消息状态 (6800-6999)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 6800 | LOGISTICS_PENDING | 待发货 |
+| 6801 | LOGISTICS_PICKED_UP | 已揽件 |
+| 6802 | LOGISTICS_IN_TRANSIT | 运输中 |
+| 6803 | LOGISTICS_ARRIVED_CITY | 已到达城市 |
+| 6804 | LOGISTICS_OUT_FOR_DELIVERY | 派送中 |
+| 6805 | LOGISTICS_DELIVERED | 已签收 |
+| 6806 | LOGISTICS_EXCEPTION | 物流异常 |
+| 6807 | LOGISTICS_RETURNED | 已退回 |
+| 6808 | LOGISTICS_LOST | 包裹丢失 |
+| 6809 | LOGISTICS_DAMAGED | 包裹破损 |
+
+### 售后消息状态 (7000-7999)
+
+#### 退货 (7000-7099)
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 7000 | RETURN_PENDING | 待处理退货 |
+| 7001 | RETURN_APPROVED | 退货已批准 |
+| 7002 | RETURN_REJECTED | 退货被拒绝 |
+| 7003 | RETURN_SHIPPED | 退货已寄出 |
+| 7004 | RETURN_RECEIVED | 退货已收到 |
+| 7005 | RETURN_COMPLETED | 退货已完成 |
+
+#### 换货 (7100-7199)
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 7100 | EXCHANGE_PENDING | 待处理换货 |
+| 7101 | EXCHANGE_APPROVED | 换货已批准 |
+| 7102 | EXCHANGE_SHIPPED | 换货已寄出 |
+| 7103 | EXCHANGE_RECEIVED | 换货已收到 |
+| 7104 | EXCHANGE_COMPLETED | 换货已完成 |
+
+#### 维修 (7200-7299)
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 7200 | REPAIR_PENDING | 待处理维修 |
+| 7201 | REPAIR_IN_PROGRESS | 维修中 |
+| 7202 | REPAIR_COMPLETED | 维修已完成 |
+| 7203 | REPAIR_RETURNED | 维修已寄回 |
+
+#### 投诉 (7300-7399)
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 7300 | COMPLAINT_PENDING | 待处理投诉 |
+| 7301 | COMPLAINT_PROCESSING | 投诉处理中 |
+| 7302 | COMPLAINT_RESOLVED | 投诉已解决 |
+| 7303 | COMPLAINT_CLOSED | 投诉已关闭 |
+
+### 促销消息状态 (8000-8299)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 8000 | COUPON_AVAILABLE | 优惠券可用 |
+| 8001 | COUPON_USED | 优惠券已使用 |
+| 8002 | COUPON_EXPIRED | 优惠券已过期 |
+| 8003 | COUPON_LOCKED | 优惠券已锁定 |
+| 8100 | PROMOTION_ACTIVE | 促销活动进行中 |
+| 8101 | PROMOTION_ENDED | 促销活动已结束 |
+| 8102 | PROMOTION_SUSPENDED | 促销活动已暂停 |
+
+### VIP 消息状态 (8300-8599)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 8300 | VIP_ACTIVATED | VIP 已激活 |
+| 8301 | VIP_EXPIRING | VIP 即将过期 |
+| 8302 | VIP_EXPIRED | VIP 已过期 |
+| 8303 | VIP_UPGRADED | VIP 已升级 |
+| 8304 | VIP_DOWNGRADED | VIP 已降级 |
+| 8305 | VIP_RENEWED | VIP 已续费 |
+| 8400 | VIP_POINTS_EARNED | 获得积分 |
+| 8401 | VIP_POINTS_USED | 积分已使用 |
+| 8402 | VIP_POINTS_EXPIRED | 积分已过期 |
+
+### 系统消息状态 (8600-8999)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 8600 | SYSTEM_NOTICE | 系统通知 |
+| 8601 | SYSTEM_MAINTENANCE | 系统维护 |
+| 8602 | SYSTEM_UPDATE | 系统更新 |
+| 8603 | SYSTEM_ERROR | 系统错误 |
+| 8604 | SYSTEM_WARNING | 系统警告 |
+| 8700 | ACCOUNT_SECURITY | 账户安全 |
+| 8701 | ACCOUNT_VERIFICATION | 账户验证 |
+| 8702 | ACCOUNT_LOCKED | 账户已锁定 |
+| 8703 | ACCOUNT_UNLOCKED | 账户已解锁 |
+
+## 🛠️ 工具函数
+
+### MessageStatusUtils
+
+提供状态码查询和转换的工具函数。
+
+#### getCategory(code)
+
+获取状态码所属分类。
+
+```typescript
+MessageStatusUtils.getCategory(6000) // 返回："订单消息"
+MessageStatusUtils.getCategory(6502) // 返回："支付消息"
+```
+
+#### getDescription(code)
+
+获取状态码中文描述。
+
+```typescript
+MessageStatusUtils.getDescription(6000) // 返回："订单已创建"
+MessageStatusUtils.getDescription(6502) // 返回："支付成功"
+```
+
+#### getColor(code)
+
+获取状态码对应颜色（用于 UI 显示）。
+
+```typescript
+MessageStatusUtils.getColor(6000) // 返回："#409eff" (蓝色)
+MessageStatusUtils.getColor(6502) // 返回："#67c23a" (绿色)
+MessageStatusUtils.getColor(5000) // 返回："#f56c6c" (红色)
+```
+
+#### getIcon(code)
+
+获取状态码对应图标名称。
+
+```typescript
+MessageStatusUtils.getIcon(6000) // 返回："document"
+MessageStatusUtils.getIcon(6502) // 返回："money"
+MessageStatusUtils.getIcon(6805) // 返回："circle-check"
+```
+
+## 📦 消息模板
+
+### MessageTemplates
+
+提供常用消息模板，快速生成标准消息。
+
+#### 订单消息
+
+```typescript
+import { MessageTemplates } from '@/common/utils/messageTemplates'
+
+// 订单创建
+MessageTemplates.order.created('ORD20260331001', 299.00)
+// 订单发货
+MessageTemplates.order.shipped('ORD20260331001', 'SF1234567890')
+// 订单送达
+MessageTemplates.order.delivered('ORD20260331001')
+```
+
+#### 支付消息
+
+```typescript
+// 待支付
+MessageTemplates.payment.pending('ORD20260331001', 299.00, '2026-03-31 23:59:59')
+// 支付成功
+MessageTemplates.payment.success('ORD20260331001', 299.00)
+// 退款成功
+MessageTemplates.payment.refunded('ORD20260331001', 299.00)
+```
+
+#### 物流消息
+
+```typescript
+// 已揽件
+MessageTemplates.logistics.pickedUp('SF1234567890')
+// 派送中
+MessageTemplates.logistics.outForDelivery('SF1234567890', '张三', '13800138000')
+```
+
+#### 售后消息
+
+```typescript
+// 退货批准
+MessageTemplates.afterSales.returnApproved('RET20260331001')
+// 退货完成
+MessageTemplates.afterSales.returnCompleted('RET20260331001', 299.00)
+```
+
+#### 通用消息
+
+```typescript
+// 欢迎语
+MessageTemplates.common.welcome()
+// 自动回复
+MessageTemplates.common.autoReply()
+// 评价邀请
+MessageTemplates.common.evaluation('ORD20260331001')
+```
+
+## 💻 使用示例
+
+### 创建消息
+
+```typescript
+import { useChatStore, MessageStatus } from '@/common/stores/chat'
+import { MessageTemplates, createAgentMessage } from '@/common/utils/messageTemplates'
+
+const chatStore = useChatStore()
+
+// 发送订单创建通知
+const template = MessageTemplates.order.created('ORD20260331001', 299.00)
+const message = createAgentMessage(userId, template)
+chatStore.addReceivedMessage(message)
+
+// 发送物流通知
+const logisticsTemplate = MessageTemplates.logistics.outForDelivery(
+  'SF1234567890',
+  '张三',
+  '13800138000'
+)
+const logisticsMessage = createAgentMessage(userId, logisticsTemplate)
+chatStore.addReceivedMessage(logisticsMessage)
+```
+
+### 消息卡片
+
+```vue
+<template>
+  <MessageCard 
+    v-for="msg in chatStore.displayMessages" 
+    :key="msg.id"
+    :message="msg" 
+  />
+</template>
+
+<script setup>
+import MessageCard from '@/common/components/MessageCard.vue'
+import { useChatStore } from '@/common/stores/chat'
+
+const chatStore = useChatStore()
+</script>
+```
+
+### 状态更新
+
+```typescript
+// 消息状态流转
+const localMessage = chatStore.addLocalMessage('您好，请问有什么可以帮您？')
+
+// 发送中 → 已发送
+setTimeout(() => {
+  chatStore.updateMessageStatus(localMessage.localId, {
+    status: MessageStatus.SENT
+  })
+}, 500)
+
+// 已发送 → 已送达
+setTimeout(() => {
+  chatStore.updateMessageStatus(localMessage.localId, {
+    status: MessageStatus.DELIVERED
+  })
+}, 1500)
+
+// 已送达 → 已读
+setTimeout(() => {
+  chatStore.updateMessageStatus(localMessage.localId, {
+    status: MessageStatus.READ
+  })
+}, 3000)
+```
+
+## 🎨 UI 样式
+
+### 消息状态颜色
+
+```css
+/* 发送中 - 灰色 */
+.message.status-1000 { opacity: 0.7; }
+
+/* 已发送 - 绿色 */
+.message.status-2000 { color: #67c23a; }
+
+/* 已送达 - 蓝色 */
+.message.status-3000 { color: #409eff; }
+
+/* 已读 - 橙色 */
+.message.status-4000 { color: #e6a23c; }
+
+/* 失败 - 红色 */
+.message.status-5000 { 
+  background: rgba(255, 77, 77, 0.3);
+  border: 1px solid rgba(255, 77, 77, 0.5);
+}
+```
+
+### 消息卡片类型
+
+- 📦 **订单卡片** - 显示订单号、金额、快递单号
+- 🚚 **物流卡片** - 显示物流信息、派送员联系方式
+- 💰 **支付卡片** - 显示支付金额、支付按钮
+- 🔄 **售后卡片** - 显示退货/换货/维修信息
+- 🎫 **优惠券卡片** - 显示优惠券金额、使用条件
+- ⭐ **评价卡片** - 显示评分组件
+
+## 📈 状态流转图
+
+### 订单消息流转
+
+```
+订单已创建 (6000)
+    ↓
+订单已确认 (6002)
+    ↓
+订单处理中 (6003)
+    ↓
+订单已发货 (6005)
+    ↓
+订单配送中 (6006)
+    ↓
+订单已送达 (6007)
+    ↓
+订单已完成 (6008)
+```
+
+### 支付消息流转
+
+```
+待支付 (6500)
+    ↓
+支付处理中 (6501)
+    ├─→ 支付成功 (6502)
+    └─→ 支付失败 (6503)
+              ↓
+         支付已取消 (6505)
+```
+
+### 退货消息流转
+
+```
+待处理退货 (7000)
+    ├─→ 退货已批准 (7001)
+    │         ↓
+    │    退货已寄出 (7003)
+    │         ↓
+    │    退货已收到 (7004)
+    │         ↓
+    │    退货已完成 (7005)
+    │
+    └─→ 退货被拒绝 (7002)
+```
+
+## 🔧 扩展开发
+
+### 添加新状态码
+
+```typescript
+// 在 messageStatus.ts 中添加
+export const CustomMessageStatus = {
+  CUSTOM_NEW: 9000,  // 使用 9000-9999 范围
+  CUSTOM_ANOTHER: 9001
+} as const
+
+// 添加工具函数配置
+export const MessageStatusUtils = {
+  getDescription(code: MessageStatusCode): string {
+    const descriptions: Record<number, string> = {
+      // ... 现有配置
+      9000: '自定义新状态',
+      9001: '另一个自定义状态'
+    }
+    return descriptions[code] || '未知状态'
+  }
+}
+```
+
+### 添加消息模板
+
+```typescript
+export const MessageTemplates = {
+  custom: {
+    newFeature: (data: any): MessageTemplate => ({
+      status: 9000,
+      content: `自定义消息：${data.info}`,
+      type: 'CARD',
+      data
+    })
+  }
+}
+```
+
+## 📝 注意事项
+
+1. **状态码范围**：严格使用 1000-9999，不要超出范围
+2. **分类清晰**：新状态码应放在对应的业务分类范围内
+3. **预留空间**：每个分类预留扩展空间，不要填满
+4. **文档同步**：添加新状态码时同步更新本文档
+5. **向后兼容**：已发布的状态码不要修改含义
+
+## 🔗 相关文件
+
+- `frontend/src/common/stores/messageStatus.ts` - 状态码定义
+- `frontend/src/common/stores/chat.ts` - 聊天消息 Store
+- `frontend/src/common/utils/messageTemplates.ts` - 消息模板
+- `frontend/src/common/components/MessageCard.vue` - 消息卡片组件
+
+---
+
+**文档版本：** v1.0.0  
+**最后更新：** 2026 年 3 月 31 日

@@ -12,18 +12,20 @@ public class ChatMessageResponse {
     private Long receiverId;
     private String content;
     private String type;
+    private Integer status;  // 消息状态码：1000-9999
     private Boolean isRead;
     private LocalDateTime createdAt;
 
     public ChatMessageResponse() {}
 
     public ChatMessageResponse(Long id, Long senderId, Long receiverId, String content,
-                               String type, Boolean isRead, LocalDateTime createdAt) {
+                               String type, Integer status, Boolean isRead, LocalDateTime createdAt) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
         this.type = type;
+        this.status = status;
         this.isRead = isRead;
         this.createdAt = createdAt;
     }
@@ -43,6 +45,9 @@ public class ChatMessageResponse {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 
     public Boolean getIsRead() { return isRead; }
     public void setIsRead(Boolean isRead) { this.isRead = isRead; }
