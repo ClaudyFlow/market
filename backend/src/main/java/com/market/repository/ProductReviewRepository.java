@@ -129,4 +129,33 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
     Page<ProductReview> searchByProductId(@Param("productId") Long productId,
                                            @Param("keyword") String keyword,
                                            Pageable pageable);
+
+    /**
+     * 获取商家所有商品的评价
+     *
+     * @param merchantId 商家 ID
+     * @param pageable 分页参数
+     * @return 评价列表分页
+     */
+    @Query("SELECT pr FROM ProductReview pr WHERE pr.merchantId = :merchantId " +
+           "ORDER BY pr.createdAt DESC")
+    Page<ProductReview> findByMerchantId(@Param("merchantId") Long merchantId, Pageable pageable);
+
+    /**
+     * 获取商家指定商品的评价
+     *
+     * @param merchantId 商家 ID
+     * @param productId 商品 ID
+     * @param pageable 分页参数
+     * @return 评价列表分页
+     */
+    Page<ProductReview> findByMerchantIdAndProductId(Long merchantId, Long productId, Pageable pageable);
+
+    /**
+     * 获取商家所有商品的评价列表
+     *
+     * @param merchantId 商家 ID
+     * @return 评价列表
+     */
+    List<ProductReview> findByMerchantId(@Param("merchantId") Long merchantId);
 }

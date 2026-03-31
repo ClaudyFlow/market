@@ -4,6 +4,7 @@ import com.market.dto.AuthResponse;
 import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
 import com.market.entity.*;
+import com.market.repository.ProductReviewRepository;
 import com.market.repository.UserRepository;
 import com.market.security.JwtService;
 import com.market.service.UserService;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ProductReviewRepository productReviewRepository;
 
     // 每日签到基础积分
     private static final int DAILY_CHECKIN_CREDIT = 10;
@@ -511,5 +515,21 @@ public class UserServiceImpl implements UserService {
                 user.getEmail(),
                 user.getAvatarUrl()
         );
+    }
+
+    @Override
+    public void updateMerchant(User merchant) {
+        userRepository.save(merchant);
+    }
+
+    @Override
+    public Map<String, Object> getMerchantShopStats(User merchant) {
+        Map<String, Object> stats = new HashMap<>();
+        // TODO: 实现真实的统计逻辑
+        stats.put("sales", "0");
+        stats.put("orders", 0);
+        stats.put("visitors", 0);
+        stats.put("favorites", 0);
+        return stats;
     }
 }

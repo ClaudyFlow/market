@@ -34,6 +34,11 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findByMerchant(User merchant);
 
     /**
+     * 查询商家的所有优惠券（通过 ID）
+     */
+    List<Coupon> findByMerchantId(Long merchantId);
+
+    /**
      * 查询有效的优惠券列表
      */
     @Query("SELECT c FROM Coupon c WHERE c.merchant = :merchant AND c.status = 'ACTIVE' " +

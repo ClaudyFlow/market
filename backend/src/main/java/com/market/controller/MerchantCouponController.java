@@ -107,11 +107,24 @@ public class MerchantCouponController {
     }
 
     /**
+     * 上下架优惠券
+     */
+    @PutMapping("/{id}/status")
+    public Result<Coupon> toggleCouponStatus(
+            @PathVariable Long id,
+            @RequestParam String status,
+            @AuthenticationPrincipal User merchant) {
+
+        Coupon coupon = couponService.toggleCouponStatus(id, merchant, status);
+        return Result.success(coupon);
+    }
+
+    /**
      * 获取优惠券统计
      */
     @GetMapping("/stats")
     public Result<Map<String, Object>> getCouponStats(@AuthenticationPrincipal User merchant) {
-        Map<String, Object> stats = couponService.getCouponStats(merchant);
+        Map<String, Object> stats = couponService.getMerchantCouponStats(merchant);
         return Result.success(stats);
     }
 
@@ -122,22 +135,9 @@ public class MerchantCouponController {
     public Result<List<Coupon>> getExpiringCoupons(
             @RequestParam(defaultValue = "7") Integer days,
             @AuthenticationPrincipal User merchant) {
-        
+
         List<Coupon> coupons = couponService.getExpiringCoupons(merchant, days);
         return Result.success(coupons);
-    }
-
-    /**
-     * 上下架优惠券
-     */
-    @PutMapping("/{id}/status")
-    public Result<Coupon> toggleCouponStatus(
-            @PathVariable Long id,
-            @RequestParam String status,
-            @AuthenticationPrincipal User merchant) {
-        
-        Coupon coupon = couponService.toggleCouponStatus(id, merchant, status);
-        return Result.success(coupon);
     }
 
     /**
@@ -163,15 +163,15 @@ public class MerchantCouponController {
         map.put("productIds", coupon.getProductIds());
         map.put("createdAt", coupon.getCreatedAt());
         map.put("updatedAt", coupon.getUpdatedAt());
-        
+
         // 计算优惠力度描述
         if ("PERCENT".equals(coupon.getType())) {
-            map.put("description", coupon.getDiscountValue() + "折" + 
+            map.put("description", coupon.getDiscountValue() + "折" +
                 (coupon.getMaxDiscount() != null ? " 最高减" + coupon.getMaxDiscount() : ""));
         } else {
             map.put("description", "满" + coupon.getMinPurchase() + "减" + coupon.getDiscountValue());
         }
-        
+
         return map;
     }
 }

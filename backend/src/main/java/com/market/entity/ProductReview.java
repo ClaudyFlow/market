@@ -76,6 +76,12 @@ public class ProductReview {
     private String images;
 
     /**
+     * 商家 ID
+     */
+    @Column(name = "merchant_id")
+    private Long merchantId;
+
+    /**
      * 商家回复内容
      */
     @Column(name = "merchant_reply", length = 1000)
@@ -205,6 +211,14 @@ public class ProductReview {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 
     public String getMerchantReply() {

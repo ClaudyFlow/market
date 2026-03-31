@@ -13,7 +13,9 @@
     "echarts": "^5.5.0",
     "element-plus": "^2.4.4",
     "pinia": "^2.1.7",
+    "pinia-plugin-logger": "^1.3.0",
     "vue": "^3.4.0",
+    "vue-logger-plugin": "^2.2.3",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

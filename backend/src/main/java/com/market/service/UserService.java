@@ -112,4 +112,14 @@ public interface UserService {
      * 获取商家统计
      */
     Map<String, Object> getMerchantStats();
+
+    /**
+     * 更新商家信息
+     */
+    void updateMerchant(User merchant);
+
+    /**
+     * 获取商家店铺统计
+     */
+    Map<String, Object> getMerchantShopStats(User merchant);
 }

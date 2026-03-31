@@ -1,11 +1,13 @@
 package com.market.entity;
 
+import jakarta.persistence.Embeddable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * VIP 信息实体
  */
+@Embeddable
 public class VipInfo {
 
     private Integer level;

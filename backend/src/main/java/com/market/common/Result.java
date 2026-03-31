@@ -1,5 +1,6 @@
 package com.market.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,8 +11,11 @@ import java.io.Serializable;
 @Data
 public class Result<T> implements Serializable {
 
+    @JsonProperty("code")
     private Integer code;
+    @JsonProperty("message")
     private String message;
+    @JsonProperty("data")
     private T data;
 
     public Result() {

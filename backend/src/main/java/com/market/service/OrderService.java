@@ -461,11 +461,49 @@ public class OrderService {
     }
 
     /**
+     * 获取商品销量排行
+     */
+    public List<Map<String, Object>> getProductSalesRank(int limit) {
+        List<Object[]> results = orderRepository.findProductSalesRank(limit);
+        List<Map<String, Object>> rank = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            Object[] row = results.get(i);
+            Map<String, Object> item = new HashMap<>();
+            item.put("rank", i + 1);
+            item.put("productId", row[0]);
+            item.put("productName", row[1]);
+            item.put("productImage", row[2]);
+            item.put("sales", row[3]);
+            item.put("revenue", row[4]);
+            rank.add(item);
+        }
+        return rank;
+    }
+
+    /**
      * 获取店铺排行
      */
     public List<Map<String, Object>> getShopRank(int limit) {
         // TODO: 实现店铺排行查询
         return new ArrayList<>();
+    }
+
+    /**
+     * 获取店铺销量排行
+     */
+    public List<Map<String, Object>> getShopSalesRank(int limit) {
+        List<Object[]> results = orderRepository.findShopSalesRank(limit);
+        List<Map<String, Object>> rank = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            Object[] row = results.get(i);
+            Map<String, Object> item = new HashMap<>();
+            item.put("rank", i + 1);
+            item.put("shopId", row[0]);
+            item.put("shopName", row[1]);
+            item.put("revenue", row[2]);
+            rank.add(item);
+        }
+        return rank;
     }
 
     /**
