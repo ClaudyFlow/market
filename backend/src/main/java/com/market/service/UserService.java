@@ -3,6 +3,7 @@ package com.market.service;
 import com.market.dto.AuthResponse;
 import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
+import com.market.dto.MerchantRegisterRequest;
 import com.market.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,11 @@ public interface UserService {
      * 用户注册
      */
     AuthResponse register(RegisterRequest request);
+
+    /**
+     * 商家注册
+     */
+    AuthResponse registerMerchant(MerchantRegisterRequest request);
 
     /**
      * 用户登录

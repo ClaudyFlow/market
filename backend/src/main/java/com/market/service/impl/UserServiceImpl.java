@@ -3,6 +3,7 @@ package com.market.service.impl;
 import com.market.dto.AuthResponse;
 import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
+import com.market.dto.MerchantRegisterRequest;
 import com.market.entity.*;
 import com.market.repository.ProductReviewRepository;
 import com.market.repository.UserRepository;
@@ -79,6 +80,45 @@ public class UserServiceImpl implements UserService {
         String token = jwtService.generateToken(user);
 
         return AuthResponse.success("注册成功", token, convertToUserDTO(user));
+    }
+
+    @Override
+    public AuthResponse registerMerchant(MerchantRegisterRequest request) {
+        // 检查用户名是否已存在
+        if (userRepository.existsByName(request.getName())) {
+            return AuthResponse.failure("用户名已存在");
+        }
+
+        // 检查邮箱是否已存在
+        if (request.getEmail() != null && !request.getEmail().isEmpty() &&
+                userRepository.existsByEmail(request.getEmail())) {
+            return AuthResponse.failure("邮箱已被使用");
+        }
+
+        // 检查店铺名称是否已存在
+        if (userRepository.existsByShopName(request.getShopName())) {
+            return AuthResponse.failure("店铺名称已存在");
+        }
+
+        // 验证密码
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            return AuthResponse.failure("两次输入的密码不一致");
+        }
+
+        // 创建商家用户
+        User merchant = new User(request.getName(), request.getEmail(),
+                passwordEncoder.encode(request.getPassword()));
+        merchant.setIsMerchant(true);
+        merchant.setShopName(request.getShopName());
+        merchant.setShopDescription(request.getShopDescription());
+        merchant.setPhone(request.getPhone());
+        merchant.setStatus("ACTIVE"); // 默认启用
+        merchant = userRepository.save(merchant);
+
+        // 生成 JWT token
+        String token = jwtService.generateToken(merchant);
+
+        return AuthResponse.success("商家注册成功", token, convertToUserDTO(merchant));
     }
 
     @Override

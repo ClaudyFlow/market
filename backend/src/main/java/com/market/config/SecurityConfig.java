@@ -57,7 +57,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // 公开接口
+                // 公开接口 - 必须放在最前面
                 .requestMatchers("/api/auth/**").permitAll()
                 // 商品查询公开，但修改需要权限
                 .requestMatchers("/api/product/**").permitAll()

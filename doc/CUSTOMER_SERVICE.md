@@ -1,0 +1,384 @@
+# 客服功能文档
+
+## 📋 概述
+
+市场平台客服系统提供完整的在线客服功能，支持实时聊天、消息状态追踪、订单/支付/物流等业务消息推送，以及本地日志记录功能。
+
+## 🎯 功能特性
+
+### 1. 实时聊天
+- ✅ WebSocket 实时通信
+- ✅ HTTP 备用通道
+- ✅ 自动重连机制
+- ✅ 消息队列管理
+
+### 2. 消息状态系统
+- ✅ 数字状态码（1000-9999）
+- ✅ 全业务场景覆盖
+- ✅ 状态流转追踪
+- ✅ 失败重试机制
+
+### 3. 业务消息
+- ✅ 订单状态通知
+- ✅ 支付结果通知
+- ✅ 物流配送通知
+- ✅ 售后服务通知
+- ✅ 优惠券/促销通知
+- ✅ VIP 会员通知
+
+### 4. 用户体验
+- ✅ 消息动画效果
+- ✅ 正在输入指示
+- ✅ 已读/未读状态
+- ✅ 消息卡片展示
+- ✅ 本地日志记录
+
+## 📊 系统架构
+
+```
+┌─────────────┐         ┌──────────────┐         ┌─────────────┐
+│   用户端    │ ◄─────► │  客服后端    │ ◄─────► │  数据库     │
+│  (Vue 3)    │  WebSocket│ (Spring Boot)│  JPA    │ (PostgreSQL)│
+└─────────────┘         └──────────────┘         └─────────────┘
+       │                        │
+       │                        ▼
+       │                 ┌──────────────┐
+       └────────────────►│  本地日志    │
+          File System    │  (IndexedDB) │
+                         └──────────────┘
+```
+
+## 💻 技术栈
+
+### 前端
+- **框架**: Vue 3 + TypeScript
+- **状态管理**: Pinia
+- **UI 组件**: Element Plus
+- **图标**: Font Awesome
+- **通信**: WebSocket (STOMP) + Axios
+- **日志**: File System Access API
+
+### 后端
+- **框架**: Spring Boot 3.4.0
+- **安全**: Spring Security + JWT
+- **通信**: WebSocket (STOMP)
+- **数据**: JPA + Hibernate
+- **数据库**: PostgreSQL / H2
+
+## 📁 文件结构
+
+```
+frontend/src/
+├── common/
+│   ├── api/
+│   │   └── chat.ts              # 客服 API 接口
+│   ├── components/
+│   │   └── MessageCard.vue      # 消息卡片组件
+│   ├── stores/
+│   │   ├── chat.ts              # 聊天消息 Store
+│   │   └── messageStatus.ts     # 消息状态码定义
+│   └── utils/
+│       ├── chatWebSocket.ts     # WebSocket 客户端
+│       └── messageTemplates.ts  # 消息模板
+└── user/
+    └── views/
+        └── CustomerService.vue  # 客服页面
+
+backend/src/
+└── main/java/com/market/
+    ├── config/
+    │   └── WebSocketConfig.java    # WebSocket 配置
+    ├── controller/
+    │   └── ChatController.java     # 聊天控制器
+    ├── dto/
+    │   ├── ChatMessageRequest.java # 消息请求 DTO
+    │   ├── ChatMessageResponse.java# 消息响应 DTO
+    │   └── MerchantRegisterRequest.java # 商家注册 DTO
+    ├── entity/
+    │   └── ChatMessage.java        # 消息实体
+    ├── repository/
+    │   └── ChatMessageRepository.java # 消息仓库
+    └── service/
+        ├── ChatService.java        # 聊天服务接口
+        └── impl/
+            └── ChatServiceImpl.java # 聊天服务实现
+```
+
+## 🔢 消息状态码
+
+### 基础消息状态 (1000-1999)
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| 1000 | SENDING | 发送中 |
+| 2000 | SENT | 已发送 |
+| 3000 | DELIVERED | 已送达 |
+| 4000 | READ | 已读 |
+| 5000 | FAILED | 发送失败 |
+
+### 业务消息状态
+
+| 分类 | 状态码范围 | 说明 |
+|------|-----------|------|
+| 订单消息 | 6000-6499 | 订单创建、发货、完成等 |
+| 支付消息 | 6500-6799 | 支付成功/失败、退款等 |
+| 物流消息 | 6800-6999 | 揽件、运输、派送、签收等 |
+| 售后消息 | 7000-7999 | 退货、换货、维修、投诉等 |
+| 促销消息 | 8000-8299 | 优惠券、促销活动等 |
+| VIP 消息 | 8300-8599 | 会员状态、积分等 |
+| 系统消息 | 8600-8999 | 系统通知、账户安全等 |
+
+详细说明请参考：[MESSAGE_STATUS.md](./MESSAGE_STATUS.md)
+
+## 🚀 快速开始
+
+### 1. 启动后端服务
+
+```bash
+cd D:\Code\Java_Code\market
+mvn spring-boot:run -Dspring-boot.run.profiles=h2
+```
+
+后端将启动在：http://localhost:8080
+
+### 2. 编译前端
+
+```bash
+cd D:\Code\Java_Code\market\frontend
+npm run build
+```
+
+### 3. 启动 Nginx
+
+```bash
+cd D:\Code\Java_Code\market\frontend\nginx
+start /B nginx.exe
+```
+
+前端将启动在：http://localhost:80
+
+### 4. 访问客服页面
+
+打开浏览器访问：http://localhost:80/customer-service
+
+## 💡 使用示例
+
+### 发送消息
+
+```typescript
+import { useChatStore, MessageStatus } from '@/common/stores/chat'
+import { MessageTemplates, createAgentMessage } from '@/common/utils/messageTemplates'
+
+const chatStore = useChatStore()
+
+// 发送文本消息
+const message = chatStore.addLocalMessage('您好，请问有什么可以帮您？')
+
+// 通过 WebSocket 发送
+chatWS.sendChatMessage(CS_USER_ID, '您好，请问有什么可以帮您？', 'TEXT')
+
+// 更新消息状态
+chatStore.updateMessageStatus(message.localId, {
+  status: MessageStatus.SENT
+})
+```
+
+### 接收业务消息
+
+```typescript
+// 订单创建通知
+const orderTemplate = MessageTemplates.order.created('ORD20260331001', 299.00)
+const orderMessage = createAgentMessage(userId, orderTemplate)
+chatStore.addReceivedMessage(orderMessage)
+
+// 物流通知
+const logisticsTemplate = MessageTemplates.logistics.outForDelivery(
+  'SF1234567890',
+  '张三',
+  '13800138000'
+)
+const logisticsMessage = createAgentMessage(userId, logisticsTemplate)
+chatStore.addReceivedMessage(logisticsMessage)
+```
+
+### 消息卡片
+
+```vue
+<template>
+  <div class="chat-messages">
+    <MessageCard 
+      v-for="msg in chatStore.displayMessages" 
+      :key="msg.id"
+      :message="msg"
+      :data="msg.data"
+    />
+  </div>
+</template>
+
+<script setup>
+import MessageCard from '@/common/components/MessageCard.vue'
+import { useChatStore } from '@/common/stores/chat'
+
+const chatStore = useChatStore()
+</script>
+```
+
+## 🎨 UI 组件
+
+### 消息卡片类型
+
+1. **订单卡片** - 显示订单号、金额、快递单号
+2. **物流卡片** - 显示物流信息、派送员联系方式
+3. **支付卡片** - 显示支付金额、支付按钮
+4. **售后卡片** - 显示退货/换货/维修信息
+5. **优惠券卡片** - 显示优惠券金额、使用条件
+6. **评价卡片** - 显示评分组件
+
+### 消息动画
+
+```css
+/* 消息进入动画 */
+.message-list-enter-active {
+  animation: message-slide-in 0.4s ease-out;
+}
+
+@keyframes message-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 正在输入动画 */
+.typing-dots span {
+  animation: typing 1.4s infinite;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+```
+
+## 📊 API 接口
+
+### HTTP 接口
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/chat/send` | POST | 发送消息 |
+| `/api/chat/conversation/{otherUserId}` | GET | 获取聊天记录 |
+| `/api/chat/unread` | GET | 获取未读消息 |
+| `/api/chat/unread/count` | GET | 获取未读数量 |
+| `/api/chat/mark-read/{senderId}` | POST | 标记为已读 |
+
+### WebSocket 接口
+
+| 接口 | 说明 |
+|------|------|
+| `/ws` | WebSocket 连接端点 |
+| `/app/chat.send` | 发送消息目标 |
+| `/app/chat.join` | 加入聊天目标 |
+| `/user/queue/messages` | 个人消息订阅 |
+
+## 🔧 配置说明
+
+### WebSocket 配置
+
+```typescript
+// frontend/src/common/utils/chatWebSocket.ts
+const chatWS = new ChatWebSocketClient('/ws')
+
+// 连接
+await chatWS.connect(token)
+
+// 监听消息
+chatWS.onMessage((message) => {
+  console.log('收到消息:', message)
+})
+
+// 发送消息
+chatWS.sendChatMessage(receiverId, content, 'TEXT')
+```
+
+### 状态码配置
+
+```typescript
+// frontend/src/common/stores/messageStatus.ts
+export const MessageStatus = {
+  SENDING: 1000,
+  SENT: 2000,
+  DELIVERED: 3000,
+  READ: 4000,
+  FAILED: 5000
+} as const
+```
+
+## 🐛 常见问题
+
+### 1. WebSocket 连接失败
+
+**现象**: 客服页面显示"离线"状态
+
+**解决方案**:
+- 检查后端服务是否启动
+- 检查 WebSocket 端点 `/ws` 是否可访问
+- 检查防火墙设置
+
+### 2. 消息发送失败
+
+**现象**: 消息显示红色背景，状态为"发送失败"
+
+**解决方案**:
+- 点击"重发"按钮重试
+- 检查网络连接
+- 检查后端服务状态
+
+### 3. 业务消息不显示卡片
+
+**现象**: 订单/物流等消息显示为普通文本
+
+**解决方案**:
+- 检查消息状态码是否正确
+- 检查消息模板是否匹配
+- 检查 MessageCard 组件是否引入
+
+## 📝 开发指南
+
+### 添加新消息类型
+
+1. 在 `messageStatus.ts` 中定义状态码
+2. 在 `messageTemplates.ts` 中添加消息模板
+3. 在 `MessageCard.vue` 中添加卡片类型
+4. 更新本文档
+
+### 自定义消息样式
+
+```css
+/* 在 CustomerService.vue 中添加 */
+.message-custom-type .message-bubble {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+```
+
+## 🔗 相关文档
+
+- [MESSAGE_STATUS.md](./MESSAGE_STATUS.md) - 消息状态码系统
+- [前端接口文档.typ](./前端接口文档.typ) - 前端组件接口规范
+- [部署配置指南.typ](./部署配置指南.typ) - 部署运维指南
+
+---
+
+**文档版本**: v1.0.0  
+**最后更新**: 2026 年 3 月 31 日
