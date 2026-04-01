@@ -14,6 +14,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * API 可用性检测切面
- * 
+ *
  * 拦截带有 @ApiAvailable 注解的方法，执行可用性检测
  * 整合系统消息状态库，提供统一的状态响应
  */
@@ -36,6 +38,8 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 public class ApiAvailabilityAspect {
+
+    private static final Logger log = LoggerFactory.getLogger(ApiAvailabilityAspect.class);
 
     @Autowired
     private ApplicationContext applicationContext;

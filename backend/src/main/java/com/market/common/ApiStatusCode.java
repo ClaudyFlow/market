@@ -118,6 +118,18 @@ public enum ApiStatusCode {
         this.level = level;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
     /**
      * 根据状态码获取枚举
      */
