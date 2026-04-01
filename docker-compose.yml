@@ -131,6 +131,8 @@ services:
       - app
     networks:
       - market-network
+    profiles:
+      - prod
 
   # ==================== 监控服务（可选） ====================
   # Prometheus 监控

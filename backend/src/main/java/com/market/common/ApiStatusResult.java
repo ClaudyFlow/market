@@ -74,6 +74,20 @@ public class ApiStatusResult implements Serializable {
     private Long checkTimeMs;
 
     /**
+     * 获取状态码
+     */
+    public Integer getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * 设置检测时间戳
+     */
+    public void setResponseTimeMs(Long responseTimeMs) {
+        this.responseTimeMs = responseTimeMs;
+    }
+
+    /**
      * 设置检测时间戳
      */
     public void setCheckTimeMs(Long checkTimeMs) {
