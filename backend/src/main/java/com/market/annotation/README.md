@@ -1,0 +1,110 @@
+# API 可用性检测注解系统
+
+## 文件结构
+
+```
+backend/src/main/java/com/market/
+├── annotation/
+│   ├── ApiAvailable.java              # 主注解：API 可用性检测
+│   ├── ApiHealthCheck.java            # 健康检查配置注解
+│   ├── ApiAvailabilityDetector.java   # 检测器接口
+│   ├── DatabaseAvailabilityDetector.java  # 数据库检测器
+│   ├── RedisAvailabilityDetector.java     # Redis 检测器
+│   ├── ExternalApiAvailabilityDetector.java # 外部 API 检测器
+│   └── API_AVAILABILITY_GUIDE.md      # 使用指南
+├── aspect/
+│   └── ApiAvailabilityAspect.java     # 切面实现
+├── exception/
+│   └── ApiAvailabilityException.java  # 可用性异常
+└── controller/
+    └── ProductControllerExample.java  # 使用示例
+```
+
+## 快速开始
+
+### 1. 基础用法
+
+```java
+@GetMapping("/products")
+@ApiAvailable(timeout = 5000)
+public Result<List<Product>> getProducts() {
+    return Result.success(productService.getAllProducts());
+}
+```
+
+### 2. 检测数据库依赖
+
+```java
+@GetMapping("/users")
+@ApiAvailable(
+    timeout = 5000,
+    dependencies = {"database"},
+    onFailure = ApiAvailable.FailureAction.RETURN_ERROR
+)
+public Result<List<User>> getUsers() {
+    return Result.success(userService.getAllUsers());
+}
+```
+
+### 3. 完整配置
+
+```java
+@GetMapping("/orders")
+@ApiAvailable(
+    timeout = 10000,
+    retryCount = 2,
+    retryInterval = 500,
+    dependencies = {"database", "redis"},
+    onFailure = ApiAvailable.FailureAction.THROW,
+    errorMessage = "订单服务不可用"
+)
+@ApiHealthCheck(critical = true, alertEnabled = true)
+public Result<List<Order>> getOrders() {
+    return Result.success(orderService.getOrders());
+}
+```
+
+## 核心功能
+
+| 功能 | 配置项 | 说明 |
+|------|--------|------|
+| 超时控制 | `timeout` | 方法执行超时时间（毫秒） |
+| 重试机制 | `retryCount`, `retryInterval` | 自动重试次数和间隔 |
+| 依赖检测 | `dependencies` | 检测 database/redis 等服务 |
+| 失败处理 | `onFailure` | THROW/RETURN_ERROR/CONTINUE |
+| 健康检查 | `@ApiHealthCheck` | 配置检查间隔和告警 |
+
+## 失败处理策略
+
+- **THROW**: 抛出 `ApiAvailabilityException`
+- **RETURN_ERROR**: 返回 `Result.error()`
+- **CONTINUE**: 继续执行（仅记录日志）
+
+## 内置检测器
+
+- `DatabaseAvailabilityDetector` - 数据库连接检测
+- `RedisAvailabilityDetector` - Redis 连接检测  
+- `ExternalApiAvailabilityDetector` - 外部 API 检测
+
+## 自定义检测器
+
+```java
+@Component
+public class CustomDetector implements ApiAvailabilityDetector {
+    @Override
+    public DetectionResult detect() {
+        // 自定义检测逻辑
+        return DetectionResult.success();
+    }
+}
+
+// 使用
+@ApiAvailable(detector = CustomDetector.class)
+```
+
+## 注意事项
+
+1. 需要 Spring AOP 支持（项目已包含）
+2. 检测器会自动从 Spring 容器获取
+3. 超时控制会中断超时方法
+4. 建议配合全局异常处理器使用

@@ -1,0 +1,173 @@
+# API 可用性检测注解 - 快速开始
+
+## 概述
+
+这套注解系统用于检测后端接口的可用性，支持：
+- ✅ 接口超时控制
+- ✅ 依赖服务健康检查（数据库、Redis 等）
+- ✅ 自动重试机制
+- ✅ 多种失败处理策略
+- ✅ 自定义检测器
+
+## 文件清单
+
+```
+annotation/
+├── ApiAvailable.java              # 主注解
+├── ApiHealthCheck.java            # 健康检查注解
+├── ApiAvailabilityDetector.java   # 检测器接口
+├── DatabaseAvailabilityDetector.java  # 数据库检测器
+├── RedisAvailabilityDetector.java     # Redis 检测器
+└── ExternalApiAvailabilityDetector.java # 外部 API 检测器
+
+aspect/
+└── ApiAvailabilityAspect.java     # 切面实现
+
+exception/
+└── ApiAvailabilityException.java  # 异常类
+```
+
+## 快速使用
+
+### 1. 最简单的用法（仅超时控制）
+
+```java
+@GetMapping("/products")
+@ApiAvailable(timeout = 5000)  // 5 秒超时
+public Result<List<Product>> getProducts() {
+    return Result.success(productService.getProducts());
+}
+```
+
+### 2. 检测数据库依赖
+
+```java
+@GetMapping("/users")
+@ApiAvailable(
+    timeout = 5000,
+    dependencies = {"database"},           // 检测数据库
+    onFailure = ApiAvailable.FailureAction.RETURN_ERROR  // 失败返回错误
+)
+public Result<List<User>> getUsers() {
+    return Result.success(userService.getUsers());
+}
+```
+
+### 3. 检测多个依赖（数据库 + Redis）
+
+```java
+@GetMapping("/orders")
+@ApiAvailable(
+    timeout = 10000,
+    retryCount = 2,                        // 重试 2 次
+    retryInterval = 500,                   // 间隔 500ms
+    dependencies = {"database", "redis"},  // 检测两个服务
+    onFailure = ApiAvailable.FailureAction.THROW  // 失败抛异常
+)
+@ApiHealthCheck(
+    critical = true,                       // 关键检查
+    alertEnabled = true,                   // 启用告警
+    alertThreshold = 3                     // 连续 3 次失败告警
+)
+public Result<List<Order>> getOrders() {
+    return Result.success(orderService.getOrders());
+}
+```
+
+## 失败处理策略
+
+| 策略 | 说明 | 适用场景 |
+|------|------|----------|
+| `THROW` | 抛出 `ApiAvailabilityException` | 关键业务，需要明确感知失败 |
+| `RETURN_ERROR` | 返回 `Result.error()` | 非关键业务，友好提示 |
+| `CONTINUE` | 继续执行（仅记录日志） | 降级处理，允许部分失败 |
+
+## 内置检测器
+
+| 检测器 | 依赖名称 | 说明 |
+|--------|----------|------|
+| `DatabaseAvailabilityDetector` | `"database"` | 执行 `SELECT 1` 检测数据库 |
+| `RedisAvailabilityDetector` | `"redis"` | 执行 SET/GET 检测 Redis |
+| `ExternalApiAvailabilityDetector` | 自定义 Bean | 检测外部 HTTP 接口 |
+
+## 自定义检测器
+
+```java
+// 1. 实现检测器接口
+@Component
+public class CustomDetector implements ApiAvailabilityDetector {
+    @Override
+    public DetectionResult detect() {
+        // 自定义检测逻辑
+        boolean isOk = checkYourService();
+        if (isOk) {
+            return DetectionResult.success("服务正常");
+        }
+        return DetectionResult.failure("服务异常");
+    }
+}
+
+// 2. 在接口上使用
+@PostMapping("/payment")
+@ApiAvailable(
+    timeout = 15000,
+    detector = CustomDetector.class,
+    onFailure = ApiAvailable.FailureAction.RETURN_ERROR
+)
+public Result<PaymentResponse> pay(@RequestBody PaymentRequest req) {
+    return Result.success(paymentService.process(req));
+}
+```
+
+## 类级别注解（批量应用）
+
+```java
+@RestController
+@RequestMapping("/api/admin")
+@ApiAvailable(
+    timeout = 5000,
+    dependencies = {"database"},
+    onFailure = ApiAvailable.FailureAction.RETURN_ERROR
+)
+public class AdminController {
+    // 所有方法都会自动进行可用性检测
+    @GetMapping("/users")
+    public Result<List<User>> getUsers() { ... }
+    
+    @GetMapping("/orders")
+    public Result<List<Order>> getOrders() { ... }
+}
+```
+
+## 全局异常处理
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ApiAvailabilityException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public Result<Void> handleApiAvailabilityException(ApiAvailabilityException e) {
+        log.error("服务不可用：{}", e.getServiceName(), e);
+        return Result.error("服务暂时不可用：" + e.getMessage());
+    }
+}
+```
+
+## 注意事项
+
+1. **需要 Spring AOP 支持** - 项目已包含 `spring-boot-starter-web`，无需额外配置
+2. **检测器自动注册** - 所有 `@Component` 检测器会自动从 Spring 容器获取
+3. **超时会中断方法** - 超时时会调用 `thread.interrupt()`
+4. **方法参数匹配** - 示例控制器已适配实际的服务接口签名
+
+## 测试运行
+
+```bash
+# 运行纯单元测试（不需要 Spring 容器）
+java com.market.aspect.ApiAvailabilityAnnotationTest
+```
+
+## 完整示例
+
+查看 `ProductControllerExample.java` 获取完整的使用示例。
