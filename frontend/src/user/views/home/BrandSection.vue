@@ -58,7 +58,6 @@ const brands = ref<Brand[]>([
 .brand-card-link {
   text-decoration: none;
   display: block;
-  /* 如果 SectionContainer 没有设置 grid，可能需要在这里设置 width: 100% 或 flex 属性 */
 }
 
 /* 品牌卡片 */

@@ -41,15 +41,15 @@ import CustomerService from "@user/components/CustomerService.vue";
 import UserForum from "@user/components/UserForum.vue";
 import SectionContainer from "@user/components/SectionContainer.vue";
 
-const router = useRouter()
+const router = useRouter();
 
 const goToCustomerService = () => {
-  router.push('/service')
-}
+  router.push("/service");
+};
 
 const goToForum = () => {
-  router.push('/forum')
-}
+  router.push("/forum");
+};
 </script>
 
 <style scoped>
@@ -256,7 +256,7 @@ article.user-card {
 
 .lottery-btn:hover {
   background: linear-gradient(135deg, #ff6600, #ff8800);
-  color: #fff;
+  color: #ffffff;
   box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
   transform: translateY(-2px);
 }
