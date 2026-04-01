@@ -1,0 +1,200 @@
+# API 可用性检测注解 - 测试指南
+
+## 测试方法
+
+### 方法 1: 运行单元测试（推荐）
+
+无需启动 Spring 容器，直接验证注解配置：
+
+```bash
+# 在 backend 目录下运行
+java -cp target/classes;target/test-classes com.market.aspect.ApiAvailabilityIntegrationTest
+```
+
+或者在 IDE 中直接运行 `ApiAvailabilityIntegrationTest.main()` 方法。
+
+### 方法 2: 启动服务进行集成测试
+
+#### 步骤 1: 启动后端服务
+
+```bash
+# 使用 Maven
+mvn spring-boot:run -pl backend
+
+# 或直接运行
+java -jar backend/target/market-platform-1.0.0.jar
+```
+
+#### 步骤 2: 测试各个端点
+
+使用 curl 或 Postman 测试以下接口：
+
+```bash
+# 1. 基础测试（应该返回成功）
+curl http://localhost:8080/api/test/availability/basic
+
+# 2. 数据库依赖测试
+curl http://localhost:8080/api/test/availability/database
+
+# 3. Redis 依赖测试
+curl http://localhost:8080/api/test/availability/redis
+
+# 4. 多依赖测试
+curl http://localhost:8080/api/test/availability/multi-dependencies
+
+# 5. 失败时抛出异常
+curl http://localhost:8080/api/test/availability/throw-exception
+
+# 6. 失败时继续执行
+curl http://localhost:8080/api/test/availability/continue-on-failure
+
+# 7. 超时测试（会超时，因为延迟 2 秒超过 1 秒超时）
+curl http://localhost:8080/api/test/availability/timeout-test?delayMs=2000
+
+# 8. 重试机制测试
+curl http://localhost:8080/api/test/availability/retry-test
+
+# 9. 健康检查测试
+curl http://localhost:8080/api/test/availability/health-check
+
+# 10. 禁用检测测试
+curl http://localhost:8080/api/test/availability/disabled
+```
+
+### 方法 3: 使用测试脚本
+
+创建 `test-availability.bat` (Windows) 或 `test-availability.sh` (Linux):
+
+```batch
+@echo off
+echo ========================================
+echo   API 可用性检测 - 集成测试
+echo ========================================
+echo.
+
+echo [测试 1] 基础功能测试...
+curl -s http://localhost:8080/api/test/availability/basic
+echo.
+echo.
+
+echo [测试 2] 数据库依赖测试...
+curl -s http://localhost:8080/api/test/availability/database
+echo.
+echo.
+
+echo [测试 3] Redis 依赖测试...
+curl -s http://localhost:8080/api/test/availability/redis
+echo.
+echo.
+
+echo [测试 4] 多依赖测试...
+curl -s http://localhost:8080/api/test/availability/multi-dependencies
+echo.
+echo.
+
+echo [测试 5] 超时测试...
+curl -s http://localhost:8080/api/test/availability/timeout-test?delayMs=2000
+echo.
+echo.
+
+echo ========================================
+echo   测试完成
+echo ========================================
+```
+
+## 预期结果
+
+### 正常情况（数据库/Redis 可用）
+
+| 接口 | 预期响应 |
+|------|----------|
+| `/basic` | `{"code":200,"message":"基础测试通过"}` |
+| `/database` | `{"code":200,"message":"数据库测试通过"}` |
+| `/redis` | `{"code":200,"message":"Redis 测试通过"}` |
+| `/multi-dependencies` | `{"code":200,"message":"多依赖测试通过"}` |
+| `/timeout-test` | `{"code":500,"message":"方法执行超时..."}` |
+
+### 异常情况（数据库不可用）
+
+| 接口 | 预期响应 |
+|------|----------|
+| `/database` | `{"code":500,"message":"依赖服务 [database] 不可用"}` |
+| `/throw-exception` | `{"code":500,"message":"数据库服务不可用"}` |
+| `/continue-on-failure` | `{"code":200,"message":"继续执行测试通过"}` |
+
+## 验证切面是否生效
+
+### 方法 1: 查看日志
+
+启动服务后，观察日志输出：
+
+```
+# 正常情况
+INFO  API 可用性检测通过：com.market.controller.ApiAvailabilityTestController.databaseTest
+
+# 失败情况
+ERROR API 可用性检测失败：com.market.controller.ApiAvailabilityTestController.databaseTest - 依赖服务 [database] 不可用
+```
+
+### 方法 2: 使用慢方法验证超时
+
+```bash
+# 这个方法会延迟 2 秒，但超时设置为 1 秒
+curl -v http://localhost:8080/api/test/availability/timeout-test?delayMs=2000
+
+# 应该在 1 秒后返回超时错误，而不是等待 2 秒
+```
+
+### 方法 3: 验证重试机制
+
+```bash
+# 重试测试会尝试 3 次（1 次初始 + 2 次重试）
+# 查看日志中是否有重试记录
+curl http://localhost:8080/api/test/availability/retry-test
+```
+
+## 常见问题排查
+
+### Q1: 注解不生效
+
+**检查项：**
+1. 确认方法/类上有 `@ApiAvailable` 注解
+2. 确认 `ApiAvailabilityAspect` 类上有 `@Aspect` 和 `@Component` 注解
+3. 确认 Spring 组件扫描包含 `com.market.aspect` 包
+
+### Q2: 数据库检测器不工作
+
+**检查项：**
+1. 确认 `DatabaseAvailabilityDetector` 类上有 `@Component` 注解
+2. 确认数据库连接配置正确
+3. 查看日志中是否有检测器执行记录
+
+### Q3: 超时控制不生效
+
+**检查项：**
+1. 确认 `timeout` 值设置正确（毫秒）
+2. 确认方法执行时间确实超过超时时间
+3. 查看日志中是否有超时错误信息
+
+## 测试报告模板
+
+```
+测试日期：2024-XX-XX
+测试环境：Windows 11 / Java 21 / Spring Boot 3.4.0
+
+测试结果:
+┌─────────────────────────────────┬────────┬──────────┐
+│ 测试项                          │ 状态   │ 备注     │
+├─────────────────────────────────┼────────┼──────────┤
+│ 注解存在性                      │ ✓/✗    │          │
+│ 注解属性配置                    │ ✓/✗    │          │
+│ 数据库依赖检测                  │ ✓/✗    │          │
+│ Redis 依赖检测                   │ ✓/✗    │          │
+│ 超时控制                        │ ✓/✗    │          │
+│ 重试机制                        │ ✓/✗    │          │
+│ 失败处理策略-THROW              │ ✓/✗    │          │
+│ 失败处理策略-RETURN_ERROR       │ ✓/✗    │          │
+│ 失败处理策略-CONTINUE           │ ✓/✗    │          │
+│ 健康检查配置                    │ ✓/✗    │          │
+└─────────────────────────────────┴────────┴──────────┘
+```
