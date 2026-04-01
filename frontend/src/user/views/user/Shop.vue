@@ -3,24 +3,25 @@
     <!-- 1. 店铺头部横幅 -->
     <header class="shop-banner">
       <div class="banner-content">
-        <!-- 返回按钮 -->
-        <div class="back-btn" @click="goBack">
-          <i class="fas fa-arrow-left"></i> 返回
-        </div>
-        
-        <div class="shop-logo-area">
-          <div class="shop-avatar">
-            {{ shopInfo.name.charAt(0) }}
-          </div>
-          <div class="shop-name-wrapper">
-            <h1 class="shop-name">{{ shopInfo.name }} 官方旗舰店</h1>
-            <div class="shop-tags">
-              <span class="tag">官方</span>
-              <span class="tag">正品</span>
-              <span class="tag">极速发货</span>
+        <!-- 左侧：店铺信息区域 -->
+        <div class="shop-info-group">
+          <div class="shop-logo-area">
+            <div class="shop-avatar">
+              {{ shopInfo.name.charAt(0) }}
+            </div>
+            <div class="shop-name-wrapper">
+              <h1 class="shop-name">{{ shopInfo.name }} 官方旗舰店</h1>
+              <div class="shop-tags">
+                <span class="tag">官方</span>
+                <span class="tag">正品</span>
+                <span class="tag">极速发货</span>
+              </div>
+              <p class="shop-desc">{{ shopInfo.description }}</p>
             </div>
           </div>
         </div>
+
+        <!-- 右侧：数据与操作区域 -->
         <div class="shop-actions">
           <div class="shop-stats">
             <div class="stat-item">
@@ -36,14 +37,19 @@
               <span class="stat-label">评分</span>
             </div>
           </div>
-          <el-button
-            :type="isFollowed ? 'success' : 'primary'"
-            class="follow-btn"
-            @click="toggleFollow"
-          >
-            <i class="fas fa-star"></i>
-            {{ isFollowed ? '已关注' : '关注店铺' }}
-          </el-button>
+          <div class="action-btns">
+            <el-button
+              :type="isFollowed ? 'success' : 'primary'"
+              class="follow-btn"
+              @click="toggleFollow"
+            >
+              <i class="fas fa-star"></i>
+              {{ isFollowed ? '已关注' : '关注店铺' }}
+            </el-button>
+            <el-button class="contact-btn" @click="openChat">
+              <i class="fas fa-comment-dots"></i> 联系客服
+            </el-button>
+          </div>
         </div>
       </div>
     </header>
@@ -66,7 +72,8 @@
       </div>
     </nav>
 
-    <SectionContainer>
+    <!-- 【修复 1】移除 SectionContainer，使用自定义容器 -->
+    <div class="shop-container">
       <div class="shop-main">
         <!-- 3. 左侧边栏 -->
         <aside class="shop-sidebar">
@@ -86,16 +93,6 @@
           </div>
 
           <div class="sidebar-card">
-            <h3 class="sidebar-title">联系客服</h3>
-            <div class="service-area">
-              <el-button class="service-btn" @click="openChat">
-                <i class="fas fa-comment-dots"></i> 在线咨询
-              </el-button>
-              <p class="service-time">工作时间：9:00-22:00</p>
-            </div>
-          </div>
-
-          <div class="sidebar-card">
             <h3 class="sidebar-title">店铺信息</h3>
             <div class="shop-info-detail">
               <div class="info-row">
@@ -105,6 +102,10 @@
               <div class="info-row">
                 <span class="label">所在地：</span>
                 <span class="value">{{ shopInfo.location }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">开店时长：</span>
+                <span class="value">5 年</span>
               </div>
             </div>
           </div>
@@ -120,85 +121,55 @@
 
         <!-- 4. 右侧主内容区 -->
         <main class="shop-content">
-          <!-- 搜索与排序 -->
-          <div class="search-sort-bar">
-            <div class="search-box">
-              <el-input
-                v-model="searchQuery"
-                placeholder="搜索店内商品..."
-                class="shop-search-input"
-                clearable
-                @keyup.enter="handleSearch"
-              >
-                <template #prefix>
-                  <i class="fas fa-search"></i>
-                </template>
-                <template #append>
-                  <el-button @click="handleSearch">搜索</el-button>
-                </template>
-              </el-input>
+          <!-- 筛选栏 -->
+          <div class="filter-bar">
+            <div class="filter-item">
+              <span class="filter-label">分类:</span>
+              <el-radio-group v-model="selectedCategory" size="small">
+                <el-radio-button label="">全部</el-radio-button>
+                <el-radio-button label="digital">数码</el-radio-button>
+                <el-radio-button label="appliance">家电</el-radio-button>
+                <el-radio-button label="fashion">服饰</el-radio-button>
+                <el-radio-button label="beauty">美妆</el-radio-button>
+              </el-radio-group>
             </div>
-            <div class="sort-options">
-              <span 
-                v-for="sort in sortOptions" 
-                :key="sort.value"
-                :class="{ active: currentSort === sort.value }"
-                @click="changeSort(sort.value)"
-              >
-                {{ sort.label }}
-              </span>
+            <div class="filter-item">
+              <span class="filter-label">价格:</span>
+              <el-radio-group v-model="priceRange" size="small">
+                <el-radio-button label="">全部</el-radio-button>
+                <el-radio-button label="0-1000">0-1000 元</el-radio-button>
+                <el-radio-button label="1000-5000">1000-5000 元</el-radio-button>
+                <el-radio-button label="5000+">5000 元以上</el-radio-button>
+              </el-radio-group>
+            </div>
+            <div class="filter-item">
+              <span class="filter-label">排序:</span>
+              <el-radio-group v-model="sortBy" size="small">
+                <el-radio-button label="default">综合</el-radio-button>
+                <el-radio-button label="sales">销量</el-radio-button>
+                <el-radio-button label="price-asc">价格↑</el-radio-button>
+                <el-radio-button label="price-desc">价格↓</el-radio-button>
+              </el-radio-group>
             </div>
           </div>
 
-          <!-- 商品列表 -->
+          <!-- 商品列表 - 调用 ProductCard 组件 -->
           <div class="product-grid">
-            <div v-if="filteredProducts.length === 0" class="empty-state">
+            <div v-if="paginatedProducts.length === 0" class="empty-state">
               <el-empty description="没有找到相关商品" />
             </div>
             
-            <!-- 商品卡片 - 与商品列表页相同的结构 -->
-            <div 
-              v-for="product in filteredProducts" 
+            <ProductCard
+              v-for="product in paginatedProducts" 
               :key="product.id" 
-              class="product-card"
-              @click="goToDetail(product.id)"
-            >
-              <div class="product-image">
-                <img :src="product.image" :alt="product.name" />
-                <div class="product-overlay">
-                  <el-button circle size="small">
-                    <i class="fas fa-eye"></i>
-                  </el-button>
-                </div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">{{ product.name }}</h3>
-                <p class="product-desc">{{ product.description }}</p>
-                <div class="product-meta">
-                  <span class="rating">
-                    <i class="fas fa-star"></i> {{ product.rating }}
-                  </span>
-                  <span class="sales">销量 {{ product.sales }}</span>
-                </div>
-                <div class="price-row">
-                  <span class="current-price">¥{{ product.price }}</span>
-                  <span class="original-price" v-if="product.originalPrice">¥{{ product.originalPrice }}</span>
-                </div>
-                <div class="stock-bar">
-                  <div class="bar-bg">
-                    <div class="bar-fill" :style="{ width: product.salesPercent + '%' }"></div>
-                  </div>
-                  <span class="stock-text">仅剩{{ product.remaining }}件</span>
-                </div>
-                <el-button class="add-cart-btn" @click.stop="addToCart(product)">
-                  <i class="fas fa-shopping-cart"></i> 加入购物车
-                </el-button>
-              </div>
-            </div>
+              :product="formatProduct(product)"
+              @click="goToDetail"
+              @add-to-cart="addToCart"
+            />
           </div>
 
           <!-- 分页 -->
-          <div class="pagination-area">
+          <div class="pagination">
             <el-pagination
               v-model:current-page="currentPage"
               v-model:page-size="pageSize"
@@ -211,15 +182,16 @@
           </div>
         </main>
       </div>
-    </SectionContainer>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Font Awesome 图标直接使用类名，无需导入
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import SectionContainer from "@user/components/SectionContainer.vue";
+// 【修复 2】移除 SectionContainer 导入
+// import SectionContainer from "@user/components/SectionContainer.vue";
+import ProductCard from "@user/components/ProductCard.vue";
 import { ElMessage } from 'element-plus';
 import { useCartStore } from "@user/stores/cart";
 
@@ -227,17 +199,46 @@ const router = useRouter();
 const route = useRoute();
 const cartStore = useCartStore();
 
-// 状态
 const isFollowed = ref(false);
-const searchQuery = ref("");
 const currentCategory = ref<number>(0);
-const currentSort = ref<string>("default");
 const currentPage = ref(1);
 const pageSize = ref(8);
 
-const shopInfo = ref({
+const selectedCategory = ref('');
+const priceRange = ref('');
+const sortBy = ref<'default' | 'sales' | 'price-asc' | 'price-desc'>('default');
+
+interface ShopInfo {
+  name: string;
+  description: string;
+  rating: number;
+  followers: number;
+  productCount: number;
+  category: string;
+  location: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice: number;
+  type: 'digital' | 'appliance' | 'fashion' | 'beauty';
+  rating: number;
+  sales: string;
+  salesNum: number;
+  image: string;
+  remainCount?: number;
+  soldCount?: number;
+  salesPercent?: number;
+  remaining?: number;
+  categoryId: number;
+  [key: string]: unknown;
+}
+
+const shopInfo = ref<ShopInfo>({
   name: "",
-  description: "",
+  description: "专注品质生活，为您提供优质的数码家电产品",
   rating: 5.0,
   followers: 10000,
   productCount: 0,
@@ -245,72 +246,88 @@ const shopInfo = ref({
   location: "广东 深圳",
 });
 
-// 品牌与品类映射
-const brandCategories: Record<string, { category: string; products: string[] }> = {
-  "华为": { category: "数码电器", products: ["手机", "平板", "笔记本", "手表", "耳机"] },
-  "小米": { category: "数码电器", products: ["手机", "智能家居", "电视", "笔记本", "耳机"] },
-  "海尔": { category: "家用电器", products: ["冰箱", "洗衣机", "空调", "热水器", "厨电"] },
-  "格力": { category: "家用电器", products: ["空调", "空气净化器", "风扇", "取暖器"] },
-  "苹果": { category: "数码电器", products: ["iPhone", "MacBook", "iPad", "Apple Watch", "AirPods"] },
-  "索尼": { category: "数码电器", products: ["相机", "耳机", "电视", "游戏机", "音响"] },
-  "三星": { category: "数码电器", products: ["手机", "电视", "冰箱", "洗衣机", "平板"] },
-  "耐克": { category: "服饰鞋包", products: ["运动鞋", "跑步鞋", "篮球鞋", "服装", "配件"] },
-  "阿迪达斯": { category: "服饰鞋包", products: ["运动鞋", "跑步鞋", "服装", "背包", "配件"] },
-  "兰蔻": { category: "美妆护肤", products: ["精华", "面霜", "口红", "香水", "眼霜"] },
-  "戴森": { category: "家用电器", products: ["吸尘器", "吹风机", "空气净化器", "卷发棒"] },
-  "西门子": { category: "家用电器", products: ["洗碗机", "洗衣机", "冰箱", "烤箱", "厨电"] },
-  "美的": { category: "家用电器", products: ["空调", "冰箱", "洗衣机", "微波炉", "电饭煲"] },
-  "任天堂": { category: "数码电器", products: ["Switch", "游戏卡带", "配件", "周边"] },
-  "LV": { category: "服饰鞋包", products: ["钱包", "手提包", "皮带", "香水", "配饰"] },
-  "联想": { category: "数码电器", products: ["笔记本", "台式机", "平板", "显示器", "配件"] },
+const brandCategories: Record<string, { category: string; products: string[]; type: string }> = {
+  "华为": { category: "数码电器", products: ["手机", "平板", "笔记本", "手表", "耳机"], type: "digital" },
+  "小米": { category: "数码电器", products: ["手机", "智能家居", "电视", "笔记本", "耳机"], type: "digital" },
+  "海尔": { category: "家用电器", products: ["冰箱", "洗衣机", "空调", "热水器", "厨电"], type: "appliance" },
+  "格力": { category: "家用电器", products: ["空调", "空气净化器", "风扇", "取暖器"], type: "appliance" },
+  "苹果": { category: "数码电器", products: ["iPhone", "MacBook", "iPad", "Apple Watch", "AirPods"], type: "digital" },
+  "索尼": { category: "数码电器", products: ["相机", "耳机", "电视", "游戏机", "音响"], type: "digital" },
+  "三星": { category: "数码电器", products: ["手机", "电视", "冰箱", "洗衣机", "平板"], type: "digital" },
+  "耐克": { category: "服饰鞋包", products: ["运动鞋", "跑步鞋", "篮球鞋", "服装", "配件"], type: "fashion" },
+  "阿迪达斯": { category: "服饰鞋包", products: ["运动鞋", "跑步鞋", "服装", "背包", "配件"], type: "fashion" },
+  "兰蔻": { category: "美妆护肤", products: ["精华", "面霜", "口红", "香水", "眼霜"], type: "beauty" },
+  "戴森": { category: "家用电器", products: ["吸尘器", "吹风机", "空气净化器", "卷发棒"], type: "appliance" },
+  "西门子": { category: "家用电器", products: ["洗碗机", "洗衣机", "冰箱", "烤箱", "厨电"], type: "appliance" },
+  "美的": { category: "家用电器", products: ["空调", "冰箱", "洗衣机", "微波炉", "电饭煲"], type: "appliance" },
+  "任天堂": { category: "数码电器", products: ["Switch", "游戏卡带", "配件", "周边"], type: "digital" },
+  "LV": { category: "服饰鞋包", products: ["钱包", "手提包", "皮带", "香水", "配饰"], type: "fashion" },
+  "联想": { category: "数码电器", products: ["笔记本", "台式机", "平板", "显示器", "配件"], type: "digital" },
 };
 
-const categories = ref([
+interface Category {
+  id: number;
+  name: string;
+  count: number;
+}
+
+const categories = ref<Category[]>([
   { id: 0, name: "全部商品", count: 0 },
   { id: 1, name: "新品上市", count: 0 },
   { id: 2, name: "热销爆款", count: 0 },
   { id: 3, name: "优惠专区", count: 0 },
 ]);
 
-const sortOptions = ref([
-  { label: "默认", value: "default" },
-  { label: "销量", value: "sales" },
-  { label: "价格", value: "price" },
-  { label: "新品", value: "new" },
-]);
-
-const allProducts = ref<any[]>([]);
+const allProducts = ref<Product[]>([]);
 
 const filteredProducts = computed(() => {
-  let result = allProducts.value;
+  let result = [...allProducts.value];
   
   if (currentCategory.value !== 0) {
     result = result.filter(p => p.categoryId === currentCategory.value);
   }
   
-  if (searchQuery.value) {
-    result = result.filter(p => 
-      p.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+  if (selectedCategory.value) {
+    result = result.filter(p => p.type === selectedCategory.value);
   }
   
-  if (currentSort.value === "sales") {
-    result = [...result].sort((a, b) => b.salesNum - a.salesNum);
-  } else if (currentSort.value === "price") {
-    result = [...result].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-  } else if (currentSort.value === "new") {
-    result = [...result].sort((a, b) => b.id - a.id);
+  if (priceRange.value) {
+    if (priceRange.value === '0-1000') {
+      result = result.filter(p => p.price <= 1000);
+    } else if (priceRange.value === '1000-5000') {
+      result = result.filter(p => p.price > 1000 && p.price <= 5000);
+    } else if (priceRange.value === '5000+') {
+      result = result.filter(p => p.price > 5000);
+    }
+  }
+  
+  if (sortBy.value === 'sales') {
+    result.sort((a, b) => b.salesNum - a.salesNum);
+  } else if (sortBy.value === 'price-asc') {
+    result.sort((a, b) => a.price - b.price);
+  } else if (sortBy.value === 'price-desc') {
+    result.sort((a, b) => b.price - a.price);
+  } else {
+    result.sort((a, b) => b.id - a.id);
   }
   
   return result;
 });
 
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return filteredProducts.value.slice(start, end);
+});
+
+watch([selectedCategory, priceRange, sortBy], () => {
+  currentPage.value = 1;
+});
+
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: 'instant' });
-  
   const brandName = route.query.brand as string || "未知品牌";
-  
-  const brandInfo = brandCategories[brandName] || { category: "综合商品", products: ["商品"] };
+  const brandInfo = brandCategories[brandName] || { category: "综合商品", products: ["商品"], type: "digital" };
   
   shopInfo.value.name = brandName;
   shopInfo.value.category = brandInfo.category;
@@ -322,36 +339,39 @@ onMounted(() => {
   categories.value[2].count = Math.floor(shopInfo.value.productCount * 0.25);
   categories.value[3].count = Math.floor(shopInfo.value.productCount * 0.2);
   
-  generateMockProducts(brandName, brandInfo.products);
+  generateMockProducts(brandName, brandInfo.products, brandInfo.type);
 });
 
-const generateMockProducts = (brand: string, productTypes: string[]) => {
-  const list = [];
+const generateMockProducts = (brand: string, productTypes: string[], type: string) => {
+  const list: Product[] = [];
   const salesOptions = ["1 万+", "3 万+", "5 万+", "8 万+", "10 万+", "15 万+"];
   
   for (let i = 1; i <= 32; i++) {
     const productType = productTypes[Math.floor(Math.random() * productTypes.length)];
     const price = parseFloat((Math.random() * 5000 + 200).toFixed(2));
     const discount = Math.floor(Math.random() * 3) + 7;
-    const originalPrice = discount < 10 ? (price / (discount / 10)).toFixed(2) : null;
+    const originalPrice = parseFloat((price / (discount / 10)).toFixed(2));
     const salesNum = Math.floor(Math.random() * 150000);
     const salesPercent = Math.floor(Math.random() * 40) + 50;
     const remaining = Math.floor(Math.random() * 5000) + 100;
+    const soldCount = Math.floor(Math.random() * 10000) + 500;
+    const rating = parseFloat((Math.random() * 1.5 + 3.5).toFixed(1));
     
     list.push({
       id: i,
       name: `${brand} ${productType} ${String.fromCharCode(65 + (i % 26))}`,
-      description: `${productType} / 官方正品 / 全国联保`,
-      price: price.toFixed(2),
-      originalPrice,
-      discount: discount < 10 ? discount : null,
-      rating: (Math.random() * 1.5 + 3.5).toFixed(1),
+      price: price,
+      originalPrice: originalPrice,
+      type: type as 'digital' | 'appliance' | 'fashion' | 'beauty',
+      rating: rating,
       sales: salesOptions[Math.floor(Math.random() * salesOptions.length)],
       salesNum,
       salesPercent,
       remaining,
+      remainCount: remaining,
+      soldCount,
       categoryId: Math.floor(Math.random() * 3) + 1,
-      image: `https://via.placeholder.com/250x250/1a2a4a/00d4ff?text=${brand}`,
+      image: `https://via.placeholder.com/300x300/0a1628/00d4ff?text=${brand}`,
     });
   }
   allProducts.value = list;
@@ -361,6 +381,12 @@ const formatNumber = (num: number) => {
   if (num >= 10000) return (num / 10000).toFixed(1) + 'w';
   return num.toString();
 };
+
+const formatProduct = (product: Product) => ({
+  ...product,
+  remaining: product.remaining || Math.round((100 - (product.salesPercent || 70)) * 10),
+  soldPercent: product.salesPercent || 70
+});
 
 const toggleFollow = () => {
   isFollowed.value = !isFollowed.value;
@@ -372,33 +398,22 @@ const selectCategory = (id: number) => {
   currentPage.value = 1;
 };
 
-const changeSort = (value: string) => {
-  currentSort.value = currentSort.value === value ? "default" : value;
-  currentPage.value = 1;
+const goToDetail = (product: Product) => {
+  router.push(`/item/${product.id}`);
 };
 
-const handleSearch = () => {
-  currentPage.value = 1;
-  ElMessage.info(`搜索：${searchQuery.value}`);
-};
-
-// 返回上一页
-const goBack = () => {
-  router.back();
-};
-
-const goToDetail = (id: number) => {
-  router.push(`/item/${id}`);
-};
-
-const addToCart = (product: any) => {
+const addToCart = (product: Product) => {
+  if (product.remaining && product.remaining <= 0) {
+    ElMessage.warning("商品已售罄");
+    return;
+  }
   cartStore.addToCart({ 
     id: product.id,
     name: product.name,
-    price: parseFloat(product.price),
-    originalPrice: product.originalPrice ? parseFloat(product.originalPrice) : 0,
+    price: product.price,
+    originalPrice: product.originalPrice,
     image: product.image,
-    description: product.description,
+    description: `${product.type} / 官方正品`,
     quantity: 1 
   });
   ElMessage.success("已加入购物车");
@@ -424,51 +439,40 @@ const handleCurrentChange = () => {
 <style scoped>
 .shop-page {
   min-height: 100vh;
-  background-color: #0f1220;
+  background-color: #050a14;
+  width: 100%;
 }
 
 /* ========== 店铺横幅 ========== */
 .shop-banner {
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.95) 0%, rgba(15, 18, 32, 0.9) 100%);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  background: linear-gradient(135deg, rgba(16, 24, 45, 0.95) 0%, rgba(5, 10, 20, 0.9) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding: 30px 0;
+  width: 100%;
 }
 
 .banner-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
+  padding: 0 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 40px;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* 返回按钮 */
-.back-btn {
+.shop-info-group {
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: #aaa;
-  cursor: pointer;
-  padding: 8px 15px;
-  border-radius: 6px;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  transition: all 0.3s;
-  font-size: 13px;
-}
-
-.back-btn:hover {
-  background: rgba(0, 212, 255, 0.2);
-  border-color: var(--mall-primary);
-  color: #fff;
+  flex: 1;
 }
 
 .shop-logo-area {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
 }
 
 .shop-avatar {
@@ -482,8 +486,9 @@ const handleCurrentChange = () => {
   font-size: 40px;
   font-weight: bold;
   color: #fff;
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .shop-name-wrapper {
@@ -496,7 +501,7 @@ const handleCurrentChange = () => {
   font-size: 28px;
   color: #fff;
   margin: 0;
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  font-weight: 700;
 }
 
 .shop-tags {
@@ -505,79 +510,101 @@ const handleCurrentChange = () => {
 }
 
 .tag {
-  background: rgba(0, 212, 255, 0.15);
-  color: #00d4ff;
-  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  padding: 2px 8px;
   border-radius: 4px;
   font-size: 12px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shop-desc {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
 }
 
 .shop-actions {
   display: flex;
   align-items: center;
   gap: 30px;
+  flex-shrink: 0;
 }
 
 .shop-stats {
   display: flex;
   gap: 25px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding-right: 25px;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 50px;
 }
 
 .stat-num {
   font-size: 20px;
   font-weight: bold;
-  color: #00d4ff;
+  color: #fff;
 }
 
 .stat-label {
   font-size: 12px;
-  color: #888;
-  margin-top: 4px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.action-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.follow-btn, .contact-btn {
+  width: 110px;
+  border-radius: 6px;
+  font-size: 13px;
 }
 
 .follow-btn {
-  background: transparent;
-  border: 1px solid var(--mall-primary);
-  color: var(--mall-primary);
-  padding: 10px 30px;
-  font-size: 14px;
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: #00d4ff;
 }
 
 .follow-btn:hover {
-  background: var(--mall-primary);
-  color: #000;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-}
-
-.follow-btn.is-success {
-  border-color: #67c23a;
-  color: #67c23a;
-}
-
-.follow-btn.is-success:hover {
-  background: #67c23a;
+  background: rgba(0, 212, 255, 0.25);
   color: #fff;
+}
+
+.contact-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaa;
 }
 
 /* ========== 店铺导航 ========== */
 .shop-nav {
-  background: rgba(26, 31, 58, 0.8);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+  background: rgba(10, 15, 30, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+  backdrop-filter: blur(10px);
+  width: 100%;
 }
 
 .nav-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
+  padding: 0 60px;
   display: flex;
   gap: 5px;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .nav-item {
@@ -585,7 +612,7 @@ const handleCurrentChange = () => {
   align-items: center;
   gap: 6px;
   padding: 15px 25px;
-  color: #aaa;
+  color: #888;
   text-decoration: none;
   font-size: 14px;
   transition: all 0.3s;
@@ -594,27 +621,36 @@ const handleCurrentChange = () => {
 
 .nav-item:hover {
   color: #fff;
-  background: rgba(0, 212, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .nav-item.active {
   color: #00d4ff;
   border-bottom-color: #00d4ff;
-  background: rgba(0, 212, 255, 0.1);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+/* ========== 【修复 3】自定义容器，替代 SectionContainer ========== */
+.shop-container {
+  width: 100%;
+  padding: 20px 60px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* ========== 主内容区 ========== */
 .shop-main {
   display: flex;
   gap: 20px;
-  padding: 20px 0;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0;
 }
 
-/* ========== 左侧边栏 ========== */
+/* 左侧边栏 */
 .shop-sidebar {
-  width: 180px;
+  width: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -622,18 +658,19 @@ const handleCurrentChange = () => {
 }
 
 .sidebar-card {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.1);
+  background: rgba(20, 30, 48, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  padding: 15px;
+  padding: 20px;
 }
 
 .sidebar-title {
-  font-size: 14px;
+  font-size: 16px;
   color: #fff;
-  margin: 0 0 15px 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
 }
 
 .category-list {
@@ -643,15 +680,16 @@ const handleCurrentChange = () => {
 }
 
 .category-list li {
-  padding: 10px 12px;
+  padding: 12px 15px;
   color: #aaa;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: all 0.3s;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .category-list li:hover {
@@ -662,6 +700,7 @@ const handleCurrentChange = () => {
 .category-list li.active {
   background: rgba(0, 212, 255, 0.2);
   color: #00d4ff;
+  font-weight: 600;
 }
 
 .count {
@@ -669,33 +708,13 @@ const handleCurrentChange = () => {
   font-size: 12px;
 }
 
-.service-btn {
-  width: 100%;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  color: #00d4ff;
-  padding: 10px;
-}
-
-.service-btn:hover {
-  background: var(--mall-primary);
-  color: #000;
-}
-
-.service-time {
-  font-size: 12px;
-  color: #666;
-  margin: 10px 0 0 0;
-  text-align: center;
-}
-
 .shop-info-detail {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .info-row {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .info-row:last-child {
@@ -704,7 +723,7 @@ const handleCurrentChange = () => {
 
 .label {
   color: #888;
-  width: 60px;
+  width: 70px;
 }
 
 .value {
@@ -713,17 +732,18 @@ const handleCurrentChange = () => {
 
 .float-tools {
   position: fixed;
-  right: 20px;
+  right: 30px;
   bottom: 100px;
-  background: rgba(26, 31, 58, 0.9);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  background: rgba(20, 30, 48, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
   z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
 .tool-item {
-  padding: 15px 12px;
+  padding: 15px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -739,260 +759,109 @@ const handleCurrentChange = () => {
   color: #00d4ff;
 }
 
-/* ========== 右侧内容区 ========== */
+/* 右侧内容区 */
 .shop-content {
   flex: 1;
   min-width: 0;
-}
-
-/* 搜索排序栏 */
-.search-sort-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 20px;
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.1);
-  border-radius: 8px;
-  padding: 15px 20px;
-}
-
-.search-box {
-  flex: 1;
-  max-width: 500px;
-}
-
-.shop-search-input {
-  --el-input-bg-color: rgba(15, 18, 32, 0.5);
-  --el-input-border-color: rgba(0, 212, 255, 0.3);
-  --el-input-text-color: #fff;
-}
-
-.shop-search-input :deep(.el-input__wrapper) {
-  box-shadow: none;
-  border-radius: 20px;
-}
-
-.shop-search-input :deep(.el-button) {
-  background: var(--mall-primary);
-  color: #000;
-  border: none;
-}
-
-.sort-options {
-  display: flex;
-  gap: 5px;
-}
-
-.sort-options span {
-  padding: 8px 20px;
-  background: rgba(15, 18, 32, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.1);
-  border-radius: 4px;
-  color: #aaa;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.3s;
-}
-
-.sort-options span:hover {
-  border-color: rgba(0, 212, 255, 0.3);
-  color: #fff;
-}
-
-.sort-options span.active {
-  background: rgba(0, 212, 255, 0.15);
-  border-color: #00d4ff;
-  color: #00d4ff;
-}
-
-/* ========== 商品网格 - 核心修改区域 ========== */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  margin-bottom: 30px;
-}
-
-.product-card {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--mall-primary);
-  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2);
-}
-
-.product-image {
-  height: 320px;
-  background: rgba(15, 18, 32, 0.5);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
-.product-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+/* ========== 筛选栏 ========== */
+.filter-bar {
+  background: rgba(20, 30, 48, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 25px 30px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.3s;
-}
-
-.product-card:hover .product-overlay {
-  opacity: 1;
-}
-
-.product-info {
-  /* 4. 增加卡片内边距 */
-  padding: 18px;
-}
-
-.product-title {
-  font-size: 16px;
-  color: #fff;
-  margin: 0 0 10px 0;
-  height: 44px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-height: 1.5;
-}
-
-.product-desc {
-  font-size: 13px;
-  color: #888;
-  margin: 0 0 12px 0;
-  height: 18px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.product-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: #aaa;
-  margin-bottom: 12px;
-}
-
-.rating {
-  color: #ffa41c;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.current-price {
-  color: #ff4d4f;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.original-price {
-  color: #666;
-  font-size: 14px;
-  text-decoration: line-through;
-}
-
-.stock-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  color: #888;
+  gap: 15px;
   margin-bottom: 15px;
 }
 
-.bar-bg {
-  flex: 1;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
+.filter-item:last-child {
+  margin-bottom: 0;
 }
 
-.bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00d4ff, #00ff88);
-  border-radius: 3px;
+.filter-label {
+  width: 50px;
+  color: #aaa;
+  font-size: 14px;
+  flex-shrink: 0;
+  font-weight: 500;
 }
 
-.add-cart-btn {
-  width: 100%;
-  background: linear-gradient(90deg, #00d4ff, #00ff88);
-  border: none;
-  color: #000;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 15px;
+:deep(.el-radio-group) {
+  gap: 5px;
+}
+
+:deep(.el-radio-button__inner) {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  box-shadow: none;
+  border-radius: 4px;
+  padding: 8px 15px;
+  font-size: 13px;
   transition: all 0.3s;
 }
 
-.add-cart-btn:hover {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
-  transform: translateY(-2px);
+:deep(.el-radio-button__inner:hover) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* 分页 */
-.pagination-area {
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background: #00d4ff;
+  border-color: #00d4ff;
+  color: #000;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+/* ========== 【修复 4】商品网格 - 移除响应式媒体查询干扰 ========== */
+.product-grid {
+  display: grid;
+  /* 只使用 auto-fit，让列自动填充 */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* ========== 分页 ========== */
+.pagination {
   display: flex;
   justify-content: center;
   padding: 30px 0;
-  border-top: 1px solid rgba(0, 212, 255, 0.1);
+  width: 100%;
 }
 
-.pagination-area :deep(.el-pagination) {
-  --el-pagination-bg-color: rgba(26, 31, 58, 0.6);
-  --el-pagination-text-color: #aaa;
-  --el-pagination-button-color: #aaa;
+.pagination :deep(.el-pagination) {
+  --el-pagination-bg-color: transparent;
+  --el-pagination-text-color: #888;
+  --el-pagination-button-color: #888;
   --el-pagination-hover-color: #00d4ff;
   --el-pagination-color: #00d4ff;
 }
 
-.pagination-area :deep(.el-pagination .btn-prev),
-.pagination-area :deep(.el-pagination .btn-next),
-.pagination-area :deep(.el-pagination .number) {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.1);
+.pagination :deep(.el-pagination .btn-prev),
+.pagination :deep(.el-pagination .btn-next),
+.pagination :deep(.el-pagination .number) {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaa;
 }
 
-.pagination-area :deep(.el-pagination .number.active) {
-  background: var(--mall-primary);
-  border-color: var(--mall-primary);
+.pagination :deep(.el-pagination .number.active) {
+  background: #00d4ff;
+  border-color: #00d4ff;
   color: #000;
 }
 
@@ -1000,6 +869,55 @@ const handleCurrentChange = () => {
 .empty-state {
   grid-column: 1 / -1;
   padding: 80px;
-  --el-empty-fill-color-0: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+}
+
+/* ========== 响应式适配 ========== */
+@media (max-width: 1400px) {
+  .banner-content, .nav-content, .shop-container {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .shop-sidebar {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .shop-main {
+    flex-direction: column;
+  }
+  
+  .shop-sidebar {
+    width: 100%;
+  }
+  
+  .shop-content {
+    width: 100%;
+  }
+  
+  .banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .shop-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .shop-nav {
+    top: 0;
+  }
+  
+  .banner-content, .nav-content, .shop-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 </style>
