@@ -64,6 +64,10 @@ public class ReviewController {
                 request.getRating(),
                 request.getContent()
             );
+            // 如果有图片，保存图片
+            if (request.getImages() != null && !request.getImages().isEmpty()) {
+                review.setImages(String.join(",", request.getImages()));
+            }
             return ResponseEntity.ok(convertToResponse(review));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

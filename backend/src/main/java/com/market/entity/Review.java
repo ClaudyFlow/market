@@ -45,6 +45,9 @@ public class Review {
     @Column(name = "order_id")
     private Long orderId;
 
+    @Column(name = "images", length = 2000)
+    private String images;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -119,6 +122,9 @@ public class Review {
 
     public Long getOrderId() { return orderId; }
     public void setOrderId(Long orderId) { this.orderId = orderId; }
+
+    public String getImages() { return images; }
+    public void setImages(String images) { this.images = images; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
