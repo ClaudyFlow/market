@@ -70,7 +70,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFavorites, removeFavorite } from '@user/api/favorite'
+import { getFavoriteList, removeFavorite } from '@user/api/favorite'
 import { addToCart as apiAddToCart } from '@user/api/cart'
 
 const router = useRouter()
@@ -109,7 +109,7 @@ const 格式化时间 = (dateString) => {
 const loadFavorites = async () => {
   loading.value = true
   try {
-    const res = await getFavorites()
+    const res = await getFavoriteList()
     favorite.value = res.data
   } catch (error) {
     console.error('加载收藏失败:', error)

@@ -109,6 +109,48 @@ export function getVipCoupons(): Promise<{
   return get(`${BASE_URL}/coupons`)
 }
 
+/**
+ * 获取每日礼包
+ */
+export function getDailyGifts(): Promise<{ data: VipGift[] }> {
+  return get(`${BASE_URL}/daily-gifts`)
+}
+
+/**
+ * 获取每月礼包
+ */
+export function getMonthlyGifts(): Promise<{ data: VipGift[] }> {
+  return get(`${BASE_URL}/monthly-gifts`)
+}
+
+/**
+ * 获取充值记录
+ */
+export function getRechargeRecords(params?: { page?: number; size?: number }): Promise<{ data: any[] }> {
+  return get(`${BASE_URL}/records`, params)
+}
+
+/**
+ * 领取礼包
+ */
+export function claimGift(giftId: number): Promise<void> {
+  return post(`${BASE_URL}/claim-gift/${giftId}`)
+}
+
+/**
+ * 创建充值订单
+ */
+export function createRechargeOrder(amount: number, growthValue?: number): Promise<{ orderId: string; amount: number }> {
+  return post(`${BASE_URL}/recharge/order`, { amount, growthValue })
+}
+
+/**
+ * 支付充值订单
+ */
+export function payRechargeOrder(orderId: string): Promise<void> {
+  return post(`${BASE_URL}/recharge/pay/${orderId}`)
+}
+
 export interface VipBenefit {
   id: number
   name: string
