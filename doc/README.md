@@ -1,186 +1,301 @@
-# 市场平台 - 项目文档
+# 市场平台 (Market Platform)
 
-本目录包含市场平台项目的完整技术文档，所有文档均使用 [Typst](https://typst.app/) 编写。
+一个基于 Vue 3 和 Spring Boot 3 的现代化全栈电商平台，采用前后端分离架构，支持完整的电商购物流程。
 
-## 📚 文档列表
+## 📋 项目概述
 
-| 文档名称 | 说明 |
-|----------|------|
-| [项目简介.typ](./项目简介.typ) | 项目概述、系统架构、技术栈、功能特性和部署方式介绍 |
-| [前端功能介绍.typ](./前端功能介绍.typ) | 前端应用的功能模块、组件架构、数据管理和用户体验特性详解 |
-| [前端接口文档.typ](./前端接口文档.typ) | 前端组件接口规范、数据结构定义和 API 设计文档 |
-| [部署配置指南.typ](./部署配置指南.typ) | 系统部署流程、配置参数、服务维护和故障处理指南 |
-| [数据库结构文档.typ](./数据库结构文档.typ) | 数据库表结构设计、关系图和 SQL 脚本 |
-| [手动测试检查清单.typ](./手动测试检查清单.typ) | 功能测试用例、兼容性测试和性能测试检查项 |
-| [消息状态码系统.md](./MESSAGE_STATUS.md) | 客服聊天消息状态码系统完整文档 |
-| [客服功能文档.md](./CUSTOMER_SERVICE.md) | 客服功能完整使用指南 |
+市场平台是一个现代化的电商解决方案，提供商品管理、购物车、订单管理、用户认证等核心功能。系统采用前后端分离架构，支持多端访问（Web、移动端）。
 
-## 📖 文档说明
+## 🏗️ 系统架构
 
-### 项目简介
+### 技术栈
 
-适合项目新成员和利益相关者阅读，内容包括：
-- 项目概述和背景
-- 系统架构设计
-- 技术栈选型
-- 核心功能特性
-- 部署方式介绍
-- 快速开始指南
+| 层级 | 技术 |
+|------|------|
+| **前端** | Vue 3 (组合式 API) + Element Plus + Pinia + Vue Router + Axios |
+| **后端** | Java 21 + Spring Boot 3.4.0 + Spring Security + Spring Data JPA + Redis |
+| **数据库** | PostgreSQL + Redis |
+| **认证** | JWT Token |
+| **构建工具** | Vite (前端) / Maven (后端) |
+| **部署** | Nginx + Docker |
 
-### 前端功能介绍
+### 项目结构
 
-适合前端开发人员和 UI/UX 设计师阅读，内容包括：
-- 技术栈详解（Vue 3 + CSS3 + Font Awesome）
-- 功能模块说明（导航、商品、购物车、订单、用户系统）
-- 组件架构设计
-- 数据管理策略
-- 用户体验特性
-- 性能优化方案
+```
+market/
+├── backend/              # Java 后端 (Spring Boot)
+│   └── src/
+│       ├── main/java/com/market/
+│       │   ├── config/       # 安全配置、JWT 配置、数据库初始化
+│       │   ├── controller/   # REST API 控制器
+│       │   ├── dto/          # 数据传输对象
+│       │   ├── entity/       # JPA 实体类
+│       │   ├── repository/   # 数据访问层
+│       │   ├── security/     # JWT 认证相关
+│       │   └── service/      # 业务逻辑层
+│       └── main/resources/   # 配置文件
+├── frontend/             # 前端 (Vue 3)
+│   ├── src/
+│   │   ├── user/         # 用户端应用
+│   │   ├── admin/        # 管理后台
+│   │   ├── merchant/     # 商家后台
+│   │   └── common/       # 公共模块
+│   ├── index.html        # 用户端入口
+│   ├── admin.html        # 管理后台入口
+│   └── merchant.html     # 商家后台入口
+├── doc/                  # 项目文档 (.typ 源文件)
+├── script/               # 辅助脚本
+├── pom.xml               # Maven 配置
+└── start_backend.bat     # 后端启动脚本
+```
 
-### 前端接口文档
+## ✨ 功能特性
 
-适合前端开发人员和测试人员阅读，内容包括：
-- 组件接口规范
-- Props 和 Events 定义
-- 数据结构设计
-- API 接口文档
-- 状态管理方案
+### 前端功能
 
-### 部署配置指南
+#### 1. 用户端 (frontend/src/user)
+- **商品浏览**：网格布局展示，响应式设计
+- **商品搜索**：支持名称、描述、分类的模糊搜索
+- **购物车管理**：添加商品、数量调整、移除商品、实时计算
+- **订单管理**：订单创建、订单查看、状态跟踪
+- **用户认证**：登录、注册、退出
+- **积分系统**：积分查询、积分历史、签到打卡
+- **优惠券**：优惠券领取和使用
 
-适合运维人员和系统管理员阅读，内容包括：
-- 系统环境准备
-- 软件安装步骤
-- 配置文件说明
-- 服务启动与维护
-- 数据库维护
-- 系统升级流程
-- 故障处理指南
-- 常见问题解答
+#### 2. 管理后台 (frontend/src/admin)
+- **用户管理**：用户列表、用户详情
+- **商品管理**：商品 CRUD、库存管理
+- **订单管理**：订单处理、状态更新
+- **数据统计**：销售统计、用户分析
 
-### 数据库结构文档
+#### 3. 商家后台 (frontend/src/merchant)
+- **商品管理**：商家专属商品管理
+- **订单处理**：订单发货、退款处理
+- **店铺管理**：店铺信息配置
 
-适合后端开发人员和数据库管理员阅读，内容包括：
-- 数据库设计原则
-- 表结构定义
-- 实体关系图
-- 索引设计
-- SQL 脚本
-- 数据字典
+### 后端功能
 
-### 手动测试检查清单
+#### 核心模块
 
-适合测试人员和质量保证团队阅读，内容包括：
-- 功能测试用例
-- 兼容性测试清单
-- 性能测试检查项
-- 安全测试要点
-- 用户体验测试
-- 回归测试流程
+| 模块 | 说明 |
+|------|------|
+| **AuthController** | 用户认证（登录、注册） |
+| **UserController** | 用户信息管理 |
+| **ProductController** | 商品 CRUD、搜索 |
+| **CartController** | 购物车操作 |
+| **OrderController** | 订单创建、查询、状态管理 |
+| **PointsController** | 积分管理、签到 |
+| **EmailController** | 邮箱验证、验证码发送 |
 
-### 消息状态码系统
+#### 实体类
 
-适合前端开发人员、后端开发人员和客服人员阅读，内容包括：
-- 状态码分类和范围（1000-9999）
-- 详细状态码定义（订单、支付、物流、售后等）
-- 工具函数使用说明
-- 消息模板使用指南
-- 消息卡片组件使用
-- 状态流转图
-- 扩展开发指南
+- `User` - 用户信息
+- `Product` - 商品信息
+- `Order` / `OrderItem` - 订单及订单项
+- `CartItem` - 购物车项
+- `Coupon` / `UserCoupon` - 优惠券
+- `UserPointsInfo` / `PointsHistory` - 积分及历史记录
 
-### 客服功能文档
+#### 安全特性
 
-适合前端开发人员、后端开发人员和客服人员阅读，内容包括：
-- 客服系统架构和技术栈
-- 实时聊天功能实现
-- 消息状态系统使用
-- 业务消息推送（订单、支付、物流、售后）
-- UI 组件和动画效果
-- API 接口文档
-- 快速开始指南
-- 常见问题解答
+- JWT Token 认证
+- Spring Security 权限控制
+- 邮箱验证（格式验证、MX 记录验证）
+- 验证码发送
 
-## 🛠️ 文档构建
+## 🚀 快速开始
 
 ### 环境要求
 
-- [Typst](https://typst.app/) 0.11.0 或更高版本
-- 中文字体支持（SimHei、SimSun 等）
+**开发环境：**
+- JDK 21+
+- PostgreSQL 14+ / SQLite 3.45+
+- Redis 6+
+- Maven 3.6+
+- Node.js 18+
+- Git 2.20.0+
 
-### 编译 PDF
+### 后端启动
 
 ```bash
-# 编译单个文档
-typst compile 项目简介.typ
-typst compile 前端功能介绍.typ
-typst compile 部署配置指南.typ
+# 方式 1：使用启动脚本 (Windows)
+start_backend.bat
 
-# 或使用 watch 模式实时预览
-typst watch 项目简介.typ
+# 方式 2：使用 Maven
+mvn spring-boot:run
+
+# 方式 3：打包后运行
+mvn clean package
+java -jar target/market-platform-1.0.0.jar
 ```
 
-### 字体配置
+后端服务运行在：`http://localhost:8080`
 
-文档使用以下中文字体：
-- **SimHei**（黑体）- 标题
-- **SimSun**（宋体）- 正文
+### 前端启动
 
-请确保系统已安装上述字体，或在 Typst 配置中指定替代字体。
+```bash
+cd frontend
 
-## 📁 目录结构
+# 安装依赖
+npm install
 
-```
-doc/
-├── README.md                 # 本文档
-├── MESSAGE_STATUS.md         # 消息状态码系统文档
-├── CUSTOMER_SERVICE.md       # 客服功能文档
-├── 项目简介.typ              # 项目概述文档
-├── 前端功能介绍.typ          # 前端功能详解
-├── 前端接口文档.typ          # 前端接口规范
-├── 部署配置指南.typ          # 部署运维指南
-├── 数据库结构文档.typ        # 数据库设计文档
-└── 手动测试检查清单.typ      # 测试用例清单
+# 启动开发服务器
+npm run dev
 ```
 
-## 📝 文档规范
+前端访问地址：`http://localhost:5173`
 
-### 排版格式
+### Docker 部署
 
-- 纸张：A4
-- 页边距：内侧 25mm，外侧 20mm，顶部 35mm，底部 30mm
-- 正文字体：五号宋体（10.5pt）
-- 标题字体：五号黑体（10.5pt）
-- 行距：1.25 倍
+```bash
+# 使用 Docker Compose 一键部署
+docker-compose up -d
 
-### 页眉页脚
+# 访问应用
+# 前端：http://localhost:80
+# 后端 API：http://localhost:8080
+```
 
-- 页眉：文档标题居中
-- 页脚：日期居左，页码居右
-- 目录页使用罗马数字页码
-- 正文使用阿拉伯数字页码
+## 📚 文档
 
-### 更新维护
+详细文档位于 `doc/` 目录：
 
-- 文档应随代码变更同步更新
-- 重大功能变更需要更新相关文档
-- 版本号应在文档中标注
-- 最后更新日期应保持一致
+| 文档 | 说明 |
+|------|------|
+| 项目简介.typ | 项目概述、架构、技术栈 |
+| 前端功能介绍.typ | 前端功能模块详解 |
+| 前端接口文档.typ | 组件接口规范、API 设计 |
+| 部署配置指南.typ | 部署步骤、配置优化 |
+| 数据库结构文档.typ | 数据库表结构、SQL 脚本 |
+| 手动测试检查清单.typ | 测试用例、检查项 |
 
-## 🔗 相关链接
+## 📦 API 接口
 
-- [Typst 官方文档](https://typst.app/docs/)
-- [Typst 中文社区](https://github.com/typst-cn)
-- [项目主仓库](https://github.com/market-platform)
+### 认证接口
+- `POST /api/auth/register` - 用户注册
+- `POST /api/auth/login` - 用户登录
 
-## 📧 反馈与支持
+### 用户接口
+- `GET /api/user/profile` - 获取用户信息
+- `PUT /api/user/profile` - 更新用户信息
 
-如文档有任何问题或建议，请通过以下方式联系我们：
+### 商品接口
+- `GET /api/product` - 获取商品列表
+- `GET /api/product/{id}` - 获取商品详情
+- `POST /api/product` - 创建商品
+- `PUT /api/product/{id}` - 更新商品
+- `DELETE /api/product/{id}` - 删除商品
 
-- 📧 Email: support@market.com
-- 🐙 GitHub Issues: [提交问题](https://github.com/market-platform/issues)
+### 购物车接口
+- `GET /api/cart` - 获取购物车
+- `POST /api/cart/items` - 添加商品到购物车
+- `PUT /api/cart/items/{id}` - 更新购物车项
+- `DELETE /api/cart/items/{id}` - 删除购物车项
+
+### 订单接口
+- `GET /api/order` - 获取订单列表
+- `GET /api/order/{id}` - 获取订单详情
+- `POST /api/order` - 创建订单
+- `PUT /api/order/{id}/status` - 更新订单状态
+
+### 积分接口
+- `GET /api/credit` - 获取积分余额
+- `GET /api/credit/history` - 获取积分历史
+- `POST /api/credit/redeem` - 积分兑换
+
+## 🔧 配置说明
+
+### 后端配置
+
+配置文件位于 `backend/src/main/resources/application.properties`（需自行创建）
+
+```properties
+# 服务器配置
+server.port=8080
+
+# 数据库配置
+spring.datasource.url=jdbc:sqlite:data/market.db
+spring.jpa.hibernate.ddl-auto=update
+
+# JWT 配置
+jwt.secret=your-secret-key
+jwt.expiration=86400000
+
+# 邮件配置
+spring.mail.host=smtp.example.com
+spring.mail.port=587
+spring.mail.username=your-email
+spring.mail.password=your-password
+
+# Redis 配置
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.data.redis.password=
+spring.data.redis.database=0
+```
+
+### Redis 安装
+
+**Windows:**
+```bash
+# 使用 winget 安装
+winget install Microsoft.OpenRedis
+
+# 或使用 Docker
+docker run -d -p 6379:6379 --name redis redis:latest
+```
+
+**Linux:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install redis-server
+
+# CentOS/RHEL
+sudo yum install redis
+```
+
+**macOS:**
+```bash
+brew install redis
+brew services start redis
+```
+
+启动 Redis 服务：
+```bash
+redis-server
+```
+
+验证 Redis 连接：
+```bash
+redis-cli ping
+# 返回 PONG 表示成功
+```
+
+## 📝 版本历史
+
+| 版本 | 日期 | 说明 |
+|------|------|------|
+| v1.0.0 | 2026-03-09 | 初始版本：基础电商功能、Vue 3 前端、Spring Boot 3.4.0 后端 |
+| v1.1.0 | 规划中 | 支付集成、物流跟踪、商品评价 |
+| v1.2.0 | 规划中 | 移动端 App 完善、社交分享、优惠券系统 |
+| v2.0.0 | 规划中 | 微服务架构、AI 推荐、多商户支持 |
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request 来帮助改进项目！
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 📧 联系方式
+
+- 📧 Email: contact@market.com
+- 🌐 Website: https://market.com
+- 🐙 GitHub: https://github.com/market-platform
+- 📚 Docs: https://docs.market.com
 
 ---
 
-**最后更新：** 2026 年 3 月 31 日  
-**文档版本：** v1.2.0
+**最后更新：** 2026 年 3 月 14 日  
+**文档版本：** v1.0.0
