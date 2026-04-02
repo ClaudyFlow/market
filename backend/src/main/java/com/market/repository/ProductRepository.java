@@ -73,4 +73,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * 按状态获取商品
      */
     Page<Product> findByStatus(Integer status, Pageable pageable);
+
+    /**
+     * 按商家 ID 获取商品列表
+     */
+    List<Product> findByMerchantId(Long merchantId);
+
+    /**
+     * 按销量排序获取热门商品
+     */
+    List<Product> findTop10ByStatusOrderBySalesDesc(Integer status);
 }
