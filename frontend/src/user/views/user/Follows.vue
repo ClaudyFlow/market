@@ -61,7 +61,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFollows, removeFollow as removeFollowApi } from '@user/api/follow'
+import { getFollowingList, unfollow as removeFollowApi } from '@user/api/follow'
 
 const router = useRouter()
 
@@ -99,7 +99,7 @@ const 格式化时间 = (dateString) => {
 const loadFollows = async () => {
   loading.value = true
   try {
-    const res = await getFollows()
+    const res = await getFollowingList()
     follow.value = res.data || []
   } catch (error) {
     console.error('加载关注列表失败:', error)

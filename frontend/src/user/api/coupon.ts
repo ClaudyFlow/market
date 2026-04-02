@@ -105,3 +105,17 @@ export function getShopCoupons(shopId: number | string): Promise<CouponTemplate[
 export function getProductCoupons(productId: number | string): Promise<CouponTemplate[]> {
   return get(`/product/${productId}/coupons`)
 }
+
+/**
+ * 获取我的优惠券（已领取的）
+ */
+export function getMyCoupons(params?: PageParams): Promise<PageData<Coupon>> {
+  return get(BASE_URL, params)
+}
+
+/**
+ * 领取优惠券（简化版）
+ */
+export function takeCoupon(templateId: number | string): Promise<void> {
+  return post(`${BASE_URL}/receive`, { templateId })
+}

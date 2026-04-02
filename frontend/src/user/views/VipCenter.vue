@@ -290,7 +290,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import UserAvatar from '@user/components/UserAvatar.vue'
 import {
   getVipLevels,
-  getMyVipInfo,
+  getVipInfo,
   getDailyGifts,
   getMonthlyGifts,
   claimGift,
@@ -298,7 +298,7 @@ import {
   payRechargeOrder,
   getRechargeRecords,
   type VipLevel,
-  type VipGift 
+  type VipGift
 } from '@user/api/vip'
 
 const userAvatar = ref('/DouglasMacArthur.jpg')
@@ -417,7 +417,7 @@ const benefitsList = computed(() => {
 // 加载 VIP 信息
 const loadVipInfo = async () => {
   try {
-    const res = await getMyVipInfo()
+    const res = await getVipInfo()
     currentLevel.value = res.data.currentLevel
     growthValue.value = res.data.growthValue
     progressPercent.value = res.data.progressPercent
