@@ -56,7 +56,7 @@
           <el-sub-menu index="coupon">
             <template #title>
               <el-icon><Ticket /></el-icon>
-              <span>优惠券管理</el-menu-item>
+              <span>优惠券管理</span>
             </template>
             <el-menu-item index="/merchant/coupon/list">优惠券列表</el-menu-item>
             <el-menu-item index="/merchant/coupon/add">添加优惠券</el-menu-item>

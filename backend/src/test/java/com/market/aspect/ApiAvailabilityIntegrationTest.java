@@ -3,170 +3,18 @@ package com.market.aspect;
 import com.market.annotation.ApiAvailable;
 import com.market.annotation.ApiHealthCheck;
 import com.market.common.Result;
-import com.market.exception.ApiAvailabilityException;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * API 可用性注解功能测试
- * 
- * 测试方法：
- * 1. 直接运行 main 方法（无需 Spring 容器）
- * 2. 验证注解属性是否正确
  */
-public class ApiAvailabilityIntegrationTest {
-
-    public static void main(String[] args) {
-        System.out.println("========================================");
-        System.out.println("  API 可用性检测注解 - 功能测试");
-        System.out.println("========================================\n");
-
-        boolean allPassed = true;
-
-        // 测试 1: 注解存在性
-        allPassed &= testAnnotationExists();
-
-        // 测试 2: 注解属性值
-        allPassed &= testAnnotationAttributes();
-
-        // 测试 3: 失败策略枚举
-        allPassed &= testFailureActionEnum();
-
-        // 测试 4: 健康检查注解
-        allPassed &= testHealthCheckAnnotation();
-
-        System.out.println("\n========================================");
-        if (allPassed) {
-            System.out.println("  ✓ 所有测试通过!");
-        } else {
-            System.out.println("  ✗ 部分测试失败!");
-            System.exit(1);
-        }
-        System.out.println("========================================");
-    }
+class ApiAvailabilityIntegrationTest {
 
     /**
-     * 测试 1: 注解是否存在
+     * 测试用控制器类
      */
-    private static boolean testAnnotationExists() {
-        System.out.println("测试 1: 验证注解存在性...");
-        try {
-            Class.forName("com.market.annotation.ApiAvailable");
-            Class.forName("com.market.annotation.ApiHealthCheck");
-            Class.forName("com.market.annotation.ApiAvailabilityDetector");
-            Class.forName("com.market.aspect.ApiAvailabilityAspect");
-            Class.forName("com.market.exception.ApiAvailabilityException");
-            System.out.println("  ✓ 所有类都存在\n");
-            return true;
-        } catch (ClassNotFoundException e) {
-            System.out.println("  ✗ 类不存在：" + e.getMessage() + "\n");
-            return false;
-        }
-    }
-
-    /**
-     * 测试 2: 注解属性值
-     */
-    private static boolean testAnnotationAttributes() {
-        System.out.println("测试 2: 验证注解属性值...");
-        try {
-            var method = TestController.class.getMethod("testMethod");
-            var annotation = method.getAnnotation(ApiAvailable.class);
-
-            if (annotation == null) {
-                System.out.println("  ✗ @ApiAvailable 注解未找到\n");
-                return false;
-            }
-
-            boolean passed = true;
-
-            if (annotation.timeout() != 5000) {
-                System.out.println("  ✗ timeout 应为 5000, 实际：" + annotation.timeout());
-                passed = false;
-            }
-
-            if (annotation.retryCount() != 3) {
-                System.out.println("  ✗ retryCount 应为 3, 实际：" + annotation.retryCount());
-                passed = false;
-            }
-
-            if (annotation.enabled() != true) {
-                System.out.println("  ✗ enabled 应为 true, 实际：" + annotation.enabled());
-                passed = false;
-            }
-
-            String[] deps = annotation.dependencies();
-            if (deps.length != 2 || !deps[0].equals("database") || !deps[1].equals("redis")) {
-                System.out.println("  ✗ dependencies 配置不正确");
-                passed = false;
-            }
-
-            if (annotation.onFailure() != ApiAvailable.FailureAction.RETURN_ERROR) {
-                System.out.println("  ✗ onFailure 配置不正确");
-                passed = false;
-            }
-
-            if (passed) {
-                System.out.println("  ✓ 所有属性值正确\n");
-            }
-            return passed;
-        } catch (Exception e) {
-            System.out.println("  ✗ 测试失败：" + e.getMessage() + "\n");
-            return false;
-        }
-    }
-
-    /**
-     * 测试 3: 失败策略枚举
-     */
-    private static boolean testFailureActionEnum() {
-        System.out.println("测试 3: 验证失败策略枚举...");
-        var actions = ApiAvailable.FailureAction.values();
-
-        if (actions.length != 3) {
-            System.out.println("  ✗ 应有 3 个枚举值，实际：" + actions.length);
-            return false;
-        }
-
-        System.out.println("  枚举值:");
-        for (var action : actions) {
-            System.out.println("    - " + action.name());
-        }
-        System.out.println("  ✓ 枚举定义正确\n");
-        return true;
-    }
-
-    /**
-     * 测试 4: 健康检查注解
-     */
-    private static boolean testHealthCheckAnnotation() {
-        System.out.println("测试 4: 验证健康检查注解...");
-        try {
-            var method = TestController.class.getMethod("healthCheckMethod");
-            var annotation = method.getAnnotation(ApiHealthCheck.class);
-
-            if (annotation == null) {
-                System.out.println("  ✗ @ApiHealthCheck 注解未找到\n");
-                return false;
-            }
-
-            if (annotation.critical() != true) {
-                System.out.println("  ✗ critical 应为 true");
-                return false;
-            }
-
-            if (annotation.checkInterval() != 60) {
-                System.out.println("  ✗ checkInterval 应为 60");
-                return false;
-            }
-
-            System.out.println("  ✓ 健康检查注解配置正确\n");
-            return true;
-        } catch (Exception e) {
-            System.out.println("  ✗ 测试失败：" + e.getMessage() + "\n");
-            return false;
-        }
-    }
-
-    // 测试用控制器类
     static class TestController {
 
         @ApiAvailable(
@@ -191,5 +39,50 @@ public class ApiAvailabilityIntegrationTest {
         public Result<String> healthCheckMethod() {
             return Result.success("OK");
         }
+    }
+
+    @Test
+    void testAnnotationExists() {
+        // 验证所有相关类都存在
+        assertDoesNotThrow(() -> Class.forName("com.market.annotation.ApiAvailable"), "ApiAvailable 类应存在");
+        assertDoesNotThrow(() -> Class.forName("com.market.annotation.ApiHealthCheck"), "ApiHealthCheck 类应存在");
+        assertDoesNotThrow(() -> Class.forName("com.market.annotation.ApiAvailabilityDetector"), "ApiAvailabilityDetector 类应存在");
+        assertDoesNotThrow(() -> Class.forName("com.market.aspect.ApiAvailabilityAspect"), "ApiAvailabilityAspect 类应存在");
+        assertDoesNotThrow(() -> Class.forName("com.market.exception.ApiAvailabilityException"), "ApiAvailabilityException 类应存在");
+    }
+
+    @Test
+    void testAnnotationAttributes() throws NoSuchMethodException {
+        var method = TestController.class.getMethod("testMethod");
+        var annotation = method.getAnnotation(ApiAvailable.class);
+
+        assertNotNull(annotation, "@ApiAvailable 注解未找到");
+
+        assertEquals(5000, annotation.timeout(), "timeout 应为 5000");
+        assertEquals(3, annotation.retryCount(), "retryCount 应为 3");
+        assertTrue(annotation.enabled(), "enabled 应为 true");
+
+        String[] deps = annotation.dependencies();
+        assertEquals(2, deps.length, "dependencies 应有 2 个元素");
+        assertEquals("database", deps[0], "第一个依赖应为 database");
+        assertEquals("redis", deps[1], "第二个依赖应为 redis");
+
+        assertEquals(ApiAvailable.FailureAction.RETURN_ERROR, annotation.onFailure(), "onFailure 配置不正确");
+    }
+
+    @Test
+    void testFailureActionEnum() {
+        var actions = ApiAvailable.FailureAction.values();
+        assertEquals(3, actions.length, "应有 3 个枚举值");
+    }
+
+    @Test
+    void testHealthCheckAnnotation() throws NoSuchMethodException {
+        var method = TestController.class.getMethod("healthCheckMethod");
+        var annotation = method.getAnnotation(ApiHealthCheck.class);
+
+        assertNotNull(annotation, "@ApiHealthCheck 注解未找到");
+        assertTrue(annotation.critical(), "critical 应为 true");
+        assertEquals(60, annotation.checkInterval(), "checkInterval 应为 60");
     }
 }
