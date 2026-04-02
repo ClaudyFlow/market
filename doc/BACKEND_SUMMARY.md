@@ -1,78 +1,142 @@
-# Market 平台后端 API 完成总结
+# 后端功能完善总结
 
-## 已完成的功能模块
+## 项目概述
 
-### 管理员端 (Admin) - 5 个控制器
-1. **AdminUserController** ✅
-   - 用户 CRUD、封禁/解封、统计
+市场电商平台 - 基于 Spring Boot 3.4 + Vue 3 的全栈电商系统
 
-2. **AdminMerchantController** ✅
-   - 商家列表、审核、封禁/解封、详情、统计
+## 后端架构
 
-3. **AdminProductController** ✅
-   - 商品审核、详情、删除、统计
+### 技术栈
+- **框架**: Spring Boot 3.4.0
+- **数据库**: PostgreSQL / H2 (测试)
+- **ORM**: JPA / Hibernate
+- **安全**: Spring Security + JWT
+- **缓存**: Redis (可选)
+- **其他**: Lombok, Maven
 
-4. **AdminOrderController** ✅
-   - 订单列表、详情、统计、排行、退款、导出
+### 自定义注解系统
 
-5. **AdminCouponController** ✅
-   - 平台券 CRUD、商家券查看、统计、排行
+| 注解 | 功能 | 应用场景 |
+|-----|------|---------|
+| `@Idempotent` | 幂等性控制 | 防止重复提交 |
+| `@DistributedLock` | 分布式锁 | 并发控制 |
+| `@Cacheable` | 缓存控制 | 性能优化 |
+| `@AuditLog` | 审计日志 | 操作记录 |
+| `@Retryable` | 重试机制 | 容错处理 |
+| `@DataScope` | 数据权限 | 数据过滤 |
+| `@SensitiveData` | 数据脱敏 | 信息安全 |
+| `@DeprecatedApi` | API 弃用 | 版本管理 |
+| `@RateLimiter` | 限流控制 | 流量控制 |
 
-### 商家端 (Merchant) - 5 个控制器
-1. **MerchantProductController** ✅
-   - 商品 CRUD、上下架、列表
+## 核心模块
 
-2. **MerchantOrderController** ✅
-   - 订单列表、详情、发货、统计、退款处理
+### 1. 用户模块
+- 用户注册/登录
+- JWT 认证
+- 个人信息管理
+- 积分系统
+- VIP 等级
 
-3. **MerchantCouponController** ✅
-   - 优惠券 CRUD、统计、即将过期
+### 2. 商品模块
+- 商品 CRUD
+- 商品搜索
+- 商品分类
+- 商品品牌
+- 商品审核
 
-4. **MerchantReviewController** ✅
-   - 评价列表、回复、统计
+### 3. 店铺模块
+- 店铺管理
+- 店铺关注
+- 店铺认证
+- 店铺评分
 
-5. **MerchantShopController** ✅
-   - 店铺信息、更新、统计、开关
+### 4. 订单模块
+- 订单创建
+- 订单支付
+- 订单发货
+- 订单退款
+- 物流跟踪
 
-### 用户端 (User) - 15+ 个控制器
-1. **AuthController** ✅ - 登录/注册
-2. **UserController** ✅ - 用户信息
-3. **UserAddressController** ✅ - 地址管理
-4. **CartController** ✅ - 购物车
-5. **OrderController** ✅ - 订单
-6. **CouponController** ✅ - 优惠券
-7. **FavoriteController** ✅ - 收藏
-8. **FollowController** ✅ - 关注
-9. **ReviewController** ✅ - 评价
-10. **CreditController** ✅ - 积分
-11. **VipController** ✅ - VIP
-12. **LotteryController** ✅ - 抽奖
-13. **ForumController** ✅ - 论坛
-14. **ChatController** ✅ - 聊天
-15. **MessageController** ✅ - 消息
-16. **UserBrowseHistoryController** ✅ - 浏览历史
-17. **UserNotificationController** ✅ - 通知
-18. **ProductController** ✅ - 商品浏览
-19. **SearchController** ✅ - 搜索
-20. **HomeController** ✅ - 首页
-21. **StatisticsController** ✅ - 统计
-22. **UploadController** ✅ - 上传
+### 5. 购物车模块
+- 购物车 CRUD
+- 批量操作
+- 库存检查
 
-### 其他功能
-- **EmailController** - 邮件 (已禁用)
-- **ScheduledService** - 定时任务
+### 6. 优惠券模块
+- 优惠券模板
+- 优惠券领取
+- 优惠券使用
+- 优惠券核销
 
-## 数据库
-- 20 张核心表
-- data.sql 初始化脚本
-- doc/DATABASE.md 设计文档
+### 7. 评价模块
+- 商品评价
+- 评价回复
+- 评价审核
+- 评价统计
 
-## 测试账号
-- admin / 123456 (管理员)
-- merchant1 / 123456 (商家)
-- user1 / 123456 (用户)
+### 8. 通知模块
+- 系统通知
+- 订单通知
+- 活动通知
+- 消息推送
 
-## 服务状态
-- 后端：8080 端口
-- 前端：5173 端口
-- H2 控制台：http://localhost:8080/h2-console
+## Controller 列表
+
+### 用户端 Controller
+| Controller | 路径 | 功能 |
+|-----------|------|------|
+| AuthController | /api/auth | 认证 |
+| UserController | /api/user | 用户 |
+| ProductController | /api/product | 商品 |
+| ShopController | /api/shop | 店铺 |
+| CartController | /api/cart | 购物车 |
+| OrderController | /api/order | 订单 |
+| CouponController | /api/coupon | 优惠券 |
+| ReviewController | /api/review | 评价 |
+| NotificationController | /api/notification | 通知 |
+
+### 商家端 Controller
+| Controller | 路径 | 功能 |
+|-----------|------|------|
+| MerchantProductController | /api/merchant/product | 商品管理 |
+| MerchantOrderController | /api/merchant/order | 订单管理 |
+| MerchantCouponController | /api/merchant/coupon | 优惠券管理 |
+| MerchantShopController | /api/merchant/shop | 店铺管理 |
+| MerchantReviewController | /api/merchant/review | 评价管理 |
+
+### 管理员端 Controller
+| Controller | 路径 | 功能 |
+|-----------|------|------|
+| AdminUserController | /api/admin/user | 用户管理 |
+| AdminMerchantController | /api/admin/merchant | 商家管理 |
+| AdminProductController | /api/admin/product | 商品管理 |
+| AdminOrderController | /api/admin/order | 订单管理 |
+| AdminCouponController | /api/admin/coupon | 优惠券管理 |
+
+## 测试状态
+
+- ✅ 编译通过
+- ✅ 单元测试通过
+- ✅ 所有 Controller 可访问
+- ✅ 所有 Service 可执行
+- ✅ 所有注解生效
+
+## 编译运行
+
+### 编译
+```bash
+mvn clean compile
+```
+
+### 测试
+```bash
+mvn test
+```
+
+### 运行
+```bash
+mvn spring-boot:run
+```
+
+## 更新日期
+2026 年 4 月 2 日
