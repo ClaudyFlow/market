@@ -1,65 +1,106 @@
-﻿import request from './request'
+﻿/**
+ * 收藏相关 API
+ */
 
-interface ApiResponse<T> {
-  data: T
-  message?: string
-  code?: number
+import { get, post, del } from './request'
+import type { Favorite, FavoriteGroup } from '@user/types/favorite'
+import type { PageData, PageParams } from './request'
+
+const BASE_URL = '/favorite'
+
+/**
+ * 获取收藏列表
+ */
+export function getFavoriteList(params?: PageParams & { type?: 'product' | 'shop' | 'article' }): Promise<PageData<Favorite>> {
+  return get(BASE_URL, params)
 }
 
-export interface Favorite {
-  id: number
-  productId: number
-  productName: string
-  productImage?: string
-  productPrice: number
-  createdAt?: string
+/**
+ * 添加收藏
+ */
+export function addFavorite(data: {
+  type: 'product' | 'shop' | 'article'
+  itemId: number | string
+  name: string
+  image?: string
+  groupId?: number
+}): Promise<Favorite> {
+  return post(BASE_URL, data)
 }
 
-// 获取收藏列表
-export function getFavorites() {
-  return request<ApiResponse<Favorite[]>>({
-    url: '/favorite',
-    method: 'get'
-  })
+/**
+ * 取消收藏
+ */
+export function removeFavorite(favoriteId: number | string): Promise<void> {
+  return del(`${BASE_URL}/${favoriteId}`)
 }
 
-// 添加收藏
-export function addFavorite(productId: number) {
-  return request({
-    url: '/favorite',
-    method: 'post',
-    data: { productId }
-  })
+/**
+ * 批量取消收藏
+ */
+export function batchRemoveFavorites(favoriteIds: number[]): Promise<void> {
+  return del(`${BASE_URL}/batch`, { ids: favoriteIds })
 }
 
-// 取消收藏
-export function removeFavorite(productId: number) {
-  return request({
-    url: `/favorite/${productId}`,
-    method: 'delete'
-  })
+/**
+ * 检查是否已收藏
+ */
+export function checkFavorite(type: 'product' | 'shop' | 'article', itemId: number | string): Promise<{ favorite: boolean; favoriteId?: number }> {
+  return get(`${BASE_URL}/check`, { type, itemId })
 }
 
-// 切换收藏状态
-export function toggleFavorite(productId: number) {
-  return request({
-    url: `/favorite/toggle/${productId}`,
-    method: 'post'
-  })
+/**
+ * 获取收藏数
+ */
+export function getFavoriteCount(type?: 'product' | 'shop' | 'article'): Promise<{ count: number }> {
+  return get(`${BASE_URL}/count`, { type })
 }
 
-// 检查是否已收藏
-export function checkFavorite(productId: number) {
-  return request<ApiResponse<{ isFavorite: boolean }>>({
-    url: `/favorite/check/${productId}`,
-    method: 'get'
-  })
+/**
+ * 创建收藏分组
+ */
+export function createGroup(name: string, description?: string): Promise<FavoriteGroup> {
+  return post(`${BASE_URL}/group`, { name, description })
 }
 
-// 获取收藏数量
-export function getFavoriteCount() {
-  return request<ApiResponse<{ count: number }>>({
-    url: '/favorite/count',
-    method: 'get'
-  })
+/**
+ * 获取收藏分组列表
+ */
+export function getGroupList(): Promise<FavoriteGroup[]> {
+  return get(`${BASE_URL}/groups`)
+}
+
+/**
+ * 更新收藏分组
+ */
+export function updateGroup(groupId: number, data: { name?: string; description?: string }): Promise<void> {
+  return put(`${BASE_URL}/group/${groupId}`, data)
+}
+
+/**
+ * 删除收藏分组
+ */
+export function deleteGroup(groupId: number): Promise<void> {
+  return del(`${BASE_URL}/group/${groupId}`)
+}
+
+/**
+ * 移动收藏到分组
+ */
+export function moveToGroup(favoriteId: number, groupId?: number): Promise<void> {
+  return put(`${BASE_URL}/${favoriteId}/group`, { groupId })
+}
+
+/**
+ * 批量移动收藏
+ */
+export function batchMoveToFavorites(favoriteIds: number[], groupId?: number): Promise<void> {
+  return put(`${BASE_URL}/batch-move`, { ids: favoriteIds, groupId })
+}
+
+/**
+ * 获取分组收藏统计
+ */
+export function getGroupStats(groupId: number): Promise<{ total: number; products: number; shops: number }> {
+  return get(`${BASE_URL}/group/${groupId}/stats`)
 }

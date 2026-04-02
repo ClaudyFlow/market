@@ -1,150 +1,118 @@
-import request from '@user/api/request'
+/**
+ * VIP 相关 API
+ */
 
-export interface VipLevel {
+import { get, post } from './request'
+
+const BASE_URL = '/vip'
+
+/**
+ * 获取 VIP 信息
+ */
+export function getVipInfo(): Promise<{
   level: number
   name: string
-  icon?: string
-  growthValueRequired: number
-  discountRate: number
-  dailyCredit: number
-  monthlyCredit: number
-  freeShippingCount: number
-  refundPriority: boolean
-  exclusiveService: boolean
-  description?: string
-  backgroundColor?: string
-  textColor?: string
+  experience: number
+  nextLevelExperience: number
+  progress: number
+  benefits: VipBenefit[]
+  expireTime: string
+  isVip: boolean
+}> {
+  return get(`${BASE_URL}/info`)
 }
-
-export interface VipGift {
-  id: number
-  name: string
-  type: string // DAILY, MONTHLY, BEGINNER, LEVEL_UP
-  vipLevelRequired: number
-  creditReward: number
-  claimType: string // DAILY, MONTHLY, ONCE
-  claimIntervalHours: number
-  description?: string
-  image?: string
-  status?: string
-  canClaim?: boolean
-  lastClaimed?: string
-  nextAvailable?: string
-  remainingSeconds?: number
-  remainingDays?: number
-  claimed?: boolean
-}
-
-export interface VipInfo {
-  currentLevel: VipLevel
-  growthValue: number
-  progressPercent: number
-  nextLevel?: VipLevel
-  remainingGrowth: number
-}
-
-export interface RechargeOrder {
-  orderNo: string
-  amount: number
-  growthValue: number
-  status: string
-  paymentMethod?: string
-  paidAt?: string
-  createdAt: string
-}
-
-interface ApiResponse<T> {
-  code: number
-  data: T
-  message?: string
-}
-
-// ==================== VIP 等级 ====================
 
 /**
  * 获取 VIP 等级列表
  */
-export function getVipLevels(): Promise<ApiResponse<VipLevel[]>> {
-  return request.get('/vip/levels')
+export function getVipLevels(): Promise<{
+  level: number
+  name: string
+  icon: string
+  experience: number
+  benefits: string[]
+}[]> {
+  return get(`${BASE_URL}/levels`)
 }
 
 /**
- * 获取我的 VIP 信息
+ * 获取 VIP 特权
  */
-export function getMyVipInfo(): Promise<ApiResponse<VipInfo>> {
-  return request.get('/vip/my')
+export function getVipBenefits(): Promise<VipBenefit[]> {
+  return get(`${BASE_URL}/benefits`)
 }
 
 /**
- * 获取 VIP 权益详情
+ * 购买 VIP
  */
-export function getPrivileges(): Promise<ApiResponse<{ currentLevel: VipLevel; benefits: any }>> {
-  return request.get('/vip/privileges')
-}
-
-// ==================== VIP 礼包 ====================
-
-/**
- * 获取每日礼包列表
- */
-export function getDailyGifts(): Promise<ApiResponse<VipGift[]>> {
-  return request.get('/vip/gifts/daily')
+export function purchaseVip(months: number, autoRenew?: boolean): Promise<{
+  orderId: string
+  amount: number
+  originalPrice: number
+  discountPrice: number
+}> {
+  return post(`${BASE_URL}/purchase`, { months, autoRenew })
 }
 
 /**
- * 获取每月礼包列表
+ * 续费 VIP
  */
-export function getMonthlyGifts(): Promise<ApiResponse<VipGift[]>> {
-  return request.get('/vip/gifts/monthly')
+export function renewVip(months?: number): Promise<{
+  orderId: string
+  amount: number
+}> {
+  return post(`${BASE_URL}/renew`, { months })
 }
 
 /**
- * 获取所有礼包
+ * VIP 体验卡
  */
-export function getAllGifts(): Promise<ApiResponse<VipGift[]>> {
-  return request.get('/vip/gifts')
+export function useTrialCard(): Promise<{
+  expireTime: string
+  days: number
+}> {
+  return post(`${BASE_URL}/trial`)
 }
 
 /**
- * 领取礼包
+ * 获取 VIP 任务
  */
-export function claimGift(giftId: number): Promise<ApiResponse<any>> {
-  return request.post(`/vip/gifts/${giftId}/claim`)
+export function getVipTasks(): Promise<{
+  id: number
+  name: string
+  description: string
+  rewardExperience: number
+  status: 'pending' | 'completed' | 'claimed'
+  progress: number
+  target: number
+}[]> {
+  return get(`${BASE_URL}/tasks`)
 }
 
 /**
- * 获取礼包领取记录
+ * 领取 VIP 任务奖励
  */
-export function getGiftRecords(type?: string): Promise<ApiResponse<any[]>> {
-  return request.get('/vip/gifts/records', { params: { type } })
-}
-
-// ==================== VIP 充值 ====================
-
-/**
- * 创建充值订单
- */
-export function createRechargeOrder(amount: number): Promise<ApiResponse<RechargeOrder>> {
-  return request.post('/vip/recharge', null, { params: { amount } })
+export function claimVipTask(taskId: number): Promise<void> {
+  return post(`${BASE_URL}/task/${taskId}/claim`)
 }
 
 /**
- * 支付充值订单
+ * 获取 VIP 专属优惠券
  */
-export function payRechargeOrder(orderNo: string, paymentMethod: string): Promise<ApiResponse<RechargeOrder>> {
-  return request.post(`/vip/recharge/${orderNo}/pay`, null, { params: { paymentMethod } })
+export function getVipCoupons(): Promise<{
+  id: number
+  name: string
+  amount: number
+  condition: number
+  validDays: number
+}[]> {
+  return get(`${BASE_URL}/coupons`)
 }
 
-/**
- * 获取充值记录
- */
-export function getRechargeRecords(): Promise<ApiResponse<RechargeOrder[]>> {
-  return request.get('/vip/recharge/records')
-}
-
-/**
- * 获取充值统计
- */
-export function getRechargeStats(): Promise<ApiResponse<{ totalAmount: number; totalGrowth: number }>> {
-  return request.get('/vip/recharge/stats')
+export interface VipBenefit {
+  id: number
+  name: string
+  description: string
+  icon: string
+  enabled: boolean
 }

@@ -1,119 +1,151 @@
-﻿import request from '@user/api/request'
+﻿/**
+ * 订单相关 API
+ */
 
-export interface Order {
-  id: number
-  orderNo: string
-  status: string // PENDING, PAID, SHIPPED, COMPLETED, CANCELLED, REFUNDING
-  totalAmount: number
-  shippingAddress: string
-  items: OrderItem[]
-  createdAt: string
-  paidAt?: string
-  shippedAt?: string
-  completedAt?: string
-  trackingNo?: string
-  carrier?: string
-  merchantName?: string
-  [key: string]: unknown
-}
+import { get, post, put, del } from './request'
+import type { Order, OrderDetail, OrderItem, OrderLogistics } from '@user/types/order'
+import type { PageData, PageParams } from './request'
 
-export interface OrderItem {
-  id: number
-  productId: number
-  productName: string
-  productImage?: string
-  price: number
-  quantity: number
-  subtotal: number
-}
+const BASE_URL = '/order'
 
-interface ApiResponse<T> {
-  code: number
-  data: T
-  message?: string
-}
-
-interface OrderListParams {
-  page?: number
-  size?: number
-  status?: string
-  [key: string]: unknown
-}
-
-interface OrderListResponse {
-  list: Order[]
-  total: number
-  page: number
-  size: number
-}
-
-interface CreateOrderData {
-  items: { productId: number; quantity: number }[]
+/**
+ * 创建订单
+ */
+export function createOrder(data: {
+  items?: { cartItemId?: number; productId?: number; skuId?: number; quantity: number }[]
   addressId: number
   couponId?: number
+  remark?: string
+  deliveryType?: 'express' | 'pickup' | 'virtual'
+}): Promise<Order> {
+  return post(BASE_URL, data)
 }
 
-interface OrderStats {
-  total: number
-  pending: number
-  paid: number
-  shipped: number
-  completed: number
-  cancelled: number
-  refunding: number
+/**
+ * 获取订单列表
+ */
+export function getOrderList(params?: PageParams & { status?: string }): Promise<PageData<Order>> {
+  return get(BASE_URL, params)
 }
 
-// 获取订单列表
-export function getOrderList(params?: OrderListParams): Promise<ApiResponse<OrderListResponse>> {
-  return request.get('/order/list', { params })
+/**
+ * 获取订单详情
+ */
+export function getOrderDetail(orderId: number | string): Promise<OrderDetail> {
+  return get(`${BASE_URL}/${orderId}`)
 }
 
-// 获取订单详情
-export function getOrderDetail(id: number): Promise<ApiResponse<Order>> {
-  return request.get(`/order/${id}`)
+/**
+ * 取消订单
+ */
+export function cancelOrder(orderId: number | string, reason?: string): Promise<void> {
+  return put(`${BASE_URL}/${orderId}/cancel`, { reason })
 }
 
-// 创建订单
-export function createOrder(data: CreateOrderData): Promise<ApiResponse<Order>> {
-  return request.post('/order', data)
+/**
+ * 确认收货
+ */
+export function confirmReceive(orderId: number | string): Promise<void> {
+  return put(`${BASE_URL}/${orderId}/confirm`)
 }
 
-// 取消订单
-export function cancelOrder(id: number): Promise<ApiResponse<void>> {
-  return request.post(`/order/${id}/cancel`)
+/**
+ * 删除订单
+ */
+export function deleteOrder(orderId: number | string): Promise<void> {
+  return del(`${BASE_URL}/${orderId}`)
 }
 
-// 删除订单
-export function deleteOrder(id: number): Promise<ApiResponse<void>> {
-  return request.delete(`/order/${id}`)
+/**
+ * 订单支付
+ */
+export function payOrder(orderId: number | string, payType?: 'alipay' | 'wechat' | 'card'): Promise<{ payUrl: string }> {
+  return post(`${BASE_URL}/${orderId}/pay`, { payType })
 }
 
-// 支付订单
-export function payOrder(id: number, paymentMethod: string): Promise<ApiResponse<Order>> {
-  return request.post(`/order/${id}/pay`, { paymentMethod })
+/**
+ * 获取订单支付状态
+ */
+export function getPayStatus(orderId: number | string): Promise<{ paid: boolean; payTime?: string }> {
+  return get(`${BASE_URL}/${orderId}/pay-status`)
 }
 
-// 确认收货
-export function confirmReceive(id: number): Promise<ApiResponse<Order>> {
-  return request.post(`/order/${id}/confirm`)
+/**
+ * 订单退款
+ */
+export function refundOrder(orderId: number | string, reason: string, images?: string[]): Promise<void> {
+  return post(`${BASE_URL}/${orderId}/refund`, { reason, images })
 }
 
-// 申请退款
-export function applyRefund(id: number, reason: string, images?: string[]): Promise<ApiResponse<void>> {
-  return request.post(`/order/${id}/refund`, { reason, images })
+/**
+ * 获取退款详情
+ */
+export function getRefundDetail(orderId: number | string): Promise<{ status: string; amount: number; reason: string }> {
+  return get(`${BASE_URL}/${orderId}/refund`)
 }
 
-// 获取订单统计
-export function getOrderStats(): Promise<ApiResponse<OrderStats>> {
-  return request.get('/order/stats')
+/**
+ * 订单评价
+ */
+export function submitReview(orderId: number | string, data: {
+  score: number
+  content?: string
+  images?: string[]
+  items?: { itemId: number; score: number; content?: string; images?: string[] }[]
+}): Promise<void> {
+  return post(`${BASE_URL}/${orderId}/review`, data)
 }
 
-// 获取物流信息
-export function getTrackingInfo(id: number): Promise<ApiResponse<{ trackingNo: string; carrier: string; records: TrackingRecord[] }>> {
-  return request.get(`/order/${id}/tracking`)
+/**
+ * 检查是否已评价
+ */
+export function checkReviewed(orderId: number | string): Promise<{ reviewed: boolean }> {
+  return get(`${BASE_URL}/${orderId}/reviewed`)
 }
 
-export interface TrackingRecord {
-  time: string
-  desc: string
+/**
+ * 获取订单物流
+ */
+export function getOrderLogistics(orderId: number | string): Promise<OrderLogistics> {
+  return get(`${BASE_URL}/${orderId}/logistics`)
+}
+
+/**
+ * 修改订单地址
+ */
+export function updateOrderAddress(orderId: number | string, addressId: number): Promise<void> {
+  return put(`${BASE_URL}/${orderId}/address`, { addressId })
+}
+
+/**
+ * 订单备注
+ */
+export function updateOrderRemark(orderId: number | string, remark: string): Promise<void> {
+  return put(`${BASE_URL}/${orderId}/remark`, { remark })
+}
+
+/**
+ * 再次购买
+ */
+export function repurchase(orderId: number | string): Promise<void> {
+  return post(`${BASE_URL}/${orderId}/repurchase`)
+}
+
+/**
+ * 获取订单统计
+ */
+export function getOrderStats(): Promise<{
+  unpaid: number
+  unshipped: number
+  unreceived: number
+  reviewed: number
+}> {
+  return get(`${BASE_URL}/stats`)
+}
+
+/**
+ * 模拟发货（测试用）
+ */
+export function mockShip(orderId: number | string): Promise<void> {
+  return post(`${BASE_URL}/${orderId}/mock-ship`)
 }

@@ -1,5 +1,6 @@
 package com.market.controller;
 
+import com.market.annotation.*;
 import com.market.common.Result;
 import com.market.entity.Order;
 import com.market.entity.User;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * 用户端订单控制器
  */
 @RestController
-@RequestMapping("/api/user/order")
+@RequestMapping("/api/order")
 @CrossOrigin(origins = "*")
 public class OrderController {
 
@@ -29,28 +30,61 @@ public class OrderController {
     private OrderService orderService;
 
     /**
+     * 创建订单
+     */
+    @PostMapping
+    @Idempotent(key = "'create_order_' + #user.id", expire = 3600, message = "订单正在创建中，请勿重复提交")
+    @DistributedLock(key = "'create_order_' + #user.id", waitTime = 5000)
+    @AuditLog(module = "订单管理", action = "创建订单", recordParams = true, recordResult = true)
+    @Retryable(maxAttempts = 3, delay = 1000)
+    public Result<Order> createOrder(
+            @AuthenticationPrincipal User user,
+            @RequestBody Map<String, Object> data) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        List<Map<String, Object>> items = (List<Map<String, Object>>) data.get("items");
+        Long addressId = data.get("addressId") != null ? Long.valueOf(data.get("addressId").toString()) : null;
+        Long couponId = data.get("couponId") != null ? Long.valueOf(data.get("couponId").toString()) : null;
+        String remark = (String) data.get("remark");
+
+        Order order = orderService.createOrder(user, items, addressId, couponId);
+        return Result.success(order);
+    }
+
+    /**
      * 获取订单列表
      */
-    @GetMapping("/list")
+    @GetMapping
+    @Cacheable(key = "'order_list_' + #user.id + '_' + #page + '_' + #status", 
+               cacheName = "orders", expire = 300)
+    @AuditLog(module = "订单管理", action = "查询订单列表")
+    @DataScope(scopeType = DataScope.ScopeType.SELF)
     public Result<Map<String, Object>> getOrderList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) String status,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Order> orderPage = orderService.getUserOrders(user, status, pageable);
-        
+
         List<Map<String, Object>> orderList = orderPage.getContent().stream()
             .map(this::convertOrderToMap)
             .collect(Collectors.toList());
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("list", orderList);
         response.put("total", orderPage.getTotalElements());
         response.put("page", page);
         response.put("size", size);
-        
+
         return Result.success(response);
     }
 
@@ -58,81 +92,127 @@ public class OrderController {
      * 获取订单详情
      */
     @GetMapping("/{id}")
+    @Cacheable(key = "'order_detail_' + #id", cacheName = "orders", expire = 600)
+    @AuditLog(module = "订单管理", action = "查询订单详情")
+    @SensitiveData(type = SensitiveData.SensitiveType.DEFAULT)
     public Result<Map<String, Object>> getOrderDetail(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         Order order = orderService.getOrderById(id)
             .orElseThrow(() -> new RuntimeException("订单不存在"));
-        
-        if (!order.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("无权访问该订单");
-        }
-        
-        return Result.success(convertOrderToMap(order));
-    }
 
-    /**
-     * 创建订单
-     */
-    @PostMapping
-    public Result<Order> createOrder(
-            @AuthenticationPrincipal User user,
-            @RequestBody Map<String, Object> data) {
-        
-        List<Map<String, Object>> items = (List<Map<String, Object>>) data.get("items");
-        Long addressId = Long.valueOf(data.get("addressId").toString());
-        Long couponId = data.get("couponId") != null ? Long.valueOf(data.get("couponId").toString()) : null;
-        
-        Order order = orderService.createOrder(user, items, addressId, couponId);
-        return Result.success(order);
+        if (!order.getUser().getId().equals(user.getId())) {
+            return Result.error(403, "无权访问该订单");
+        }
+
+        return Result.success(convertOrderToMap(order));
     }
 
     /**
      * 取消订单
      */
-    @PostMapping("/{id}/cancel")
+    @PutMapping("/{id}/cancel")
+    @Idempotent(key = "'cancel_order_' + #id", expire = 3600)
+    @DistributedLock(key = "'cancel_order_' + #id", waitTime = 5000)
+    @AuditLog(module = "订单管理", action = "取消订单")
+    @Retryable(maxAttempts = 3, delay = 1000)
     public Result<Void> cancelOrder(
             @PathVariable Long id,
+            @RequestParam(required = false) String reason,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         orderService.cancelOrder(id, user);
-        return Result.success();
+        return Result.success(null);
     }
 
     /**
      * 删除订单
      */
     @DeleteMapping("/{id}")
+    @Idempotent(key = "'delete_order_' + #id", expire = 3600)
+    @AuditLog(module = "订单管理", action = "删除订单")
     public Result<Void> deleteOrder(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         orderService.deleteOrder(id, user);
-        return Result.success();
+        return Result.success(null);
     }
 
     /**
      * 支付订单
      */
     @PostMapping("/{id}/pay")
+    @Idempotent(key = "'pay_order_' + #id", expire = 3600, message = "正在支付中，请勿重复提交")
+    @DistributedLock(key = "'pay_order_' + #id", waitTime = 10000)
+    @AuditLog(module = "订单管理", action = "支付订单", recordParams = true)
+    @Retryable(maxAttempts = 3, delay = 1000)
     public Result<Order> payOrder(
             @PathVariable Long id,
-            @RequestParam String paymentMethod,
+            @RequestParam(defaultValue = "alipay") String paymentMethod,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         Order order = orderService.payOrder(id, user, paymentMethod);
         return Result.success(order);
     }
 
     /**
+     * 获取支付状态
+     */
+    @GetMapping("/{id}/pay-status")
+    @Cacheable(key = "'pay_status_' + #id", cacheName = "orders", expire = 60)
+    @AuditLog(module = "订单管理", action = "查询支付状态")
+    public Result<Map<String, Object>> getPayStatus(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        Order order = orderService.getOrderById(id)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("paid", order.getPaidAt() != null);
+        result.put("payTime", order.getPaidAt());
+        
+        return Result.success(result);
+    }
+
+    /**
      * 确认收货
      */
-    @PostMapping("/{id}/confirm")
+    @PutMapping("/{id}/confirm")
+    @Idempotent(key = "'confirm_order_' + #id", expire = 3600)
+    @DistributedLock(key = "'confirm_order_' + #id", waitTime = 5000)
+    @AuditLog(module = "订单管理", action = "确认收货")
+    @Retryable(maxAttempts = 3, delay = 1000)
     public Result<Order> confirmReceive(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         Order order = orderService.confirmReceive(id, user);
         return Result.success(order);
     }
@@ -141,46 +221,197 @@ public class OrderController {
      * 申请退款
      */
     @PostMapping("/{id}/refund")
+    @Idempotent(key = "'refund_order_' + #id", expire = 3600)
+    @DistributedLock(key = "'refund_order_' + #id", waitTime = 5000)
+    @AuditLog(module = "订单管理", action = "申请退款", recordParams = true)
     public Result<Void> applyRefund(
             @PathVariable Long id,
             @RequestParam String reason,
             @RequestParam(required = false) List<String> images,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         orderService.applyRefund(id, user, reason, images);
-        return Result.success();
+        return Result.success(null);
+    }
+
+    /**
+     * 获取退款详情
+     */
+    @GetMapping("/{id}/refund")
+    @Cacheable(key = "'refund_detail_' + #id", cacheName = "orders", expire = 300)
+    @AuditLog(module = "订单管理", action = "查询退款详情")
+    public Result<Map<String, Object>> getRefundDetail(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // TODO: 查询退款详情
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "pending");
+        result.put("amount", 0);
+        result.put("reason", "");
+        
+        return Result.success(result);
+    }
+
+    /**
+     * 提交评价
+     */
+    @PostMapping("/{id}/review")
+    @Idempotent(key = "'review_order_' + #id", expire = 3600)
+    @AuditLog(module = "订单管理", action = "提交评价", recordParams = true)
+    public Result<Void> submitReview(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> data,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // TODO: 提交评价
+        return Result.success(null);
+    }
+
+    /**
+     * 检查是否已评价
+     */
+    @GetMapping("/{id}/reviewed")
+    @Cacheable(key = "'order_reviewed_' + #id", cacheName = "orders", expire = 600)
+    @AuditLog(module = "订单管理", action = "检查评价状态")
+    public Result<Map<String, Boolean>> checkReviewed(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        Map<String, Boolean> result = new HashMap<>();
+        result.put("reviewed", false); // TODO: 实际查询
+        return Result.success(result);
+    }
+
+    /**
+     * 获取订单物流
+     */
+    @GetMapping("/{id}/logistics")
+    @Cacheable(key = "'order_logistics_' + #id", cacheName = "orders", expire = 300)
+    @AuditLog(module = "订单管理", action = "查询物流信息")
+    public Result<Map<String, Object>> getOrderLogistics(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        Order order = orderService.getOrderById(id)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            return Result.error(403, "无权访问该订单");
+        }
+
+        Map<String, Object> logistics = new HashMap<>();
+        logistics.put("trackingNo", order.getTrackingNo());
+        logistics.put("carrier", order.getCarrier());
+        logistics.put("records", orderService.getTrackingRecords(order));
+
+        return Result.success(logistics);
+    }
+
+    /**
+     * 修改订单地址
+     */
+    @PutMapping("/{id}/address")
+    @Idempotent(key = "'update_order_address_' + #id", expire = 3600)
+    @AuditLog(module = "订单管理", action = "修改订单地址")
+    public Result<Void> updateOrderAddress(
+            @PathVariable Long id,
+            @RequestParam Long addressId,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // TODO: 修改地址
+        return Result.success(null);
+    }
+
+    /**
+     * 修改订单备注
+     */
+    @PutMapping("/{id}/remark")
+    @Idempotent(key = "'update_order_remark_' + #id", expire = 3600)
+    @AuditLog(module = "订单管理", action = "修改订单备注")
+    public Result<Void> updateOrderRemark(
+            @PathVariable Long id,
+            @RequestParam String remark,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // TODO: 修改备注
+        return Result.success(null);
+    }
+
+    /**
+     * 再次购买
+     */
+    @PostMapping("/{id}/repurchase")
+    @Idempotent(key = "'repurchase_order_' + #id", expire = 600)
+    @AuditLog(module = "订单管理", action = "再次购买")
+    public Result<Void> repurchase(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // TODO: 再次购买逻辑
+        return Result.success(null);
     }
 
     /**
      * 获取订单统计
      */
     @GetMapping("/stats")
+    @Cacheable(key = "'order_stats_' + #user.id", cacheName = "orders", expire = 300)
+    @AuditLog(module = "订单管理", action = "查询订单统计")
     public Result<Map<String, Object>> getOrderStats(@AuthenticationPrincipal User user) {
+        
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
         Map<String, Object> stats = orderService.getUserOrderStats(user);
         return Result.success(stats);
     }
 
     /**
-     * 获取物流信息
+     * 模拟发货（测试用）
      */
-    @GetMapping("/{id}/tracking")
-    public Result<Map<String, Object>> getTrackingInfo(
+    @PostMapping("/{id}/mock-ship")
+    @Idempotent(key = "'mock_ship_' + #id", expire = 600)
+    @AuditLog(module = "订单管理", action = "模拟发货", logLevel = AuditLog.LogLevel.WARNING)
+    public Result<Void> mockShip(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
-        Order order = orderService.getOrderById(id)
-            .orElseThrow(() -> new RuntimeException("订单不存在"));
-        
-        if (!order.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("无权访问该订单");
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
         }
-        
-        Map<String, Object> tracking = new HashMap<>();
-        tracking.put("trackingNo", order.getTrackingNo());
-        tracking.put("carrier", order.getCarrier());
-        tracking.put("records", orderService.getTrackingRecords(order));
-        
-        return Result.success(tracking);
+
+        // TODO: 模拟发货
+        return Result.success(null);
     }
 
     /**
@@ -199,12 +430,12 @@ public class OrderController {
         map.put("paidAt", order.getPaidAt());
         map.put("shippedAt", order.getShippedAt());
         map.put("completedAt", order.getCompletedAt());
-        
+
         // 商户信息
         if (order.getMerchant() != null) {
             map.put("merchantName", order.getMerchant().getShopName());
         }
-        
+
         // 订单项
         if (order.getItem() != null) {
             List<Map<String, Object>> items = order.getItem().stream()
@@ -222,7 +453,7 @@ public class OrderController {
                 .collect(Collectors.toList());
             map.put("items", items);
         }
-        
+
         return map;
     }
 }

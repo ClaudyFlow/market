@@ -1,105 +1,107 @@
-import request from '@user/api/request'
+/**
+ * 优惠券相关 API
+ */
 
-export interface Coupon {
-  id: number
-  userCouponId?: number
-  couponId: number
-  name: string
-  type: string // PERCENT-折扣券，FIXED-满减券
-  discountValue: number
-  minPurchase?: number
-  maxDiscount?: number
-  validFrom?: string
-  validTo?: string
-  status: string // UNUSED, USED, EXPIRED
-  description?: string
-  scope?: string
-  label?: string
-  obtainedAt?: string
-  usedAt?: string
-  merchantId?: number
-  merchantName?: string
+import { get, post, del } from './request'
+import type { Coupon, CouponTemplate } from '@user/types/coupon'
+import type { PageData, PageParams } from './request'
+
+const BASE_URL = '/coupon'
+
+/**
+ * 获取优惠券列表（用户已领取的）
+ */
+export function getCouponList(params?: PageParams): Promise<PageData<Coupon>> {
+  return get(BASE_URL, params)
 }
 
-export interface CouponStats {
-  total: number
-  unused: number
-  used: number
-  expired: number
-  savedAmount: number
+/**
+ * 获取优惠券模板列表（可领取的）
+ */
+export function getCouponTemplates(params?: PageParams): Promise<PageData<CouponTemplate>> {
+  return get(`${BASE_URL}/templates`, params)
 }
 
-interface ApiResponse<T> {
-  code: number
-  data: T
-  message?: string
+/**
+ * 获取优惠券详情
+ */
+export function getCouponDetail(couponId: number | string): Promise<Coupon> {
+  return get(`${BASE_URL}/${couponId}`)
 }
 
-interface CouponListParams {
-  page?: number
-  size?: number
-  status?: string
+/**
+ * 获取优惠券模板详情
+ */
+export function getCouponTemplateDetail(templateId: number | string): Promise<CouponTemplate> {
+  return get(`${BASE_URL}/templates/${templateId}`)
 }
 
-interface CouponListResponse {
-  list: Coupon[]
-  total: number
-  page: number
-  size: number
+/**
+ * 领取优惠券
+ */
+export function receiveCoupon(templateId: number | string): Promise<Coupon> {
+  return post(`${BASE_URL}/receive`, { templateId })
 }
 
-// 领取优惠券
-export function takeCoupon(id: number): Promise<ApiResponse<Coupon>> {
-  return request.post(`/coupon/take/${id}`)
+/**
+ * 批量领取优惠券
+ */
+export function batchReceiveCoupon(templateIds: number[]): Promise<Coupon[]> {
+  return post(`${BASE_URL}/batch-receive`, { templateIds })
 }
 
-// 获取我的优惠券列表
-export function getMyCoupons(params?: CouponListParams): Promise<ApiResponse<CouponListResponse>> {
-  return request.get('/coupon/list', { params })
+/**
+ * 使用优惠券
+ */
+export function useCoupon(couponId: number | string, orderId: number | string): Promise<void> {
+  return post(`${BASE_URL}/${couponId}/use`, { orderId })
 }
 
-// 获取可用优惠券（下单时选择）
-export function getAvailableCoupons(merchantId?: number, orderAmount?: number): Promise<ApiResponse<Coupon[]>> {
-  return request.get('/coupon/available', { 
-    params: { merchantId, orderAmount } 
-  })
+/**
+ * 退还优惠券
+ */
+export function returnCoupon(couponId: number | string): Promise<void> {
+  return post(`${BASE_URL}/${couponId}/return`)
 }
 
-// 获取订单可用优惠券（智能推荐）
-export function getOrderAvailableCoupons(
-  merchantId: number,
-  orderAmount: number,
-  productIds?: number[],
-  categories?: string[]
-): Promise<ApiResponse<Coupon[]>> {
-  return request.get('/coupon/order/available', {
-    params: { merchantId, orderAmount, productIds, categories }
-  })
+/**
+ * 删除优惠券
+ */
+export function deleteCoupon(couponId: number | string): Promise<void> {
+  return del(`${BASE_URL}/${couponId}`)
 }
 
-// 获取最优优惠券
-export function getBestCoupon(
-  merchantId: number,
-  orderAmount: number,
-  productIds?: number[],
-  categories?: string[]
-): Promise<ApiResponse<Coupon>> {
-  return request.get('/coupon/best', {
-    params: { merchantId, orderAmount, productIds, categories }
-  })
+/**
+ * 检查优惠券是否可用
+ */
+export function checkCouponAvailable(couponId: number | string, amount?: number): Promise<{ available: boolean; reason?: string }> {
+  return get(`${BASE_URL}/${couponId}/check`, { amount })
 }
 
-// 使用优惠券
-export function useCoupon(id: number): Promise<ApiResponse<void>> {
-  return request.post(`/coupon/${id}/use`)
+/**
+ * 获取可用优惠券列表
+ */
+export function getAvailableCoupons(amount?: number, shopId?: number): Promise<Coupon[]> {
+  return get(`${BASE_URL}/available`, { amount, shopId })
 }
 
-// 退还优惠券（订单取消时）
-export function returnCoupon(id: number): Promise<ApiResponse<void>> {
-  return request.post(`/coupon/${id}/return`)
+/**
+ * 获取即将过期优惠券
+ */
+export function getExpiringCoupons(days?: number): Promise<Coupon[]> {
+  return get(`${BASE_URL}/expiring`, { days })
 }
 
-// 获取优惠券统计
-export function getCouponStats(): Promise<ApiResponse<CouponStats>> {
-  return request.get('/coupon/stats')
+/**
+ * 店铺优惠券列表
+ */
+export function getShopCoupons(shopId: number | string): Promise<CouponTemplate[]> {
+  return get(`/shop/${shopId}/coupons`)
+}
+
+/**
+ * 商品优惠券列表
+ */
+export function getProductCoupons(productId: number | string): Promise<CouponTemplate[]> {
+  return get(`/product/${productId}/coupons`)
 }
