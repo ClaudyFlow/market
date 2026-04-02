@@ -1,90 +1,234 @@
 <template>
-  <div class="app-container">
-    <!-- 未登录时只显示路由内容（登录页） -->
-    <template v-if="!isLoggedIn">
-      <router-view />
-    </template>
-    <!-- 已登录时显示完整布局 -->
-    <template v-else>
-      <Header />
-      <main class="main-content">
-        <div class="page-content">
-          <router-view />
-        </div>
+  <div class="admin-dashboard">
+    <!-- 顶部导航 -->
+    <header class="admin-header">
+      <div class="logo">
+        <el-icon><Monitor /></el-icon>
+        <span>平台管理后台</span>
+      </div>
+      <div class="header-actions">
+        <el-badge :value="unreadNotifications" :hidden="unreadNotifications === 0">
+          <el-button circle @click="goToNotifications">
+            <el-icon><Bell /></el-icon>
+          </el-button>
+        </el-badge>
+        <el-dropdown @command="handleCommand">
+          <span class="user-info">
+            <el-avatar :size="32" :src="adminInfo.avatar" />
+            <span class="username">{{ adminInfo.name }}</span>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+              <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <!-- 侧边栏导航 -->
+      <aside class="sidebar">
+        <el-menu :default-active="activeMenu" router background-color="#1a1f3a" text-color="#b0d4ff"
+          active-text-color="#00d4ff">
+          <el-menu-item index="/admin/dashboard">
+            <el-icon><DataAnalysis /></el-icon>
+            <span>数据概览</span>
+          </el-menu-item>
+          <el-sub-menu index="user">
+            <template #title>
+              <el-icon><User /></el-icon>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item index="/admin/user/list">用户列表</el-menu-item>
+            <el-menu-item index="/admin/user/credit">用户积分</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="merchant">
+            <template #title>
+              <el-icon><Shop /></el-icon>
+              <span>商家管理</span>
+            </template>
+            <el-menu-item index="/admin/merchant/list">商家列表</el-menu-item>
+            <el-menu-item index="/admin/merchant/audit">入驻审核</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="product">
+            <template #title>
+              <el-icon><Goods /></el-icon>
+              <span>商品管理</span>
+            </template>
+            <el-menu-item index="/admin/product/list">商品列表</el-menu-item>
+            <el-menu-item index="/admin/product/audit">商品审核</el-menu-item>
+            <el-menu-item index="/admin/product/category">分类管理</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="order">
+            <template #title>
+              <el-icon><ShoppingCart /></el-icon>
+              <span>订单管理</span>
+            </template>
+            <el-menu-item index="/admin/order/list">订单列表</el-menu-item>
+            <el-menu-item index="/admin/order/refund">退款管理</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="coupon">
+            <template #title>
+              <el-icon><Ticket /></el-icon>
+              <span>优惠券管理</span>
+            </template>
+            <el-menu-item index="/admin/coupon/list">优惠券列表</el-menu-item>
+            <el-menu-item index="/admin/coupon/template">模板管理</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="content">
+            <template #title>
+              <el-icon><Document /></el-icon>
+              <span>内容管理</span>
+            </template>
+            <el-menu-item index="/admin/content/notice">公告管理</el-menu-item>
+            <el-menu-item index="/admin/content/banner">轮播图管理</el-menu-item>
+            <el-menu-item index="/admin/content/review">评价审核</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="marketing">
+            <template #title>
+              <el-icon><Promotion /></el-icon>
+              <span>营销管理</span>
+            </template>
+            <el-menu-item index="/admin/marketing/activity">活动管理</el-menu-item>
+            <el-menu-item index="/admin/marketing/lottery">抽奖管理</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="system">
+            <template #title>
+              <el-icon><Setting /></el-icon>
+              <span>系统设置</span>
+            </template>
+            <el-menu-item index="/admin/system/settings">系统配置</el-menu-item>
+            <el-menu-item index="/admin/system/log">操作日志</el-menu-item>
+            <el-menu-item index="/admin/system/permission">权限管理</el-menu-item>
+          </el-sub-menu>
+        </el-menu>
+      </aside>
+
+      <!-- 主内容区 -->
+      <main class="content">
+        <router-view />
       </main>
-      <Footer />
-    </template>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-import Header from '@admin/components/Header.vue'
-import Footer from '@admin/components/Footer.vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import {
+  Monitor, Bell, DataAnalysis, User, Shop, Goods, ShoppingCart, Ticket, Document, Promotion, Setting
+} from '@element-plus/icons-vue'
 
-const isLoggedIn = computed(() => {
-  return !!localStorage.getItem('admin_token')
+const router = useRouter()
+const route = useRoute()
+
+const activeMenu = ref(route.path)
+const unreadNotifications = ref(0)
+
+const adminInfo = ref({
+  name: '管理员',
+  avatar: '/images/avatar-default.png'
+})
+
+// 处理下拉菜单命令
+const handleCommand = (command) => {
+  if (command === 'logout') {
+    localStorage.removeItem('token')
+    localStorage.removeItem('adminInfo')
+    router.push('/admin/login')
+    ElMessage.success('已退出登录')
+  } else if (command === 'profile') {
+    router.push('/admin/profile')
+  }
+}
+
+// 跳转到通知
+const goToNotifications = () => {
+  router.push('/admin/notifications')
+}
+
+// 获取未读消息数
+const fetchUnreadCount = async () => {
+  // TODO: 调用 API 获取未读消息数
+  unreadNotifications.value = 0
+}
+
+onMounted(() => {
+  fetchUnreadCount()
 })
 </script>
 
-<style>
-@import '@admin/assets/mall-style.css';
-
-* {
-  
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
-  background: var(--mall-bg-dark);
+<style scoped>
+.admin-dashboard {
   min-height: 100vh;
-  color: #fff;
+  background: #0a0f1a;
 }
 
-.app-container {
-  min-height: 100vh;
+.admin-header {
   display: flex;
-  flex-direction: column;
-  background:
-    radial-gradient(ellipse at top, #1a2a4a 0%, transparent 50%),
-    radial-gradient(ellipse at bottom, #0d1a2a 0%, transparent 50%),
-    var(--mall-bg-dark);
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  background: #1a1f3a;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
 
-.main-content {
-  flex: 1;
+.logo {
   display: flex;
-  flex-direction: column;
-  padding: 20px;
-  max-width: 1400px;
-  
-  width: 100%;
-}
-
-.page-content {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00d4ff;
 }
 
-/* 科幻风格滚动条 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--mall-bg-medium);
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--mall-primary);
-  border-radius: 4px;
+.username {
+  color: #fff;
+  font-size: 14px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--mall-secondary);
+.main-container {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.sidebar {
+  width: 220px;
+  background: #1a1f3a;
+  border-right: 1px solid rgba(0, 212, 255, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar :deep(.el-menu) {
+  border-right: none;
+}
+
+.sidebar :deep(.el-sub-menu__title:hover),
+.sidebar :deep(.el-menu-item:hover) {
+  background: rgba(0, 212, 255, 0.1) !important;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #0a0f1a;
 }
 </style>

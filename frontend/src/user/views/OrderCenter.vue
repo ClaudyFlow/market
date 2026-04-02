@@ -1,253 +1,274 @@
 <template>
-  <div class="page-container">
-    <div class="container">
-      <div class="page-header">
-        <div style="display: flex; align-items: center;">
-          <el-button class="back-btn" @click="goBack" circle>
-            <i class="fas fa-arrow-left"></i>
-          </el-button>
-          <h2 class="sub-title">
-            <i class="fas fa-file-alt"></i>
-            订单中心
-          </h2>
-        </div>
+  <div class="order-center">
+    <div class="page-header">
+      <h1><el-icon><ShoppingCart /></el-icon> 我的订单</h1>
+    </div>
+
+    <!-- 订单状态筛选 -->
+    <div class="filter-tabs">
+      <el-tabs v-model="activeStatus" @tab-change="loadOrders">
+        <el-tab-pane label="全部订单" name="all" />
+        <el-tab-pane label="待付款" name="PENDING" />
+        <el-tab-pane label="待发货" name="PAID" />
+        <el-tab-pane label="待收货" name="SHIPPED" />
+        <el-tab-pane label="待评价" name="COMPLETED" />
+        <el-tab-pane label="售后/退款" name="REFUNDING" />
+      </el-tabs>
+    </div>
+
+    <!-- 订单列表 -->
+    <div class="order-list" v-loading="loading">
+      <div v-if="orders.length === 0" class="empty-state">
+        <el-empty description="暂无订单" />
+        <el-button type="primary" @click="goToShop">去逛逛</el-button>
       </div>
 
-      <div class="orders-section">
-        <div class="orders-list" v-loading="loading">
-          <div v-for="order in orderList" :key="order.id" class="order-card">
-            <div class="order-header">
-              <div class="order-info">
-                <span class="order-id">订单号：{{ order.orderNo }}</span>
-                <span class="order-date">{{ formatDateTime(order.createdAt) }}</span>
-              </div>
-              <el-tag :type="getStatusType(order.status)" effect="dark">
-                {{ getStatusText(order.status) }}
-              </el-tag>
-            </div>
-
-            <div class="order-items">
-              <div
-                v-for="(item, index) in order.items"
-                :key="index"
-                class="order-item"
-              >
-                <el-image
-                  :src="item.productImage || 'https://via.placeholder.com/80x80?text=商品'"
-                  class="item-image"
-                  fit="cover"
-                />
-                <div class="item-info">
-                  <h4 class="item-name">{{ item.productName }}</h4>
-                  <p class="item-spec">{{ item.spec || '默认规格' }}</p>
-                  <div class="item-meta">
-                    <span class="item-price">¥{{ (item.price / 100).toFixed(2) }}</span>
-                    <span class="item-quantity">x{{ item.quantity }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="order-footer">
-              <div class="order-total">
-                <span>订单总额：</span>
-                <span class="total-amount">¥{{ (order.totalAmount / 100).toFixed(2) }}</span>
-              </div>
-              <div class="order-actions">
-                <el-button
-                  v-if="order.status === 'PENDING_PAYMENT'"
-                  type="primary"
-                  size="small"
-                  @click="payOrder(order.id)"
-                >
-                  立即支付
-                </el-button>
-                <el-button
-                  v-if="order.status === 'PAID'"
-                  type="warning"
-                  size="small"
-                  @click="cancelOrder(order.id)"
-                >
-                  取消订单
-                </el-button>
-                <el-button
-                  v-if="order.status === 'SHIPPED'"
-                  type="success"
-                  size="small"
-                  @click="confirmReceive(order.id)"
-                >
-                  确认收货
-                </el-button>
-                <el-button
-                  v-if="order.status === 'COMPLETED'"
-                  size="small"
-                  @click="reviewOrder(order)"
-                >
-                  评价
-                </el-button>
-                <el-button size="small" @click="viewDetail(order.id)">
-                  订单详情
-                </el-button>
-              </div>
-            </div>
-          </div>
-
-          <el-empty v-if="orderList.length === 0" description="暂无订单" />
+      <div v-for="order in orders" :key="order.id" class="order-card">
+        <!-- 订单头部 -->
+        <div class="order-header">
+          <span class="order-no">订单号：{{ order.orderNo }}</span>
+          <span class="order-time">{{ formatDate(order.createdAt) }}</span>
+          <span class="order-status" :class="getStatusClass(order.status)">
+            {{ getStatusText(order.status) }}
+          </span>
         </div>
 
-        <div class="pagination-bar" v-if="orderList.length > 0">
-          <el-pagination
-            v-model:current-page="pagination.currentPage"
-            v-model:page-size="pagination.pageSize"
-            :total="pagination.total"
-            :page-sizes="[10, 20, 50]"
-            layout="total, sizes, prev, pager, next, jumper"
-            @size-change="loadOrders"
-            @current-change="loadOrders"
-          />
+        <!-- 订单商品 -->
+        <div class="order-items">
+          <div v-for="item in order.items" :key="item.id" class="order-item">
+            <el-image :src="item.productImage" fit="cover" class="item-image" />
+            <div class="item-info">
+              <div class="item-name">{{ item.productName }}</div>
+              <div v-if="item.specs" class="item-specs">{{ item.specs }}</div>
+              <div class="item-meta">
+                <span class="item-price">¥{{ item.price }}</span>
+                <span class="item-quantity">x{{ item.quantity }}</span>
+              </div>
+            </div>
+            <div class="item-subtotal">¥{{ item.subtotal }}</div>
+          </div>
+        </div>
+
+        <!-- 订单底部 -->
+        <div class="order-footer">
+          <div class="order-total">
+            <span>订单总额：</span>
+            <span class="total-amount">¥{{ order.totalAmount }}</span>
+          </div>
+          <div class="order-actions">
+            <template v-if="order.status === 'PENDING'">
+              <el-button size="small" @click="cancelOrder(order.id)">取消订单</el-button>
+              <el-button size="small" type="primary" @click="payOrder(order.id)">立即付款</el-button>
+            </template>
+            <template v-else-if="order.status === 'PAID' || order.status === 'SHIPPED'">
+              <el-button size="small" @click="showLogistics(order)">查看物流</el-button>
+              <el-button size="small" v-if="order.status === 'SHIPPED'" @click="confirmReceive(order.id)">
+                确认收货
+              </el-button>
+            </template>
+            <template v-else-if="order.status === 'COMPLETED'">
+              <el-button size="small" @click="viewDetail(order.id)">订单详情</el-button>
+              <el-button size="small" type="primary" @click="reviewOrder(order.id)">评价</el-button>
+            </template>
+            <template v-else-if="order.status === 'REFUNDING'">
+              <el-button size="small" @click="viewRefundDetail(order.id)">退款详情</el-button>
+            </template>
+            <template v-else-if="order.status === 'CANCELLED' || order.status === 'REFUNDED'">
+              <el-button size="small" @click="deleteOrder(order.id)">删除订单</el-button>
+            </template>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 分页 -->
+    <div class="pagination-wrapper" v-if="total > pageSize">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 20, 50]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="loadOrders"
+        @current-change="loadOrders"
+      />
+    </div>
+
+    <!-- 物流信息弹窗 -->
+    <el-dialog v-model="showLogisticsDialog" title="物流信息" width="600px">
+      <div v-if="currentLogistics" class="logistics-content">
+        <div class="logistics-header">
+          <div class="tracking-no">运单号：{{ currentLogistics.trackingNo }}</div>
+          <div class="carrier">物流公司：{{ currentLogistics.carrier }}</div>
+        </div>
+        <el-timeline class="logistics-timeline">
+          <el-timeline-item
+            v-for="(trace, index) in currentLogistics.traces"
+            :key="index"
+            :timestamp="trace.time"
+            placement="top"
+          >
+            <div class="trace-content">{{ trace.description }}</div>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-// Font Awesome 图标直接使用类名，无需导入
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import api from '@/common/utils/api'
+import { ShoppingCart } from '@element-plus/icons-vue'
+import * as orderApi from '@user/api/order'
+import { formatDate } from '@user/util/format'
 
 const router = useRouter()
 
 const loading = ref(false)
-const orderList = ref([])
+const orders = ref([])
+const total = ref(0)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const activeStatus = ref('all')
 
-const pagination = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  total: 0
-})
+const showLogisticsDialog = ref(false)
+const currentLogistics = ref(null)
 
-const goBack = () => {
-  router.push('/user/center')
-}
-
-const getStatusType = (status) => {
-  const types = {
-    PENDING_PAYMENT: 'warning',
-    PAID: 'primary',
-    SHIPPED: 'success',
-    COMPLETED: 'info',
-    CANCELLED: 'danger',
-    REFUNDED: 'danger'
-  }
-  return types[status] || 'info'
-}
-
-const getStatusText = (status) => {
-  const texts = {
-    PENDING_PAYMENT: '待支付',
-    PAID: '已支付',
-    SHIPPED: '已发货',
-    COMPLETED: '已完成',
-    CANCELLED: '已取消',
-    REFUNDED: '已退款'
-  }
-  return texts[status] || status
-}
-
-const formatDateTime = (dateTime) => {
-  if (!dateTime) return ''
-  const date = new Date(dateTime)
-  return date.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
-
+// 加载订单列表
 const loadOrders = async () => {
   loading.value = true
   try {
-    const res = await api.get('/api/order/list', {
-      params: {
-        page: pagination.currentPage - 1,
-        size: pagination.pageSize
-      }
-    })
-    orderList.value = res.data.content || []
-    pagination.total = res.data.total || 0
+    const params = {
+      current: currentPage.value,
+      size: pageSize.value,
+      status: activeStatus.value === 'all' ? undefined : activeStatus.value
+    }
+    const result = await orderApi.getOrderList(params)
+    orders.value = result.records || []
+    total.value = result.total || 0
   } catch (error) {
-    console.error('加载订单列表失败', error)
-    ElMessage.error('加载订单列表失败')
+    ElMessage.error('加载订单失败')
   } finally {
     loading.value = false
   }
 }
 
-const payOrder = async (orderId) => {
-  try {
-    ElMessageBox.confirm('确定要支付该订单吗？', '支付确认', {
-      type: 'warning'
-    })
-    await api.post(`/api/order/${orderId}/pay`)
-    ElMessage.success('支付成功')
-    loadOrders()
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('支付失败', error)
-      ElMessage.error('支付失败')
-    }
-  }
-}
-
+// 取消订单
 const cancelOrder = async (orderId) => {
   try {
-    await ElMessageBox.confirm('确定要取消该订单吗？', '取消确认', {
-      type: 'warning'
-    })
-    await api.post(`/api/order/${orderId}/cancel`)
+    await ElMessageBox.confirm('确定要取消订单吗？', '提示', { type: 'warning' })
+    await orderApi.cancelOrder(orderId, '用户主动取消')
     ElMessage.success('订单已取消')
     loadOrders()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error('取消订单失败', error)
       ElMessage.error('取消订单失败')
     }
   }
 }
 
+// 支付订单
+const payOrder = (orderId) => {
+  ElMessageBox.confirm('确定要支付订单吗？', '提示', { type: 'info' })
+    .then(async () => {
+      try {
+        const result = await orderApi.payOrder(orderId, 'alipay')
+        window.open(result.payUrl, '_blank')
+        ElMessage.success('正在跳转支付页面')
+      } catch (error) {
+        ElMessage.error('支付失败')
+      }
+    })
+    .catch(() => {})
+}
+
+// 确认收货
 const confirmReceive = async (orderId) => {
   try {
-    await ElMessageBox.confirm('确认已收到商品？', '确认收货', {
-      type: 'warning'
-    })
-    await api.post(`/api/order/${orderId}/confirm`)
+    await ElMessageBox.confirm('确定已收到商品吗？', '提示', { type: 'warning' })
+    await orderApi.confirmReceive(orderId)
     ElMessage.success('确认收货成功')
     loadOrders()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error('确认收货失败', error)
       ElMessage.error('确认收货失败')
     }
   }
 }
 
-const reviewOrder = (order) => {
-  router.push({
-    path: '/user/review',
-    query: {
-      orderId: order.id,
-      productId: order.items?.[0]?.productId
-    }
-  })
+// 查看订单详情
+const viewDetail = (orderId) => {
+  router.push(`/order/${orderId}`)
 }
 
-const viewDetail = (orderId) => {
-  router.push(`/user/order/${orderId}`)
+// 评价订单
+const reviewOrder = (orderId) => {
+  router.push(`/order/${orderId}/review`)
+}
+
+// 查看物流
+const showLogistics = async (order) => {
+  try {
+    const logistics = await orderApi.getOrderLogistics(order.id)
+    currentLogistics.value = logistics
+    showLogisticsDialog.value = true
+  } catch (error) {
+    ElMessage.error('获取物流信息失败')
+  }
+}
+
+// 查看退款详情
+const viewRefundDetail = (orderId) => {
+  router.push(`/order/${orderId}/refund`)
+}
+
+// 删除订单
+const deleteOrder = async (orderId) => {
+  try {
+    await ElMessageBox.confirm('确定要删除订单吗？', '提示', { type: 'warning' })
+    await orderApi.deleteOrder(orderId)
+    ElMessage.success('订单已删除')
+    loadOrders()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除订单失败')
+    }
+  }
+}
+
+// 获取状态样式类
+const getStatusClass = (status) => {
+  const classMap = {
+    PENDING: 'status-pending',
+    PAID: 'status-paid',
+    SHIPPED: 'status-shipped',
+    COMPLETED: 'status-completed',
+    CANCELLED: 'status-cancelled',
+    REFUNDING: 'status-refunding',
+    REFUNDED: 'status-refunded'
+  }
+  return classMap[status] || ''
+}
+
+// 获取状态文本
+const getStatusText = (status) => {
+  const textMap = {
+    PENDING: '待付款',
+    PAID: '待发货',
+    SHIPPED: '待收货',
+    COMPLETED: '已完成',
+    CANCELLED: '已取消',
+    REFUNDING: '退款中',
+    REFUNDED: '已退款'
+  }
+  return textMap[status] || status
+}
+
+// 去店铺
+const goToShop = () => {
+  router.push('/shops')
 }
 
 onMounted(() => {
@@ -256,134 +277,148 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.page-container {
-  min-height: 100vh;
-  background: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(10, 14, 26, 0.8) 100%);
-  padding: 40px 20px;
-}
-
-.container {
+.order-center {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
-.sub-title {
-  font-size: 28px;
+.page-header h1 {
+  font-size: 24px;
   font-weight: bold;
-  background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 0;
+  color: #fff;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-.back-btn {
-  margin-right: 20px;
-  background: transparent;
-  border: 1px solid var(--mall-primary);
-  color: var(--mall-primary);
-  cursor: pointer;
-}
-
-.back-btn:hover {
-  background: rgba(0, 212, 255, 0.1);
-}
-
-.orders-section {
+.filter-tabs {
   background: var(--mall-bg-card);
   border: 1px solid var(--mall-border);
-  border-radius: 16px;
-  padding: 24px;
-  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 0 20px;
+  margin-bottom: 20px;
 }
 
-.orders-list {
+.order-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.order-card {
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.15);
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
   border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s;
 }
 
-.order-card:hover {
-  border-color: var(--mall-primary);
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+.order-card {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--mall-border);
 }
 
-.order-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.order-id {
+.order-no {
   font-size: 14px;
-  color: var(--mall-primary);
-  font-weight: bold;
+  color: var(--mall-text-secondary);
 }
 
-.order-date {
-  font-size: 12px;
-  color: #88aacc;
+.order-time {
+  font-size: 13px;
+  color: var(--mall-text-muted);
+}
+
+.order-status {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.status-pending {
+  background: rgba(255, 153, 0, 0.2);
+  color: #ff9900;
+}
+
+.status-paid {
+  background: rgba(0, 212, 255, 0.2);
+  color: #00d4ff;
+}
+
+.status-shipped {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+}
+
+.status-completed {
+  background: rgba(157, 78, 221, 0.2);
+  color: #9d4edd;
+}
+
+.status-cancelled,
+.status-refunded {
+  background: rgba(255, 68, 68, 0.2);
+  color: #ff4444;
+}
+
+.status-refunding {
+  background: rgba(255, 187, 0, 0.2);
+  color: #ffbb00;
 }
 
 .order-items {
-  padding: 16px 0;
+  padding: 20px;
 }
 
 .order-item {
   display: flex;
-  gap: 16px;
-  padding: 12px 0;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--mall-border);
+}
+
+.order-item:last-child {
+  border-bottom: none;
 }
 
 .item-image {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 8px;
-  flex-shrink: 0;
 }
 
 .item-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .item-name {
   font-size: 14px;
+  font-weight: bold;
   color: #fff;
-  margin: 0 0 6px 0;
 }
 
-.item-spec {
+.item-specs {
   font-size: 12px;
-  color: #88aacc;
-  margin: 0 0 8px 0;
+  color: var(--mall-text-muted);
 }
 
 .item-meta {
@@ -394,43 +429,70 @@ onMounted(() => {
 
 .item-price {
   font-size: 16px;
-  color: var(--mall-primary);
   font-weight: bold;
+  color: var(--mall-primary);
 }
 
 .item-quantity {
-  font-size: 12px;
-  color: #88aacc;
+  font-size: 13px;
+  color: var(--mall-text-muted);
+}
+
+.item-subtotal {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--mall-primary);
 }
 
 .order-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--mall-border);
 }
 
 .order-total {
   font-size: 14px;
-  color: #ccc;
+  color: var(--mall-text-secondary);
 }
 
 .total-amount {
   font-size: 18px;
-  color: #ff6b6b;
   font-weight: bold;
-  margin-left: 8px;
+  color: var(--mall-primary);
+  margin-left: 10px;
 }
 
 .order-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
-.pagination-bar {
+.pagination-wrapper {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 24px;
+  justify-content: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--mall-border);
+}
+
+.logistics-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--mall-border);
+}
+
+.tracking-no,
+.carrier {
+  font-size: 14px;
+  color: var(--mall-text-secondary);
+  margin-bottom: 8px;
+}
+
+.trace-content {
+  font-size: 14px;
+  color: var(--mall-text-secondary);
 }
 </style>

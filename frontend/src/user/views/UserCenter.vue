@@ -1,253 +1,713 @@
 <template>
-  <div class="page-container">
-    <header class="page-header">
-      <h1 class="page-title">
-        <el-icon><User /></el-icon>
-        个人中心
-      </h1>
-    </header>
-
-    <section class="user-menu">
-      <div class="menu-grid">
-        <div class="menu-item" @click="navigateTo('/user/order')">
-          <div class="menu-icon"><el-icon><Document /></el-icon></div>
-          <span class="menu-text">我的订单</span>
+  <div class="user-center">
+    <!-- 用户信息头部 -->
+    <div class="user-header">
+      <div class="avatar-section">
+        <el-avatar :size="100" :src="userInfo.avatar || '/images/avatar-default.png'" />
+        <el-button class="edit-avatar-btn" size="small" @click="triggerAvatarUpload">
+          更换头像
+        </el-button>
+        <input ref="avatarInput" type="file" accept="image/*" style="display: none" @change="handleAvatarUpload" />
+      </div>
+      <div class="user-info-section">
+        <h2 class="username">{{ userInfo.nickname || userInfo.username }}</h2>
+        <div class="user-level">
+          <el-tag :type="getLevelType(userInfo.level)" size="large">
+            {{ getLevelName(userInfo.level) }}
+          </el-tag>
         </div>
-
-        <div class="menu-item" @click="navigateTo('/user/favorite')">
-          <div class="menu-icon"><el-icon><Star /></el-icon></div>
-          <span class="menu-text">我的收藏</span>
-        </div>
-
-        <div class="menu-item" @click="navigateTo('/user/follow')">
-          <div class="menu-icon"><el-icon><User /></el-icon></div>
-          <span class="menu-text">我的关注</span>
-        </div>
-
-        <div class="menu-item" @click="navigateTo('/user/address')">
-          <div class="menu-icon"><el-icon><Location /></el-icon></div>
-          <span class="menu-text">地址管理</span>
-        </div>
-
-        <div class="menu-item" @click="navigateTo('/user/credit')">
-          <div class="menu-icon"><el-icon><Trophy /></el-icon></div>
-          <span class="menu-text">我的积分</span>
-        </div>
-
-        <div class="menu-item" @click="navigateTo('/user/coupon')">
-          <div class="menu-icon"><el-icon><Ticket /></el-icon></div>
-          <span class="menu-text">优惠券</span>
-        </div>
-
-        <div class="menu-item" @click="navigateTo('/user/settings')">
-          <div class="menu-icon"><el-icon><Setting /></el-icon></div>
-          <span class="menu-text">设置</span>
-        </div>
-
-        <div class="menu-item vip-card" @click="navigateTo('/user/vip')">
-          <div class="menu-icon"><el-icon><Star /></el-icon></div>
-          <div class="vip-content">
-            <div class="vip-title">
-              <span class="menu-text">VIP 会员中心</span>
-              <el-tag type="warning" size="small">HOT</el-tag>
-            </div>
-            <div class="vip-info">
-              <div class="info-item">
-                <span class="info-label">当前等级</span>
-                <span class="info-value">{{ vipLevelName }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">我的积分</span>
-                <span class="info-value">{{ userCredit?.credit || 0 }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">成长值</span>
-                <span class="info-value">{{ userCredit?.growthValue || 0 }}</span>
-              </div>
-            </div>
+        <div class="user-stats">
+          <div class="stat-item">
+            <span class="label">积分</span>
+            <span class="value">{{ userInfo.points || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">关注</span>
+            <span class="value">{{ userInfo.followingCount || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">粉丝</span>
+            <span class="value">{{ userInfo.followerCount || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">收藏</span>
+            <span class="value">{{ userInfo.favoriteCount || 0 }}</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+
+    <!-- 功能菜单 -->
+    <div class="function-menu">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="menu-card" @click="navigateTo('/order-center')">
+            <div class="menu-icon"><el-icon><ShoppingCart /></el-icon></div>
+            <div class="menu-title">我的订单</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="menu-card" @click="navigateTo('/favorite')">
+            <div class="menu-icon"><el-icon><Star /></el-icon></div>
+            <div class="menu-title">我的收藏</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="menu-card" @click="navigateTo('/coupon')">
+            <div class="menu-icon"><el-icon><Ticket /></el-icon></div>
+            <div class="menu-title">我的优惠券</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="menu-card" @click="navigateTo('/address')">
+            <div class="menu-icon"><el-icon><Location /></el-icon></div>
+            <div class="menu-title">地址管理</div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+
+    <!-- 选项卡内容 -->
+    <div class="content-section">
+      <el-tabs v-model="activeTab">
+        <el-tab-pane label="基本信息" name="profile">
+          <el-form :model="profileForm" label-width="100px" class="profile-form">
+            <el-form-item label="用户名">
+              <el-input v-model="profileForm.username" disabled />
+            </el-form-item>
+            <el-form-item label="昵称">
+              <el-input v-model="profileForm.nickname" placeholder="请输入昵称" />
+            </el-form-item>
+            <el-form-item label="手机号">
+              <div class="phone-input">
+                <el-input v-model="profileForm.phone" :disabled="true" />
+                <el-button type="primary" size="small" @click="showBindPhone = true">
+                  {{ profileForm.phone ? '更换手机' : '绑定手机' }}
+                </el-button>
+              </div>
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <div class="email-input">
+                <el-input v-model="profileForm.email" :disabled="true" />
+                <el-button type="primary" size="small" @click="showBindEmail = true">
+                  {{ profileForm.email ? '更换邮箱' : '绑定邮箱' }}
+                </el-button>
+              </div>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="profileForm.gender">
+                <el-radio label="male">男</el-radio>
+                <el-radio label="female">女</el-radio>
+                <el-radio label="unknown">保密</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="生日">
+              <el-date-picker
+                v-model="profileForm.birthday"
+                type="date"
+                placeholder="选择生日"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
+              />
+            </el-form-item>
+            <el-form-item label="个人简介">
+              <el-input
+                v-model="profileForm.bio"
+                type="textarea"
+                :rows="4"
+                placeholder="介绍一下自己吧"
+                maxlength="200"
+                show-word-limit
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="saveProfile">保存修改</el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+
+        <el-tab-pane label="账号安全" name="security">
+          <div class="security-list">
+            <div class="security-item">
+              <div class="item-info">
+                <div class="item-title">登录密码</div>
+                <div class="item-desc">定期修改密码有助于保护账号安全</div>
+              </div>
+              <el-button @click="showChangePassword = true">修改</el-button>
+            </div>
+            <div class="security-item">
+              <div class="item-info">
+                <div class="item-title">手机号</div>
+                <div class="item-desc">{{ profileForm.phone || '未绑定' }}</div>
+              </div>
+              <el-button @click="showBindPhone = true">
+                {{ profileForm.phone ? '更换' : '绑定' }}
+              </el-button>
+            </div>
+            <div class="security-item">
+              <div class="item-info">
+                <div class="item-title">邮箱</div>
+                <div class="item-desc">{{ profileForm.email || '未绑定' }}</div>
+              </div>
+              <el-button @click="showBindEmail = true">
+                {{ profileForm.email ? '更换' : '绑定' }}
+              </el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="浏览历史" name="history">
+          <div class="history-list">
+            <div v-for="item in browseHistory" :key="item.id" class="history-item" @click="goToProduct(item.productId)">
+              <el-image :src="item.image" fit="cover" class="product-image" />
+              <div class="product-info">
+                <div class="product-name">{{ item.name }}</div>
+                <div class="product-price">¥{{ item.price }}</div>
+                <div class="browse-time">{{ formatTime(item.browseTime) }}</div>
+              </div>
+              <el-button size="small" type="danger" @click.stop="deleteHistory(item.id)">删除</el-button>
+            </div>
+            <div v-if="browseHistory.length === 0" class="empty-state">
+              <el-empty description="暂无浏览记录" />
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <el-dialog v-model="showChangePassword" title="修改密码" width="400px">
+      <el-form :model="passwordForm" label-width="80px">
+        <el-form-item label="原密码">
+          <el-input v-model="passwordForm.oldPassword" type="password" placeholder="请输入原密码" />
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input v-model="passwordForm.newPassword" type="password" placeholder="请输入新密码" />
+        </el-form-item>
+        <el-form-item label="确认密码">
+          <el-input v-model="passwordForm.confirmPassword" type="password" placeholder="请确认新密码" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showChangePassword = false">取消</el-button>
+        <el-button type="primary" @click="handleChangePassword">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 绑定手机弹窗 -->
+    <el-dialog v-model="showBindPhone" title="绑定手机号" width="400px">
+      <el-form :model="phoneForm" label-width="80px">
+        <el-form-item label="手机号">
+          <el-input v-model="phoneForm.phone" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item label="验证码">
+          <div class="captcha-input">
+            <el-input v-model="phoneForm.code" placeholder="请输入验证码" />
+            <el-button :disabled="captchaCountdown > 0" @click="sendPhoneCaptcha">
+              {{ captchaCountdown > 0 ? `${captchaCountdown}s` : '获取验证码' }}
+            </el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showBindPhone = false">取消</el-button>
+        <el-button type="primary" @click="handleBindPhone">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 绑定邮箱弹窗 -->
+    <el-dialog v-model="showBindEmail" title="绑定邮箱" width="400px">
+      <el-form :model="emailForm" label-width="80px">
+        <el-form-item label="邮箱">
+          <el-input v-model="emailForm.email" placeholder="请输入邮箱地址" />
+        </el-form-item>
+        <el-form-item label="验证码">
+          <div class="captcha-input">
+            <el-input v-model="emailForm.code" placeholder="请输入验证码" />
+            <el-button :disabled="captchaCountdown > 0" @click="sendEmailCaptcha">
+              {{ captchaCountdown > 0 ? `${captchaCountdown}s` : '获取验证码' }}
+            </el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showBindEmail = false">取消</el-button>
+        <el-button type="primary" @click="handleBindEmail">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, computed } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { User, Document, Star, Location, Trophy, Ticket, Setting } from '@element-plus/icons-vue'
-import { useUserStore } from '@/common/stores/user'
-import request from '@/common/api/request'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ShoppingCart, Star, Ticket, Location } from '@element-plus/icons-vue'
+import { useUserStore } from '@user/stores/user'
+import * as userApi from '@user/api/user'
+import * as authApi from '@user/api/auth'
+import { formatDate } from '@user/util/format'
 
 const router = useRouter()
 const userStore = useUserStore()
 
-const userCredit = ref(null)
-
-const vipLevelName = computed(() => {
-  const levels = ['普通会员', '白银会员', '黄金会员', '铂金会员', '钻石会员', '至尊会员']
-  return levels[userStore.user?.vipLevel || 0]
+const userInfo = ref({
+  username: '',
+  nickname: '',
+  avatar: '',
+  level: 1,
+  points: 0,
+  followingCount: 0,
+  followerCount: 0,
+  favoriteCount: 0
 })
 
+const activeTab = ref('profile')
+
+const profileForm = reactive({
+  username: '',
+  nickname: '',
+  phone: '',
+  email: '',
+  gender: 'unknown',
+  birthday: '',
+  bio: ''
+})
+
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+const phoneForm = reactive({
+  phone: '',
+  code: ''
+})
+
+const emailForm = reactive({
+  email: '',
+  code: ''
+})
+
+const showChangePassword = ref(false)
+const showBindPhone = ref(false)
+const showBindEmail = ref(false)
+const captchaCountdown = ref(0)
+
+const browseHistory = ref([])
+const avatarInput = ref(null)
+
+// 获取用户信息
+const fetchUserInfo = async () => {
+  try {
+    const user = await userApi.getCurrentUser()
+    userInfo.value = {
+      username: user.username,
+      nickname: user.nickname || user.username,
+      avatar: user.avatar,
+      level: user.level || 1,
+      points: user.points || 0,
+      followingCount: user.followingCount || 0,
+      followerCount: user.followerCount || 0,
+      favoriteCount: user.favoriteCount || 0
+    }
+    profileForm.username = user.username
+    profileForm.nickname = user.nickname || ''
+    profileForm.phone = user.phone || ''
+    profileForm.email = user.email || ''
+    profileForm.gender = user.gender || 'unknown'
+    profileForm.birthday = user.birthday || ''
+    profileForm.bio = user.bio || ''
+  } catch (error) {
+    ElMessage.error('获取用户信息失败')
+  }
+}
+
+// 获取浏览历史
+const fetchBrowseHistory = async () => {
+  try {
+    const result = await userApi.getBrowseHistory({ page: 1, size: 10 })
+    browseHistory.value = result.records || []
+  } catch (error) {
+    console.error('获取浏览历史失败', error)
+  }
+}
+
+// 保存个人资料
+const saveProfile = async () => {
+  try {
+    await userApi.updateUserInfo({
+      nickname: profileForm.nickname,
+      gender: profileForm.gender,
+      birthday: profileForm.birthday,
+      bio: profileForm.bio
+    })
+    ElMessage.success('保存成功')
+    fetchUserInfo()
+  } catch (error) {
+    ElMessage.error('保存失败')
+  }
+}
+
+// 修改密码
+const handleChangePassword = async () => {
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    ElMessage.error('两次输入的密码不一致')
+    return
+  }
+  try {
+    await authApi.changePassword(passwordForm.oldPassword, passwordForm.newPassword)
+    ElMessage.success('密码修改成功')
+    showChangePassword.value = false
+    passwordForm.oldPassword = ''
+    passwordForm.newPassword = ''
+    passwordForm.confirmPassword = ''
+  } catch (error) {
+    ElMessage.error('密码修改失败')
+  }
+}
+
+// 发送手机验证码
+const sendPhoneCaptcha = async () => {
+  if (!phoneForm.phone) {
+    ElMessage.warning('请输入手机号')
+    return
+  }
+  try {
+    await authApi.sendCaptcha(phoneForm.phone, 'phone', 'bind')
+    ElMessage.success('验证码已发送')
+    startCountdown()
+  } catch (error) {
+    ElMessage.error('发送验证码失败')
+  }
+}
+
+// 发送邮箱验证码
+const sendEmailCaptcha = async () => {
+  if (!emailForm.email) {
+    ElMessage.warning('请输入邮箱')
+    return
+  }
+  try {
+    await authApi.sendCaptcha(emailForm.email, 'email', 'bind')
+    ElMessage.success('验证码已发送')
+    startCountdown()
+  } catch (error) {
+    ElMessage.error('发送验证码失败')
+  }
+}
+
+// 绑定手机
+const handleBindPhone = async () => {
+  if (!phoneForm.code) {
+    ElMessage.warning('请输入验证码')
+    return
+  }
+  try {
+    await authApi.bindPhone(phoneForm.phone, phoneForm.code)
+    ElMessage.success('绑定成功')
+    showBindPhone.value = false
+    profileForm.phone = phoneForm.phone
+    phoneForm.phone = ''
+    phoneForm.code = ''
+  } catch (error) {
+    ElMessage.error('绑定失败')
+  }
+}
+
+// 绑定邮箱
+const handleBindEmail = async () => {
+  if (!emailForm.code) {
+    ElMessage.warning('请输入验证码')
+    return
+  }
+  try {
+    await authApi.bindEmail(emailForm.email, emailForm.code)
+    ElMessage.success('绑定成功')
+    showBindEmail.value = false
+    profileForm.email = emailForm.email
+    emailForm.email = ''
+    emailForm.code = ''
+  } catch (error) {
+    ElMessage.error('绑定失败')
+  }
+}
+
+// 倒计时
+const startCountdown = () => {
+  captchaCountdown.value = 60
+  const timer = setInterval(() => {
+    captchaCountdown.value--
+    if (captchaCountdown.value <= 0) {
+      clearInterval(timer)
+    }
+  }, 1000)
+}
+
+// 触发头像上传
+const triggerAvatarUpload = () => {
+  avatarInput.value?.click()
+}
+
+// 处理头像上传
+const handleAvatarUpload = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  try {
+    const result = await userApi.updateAvatar(file)
+    userInfo.value.avatar = result.avatar
+    ElMessage.success('头像更新成功')
+  } catch (error) {
+    ElMessage.error('头像更新失败')
+  }
+}
+
+// 删除浏览历史
+const deleteHistory = async (id) => {
+  try {
+    await userApi.deleteBrowseHistory(id)
+    fetchBrowseHistory()
+    ElMessage.success('删除成功')
+  } catch (error) {
+    ElMessage.error('删除失败')
+  }
+}
+
+// 跳转商品详情
+const goToProduct = (productId) => {
+  router.push(`/product/${productId}`)
+}
+
+// 导航
 const navigateTo = (path) => {
   router.push(path)
 }
 
-const loadUserCredit = async () => {
-  try {
-    const res = await request.get('/user/credit')
-    userCredit.value = res.data || res
-  } catch (error) {
-    console.error('加载积分信息失败', error)
-  }
+// 获取等级类型
+const getLevelType = (level) => {
+  const types = ['', 'info', 'success', 'warning', 'danger']
+  return types[level] || 'info'
+}
+
+// 获取等级名称
+const getLevelName = (level) => {
+  const names = ['', '普通会员', '白银会员', '黄金会员', '钻石会员', '至尊会员']
+  return names[level] || '普通会员'
+}
+
+// 格式化时间
+const formatTime = (time) => {
+  return formatDate(time, 'YYYY-MM-DD HH:mm')
 }
 
 onMounted(() => {
-  loadUserCredit()
+  fetchUserInfo()
+  fetchBrowseHistory()
 })
 </script>
 
 <style scoped>
-.page-container {
-  min-height: 100vh;
-  background: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(10, 14, 26, 0.8) 100%);
-  padding: 40px 20px;
-}
-
-.page-header {
-  max-width: 1200px;
-  margin: 0 auto 40px;
-}
-
-.page-title {
-  color: #fff;
-  font-size: 32px;
-  text-align: center;
-  background: linear-gradient(90deg, var(--mall-primary), var(--mall-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.user-menu {
+.user-center {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
+}
+
+.user-header {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
   background: var(--mall-bg-card);
   border: 1px solid var(--mall-border);
-  border-radius: 16px;
-  padding: 40px;
-  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
-.menu-grid {
+.avatar-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.menu-item {
-  display: flex;
   align-items: center;
-  padding: 20px 24px;
-  background: rgba(26, 31, 58, 0.6);
-  border: 1px solid rgba(0, 212, 255, 0.15);
-  border-radius: 12px;
-  transition: all 0.3s;
-  height: 80px;
-  cursor: pointer;
+  gap: 10px;
 }
 
-.menu-item:hover {
-  transform: translateX(8px);
+.edit-avatar-btn {
+  font-size: 12px;
+}
+
+.user-info-section {
+  flex: 1;
+}
+
+.username {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  margin: 0 0 10px 0;
+}
+
+.user-level {
+  margin-bottom: 15px;
+}
+
+.user-stats {
+  display: flex;
+  gap: 30px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item .label {
+  font-size: 12px;
+  color: var(--mall-text-muted);
+}
+
+.stat-item .value {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--mall-primary);
+}
+
+.function-menu {
+  margin-bottom: 20px;
+}
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-card:hover {
   border-color: var(--mall-primary);
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
-  background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05));
+  transform: translateY(-5px);
 }
 
 .menu-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--mall-primary), var(--mall-secondary));
-  color: #fff;
-  font-size: 24px;
-  margin-right: 20px;
-  flex-shrink: 0;
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+  font-size: 32px;
+  color: var(--mall-primary);
+  margin-bottom: 10px;
 }
 
-.menu-text {
-  font-size: 16px;
+.menu-title {
+  font-size: 14px;
   color: var(--mall-text-secondary);
-  font-weight: 500;
-  flex: 1;
 }
 
-/* VIP 卡片 */
-.menu-item.vip-card {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.15), rgba(255, 170, 0, 0.1));
-  border: 2px solid rgba(255, 215, 0, 0.4);
-  height: 100px;
-  padding: 16px 24px;
+.content-section {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  padding: 20px;
 }
 
-.menu-item.vip-card:hover {
-  border-color: #ffd700;
-  box-shadow: 0 4px 30px rgba(255, 215, 0, 0.5);
+.profile-form {
+  max-width: 500px;
+  margin-top: 20px;
 }
 
-.menu-item.vip-card .menu-icon {
-  background: linear-gradient(135deg, #ffd700, #ffaa00);
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
-}
-
-.vip-content {
+.phone-input,
+.email-input {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  margin-left: 16px;
+  gap: 10px;
 }
 
-.vip-title {
+.security-list {
+  margin-top: 20px;
+}
+
+.security-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--mall-border);
 }
 
-.vip-title .menu-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffd700;
+.security-item:last-child {
+  border-bottom: none;
 }
 
-.vip-info {
-  display: flex;
-  gap: 24px;
-}
-
-.vip-info .info-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.vip-info .info-label {
-  font-size: 12px;
-  color: #88aacc;
-}
-
-.vip-info .info-value {
+.item-title {
   font-size: 16px;
   font-weight: bold;
   color: #fff;
+}
+
+.item-desc {
+  font-size: 13px;
+  color: var(--mall-text-muted);
+  margin-top: 5px;
+}
+
+.captcha-input {
+  display: flex;
+  gap: 10px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--mall-primary);
+  margin-bottom: 5px;
+}
+
+.browse-time {
+  font-size: 12px;
+  color: var(--mall-text-muted);
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
 }
 </style>
