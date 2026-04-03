@@ -1,0 +1,137 @@
+@baseUrl = http://localhost:8080
+
+# 登录后把返回的 token 填到这里，格式不要带 Bearer 前缀
+@token = 登录后替换为真实JWT
+
+# 常用测试参数
+@otherUserId = 2
+@senderId = 2
+@messageId = 1
+@receiveId = 1
+@notificationId = 1
+@targetUserId = 2
+
+### 用户登录
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "name": "admin",
+  "password": "123456"
+}
+
+### 获取聊天记录
+GET {{baseUrl}}/api/chat/conversation/{{otherUserId}}?page=0&size=20
+Authorization: Bearer {{token}}
+
+### 获取未读聊天消息
+GET {{baseUrl}}/api/chat/unread
+Authorization: Bearer {{token}}
+
+### 获取未读聊天消息数量
+GET {{baseUrl}}/api/chat/unread/count
+Authorization: Bearer {{token}}
+
+### 发送聊天消息
+POST {{baseUrl}}/api/chat/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "receiverId": {{otherUserId}},
+  "content": "这是一条通过 HTTP 接口发送的测试消息",
+  "type": "TEXT"
+}
+
+### 标记与某个发送者的消息为已读
+POST {{baseUrl}}/api/chat/mark-read/{{senderId}}
+Authorization: Bearer {{token}}
+
+### 获取系统消息列表
+GET {{baseUrl}}/api/message/list?page=1&size=10
+Authorization: Bearer {{token}}
+
+### 获取未读系统消息列表
+GET {{baseUrl}}/api/message/unread?page=1&size=10
+Authorization: Bearer {{token}}
+
+### 获取未读系统消息数量
+GET {{baseUrl}}/api/message/unread/count
+Authorization: Bearer {{token}}
+
+### 获取系统消息详情
+GET {{baseUrl}}/api/message/{{messageId}}
+Authorization: Bearer {{token}}
+
+### 获取系统消息统计
+GET {{baseUrl}}/api/message/stats
+Authorization: Bearer {{token}}
+
+### 标记指定系统消息为已读
+POST {{baseUrl}}/api/message/read
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+  {{receiveId}}
+]
+
+### 标记所有系统消息为已读
+POST {{baseUrl}}/api/message/read/all
+Authorization: Bearer {{token}}
+
+### 管理员发送系统消息
+POST {{baseUrl}}/api/message/send?title=系统通知测试&content=这是一条管理员发送的系统消息&type=SYSTEM&priority=1&jumpUrl=%2Fuser%2Fmessage
+Authorization: Bearer {{token}}
+
+### 管理员发送系统消息给指定用户
+POST {{baseUrl}}/api/message/send/user?userId={{targetUserId}}&title=定向通知&content=这是一条发送给指定用户的通知&type=SYSTEM&priority=1&jumpUrl=%2Fuser%2Fmessage
+Authorization: Bearer {{token}}
+
+### 管理员批量发送系统消息给多个用户
+POST {{baseUrl}}/api/message/send/users?title=批量通知&content=这是一条批量用户通知&type=SYSTEM&priority=1&jumpUrl=%2Fuser%2Fmessage
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+  2,
+  3
+]
+
+### 获取通知列表
+GET {{baseUrl}}/api/notification/list?page=0&size=20
+Authorization: Bearer {{token}}
+
+### 获取全部通知
+GET {{baseUrl}}/api/notification/all
+Authorization: Bearer {{token}}
+
+### 获取未读通知数量
+GET {{baseUrl}}/api/notification/unread/count
+Authorization: Bearer {{token}}
+
+### 获取通知详情
+GET {{baseUrl}}/api/notification/{{notificationId}}
+Authorization: Bearer {{token}}
+
+### 标记指定通知为已读
+POST {{baseUrl}}/api/notification/read
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+  {{notificationId}}
+]
+
+### 标记所有通知为已读
+POST {{baseUrl}}/api/notification/read/all
+Authorization: Bearer {{token}}
+
+### 删除通知
+DELETE {{baseUrl}}/api/notification/{{notificationId}}
+Authorization: Bearer {{token}}
+
+### 清理旧通知
+POST {{baseUrl}}/api/notification/clean?days=30
+Authorization: Bearer {{token}}
