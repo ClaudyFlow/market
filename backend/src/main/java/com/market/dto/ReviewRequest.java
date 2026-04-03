@@ -1,5 +1,7 @@
 package com.market.dto;
 
+import java.util.List;
+
 /**
  * 评价请求 DTO
  */
@@ -7,6 +9,7 @@ public class ReviewRequest {
     private Long productId;
     private Integer rating;
     private String content;
+    private List<String> images;
 
     public ReviewRequest() {}
 
@@ -38,5 +41,13 @@ public class ReviewRequest {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }
