@@ -5,18 +5,19 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户评价实体
- * <p>
- * 记录用户对商品的评价。
- * </p>
+ * 用户评价实体类
+ * 对应数据库表：product_review
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "product_review")
 public class ProductReview {
 
+    /**
+     * 评价唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

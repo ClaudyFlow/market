@@ -13,14 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 用户数据访问接口
- * <p>
- * 提供用户实体的数据访问操作，包括基本的 CRUD 操作和自定义查询方法。
- * 继承 JpaRepository 以获得标准的 JPA 数据访问功能。
- * </p>
+ * 用户数据访问层
+ * 对应实体：User
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -159,4 +156,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return 如果店铺名称已存在返回 true
      */
     boolean existsByShopName(String shopName);
+    long countByCreatedAtAfter(LocalDateTime createdAt);
 }

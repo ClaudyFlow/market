@@ -4,19 +4,20 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 用户关注关系实体
- * <p>
- * 记录用户之间的关注关系。
- * </p>
+ * 用户关注关系实体类
+ * 对应数据库表：user_follow
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Entity
-@Table(name = "user_follow", 
+@Table(name = "user_follow",
        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"}))
 public class UserFollow {
 
+    /**
+     * 关注关系唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

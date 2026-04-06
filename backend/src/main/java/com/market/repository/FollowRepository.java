@@ -7,6 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 关注数据访问层
+ * 对应实体：Follow
+ *
+ * @author market-team
+ * @since 1.0
+ */
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 

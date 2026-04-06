@@ -12,7 +12,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 消息接收记录数据访问接口
+ * 消息接收记录数据访问层
+ * 对应实体：MessageReceive
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface MessageReceiveRepository extends JpaRepository<MessageReceive, Long> {

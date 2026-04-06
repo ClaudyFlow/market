@@ -98,4 +98,48 @@ public interface UserNotificationService {
      * @return 删除数量
      */
     int cleanOldNotifications(Long userId, int days);
+
+    /**
+     * 获取用户通知列表（带类型过滤，分页）
+     *
+     * @param userId 用户 ID
+     * @param type 通知类型（可为空）
+     * @param pageable 分页参数
+     * @return 通知列表分页
+     */
+    Page<UserNotificationResponse> getNotificationsByType(Long userId, String type, Pageable pageable);
+
+    /**
+     * 批量删除通知
+     *
+     * @param userId 用户 ID
+     * @param notificationIds 通知 ID 列表
+     * @return 删除数量
+     */
+    int batchDeleteNotifications(Long userId, List<Long> notificationIds);
+
+    /**
+     * 清空用户所有通知
+     *
+     * @param userId 用户 ID
+     * @return 删除数量
+     */
+    int clearAllNotifications(Long userId);
+
+    /**
+     * 获取通知统计
+     *
+     * @param userId 用户 ID
+     * @return 统计数据 (total, unread, 各类型未读数)
+     */
+    java.util.Map<String, Object> getNotificationStats(Long userId);
+
+    /**
+     * 获取最新通知（限制条数）
+     *
+     * @param userId 用户 ID
+     * @param limit 限制条数
+     * @return 通知列表
+     */
+    List<UserNotificationResponse> getLatestNotifications(Long userId, int limit);
 }

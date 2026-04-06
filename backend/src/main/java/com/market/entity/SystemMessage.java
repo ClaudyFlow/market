@@ -4,12 +4,19 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 系统消息实体
+ * 系统消息实体类
+ * 对应数据库表：system_message
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "system_message")
 public class SystemMessage {
 
+    /**
+     * 消息唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

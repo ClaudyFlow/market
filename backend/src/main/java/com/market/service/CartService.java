@@ -97,4 +97,47 @@ public class CartService {
     public int getCartItemCount(User user) {
         return getCartItems(user).size();
     }
+
+    /**
+     * 选中/取消选中购物车商品
+     */
+    @Transactional
+    public CartItem selectItem(User user, Long itemId, Boolean selected) {
+        CartItem item = cartItemRepository.findById(itemId)
+            .filter(i -> i.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("购物车商品不存在"));
+        
+        item.setSelected(selected);
+        return cartItemRepository.save(item);
+    }
+
+    /**
+     * 全选/取消全选
+     */
+    @Transactional
+    public void selectAll(User user, Boolean selected) {
+        List<CartItem> items = cartItemRepository.findByUser(user);
+        for (CartItem item : items) {
+            item.setSelected(selected);
+        }
+        cartItemRepository.saveAll(items);
+    }
+
+    /**
+     * 获取选中的商品列表
+     */
+    public List<CartItem> getSelectedItems(User user) {
+        return cartItemRepository.findByUserAndSelectedTrue(user);
+    }
+
+    /**
+     * 检查购物车商品库存
+     * @return 库存不足的商品列表
+     */
+    public List<CartItem> checkStock(User user) {
+        List<CartItem> items = getCartItems(user);
+        return items.stream()
+            .filter(item -> item.getProduct().getStock() < item.getQuantity())
+            .toList();
+    }
 }

@@ -11,6 +11,10 @@ import java.util.List;
 
 /**
  * 商品图片数据访问层
+ * 对应实体：ProductImage
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {

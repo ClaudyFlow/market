@@ -12,6 +12,10 @@ import java.util.Optional;
 
 /**
  * 浏览历史数据访问层
+ * 对应实体：UserBrowseHistory
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface UserBrowseHistoryRepository extends JpaRepository<UserBrowseHistory, Long> {

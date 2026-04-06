@@ -14,12 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * 产品控制器 - API 可用性检测示例
- * 
- * 演示如何使用 @ApiAvailable 注解来检测接口可用性
+ * 演示如何使用 @ApiAvailable 和 @ApiHealthCheck 注解来检测接口可用性。
+ * 权限要求：查询接口公开，创建接口需要登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/products-example
  */
 @Slf4j
 @RestController
@@ -31,10 +33,13 @@ public class ProductControllerExample {
     private ProductService productService;
 
     /**
-     * 获取所有产品
-     * 
-     * 使用 @ApiAvailable 注解检测数据库依赖
-     * 如果数据库不可用，将返回错误响应
+     * 获取所有产品（带数据库依赖检测）
+     * API路径：GET /api/products-example
+     * 权限：公开
+     *
+     * @param page 页码，默认0
+     * @param size 每页大小，默认20
+     * @return 分页的产品列表
      */
     @GetMapping
     @ApiAvailable(
@@ -55,8 +60,11 @@ public class ProductControllerExample {
 
     /**
      * 根据 ID 获取产品
-     * 
-     * 轻量级检测，仅设置超时
+     * API路径：GET /api/products-example/{id}
+     * 权限：公开
+     *
+     * @param id 产品ID
+     * @return 产品详情
      */
     @GetMapping("/{id}")
     @ApiAvailable(timeout = 3000)
@@ -65,9 +73,14 @@ public class ProductControllerExample {
     }
 
     /**
-     * 搜索产品
-     * 
-     * 使用数据库和 Redis 缓存依赖
+     * 搜索产品（带数据库和Redis依赖检测）
+     * API路径：GET /api/products-example/search
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认0
+     * @param size 每页大小，默认20
+     * @return 分页的搜索结果
      */
     @GetMapping("/search")
     @ApiAvailable(
@@ -85,9 +98,13 @@ public class ProductControllerExample {
     }
 
     /**
-     * 创建产品（商家）
-     * 
-     * 严格检测，失败时抛出异常
+     * 创建产品（商家，带严格可用性检测）
+     * API路径：POST /api/products-example
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param product 产品信息
+     * @return 创建的产品
      */
     @PostMapping
     @ApiAvailable(

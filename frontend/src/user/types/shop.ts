@@ -1,108 +1,52 @@
 /**
- * 店铺相关类型定义
+ * ShopHome 相关类型定义
  */
 
-import type { ImageInfo } from './common'
-
-// 店铺信息
-export interface Shop {
+export interface ShopInfo {
   id: number
   name: string
-  logo?: string
-  banner?: string
-  description?: string
+  banner: string
+  logo: string
   rating: number
   followers: number
   productCount: number
-  status: 'active' | 'inactive' | 'closed'
-  certified: boolean
-  tags?: string[]
-  createTime: string
-}
-
-// 店铺详情
-export interface ShopDetail extends Shop {
-  slogan?: string
   positiveRate: number
   openYears: number
-  announcement?: string
-  businessLicense?: string
-  location?: string
-  serviceScores: ServiceScores
-  coupons?: ShopCoupon[]
+  certified: boolean
+  tags: string[]
+  announcement: string
+  coupons: Coupon[]
 }
 
-// 服务评分
-export interface ServiceScores {
-  description: number
-  service: number
-  logistics: number
-}
-
-// 店铺统计
-export interface ShopStats {
-  totalProducts: number
-  totalSales: number
-  totalOrders: number
-  totalRevenue: number
-  newProducts: number
-  hotProducts: number
-}
-
-// 店铺商品
-export interface ShopProduct {
-  id: number
-  name: string
-  image: string
-  price: number
-  originalPrice?: number
-  sales: number
-  stock: number
-  status: 'onsale' | 'offsale'
-  tags?: string[]
-  specs?: string[]
-  discount?: number
-}
-
-// 店铺优惠券
-export interface ShopCoupon {
+export interface Coupon {
   id: number
   name: string
   amount: number
   condition: number
   description: string
-  validFrom: string
   validUntil: string
   received: boolean
-  stock?: number
-  remainingStock?: number
 }
 
-// 店铺分类
-export interface ShopCategory {
+export interface Category {
   id: number
   name: string
-  parentId?: number
-  productCount: number
-  icon?: string
+  icon: string
+  count: number
 }
 
-// 店铺认证信息
-export interface ShopCertification {
-  type: 'enterprise' | 'individual' | 'brand'
-  status: 'pending' | 'approved' | 'rejected'
-  name: string
-  licenseNumber: string
-  legalPerson?: string
-  verifiedTime?: string
-}
-
-// 店铺动态
-export interface ShopActivity {
+export interface Product {
   id: number
-  type: 'product' | 'promotion' | 'notice'
-  title: string
-  content: string
-  image?: string
-  createTime: string
+  name: string
+  description: string
+  price: number
+  originalPrice?: number
+  sales: number
+  stock: number
+  image: string
+}
+
+export interface SortOption {
+  label: string
+  value: string
 }

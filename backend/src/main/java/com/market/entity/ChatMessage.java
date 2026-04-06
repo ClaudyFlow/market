@@ -5,7 +5,11 @@ import java.time.LocalDateTime;
 
 /**
  * 聊天消息实体类
+ * 对应数据库表：chat_message
  * 用于存储用户与客服之间的聊天记录
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "chat_message", indexes = {
@@ -15,29 +19,53 @@ import java.time.LocalDateTime;
 })
 public class ChatMessage {
 
+    /**
+     * 聊天消息唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 发送者ID
+     */
     @Column(nullable = false)
     private Long senderId;
 
+    /**
+     * 接收者ID
+     */
     @Column(nullable = false)
     private Long receiverId;
 
+    /**
+     * 消息内容
+     */
     @Column(nullable = false, length = 2000)
     private String content;
 
+    /**
+     * 消息类型（TEXT文本、IMAGE图片、SYSTEM系统、FILE文件）
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private MessageType type = MessageType.TEXT;
 
+    /**
+     * 消息状态码：1000-发送中，2000-已发送，3000-已送达，4000-已读，5000-失败
+     */
     @Column(nullable = false)
-    private Integer status = 1000; // 消息状态码：1000-发送中，2000-已发送，3000-已送达，4000-已读，5000-失败
+    private Integer status = 1000;
 
+    /**
+     * 是否已读
+     */
     @Column(nullable = false)
     private Boolean isRead = false;
 
+    /**
+     * 消息创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

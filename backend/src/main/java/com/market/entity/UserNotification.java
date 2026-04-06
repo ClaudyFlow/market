@@ -4,18 +4,19 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 用户通知消息实体
- * <p>
- * 记录系统发送给用户的通知消息。
- * </p>
+ * 用户通知消息实体类
+ * 对应数据库表：user_notification
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "user_notification")
 public class UserNotification {
 
+    /**
+     * 通知消息唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

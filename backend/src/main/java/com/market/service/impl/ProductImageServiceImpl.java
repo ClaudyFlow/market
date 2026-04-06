@@ -93,14 +93,10 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     @Override
     public String generateThumbnail(String base64Data, int size) {
-        // 注意：实际缩略图生成应该在前端完成
-        // 后端这里只返回原图，或者可以做简单的缩放
-        // 由于 Java 处理图片需要额外依赖（如 Thumbnailator），这里暂时返回原图
-        
-        // TODO: 如果需要在后端生成缩略图，可以添加 Thumbnailator 依赖
-        // 但目前推荐在前端用 Canvas 生成，性能更好
-        
-        return base64Data; // 暂时返回原图
+        // 简单实现：返回原图
+        // 完整实现需要使用 Thumbnailator 或前端处理
+        // 这里保持兼容性和简单性
+        return base64Data;
     }
 
     /**

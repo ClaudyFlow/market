@@ -121,12 +121,15 @@ defineExpose({
 .notification-container {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 400px;
+  max-width: 480px;
+  width: 90%;
+  pointer-events: none;
 }
 
 /* ==================== 通知卡片基础样式 ==================== */
@@ -142,8 +145,9 @@ defineExpose({
   cursor: default;
   position: relative;
   overflow: hidden;
-  min-width: 300px;
-  max-width: 400px;
+  min-width: 280px;
+  max-width: 480px;
+  pointer-events: auto;
 }
 
 .notification-toast.is-clickable {
@@ -261,15 +265,15 @@ defineExpose({
 
 /* ==================== 动画效果 ==================== */
 
-/* 淡入淡出 (默认) */
+/* 淡入淡出 (默认 - 正上方) */
 .animation-fade {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeInTop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInTop {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
@@ -279,13 +283,13 @@ defineExpose({
 
 /* 从顶部滑入 */
 .animation-slide-top {
-  animation: slideInTop 0.3s ease-out;
+  animation: slideInTop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes slideInTop {
   from {
     opacity: 0;
-    transform: translateY(-100%);
+    transform: translateY(-50px);
   }
   to {
     opacity: 1;
@@ -349,17 +353,17 @@ defineExpose({
 @keyframes bounceIn {
   0% {
     opacity: 0;
-    transform: scale(0.3);
+    transform: scale(0.3) translateY(-20px);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-10px);
   }
   70% {
-    transform: scale(0.9);
+    transform: scale(0.9) translateY(-5px);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -371,11 +375,11 @@ defineExpose({
 @keyframes zoomIn {
   from {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.5) translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -387,55 +391,55 @@ defineExpose({
 @keyframes flipIn {
   from {
     opacity: 0;
-    transform: perspective(400px) rotateY(90deg);
+    transform: perspective(400px) rotateY(90deg) translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: perspective(400px) rotateY(0);
+    transform: perspective(400px) rotateY(0) translateY(0);
   }
 }
 
 /* ==================== 列表过渡动画 ==================== */
-.notification-list-enter-active,
+.notification-list-enter-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .notification-list-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  width: 100%;
 }
 
 .notification-list-enter-from {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(-30px);
 }
 
 .notification-list-enter-to {
   opacity: 1;
-  transform: translateX(0);
-}
-
-.notification-list-leave-active {
-  position: absolute;
-  right: 0;
-  width: 100%;
+  transform: translateY(0);
 }
 
 .notification-list-leave-from {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
 .notification-list-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(-30px);
 }
 
 /* ==================== 响应式 ==================== */
 @media (max-width: 768px) {
   .notification-container {
     top: 10px;
-    right: 10px;
     left: 10px;
+    right: 10px;
     max-width: none;
+    width: calc(100% - 20px);
   }
-  
+
   .notification-toast {
     min-width: auto;
     max-width: none;

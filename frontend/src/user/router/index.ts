@@ -108,13 +108,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/order',
     name: 'Order',
-    component: () => import('@user/views/Order.vue'),
+    component: () => import('@user/views/order/OrderConfirm.vue'),
     meta: { title: '订单确认' }
   },
   {
     path: '/payment',
     name: 'Payment',
-    component: () => import('@user/views/PaymentPage.vue'),
+    component: () => import('@user/views/order/PaymentPage.vue'),
     meta: { title: '订单支付' }
   },
   {
@@ -152,7 +152,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'orders',
         name: 'OrderCenter',
-        component: () => import('@user/views/user/OrderCenter.vue'),
+        component: () => import('@user/views/order/OrderCenter.vue'),
         meta: { title: '订单中心' }
       },
       {
@@ -191,13 +191,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/lottery',
     name: 'Lottery',
-    component: () => import('@user/views/Lottery.vue'),
+    component: () => import('@user/views/marketing/Lottery.vue'),
     meta: { title: '幸运抽奖' }
   },
   {
     path: '/vip',
     name: 'VipCenter',
-    component: () => import('@user/views/VipCenter.vue'),
+    component: () => import('@user/views/marketing/VipCenter.vue'),
     meta: { title: 'VIP 会员中心' }
   },
   {
@@ -233,7 +233,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/coupon',
     name: 'Coupon',
-    component: () => import('@user/views/Coupon.vue'),
+    component: () => import('@user/views/coupon/CouponCenter.vue'),
     meta: { title: '优惠券中心' }
   },
   {
@@ -247,6 +247,12 @@ const routes: RouteRecordRaw[] = [
     name: 'PrivacyPolicy',
     component: () => import('@user/views/PrivacyPolicy.vue'),
     meta: { title: '隐私政策' }
+  },
+  {
+    path: '/feedback',
+    name: 'Feedback',
+    component: () => import('@user/views/feedback/FeedbackCenter.vue'),
+    meta: { title: '购物评分反馈' }
   }
 ]
 

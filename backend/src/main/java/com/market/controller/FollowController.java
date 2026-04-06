@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
 
 /**
  * 关注控制器
+ * 提供用户关注店铺的增删改查、状态切换、数量统计等功能。
+ * 权限要求：需要登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/follow
  */
 @RestController
 @RequestMapping("/api/follow")
@@ -27,7 +33,12 @@ public class FollowController {
     private FollowService followService;
 
     /**
-     * 获取用户的关注列表
+     * 获取用户关注列表
+     * API路径：GET /api/follow
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 关注店铺响应列表
      */
     @GetMapping
     public ResponseEntity<List<FollowResponse>> getFollows(@AuthenticationPrincipal User user) {
@@ -49,6 +60,12 @@ public class FollowController {
 
     /**
      * 添加关注
+     * API路径：POST /api/follow
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param request 关注请求（包含店铺ID、名称、头像）
+     * @return 添加的关注记录
      */
     @PostMapping
     public ResponseEntity<?> addFavorite(
@@ -56,8 +73,8 @@ public class FollowController {
             @RequestBody FollowRequest request) {
         try {
             Follow favorite = followService.addFavorite(
-                user.getId(), 
-                request.getShopId(), 
+                user.getId(),
+                request.getShopId(),
                 request.getShopName(),
                 request.getShopAvatar()
             );
@@ -69,6 +86,12 @@ public class FollowController {
 
     /**
      * 取消关注
+     * API路径：DELETE /api/follow/{shopId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param shopId 店铺ID
+     * @return 操作结果
      */
     @DeleteMapping("/{shopId}")
     public ResponseEntity<Void> removeFavorite(
@@ -80,6 +103,12 @@ public class FollowController {
 
     /**
      * 检查是否已关注
+     * API路径：GET /api/follow/check/{shopId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param shopId 店铺ID
+     * @return 是否已关注
      */
     @GetMapping("/check/{shopId}")
     public ResponseEntity<Map<String, Boolean>> checkFavorite(
@@ -93,6 +122,13 @@ public class FollowController {
 
     /**
      * 切换关注状态
+     * API路径：POST /api/follow/toggle/{shopId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param shopId 店铺ID
+     * @param request 关注请求（包含店铺名称、头像）
+     * @return 切换后的关注状态和提示消息
      */
     @PostMapping("/toggle/{shopId}")
     public ResponseEntity<Map<String, Object>> toggleFavorite(
@@ -100,8 +136,8 @@ public class FollowController {
             @PathVariable Long shopId,
             @RequestBody FollowRequest request) {
         boolean isAdded = followService.toggleFavorite(
-            user.getId(), 
-            shopId, 
+            user.getId(),
+            shopId,
             request.getShopName(),
             request.getShopAvatar()
         );
@@ -115,6 +151,11 @@ public class FollowController {
 
     /**
      * 获取关注数量
+     * API路径：GET /api/follow/count
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 关注数量
      */
     @GetMapping("/count")
     public ResponseEntity<Map<String, Integer>> getFavoriteCount(@AuthenticationPrincipal User user) {

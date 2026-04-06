@@ -12,15 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * 邮箱验证控制器 - 已禁用
- * <p>
- * 处理邮箱验证码的发送和验证请求。
- * 集成邮箱验证服务进行格式和域名验证。
- * 所有接口允许跨域访问（@CrossOrigin(origins = "*")）。
- * </p>
+ * 邮箱验证控制器
+ * 处理邮箱验证码的发送和验证请求，集成邮箱验证服务进行格式和域名验证。
+ * 权限要求：公开接口，无需登录（仅在 spring.mail.enabled=true 时启用）
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/auth
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -45,6 +43,14 @@ public class EmailController {
         this.emailValidatorService = emailValidatorService;
     }
 
+    /**
+     * 发送邮箱验证码
+     * API路径：POST /api/auth/send-code
+     * 权限：公开
+     *
+     * @param request 请求体（包含邮箱地址 email 字段）
+     * @return 发送结果
+     */
     @PostMapping("/send-code")
     public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -76,6 +82,14 @@ public class EmailController {
         }
     }
 
+    /**
+     * 验证邮箱验证码
+     * API路径：POST /api/auth/verify-code
+     * 权限：公开
+     *
+     * @param request 请求体（包含邮箱 email 和验证码 verificationCode 字段）
+     * @return 验证结果
+     */
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request) {
         String email = request.get("email");

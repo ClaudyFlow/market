@@ -36,6 +36,12 @@ public class VipService {
     @Autowired
     private CreditService creditService;
 
+    @Autowired
+    private CouponRepository couponRepository;
+
+    @Autowired
+    private UserCouponRepository userCouponRepository;
+
     // ==================== VIP 等级管理 ====================
 
     /**
@@ -188,8 +194,24 @@ public class VipService {
         
         // 发放优惠券
         if (gift.getCouponIds() != null && !gift.getCouponIds().isEmpty()) {
-            // TODO: 实现优惠券发放
-            result.put("couponIds", gift.getCouponIds());
+            // couponIds 是逗号分隔的字符串，需要解析
+            String[] couponIdArray = gift.getCouponIds().split(",");
+            List<Long> issuedCouponIds = new ArrayList<>();
+            for (String couponIdStr : couponIdArray) {
+                try {
+                    Long couponId = Long.parseLong(couponIdStr.trim());
+                    com.market.entity.Coupon coupon = couponRepository.findById(couponId).orElse(null);
+                    if (coupon != null) {
+                        com.market.entity.UserCoupon userCoupon = new com.market.entity.UserCoupon(user, coupon);
+                        userCoupon.setStatus("UNUSED");
+                        userCouponRepository.save(userCoupon);
+                        issuedCouponIds.add(couponId);
+                    }
+                } catch (NumberFormatException e) {
+                    // 跳过无效的优惠券ID
+                }
+            }
+            result.put("issuedCouponIds", issuedCouponIds);
         }
         
         return result;

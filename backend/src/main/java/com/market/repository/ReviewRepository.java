@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 评价数据访问接口
+ * 评价数据访问层
+ * 对应实体：Review
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -60,4 +64,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * 删除用户的某个评价
      */
     void deleteByUserIdAndProductId(Long userId, Long productId);
+    
+    /**
+     * 检查订单是否已评价
+     */
+    boolean existsByOrderId(Long orderId);
 }

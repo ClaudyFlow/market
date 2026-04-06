@@ -4,7 +4,9 @@ import com.market.annotation.*;
 import com.market.common.Result;
 import com.market.entity.Product;
 import com.market.entity.User;
+import com.market.service.FavoriteService;
 import com.market.service.ProductService;
+import com.market.service.UserBrowseHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,12 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private FavoriteService favoriteService;
+
+    @Autowired
+    private UserBrowseHistoryService browseHistoryService;
 
     /**
      * 获取商品列表
@@ -211,12 +219,17 @@ public class ProductController {
     public Result<Void> favoriteProduct(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         if (user == null) {
             return Result.error(401, "请先登录");
         }
-        // TODO: 调用 FavoriteService
-        return Result.success(null);
+        
+        try {
+            favoriteService.addFavorite(user.getId(), id);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**
@@ -228,12 +241,17 @@ public class ProductController {
     public Result<Void> unfavoriteProduct(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         if (user == null) {
             return Result.error(401, "请先登录");
         }
-        // TODO: 调用 FavoriteService
-        return Result.success(null);
+        
+        try {
+            favoriteService.removeFavorite(user.getId(), id);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**
@@ -245,9 +263,14 @@ public class ProductController {
     public Result<Map<String, Boolean>> checkFavorite(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        boolean isFavorite = favoriteService.isFavorite(user.getId(), id);
         Map<String, Boolean> result = new HashMap<>();
-        result.put("favorite", false); // TODO: 实际查询
+        result.put("favorite", isFavorite);
         return Result.success(result);
     }
 
@@ -260,12 +283,23 @@ public class ProductController {
     public Result<Void> addBrowseHistory(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         if (user == null) {
             return Result.error(401, "请先登录");
         }
-        // TODO: 调用 BrowseHistoryService
-        return Result.success(null);
+        
+        try {
+            com.market.entity.Product product = productService.getProductById(id);
+            if (product != null && product.getMerchant() != null) {
+                browseHistoryService.addBrowseHistory(
+                    user.getId(), id, product.getName(), product.getImage(),
+                    product.getPrice(), product.getMerchant().getId(), product.getMerchant().getShopName()
+                );
+            }
+            return Result.success(null);
+        } catch (Exception e) {
+            return Result.success(null); // 浏览记录失败不报错
+        }
     }
 
     /**

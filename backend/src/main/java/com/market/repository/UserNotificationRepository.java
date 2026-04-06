@@ -12,10 +12,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 用户通知消息数据访问接口
+ * 用户通知消息数据访问层
+ * 对应实体：UserNotification
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface UserNotificationRepository extends JpaRepository<UserNotification, Long> {
@@ -112,4 +113,14 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     @Query("DELETE FROM UserNotification n WHERE n.userId = :userId AND n.createdAt < :createdAt")
     int deleteOldNotifications(@Param("userId") Long userId,
                                 @Param("createdAt") java.time.LocalDateTime createdAt);
+
+    /**
+     * 获取用户指定类型的未读通知数量
+     *
+     * @param userId 用户 ID
+     * @param type 通知类型
+     * @param isRead 是否已读
+     * @return 未读通知数量
+     */
+    long countByUserIdAndTypeAndIsReadFalse(Long userId, String type, boolean isRead);
 }

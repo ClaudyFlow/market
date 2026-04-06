@@ -4,12 +4,19 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 论坛评论实体
+ * 论坛评论实体类
+ * 对应数据库表：forum_comment
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "forum_comment")
 public class ForumComment {
 
+    /**
+     * 评论唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

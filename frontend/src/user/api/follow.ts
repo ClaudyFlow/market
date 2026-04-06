@@ -70,3 +70,23 @@ export function getMutualFollowing(params?: PageParams): Promise<PageData<Follow
 export function getSuggestedFollows(limit?: number): Promise<Follow[]> {
   return get(`${BASE_URL}/suggestions`, { limit })
 }
+
+/**
+ * 检查是否已关注（checkFollowing 的别名）
+ */
+export const checkFollow = checkFollowing
+
+/**
+ * 切换关注状态
+ */
+export async function toggleFollow(targetId: number | string, type: 'user' | 'shop'): Promise<{ followed: boolean }> {
+  const { following } = await checkFollowing(targetId, type)
+  
+  if (following) {
+    await unfollow(targetId, type)
+    return { followed: false }
+  } else {
+    await follow(targetId, type)
+    return { followed: true }
+  }
+}

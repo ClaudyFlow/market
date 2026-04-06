@@ -4,49 +4,92 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * VIP 礼包实体类
+ * VIP礼包实体类
+ * 对应数据库表：vip_gift
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "vip_gift")
 public class VipGift {
 
+    /**
+     * 礼包唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 礼包名称
+     */
     @Column(nullable = false, length = 100)
     private String name;
 
+    /**
+     * 礼包类型（DAILY每日、MONTHLY每月、BEGINNER新手、LEVEL_UP升级）
+     */
     @Column(nullable = false, length = 20)
-    private String type; // DAILY, MONTHLY, BEGINNER, LEVEL_UP
+    private String type;
 
+    /**
+     * 所需VIP等级
+     */
     @Column(name = "vip_level_required", nullable = false)
     private Integer vipLevelRequired = 0;
 
+    /**
+     * 奖励积分
+     */
     @Column(name = "credit_reward", nullable = false)
     private Integer creditReward = 0;
 
+    /**
+     * 关联的优惠券ID列表（逗号分隔）
+     */
     @Column(name = "coupon_ids", length = 500)
     private String couponIds;
 
+    /**
+     * 关联的商品ID列表（逗号分隔）
+     */
     @Column(name = "product_ids", length = 500)
     private String productIds;
 
+    /**
+     * 领取类型（DAILY每日、MONTHLY每月、ONCE一次性）
+     */
     @Column(name = "claim_type", nullable = false, length = 20)
-    private String claimType; // DAILY, MONTHLY, ONCE
+    private String claimType;
 
+    /**
+     * 领取间隔小时数
+     */
     @Column(name = "claim_interval_hours", nullable = false)
     private Integer claimIntervalHours = 24;
 
+    /**
+     * 礼包描述
+     */
     @Column(length = 500)
     private String description;
 
+    /**
+     * 礼包图片URL
+     */
     @Column(length = 500)
     private String image;
 
+    /**
+     * 礼包状态（ACTIVE启用、INACTIVE停用）
+     */
     @Column(nullable = false, length = 20)
     private String status = "ACTIVE";
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

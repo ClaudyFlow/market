@@ -5,7 +5,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 商品图片实体（Base64 存储）
+ * 商品图片实体类（Base64存储）
+ * 对应数据库表：product_image
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Data
 @Entity
@@ -15,6 +19,9 @@ import java.time.LocalDateTime;
 })
 public class ProductImage {
 
+    /**
+     * 图片记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

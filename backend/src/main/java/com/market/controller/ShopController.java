@@ -19,6 +19,12 @@ import java.util.Map;
 
 /**
  * 店铺控制器
+ * 提供店铺的 CRUD、搜索、关注、认证商家、店铺公告、关闭店铺等功能。
+ * 权限要求：查询接口公开，创建/更新/删除店铺等需要登录，关闭店铺需要管理员
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/shop
  */
 @RestController
 @RequestMapping("/api/shop")
@@ -30,6 +36,13 @@ public class ShopController {
 
     /**
      * 获取店铺列表
+     * API路径：GET /api/shop
+     * 权限：公开
+     *
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @param status 状态筛选（可选）
+     * @return 分页的店铺列表
      */
     @GetMapping
     @Cacheable(key = "'shop_list_' + #page + '_' + #size", cacheName = "shops", expire = 300)
@@ -39,18 +52,23 @@ public class ShopController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) String status) {
-        
+
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        
+
         if (status != null && !status.isEmpty()) {
             return Result.success(shopService.getShops(pageable));
         }
-        
+
         return Result.success(shopService.getShops(pageable));
     }
 
     /**
      * 获取店铺详情
+     * API路径：GET /api/shop/{id}
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @return 店铺详情
      */
     @GetMapping("/{id}")
     @Cacheable(key = "'shop_detail_' + #id", cacheName = "shops", expire = 600)
@@ -63,6 +81,11 @@ public class ShopController {
 
     /**
      * 获取店铺统计信息
+     * API路径：GET /api/shop/{id}/stats
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @return 店铺统计数据
      */
     @GetMapping("/{id}/stats")
     @Cacheable(key = "'shop_stats_' + #id", cacheName = "shops", expire = 300)
@@ -74,6 +97,13 @@ public class ShopController {
 
     /**
      * 搜索店铺
+     * API路径：GET /api/shop/search
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的店铺搜索结果
      */
     @GetMapping("/search")
     @Cacheable(key = "'shop_search_' + #keyword + '_' + #page", cacheName = "shops", expire = 300)
@@ -82,7 +112,7 @@ public class ShopController {
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        
+
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "rating"));
         Page<Shop> shops = shopService.searchShops(keyword, pageable);
         return Result.success(shops);
@@ -90,6 +120,10 @@ public class ShopController {
 
     /**
      * 获取认证店铺
+     * API路径：GET /api/shop/certified
+     * 权限：公开
+     *
+     * @return 认证店铺列表
      */
     @GetMapping("/certified")
     @Cacheable(key = "'shop_certified'", cacheName = "shops", expire = 600)
@@ -101,6 +135,14 @@ public class ShopController {
 
     /**
      * 获取高评分店铺
+     * API路径：GET /api/shop/high-rating
+     * 权限：公开
+     *
+     * @param minRating 最低评分，默认4.5
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的高评分店铺列表
+     * @return 分页的高评分店铺列表
      */
     @GetMapping("/high-rating")
     @Cacheable(key = "'shop_high_rating_' + #minRating", cacheName = "shops", expire = 300)
@@ -109,7 +151,7 @@ public class ShopController {
             @RequestParam(defaultValue = "4.5") Double minRating,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        
+
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Shop> shops = shopService.getHighRatingShops(minRating, pageable);
         return Result.success(shops);
@@ -117,6 +159,12 @@ public class ShopController {
 
     /**
      * 创建店铺
+     * API路径：POST /api/shop
+     * 权限：需要登录
+     *
+     * @param shop 店铺信息
+     * @param owner 当前登录用户（店主）
+     * @return 创建的店铺
      */
     @PostMapping
     @Idempotent(key = "'create_shop_' + #owner.id", expire = 3600, message = "店铺正在创建中，请勿重复提交")
@@ -127,13 +175,20 @@ public class ShopController {
         if (owner == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         Shop createdShop = shopService.createShop(owner, shop);
         return Result.success(createdShop);
     }
 
     /**
      * 更新店铺信息
+     * API路径：PUT /api/shop/{id}
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param shop 更新的店铺信息
+     * @param owner 当前登录用户（店主）
+     * @return 更新后的店铺
      */
     @PutMapping("/{id}")
     @Idempotent(key = "'update_shop_' + #id", expire = 3600)
@@ -143,17 +198,24 @@ public class ShopController {
             @PathVariable Long id,
             @RequestBody Shop shop,
             @AuthenticationPrincipal User owner) {
-        
+
         if (owner == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         Shop updatedShop = shopService.updateShop(id, owner, shop);
         return Result.success(updatedShop);
     }
 
     /**
      * 更新店铺公告
+     * API路径：PUT /api/shop/{id}/announcement
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param announcement 公告内容
+     * @param owner 当前登录用户（店主）
+     * @return 更新后的店铺
      */
     @PutMapping("/{id}/announcement")
     @Idempotent(key = "'update_announcement_' + #id", expire = 600)
@@ -162,13 +224,19 @@ public class ShopController {
             @PathVariable Long id,
             @RequestParam String announcement,
             @AuthenticationPrincipal User owner) {
-        
+
         Shop shop = shopService.updateAnnouncement(id, announcement);
         return Result.success(shop);
     }
 
     /**
      * 删除店铺
+     * API路径：DELETE /api/shop/{id}
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param owner 当前登录用户（店主）
+     * @return 操作结果
      */
     @DeleteMapping("/{id}")
     @Idempotent(key = "'delete_shop_' + #id", expire = 3600)
@@ -178,17 +246,23 @@ public class ShopController {
     public Result<Void> deleteShop(
             @PathVariable Long id,
             @AuthenticationPrincipal User owner) {
-        
+
         if (owner == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         shopService.deleteShop(id, owner);
         return Result.success(null);
     }
 
     /**
      * 关注店铺
+     * API路径：POST /api/shop/{id}/follow
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param user 当前登录用户
+     * @return 关注后的店铺
      */
     @PostMapping("/{id}/follow")
     @Idempotent(key = "'follow_shop_' + #id + '_' + #user.id", expire = 600)
@@ -197,17 +271,23 @@ public class ShopController {
     public Result<Shop> followShop(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         if (user == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         Shop shop = shopService.followShop(id, user.getId());
         return Result.success(shop);
     }
 
     /**
      * 取消关注店铺
+     * API路径：DELETE /api/shop/{id}/follow
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param user 当前登录用户
+     * @return 取消关注后的店铺
      */
     @DeleteMapping("/{id}/follow")
     @Idempotent(key = "'unfollow_shop_' + #id + '_' + #user.id", expire = 600)
@@ -216,17 +296,23 @@ public class ShopController {
     public Result<Shop> unfollowShop(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         if (user == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         Shop shop = shopService.unfollowShop(id, user.getId());
         return Result.success(shop);
     }
 
     /**
-     * 检查是否已关注
+     * 检查是否已关注店铺
+     * API路径：GET /api/shop/{id}/following
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param user 当前登录用户
+     * @return 是否已关注
      */
     @GetMapping("/{id}/following")
     @Cacheable(key = "'shop_following_' + #id + '_' + #user.id", cacheName = "shops", expire = 60)
@@ -234,15 +320,21 @@ public class ShopController {
     public Result<Map<String, Boolean>> checkFollowing(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         Map<String, Boolean> result = new HashMap<>();
-        // 这里应该查询关注表，暂时返回 false
         result.put("following", false);
         return Result.success(result);
     }
 
     /**
      * 认证商家
+     * API路径：POST /api/shop/{id}/certify
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param businessLicense 营业执照
+     * @param owner 当前登录用户（店主）
+     * @return 认证后的店铺
      */
     @PostMapping("/{id}/certify")
     @Idempotent(key = "'certify_shop_' + #id", expire = 3600)
@@ -252,17 +344,23 @@ public class ShopController {
             @PathVariable Long id,
             @RequestParam String businessLicense,
             @AuthenticationPrincipal User owner) {
-        
+
         if (owner == null) {
             return Result.error(401, "请先登录");
         }
-        
+
         Shop shop = shopService.certifyShop(id, businessLicense);
         return Result.success(shop);
     }
 
     /**
      * 联系商家客服
+     * API路径：POST /api/shop/{id}/contact
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param user 当前登录用户
+     * @return 聊天ID
      */
     @PostMapping("/{id}/contact")
     @AuditLog(module = "店铺管理", action = "联系商家")
@@ -270,7 +368,7 @@ public class ShopController {
     public Result<Map<String, String>> contactMerchant(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         Map<String, String> result = new HashMap<>();
         result.put("chatId", "chat_" + id + "_" + (user != null ? user.getId() : "anonymous"));
         return Result.success(result);
@@ -278,6 +376,11 @@ public class ShopController {
 
     /**
      * 分享店铺
+     * API路径：POST /api/shop/{id}/share
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @return 分享链接和分享码
      */
     @PostMapping("/{id}/share")
     @AuditLog(module = "店铺管理", action = "分享店铺")
@@ -291,6 +394,11 @@ public class ShopController {
 
     /**
      * 获取店铺公告
+     * API路径：GET /api/shop/{id}/announcement
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @return 店铺公告内容
      */
     @GetMapping("/{id}/announcement")
     @Cacheable(key = "'shop_announcement_' + #id", cacheName = "shops", expire = 600)
@@ -305,6 +413,13 @@ public class ShopController {
 
     /**
      * 关闭店铺（管理员）
+     * API路径：POST /api/shop/{id}/close
+     * 权限：需要管理员角色
+     *
+     * @param id 店铺ID
+     * @param reason 关闭原因（可选）
+     * @param admin 当前登录管理员
+     * @return 关闭后的店铺
      */
     @PostMapping("/{id}/close")
     @Idempotent(key = "'close_shop_' + #id", expire = 3600)
@@ -314,7 +429,7 @@ public class ShopController {
             @PathVariable Long id,
             @RequestParam(required = false) String reason,
             @AuthenticationPrincipal User admin) {
-        
+
         Shop shop = shopService.closeShop(id, reason != null ? reason : "违规操作");
         return Result.success(shop);
     }

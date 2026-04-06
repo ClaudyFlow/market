@@ -18,6 +18,12 @@ import java.util.stream.Collectors;
 
 /**
  * 收藏控制器
+ * 提供用户商品收藏的增删改查、状态切换、数量统计等功能。
+ * 权限要求：需要登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/favorite
  */
 @RestController
 @RequestMapping("/api/favorite")
@@ -28,7 +34,12 @@ public class FavoriteController {
     private FavoriteService favoriteService;
 
     /**
-     * 获取用户的收藏列表
+     * 获取用户收藏列表
+     * API路径：GET /api/favorite
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 收藏商品响应列表
      */
     @GetMapping
     public ResponseEntity<List<FavoriteResponse>> getFavorites(@AuthenticationPrincipal User user) {
@@ -54,6 +65,12 @@ public class FavoriteController {
 
     /**
      * 添加收藏
+     * API路径：POST /api/favorite
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param request 收藏请求（包含商品ID）
+     * @return 添加的收藏记录
      */
     @PostMapping
     public ResponseEntity<?> addFavorite(
@@ -69,6 +86,12 @@ public class FavoriteController {
 
     /**
      * 取消收藏
+     * API路径：DELETE /api/favorite/{productId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param productId 商品ID
+     * @return 操作结果
      */
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeFavorite(
@@ -80,6 +103,12 @@ public class FavoriteController {
 
     /**
      * 检查是否已收藏
+     * API路径：GET /api/favorite/check/{productId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param productId 商品ID
+     * @return 是否已收藏
      */
     @GetMapping("/check/{productId}")
     public ResponseEntity<Map<String, Boolean>> checkFavorite(
@@ -93,22 +122,33 @@ public class FavoriteController {
 
     /**
      * 切换收藏状态
+     * API路径：POST /api/favorite/toggle/{productId}
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param productId 商品ID
+     * @return 切换后的收藏状态和提示消息
      */
     @PostMapping("/toggle/{productId}")
     public ResponseEntity<Map<String, Object>> toggleFavorite(
             @AuthenticationPrincipal User user,
             @PathVariable Long productId) {
         boolean isAdded = favoriteService.toggleFavorite(user.getId(), productId);
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("isFavorite", isAdded);
         response.put("message", isAdded ? "已添加收藏" : "已取消收藏");
-        
+
         return ResponseEntity.ok(response);
     }
 
     /**
      * 获取收藏数量
+     * API路径：GET /api/favorite/count
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 收藏数量
      */
     @GetMapping("/count")
     public ResponseEntity<Map<String, Integer>> getFavoriteCount(@AuthenticationPrincipal User user) {

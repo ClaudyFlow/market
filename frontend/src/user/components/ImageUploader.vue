@@ -50,7 +50,7 @@
 import { ref, computed, watch } from 'vue'
 import { Plus, Close } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { compressImage, getBase64Size, formatFileSize } from '@user/util/imageCompress'
+import { compressImage, getBase64Size, formatFileSize } from '@user/utils/imageCompress'
 
 const props = defineProps({
   modelValue: {

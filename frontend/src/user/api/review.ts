@@ -6,6 +6,8 @@ import { get, post, put, del } from './request'
 import type { Review, ReviewStats } from '@user/types/review'
 import type { PageData, PageParams } from './request'
 
+export type { Review, ReviewStats } from '@user/types/review'
+
 const BASE_URL = '/review'
 
 /**
@@ -104,4 +106,42 @@ export function getAdditionalReviews(productId?: number, limit?: number): Promis
  */
 export function reportReview(reviewId: number | string, reason: string): Promise<void> {
   return post(`${BASE_URL}/${reviewId}/report`, { reason })
+}
+
+/**
+ * 检查用户是否已评价商品
+ */
+export function checkReview(params: { userId?: number; productId?: number; orderId?: number }): Promise<{ reviewed: boolean }> {
+  return get(`${BASE_URL}/check`, params)
+}
+
+/**
+ * 添加评价（createReview 的别名）
+ */
+export const addReview = createReview
+
+/**
+ * 获取商品评价列表（getReviewList 的便捷方法）
+ */
+export function getProductReviews(productId: number, params?: PageParams): Promise<PageData<Review>> {
+  return getReviewList({ productId, ...params })
+}
+
+/**
+ * 获取商品平均评分
+ */
+export function getProductRating(productId: number): Promise<{ averageRating: number; reviewCount: number }> {
+  return getReviewStats(productId).then(stats => ({
+    averageRating: stats.averageRating,
+    reviewCount: stats.totalReviews
+  }))
+}
+
+/**
+ * 评价信息类型别名（兼容旧代码）
+ */
+export type RatingInfo = {
+  averageRating: number
+  reviewCount: number
+  ratingDistribution: Record<number, number>
 }

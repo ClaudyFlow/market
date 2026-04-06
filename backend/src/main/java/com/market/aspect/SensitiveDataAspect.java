@@ -12,8 +12,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -39,8 +37,6 @@ import java.util.regex.Pattern;
 @Aspect
 @RestControllerAdvice
 public class SensitiveDataAspect implements ResponseBodyAdvice<Object> {
-
-    private static final Logger log = LoggerFactory.getLogger(SensitiveDataAspect.class);
 
     /**
      * 手机号脱敏规则：前 3 位 + 4 个* + 后 4 位

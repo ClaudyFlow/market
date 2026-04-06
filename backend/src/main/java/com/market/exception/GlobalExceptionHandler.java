@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 全局异常处理器
+ * 统一捕获并处理控制器层抛出的各类异常，返回标准化的错误响应
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Slf4j
 @RestControllerAdvice
@@ -23,7 +27,10 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 业务异常
+     * 处理业务异常
+     *
+     * @param e 业务异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.OK)
@@ -33,7 +40,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 参数验证异常
+     * 处理参数验证异常
+     *
+     * @param e 参数验证异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -47,7 +57,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 绑定异常
+     * 处理参数绑定异常
+     *
+     * @param e 绑定异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -61,7 +74,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 认证异常
+     * 处理认证异常（用户名或密码错误）
+     *
+     * @param e 认证异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -71,7 +87,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 权限不足异常
+     * 处理权限不足异常
+     *
+     * @param e 权限不足异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -81,7 +100,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 其他异常
+     * 处理其他未捕获的异常
+     *
+     * @param e 异常
+     * @return 错误响应结果
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

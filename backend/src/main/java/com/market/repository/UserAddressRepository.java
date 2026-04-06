@@ -11,10 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 用户收货地址数据访问接口
+ * 用户收货地址数据访问层
+ * 对应实体：UserAddress
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface UserAddressRepository extends JpaRepository<UserAddress, Long> {

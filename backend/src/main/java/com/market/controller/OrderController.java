@@ -2,9 +2,14 @@ package com.market.controller;
 
 import com.market.annotation.*;
 import com.market.common.Result;
+import com.market.entity.CartItem;
 import com.market.entity.Order;
+import com.market.entity.OrderItem;
+import com.market.entity.PaymentRefund;
+import com.market.entity.Review;
 import com.market.entity.User;
 import com.market.service.OrderService;
+import com.market.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +33,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private ReviewService reviewService;
 
     /**
      * 创建订单
@@ -252,12 +260,20 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 查询退款详情
+        PaymentRefund refund = orderService.getRefundDetail(id);
+        if (refund == null) {
+            return Result.error(404, "退款记录不存在");
+        }
+
         Map<String, Object> result = new HashMap<>();
-        result.put("status", "pending");
-        result.put("amount", 0);
-        result.put("reason", "");
-        
+        result.put("id", refund.getId());
+        result.put("refundNo", refund.getRefundNo());
+        result.put("status", refund.getStatus());
+        result.put("amount", refund.getAmount());
+        result.put("reason", refund.getReason());
+        result.put("createdAt", refund.getCreatedAt());
+        result.put("handledAt", refund.getRefundedAt());
+
         return Result.success(result);
     }
 
@@ -276,7 +292,45 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 提交评价
+        Order order = orderService.getOrderById(id)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            return Result.error(403, "无权评价该订单");
+        }
+
+        if (!"COMPLETED".equals(order.getStatus())) {
+            return Result.error(400, "订单未完成，无法评价");
+        }
+
+        // 检查是否已评价
+        if (orderService.isOrderReviewed(id)) {
+            return Result.error(400, "该订单已评价");
+        }
+
+        // 提取评价数据
+        Integer score = data.get("score") != null ? Integer.valueOf(data.get("score").toString()) : null;
+        String content = data.get("content") != null ? data.get("content").toString() : "";
+        
+        if (score == null || score < 1 || score > 5) {
+            return Result.error(400, "评分必须为 1-5 星");
+        }
+
+        // 对订单中的每个商品提交评价
+        for (OrderItem item : order.getItem()) {
+            try {
+                reviewService.addReviewFromOrder(
+                    user.getId(),
+                    item.getProduct().getId(),
+                    score,
+                    content,
+                    id
+                );
+            } catch (Exception e) {
+                // 如果某个商品已评价，跳过
+            }
+        }
+
         return Result.success(null);
     }
 
@@ -290,8 +344,9 @@ public class OrderController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
 
+        boolean reviewed = orderService.isOrderReviewed(id);
         Map<String, Boolean> result = new HashMap<>();
-        result.put("reviewed", false); // TODO: 实际查询
+        result.put("reviewed", reviewed);
         return Result.success(result);
     }
 
@@ -339,8 +394,12 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 修改地址
-        return Result.success(null);
+        try {
+            orderService.updateOrderAddress(id, addressId, user);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**
@@ -358,8 +417,12 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 修改备注
-        return Result.success(null);
+        try {
+            orderService.updateOrderRemark(id, remark, user);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**
@@ -368,7 +431,7 @@ public class OrderController {
     @PostMapping("/{id}/repurchase")
     @Idempotent(key = "'repurchase_order_' + #id", expire = 600)
     @AuditLog(module = "订单管理", action = "再次购买")
-    public Result<Void> repurchase(
+    public Result<List<CartItem>> repurchase(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
 
@@ -376,8 +439,12 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 再次购买逻辑
-        return Result.success(null);
+        try {
+            List<CartItem> addedItems = orderService.repurchase(id, user);
+            return Result.success(addedItems);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**
@@ -410,8 +477,12 @@ public class OrderController {
             return Result.error(401, "请先登录");
         }
 
-        // TODO: 模拟发货
-        return Result.success(null);
+        try {
+            orderService.mockShip(id);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 
     /**

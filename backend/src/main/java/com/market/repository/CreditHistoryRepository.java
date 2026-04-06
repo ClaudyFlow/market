@@ -9,14 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 积分历史数据访问接口
- * <p>
- * 提供积分历史记录的数据访问操作，包括基本的CRUD操作和自定义统计查询方法。
- * 继承JpaRepository以获得标准的JPA数据访问功能。
- * </p>
+ * 积分历史数据访问层
+ * 对应实体：CreditHistory
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Long> {

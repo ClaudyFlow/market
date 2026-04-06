@@ -128,4 +128,39 @@ public class ReviewService {
     public int getRatingCount(Long productId, Integer rating) {
         return reviewRepository.countByProductIdAndRating(productId, rating);
     }
+
+    /**
+     * 基于订单提交评价
+     */
+    public Review addReviewFromOrder(Long userId, Long productId, Integer rating, String content, Long orderId) {
+        // 检查是否已评价
+        if (reviewRepository.existsByUserIdAndProductId(userId, productId)) {
+            throw new RuntimeException("您已对该商品进行过评价");
+        }
+
+        // 检查商品是否存在
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("商品不存在"));
+
+        // 获取用户信息
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("用户不存在"));
+
+        Review review = new Review(
+            userId,
+            productId,
+            rating,
+            content,
+            user.getUsername(),
+            user.getAvatarUrl(),
+            product.getName(),
+            product.getImageUrl(),
+            product.getPrice()
+        );
+        
+        // 设置订单 ID
+        review.setOrderId(orderId);
+
+        return reviewRepository.save(review);
+    }
 }

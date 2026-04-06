@@ -11,7 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 商品数据访问接口
+ * 商品数据访问层
+ * 对应实体：Product
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -83,4 +87,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * 按销量排序获取热门商品
      */
     List<Product> findTop10ByStatusOrderBySalesDesc(Integer status);
+
+    List<Product> findTop4ByOrderBySalesDesc();
+
+    List<Product> findTop4ByOrderByCreatedAtDesc();
+
+    List<Product> findTop4ByOrderByRatingDesc();
+
+    List<Product> findTop6ByOrderBySalesDesc();
+
+    List<Product> findTop8ByOrderByCreatedAtDesc();
+
+    List<Product> findTop10ByOrderBySalesDesc();
 }

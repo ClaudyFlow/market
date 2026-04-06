@@ -5,37 +5,65 @@ import java.time.LocalDateTime;
 
 /**
  * 用户优惠券实体类
+ * 对应数据库表：user_coupon
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "user_coupon")
 public class UserCoupon {
-    
+
+    /**
+     * 用户优惠券唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    /**
+     * 所属用户
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    
+
+    /**
+     * 关联的优惠券
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id", nullable = false)
     private Coupon coupon;
-    
+
+    /**
+     * 使用时间
+     */
     @Column(name = "used_at")
     private LocalDateTime usedAt;
-    
+
+    /**
+     * 使用的订单ID
+     */
     @Column(name = "order_id")
     private Long orderId;
-    
+
+    /**
+     * 记录创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 获取时间
+     */
     @Column(name = "obtained_at")
     private LocalDateTime obtainedAt;
 
+    /**
+     * 优惠券状态（UNUSED未使用、USED已使用、EXPIRED已过期）
+     */
     @Column(nullable = false)
-    private String status = "UNUSED"; // UNUSED, USED, EXPIRED
+    private String status = "UNUSED";
     
     public UserCoupon() {}
     

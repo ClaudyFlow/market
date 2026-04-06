@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 系统消息数据访问接口
+ * 系统消息数据访问层
+ * 对应实体：SystemMessage
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface SystemMessageRepository extends JpaRepository<SystemMessage, Long> {

@@ -283,6 +283,15 @@ public class CouponService {
     }
 
     /**
+     * 查询用户优惠券详情
+     */
+    public UserCoupon getUserCouponDetail(Long userCouponId, User user) {
+        return userCouponRepository.findById(userCouponId)
+            .filter(uc -> uc.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("优惠券不存在"));
+    }
+
+    /**
      * 使用优惠券
      */
     @Transactional
@@ -423,5 +432,96 @@ public class CouponService {
         return coupons.stream()
             .max(Comparator.comparing(c -> c.calculateDiscount(orderAmount)))
             .orElse(null);
+    }
+
+    /**
+     * 查询可领取的优惠券模板
+     */
+    public Page<Coupon> getCouponTemplates(Long merchantId, Pageable pageable) {
+        LocalDateTime now = LocalDateTime.now();
+        if (merchantId != null) {
+            return couponRepository.findByMerchantIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+                merchantId, "ACTIVE", now, now, pageable);
+        }
+        return couponRepository.findByStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+            "ACTIVE", now, now, pageable);
+    }
+
+    /**
+     * 查询优惠券模板详情
+     */
+    public Coupon getCouponTemplateDetail(Long couponId) {
+        return couponRepository.findById(couponId)
+            .orElseThrow(() -> new RuntimeException("优惠券模板不存在"));
+    }
+
+    /**
+     * 删除用户优惠券
+     */
+    @Transactional
+    public void deleteUserCoupon(Long userCouponId, User user) {
+        UserCoupon userCoupon = userCouponRepository.findById(userCouponId)
+            .filter(uc -> uc.getUser().getId().equals(user.getId()))
+            .orElseThrow(() -> new RuntimeException("优惠券不存在"));
+        
+        if (!"UNUSED".equals(userCoupon.getStatus())) {
+            throw new RuntimeException("只能删除未使用的优惠券");
+        }
+        
+        userCouponRepository.delete(userCoupon);
+    }
+
+    /**
+     * 检查优惠券是否可用
+     */
+    public boolean isCouponAvailable(Long userCouponId, User user, BigDecimal orderAmount) {
+        UserCoupon userCoupon = userCouponRepository.findById(userCouponId)
+            .filter(uc -> uc.getUser().getId().equals(user.getId()))
+            .orElse(null);
+        
+        if (userCoupon == null) return false;
+        if (!"UNUSED".equals(userCoupon.getStatus())) return false;
+        
+        Coupon coupon = userCoupon.getCoupon();
+        if (coupon.getMinPurchase() != null && orderAmount.compareTo(coupon.getMinPurchase()) < 0) return false;
+        
+        LocalDateTime now = LocalDateTime.now();
+        if (coupon.getValidTo().isBefore(now)) return false;
+        
+        return true;
+    }
+
+    /**
+     * 查询即将过期的优惠券（用户）
+     */
+    public List<UserCoupon> getExpiringCouponsForUser(User user, int days) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime threshold = now.plusDays(days);
+        List<UserCoupon> userCoupons = userCouponRepository.findByUserAndStatus(user, "UNUSED");
+        
+        return userCoupons.stream()
+            .filter(uc -> {
+                LocalDateTime validTo = uc.getCoupon().getValidTo();
+                return validTo != null && validTo.isAfter(now) && validTo.isBefore(threshold);
+            })
+            .toList();
+    }
+
+    /**
+     * 查询店铺优惠券
+     */
+    public List<Coupon> getShopCoupons(Long shopId) {
+        LocalDateTime now = LocalDateTime.now();
+        return couponRepository.findByShopIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+            shopId, "ACTIVE", now, now);
+    }
+
+    /**
+     * 查询商品优惠券
+     */
+    public List<Coupon> getProductCoupons(Long productId) {
+        LocalDateTime now = LocalDateTime.now();
+        return couponRepository.findByProductIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+            productId, "ACTIVE", now, now);
     }
 }

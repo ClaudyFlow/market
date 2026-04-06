@@ -21,6 +21,12 @@ import java.util.stream.Collectors;
 
 /**
  * 消息通知控制器
+ * 提供用户消息接收、已读/未读管理、消息详情等功能，以及管理员发送系统消息的接口。
+ * 权限要求：用户端需要登录，管理员端需要 ADMIN 角色
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/message
  */
 @RestController
 @RequestMapping("/api/message")
@@ -32,6 +38,13 @@ public class MessageController {
 
     /**
      * 获取我的消息列表
+     * API路径：GET /api/message/list
+     * 权限：需要登录
+     *
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @param user 当前登录用户
+     * @return 分页的消息列表
      */
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getMessages(
@@ -72,6 +85,13 @@ public class MessageController {
 
     /**
      * 获取未读消息
+     * API路径：GET /api/message/unread
+     * 权限：需要登录
+     *
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @param user 当前登录用户
+     * @return 分页的未读消息列表
      */
     @GetMapping("/unread")
     public ResponseEntity<Map<String, Object>> getUnreadMessages(
@@ -112,6 +132,11 @@ public class MessageController {
 
     /**
      * 获取未读消息数量
+     * API路径：GET /api/message/unread/count
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 未读消息数量
      */
     @GetMapping("/unread/count")
     public ResponseEntity<Map<String, Long>> getUnreadCount(@AuthenticationPrincipal User user) {
@@ -122,6 +147,12 @@ public class MessageController {
 
     /**
      * 标记消息为已读
+     * API路径：POST /api/message/read
+     * 权限：需要登录
+     *
+     * @param receiveIds 消息接收记录ID列表
+     * @param user 当前登录用户
+     * @return 标记结果
      */
     @PostMapping("/read")
     public ResponseEntity<Map<String, Object>> markAsRead(
@@ -140,6 +171,11 @@ public class MessageController {
 
     /**
      * 标记所有消息为已读
+     * API路径：POST /api/message/read/all
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 标记结果
      */
     @PostMapping("/read/all")
     public ResponseEntity<Map<String, Object>> markAllAsRead(@AuthenticationPrincipal User user) {
@@ -155,6 +191,12 @@ public class MessageController {
 
     /**
      * 获取消息详情
+     * API路径：GET /api/message/{id}
+     * 权限：需要登录
+     *
+     * @param id 消息ID
+     * @param user 当前登录用户
+     * @return 消息详情
      */
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getMessageDetail(
@@ -178,6 +220,11 @@ public class MessageController {
 
     /**
      * 获取消息统计
+     * API路径：GET /api/message/stats
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 消息统计数据
      */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getMessageStats(@AuthenticationPrincipal User user) {
@@ -189,6 +236,17 @@ public class MessageController {
 
     /**
      * 发送系统消息（管理员）
+     * API路径：POST /api/message/send
+     * 权限：需要 ADMIN 角色
+     *
+     * @param title 消息标题
+     * @param content 消息内容
+     * @param type 消息类型，默认SYSTEM
+     * @param priority 优先级（可选）
+     * @param jumpUrl 跳转链接（可选）
+     * @param imageUrl 图片链接（可选）
+     * @param user 当前登录管理员
+     * @return 发送结果
      */
     @PostMapping("/send")
     @PreAuthorize("hasRole('ADMIN')")
@@ -213,6 +271,17 @@ public class MessageController {
 
     /**
      * 发送消息给指定用户（管理员）
+     * API路径：POST /api/message/send/user
+     * 权限：需要 ADMIN 角色
+     *
+     * @param userId 目标用户ID
+     * @param title 消息标题
+     * @param content 消息内容
+     * @param type 消息类型，默认SYSTEM
+     * @param priority 优先级（可选）
+     * @param jumpUrl 跳转链接（可选）
+     * @param user 当前登录管理员
+     * @return 发送结果
      */
     @PostMapping("/send/user")
     @PreAuthorize("hasRole('ADMIN')")
@@ -237,6 +306,17 @@ public class MessageController {
 
     /**
      * 发送消息给多个用户（管理员）
+     * API路径：POST /api/message/send/users
+     * 权限：需要 ADMIN 角色
+     *
+     * @param userIds 目标用户ID列表
+     * @param title 消息标题
+     * @param content 消息内容
+     * @param type 消息类型，默认SYSTEM
+     * @param priority 优先级（可选）
+     * @param jumpUrl 跳转链接（可选）
+     * @param user 当前登录管理员
+     * @return 发送结果
      */
     @PostMapping("/send/users")
     @PreAuthorize("hasRole('ADMIN')")

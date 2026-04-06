@@ -8,6 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 收藏数据访问层
+ * 对应实体：Favorite
+ *
+ * @author market-team
+ * @since 1.0
+ */
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     

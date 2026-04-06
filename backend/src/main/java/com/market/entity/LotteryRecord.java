@@ -5,30 +5,55 @@ import java.time.LocalDateTime;
 
 /**
  * 抽奖记录实体类
+ * 对应数据库表：lottery_record
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "lottery_record")
 public class LotteryRecord {
 
+    /**
+     * 抽奖记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 用户ID
+     */
     @Column(nullable = false)
     private Long userId;
 
+    /**
+     * 奖品ID
+     */
     @Column(nullable = false)
     private Long prizeId;
 
+    /**
+     * 奖品名称
+     */
     @Column(nullable = false, length = 100)
     private String prizeName;
 
+    /**
+     * 奖品类型（1=积分，2=实物）
+     */
     @Column(nullable = false)
-    private Integer prizeType; // 1=积分，2=实物
+    private Integer prizeType;
 
+    /**
+     * 消耗积分
+     */
     @Column(nullable = false)
-    private Integer cost; // 消耗积分
+    private Integer cost;
 
+    /**
+     * 抽奖时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

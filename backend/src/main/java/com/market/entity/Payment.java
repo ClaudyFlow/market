@@ -6,46 +6,86 @@ import java.time.LocalDateTime;
 
 /**
  * 支付记录实体类
+ * 对应数据库表：payment
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "payment")
 public class Payment {
 
+    /**
+     * 支付记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 支付流水号
+     */
     @Column(unique = true, nullable = false, length = 64)
     private String paymentNo;
 
+    /**
+     * 关联的订单编号
+     */
     @Column(unique = true, nullable = false, length = 64)
     private String orderNo;
 
+    /**
+     * 支付用户
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * 支付方式（ALIPAY支付宝、WECHAT微信、BANK银行卡）
+     */
     @Column(nullable = false, length = 20)
-    private String paymentMethod; // ALIPAY, WECHAT, BANK
+    private String paymentMethod;
 
+    /**
+     * 支付金额
+     */
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
+    /**
+     * 支付状态（PENDING待支付、SUCCESS支付成功、FAILED支付失败、REFUNDED已退款）
+     */
     @Column(nullable = false, length = 20)
-    private String status; // PENDING, SUCCESS, FAILED, REFUNDED
+    private String status;
 
+    /**
+     * 第三方支付流水号
+     */
     @Column(length = 64)
-    private String transactionId; // 第三方支付流水号
+    private String transactionId;
 
+    /**
+     * 回调原始数据
+     */
     @Column(columnDefinition = "TEXT")
-    private String callbackData; // 回调原始数据
+    private String callbackData;
 
+    /**
+     * 支付成功时间
+     */
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    /**
+     * 记录创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 记录更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

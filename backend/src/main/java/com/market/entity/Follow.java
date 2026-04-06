@@ -5,30 +5,55 @@ import java.time.LocalDateTime;
 
 /**
  * 店铺关注实体类
+ * 对应数据库表：follow
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "follow")
 public class Follow {
 
+    /**
+     * 关注记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 用户ID
+     */
     @Column(nullable = false)
     private Long userId;
 
+    /**
+     * 店铺ID
+     */
     @Column(nullable = false)
     private Long shopId;
 
+    /**
+     * 店铺名称
+     */
     @Column(name = "shop_name", nullable = false)
     private String shopName;
 
+    /**
+     * 店铺头像
+     */
     @Column(name = "shop_avatar")
     private String shopAvatar;
 
+    /**
+     * 关注时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 关联的用户信息
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;

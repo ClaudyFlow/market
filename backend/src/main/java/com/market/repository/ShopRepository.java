@@ -14,6 +14,10 @@ import java.util.Optional;
 
 /**
  * 店铺数据访问层
+ * 对应实体：Shop
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
@@ -27,6 +31,12 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
      * 根据认证状态查询店铺
      */
     Page<Shop> findByCertified(Boolean certified, Pageable pageable);
+
+    /**
+     * 获取优质店铺（评分高、关注多）
+     */
+    @Query("SELECT s FROM Shop s WHERE s.status = 'ACTIVE' AND s.certified = true ORDER BY s.rating DESC, s.followerCount DESC")
+    List<Shop> findTopShops(Pageable pageable);
 
     /**
      * 根据店主查询店铺

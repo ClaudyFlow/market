@@ -12,7 +12,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 聊天消息数据访问接口
+ * 聊天消息数据访问层
+ * 对应实体：ChatMessage
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {

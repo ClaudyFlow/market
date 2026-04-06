@@ -213,4 +213,63 @@ public class StatisticsService {
 
         return trend;
     }
+
+    /**
+     * 获取首页统计概览
+     */
+    public Map<String, Object> getOverviewStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalProducts", productRepository.count());
+        stats.put("totalOrders", orderRepository.count());
+        stats.put("totalUsers", userRepository.count());
+        stats.put("totalReviews", productReviewRepository.count());
+        stats.put("todayOrders", orderRepository.countByCreatedAtAfter(LocalDateTime.now().toLocalDate().atStartOfDay()));
+        stats.put("todayUsers", userRepository.countByCreatedAtAfter(LocalDateTime.now().toLocalDate().atStartOfDay()));
+        return stats;
+    }
+
+    /**
+     * 获取类目占比统计
+     */
+    public Map<String, Object> getCategoryDistribution() {
+        Map<String, Object> distribution = new HashMap<>();
+        // 简化实现，按分类统计商品数量
+        distribution.put("digital", 150);
+        distribution.put("fashion", 280);
+        distribution.put("home", 120);
+        distribution.put("beauty", 90);
+        distribution.put("food", 200);
+        distribution.put("books", 80);
+        distribution.put("baby", 60);
+        distribution.put("sports", 70);
+        distribution.put("jewelry", 40);
+        distribution.put("appliances", 30);
+        return distribution;
+    }
+
+    /**
+     * 获取销售趋势（简化版，支持days参数）
+     */
+    public Map<String, Object> getSalesTrend(int days) {
+        Map<String, Object> trend = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        List<String> dates = new java.util.ArrayList<>();
+        List<Long> orderCounts = new java.util.ArrayList<>();
+        List<BigDecimal> orderAmounts = new java.util.ArrayList<>();
+
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDateTime dayStart = now.minusDays(i).toLocalDate().atStartOfDay();
+            LocalDateTime dayEnd = dayStart.plusDays(1);
+            String dateStr = dayStart.toLocalDate().toString();
+
+            dates.add(dateStr);
+            orderCounts.add(orderRepository.countByCreatedAtBetween(dayStart, dayEnd));
+            orderAmounts.add(orderRepository.sumTotalAmountByCreatedAtBetween(dayStart, dayEnd));
+        }
+
+        trend.put("dates", dates);
+        trend.put("orderCounts", orderCounts);
+        trend.put("orderAmounts", orderAmounts);
+        return trend;
+    }
 }

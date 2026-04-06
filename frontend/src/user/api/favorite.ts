@@ -2,7 +2,7 @@
  * 收藏相关 API
  */
 
-import { get, post, del } from './request'
+import { get, post, put, del } from './request'
 import type { Favorite, FavoriteGroup } from '@user/types/favorite'
 import type { PageData, PageParams } from './request'
 
@@ -103,4 +103,25 @@ export function batchMoveToFavorites(favoriteIds: number[], groupId?: number): P
  */
 export function getGroupStats(groupId: number): Promise<{ total: number; products: number; shops: number }> {
   return get(`${BASE_URL}/group/${groupId}/stats`)
+}
+
+/**
+ * 切换收藏状态（添加/取消）
+ */
+export async function toggleFavorite(type: 'product' | 'shop' | 'article', itemId: number | string): Promise<{ favorited: boolean }> {
+  const { favorite } = await checkFavorite(type, itemId)
+  
+  if (favorite) {
+    // 已收藏，取消收藏
+    const list = await getFavoriteList({ type })
+    const item = list.records.find(r => r.itemId === itemId)
+    if (item) {
+      await removeFavorite(item.id)
+    }
+    return { favorited: false }
+  } else {
+    // 未收藏，添加收藏
+    await addFavorite({ type, itemId, name: '', image: '' })
+    return { favorited: true }
+  }
 }

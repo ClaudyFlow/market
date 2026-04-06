@@ -18,9 +18,12 @@ import java.util.Map;
 
 /**
  * 用户浏览历史控制器
+ * 提供用户浏览记录的查询、搜索、删除、清空和统计等功能。
+ * 权限要求：需要登录
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/history
  */
 @RestController
 @RequestMapping("/api/history")
@@ -32,6 +35,13 @@ public class UserBrowseHistoryController {
 
     /**
      * 获取浏览历史（分页）
+     * API路径：GET /api/history/list
+     * 权限：需要登录
+     *
+     * @param page 页码，默认0
+     * @param size 每页大小，默认20
+     * @param user 当前登录用户
+     * @return 分页的浏览历史记录
      */
     @GetMapping("/list")
     public ResponseEntity<Page<UserBrowseHistoryResponse>> getBrowseHistory(
@@ -45,7 +55,12 @@ public class UserBrowseHistoryController {
     }
 
     /**
-     * 获取浏览历史列表
+     * 获取所有浏览历史列表
+     * API路径：GET /api/history/all
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 全部浏览历史记录
      */
     @GetMapping("/all")
     public ResponseEntity<List<UserBrowseHistoryResponse>> getAllHistory(
@@ -57,6 +72,12 @@ public class UserBrowseHistoryController {
 
     /**
      * 获取最近浏览记录
+     * API路径：GET /api/history/recent
+     * 权限：需要登录
+     *
+     * @param limit 数量限制，默认10
+     * @param user 当前登录用户
+     * @return 最近浏览记录
      */
     @GetMapping("/recent")
     public ResponseEntity<List<UserBrowseHistoryResponse>> getRecentHistory(
@@ -68,7 +89,13 @@ public class UserBrowseHistoryController {
     }
 
     /**
-     * 删除浏览历史
+     * 删除单条浏览历史
+     * API路径：DELETE /api/history/product/{productId}
+     * 权限：需要登录
+     *
+     * @param productId 商品ID
+     * @param user 当前登录用户
+     * @return 删除结果
      */
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<Map<String, Object>> deleteHistory(
@@ -83,6 +110,11 @@ public class UserBrowseHistoryController {
 
     /**
      * 清空浏览历史
+     * API路径：DELETE /api/history/clear
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 清空结果
      */
     @DeleteMapping("/clear")
     public ResponseEntity<Map<String, Object>> clearHistory(
@@ -96,6 +128,11 @@ public class UserBrowseHistoryController {
 
     /**
      * 获取浏览历史数量
+     * API路径：GET /api/history/count
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 浏览历史记录数量
      */
     @GetMapping("/count")
     public ResponseEntity<Map<String, Long>> getHistoryCount(
@@ -107,6 +144,14 @@ public class UserBrowseHistoryController {
 
     /**
      * 搜索浏览历史
+     * API路径：GET /api/history/search
+     * 权限：需要登录
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认0
+     * @param size 每页大小，默认20
+     * @param user 当前登录用户
+     * @return 分页的浏览历史搜索结果
      */
     @GetMapping("/search")
     public ResponseEntity<Page<UserBrowseHistoryResponse>> searchHistory(

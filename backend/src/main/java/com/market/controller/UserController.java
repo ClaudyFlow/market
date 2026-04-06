@@ -22,12 +22,12 @@ import java.util.Map;
 
 /**
  * 用户控制器
- * <p>
- * 提供用户管理相关的 API 接口，包括用户信息管理、用户列表、用户审核等功能。
- * </p>
+ * 提供用户信息管理、签到、积分消费等用户端接口，以及用户/商家列表、审核、封禁等管理员接口。
+ * 权限要求：用户端需要登录，管理员端需要 ADMIN 角色
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/user
  */
 @RestController
 @RequestMapping("/api/user")
@@ -38,7 +38,12 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 获取用户信息
+     * 获取当前用户信息
+     * API路径：GET /api/user/info
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 用户基本信息
      */
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal User user) {
@@ -54,6 +59,11 @@ public class UserController {
 
     /**
      * 获取用户 VIP 信息
+     * API路径：GET /api/user/vip
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return VIP 信息
      */
     @GetMapping("/vip")
     public ResponseEntity<VipInfo> getVipInfo(@AuthenticationPrincipal User user) {
@@ -63,6 +73,11 @@ public class UserController {
 
     /**
      * 获取用户积分信息
+     * API路径：GET /api/user/credit
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 积分信息
      */
     @GetMapping("/credit")
     public ResponseEntity<UserCreditInfo> getUserCredit(@AuthenticationPrincipal User user) {
@@ -72,6 +87,11 @@ public class UserController {
 
     /**
      * 用户签到
+     * API路径：POST /api/user/checkin
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 签到结果
      */
     @PostMapping("/checkin")
     public ResponseEntity<CheckInResult> checkIn(@AuthenticationPrincipal User user) {
@@ -81,6 +101,12 @@ public class UserController {
 
     /**
      * 使用积分
+     * API路径：POST /api/user/credit/consume
+     * 权限：需要登录
+     *
+     * @param amount 消费积分数
+     * @param user 当前登录用户
+     * @return 消费结果
      */
     @PostMapping("/credit/consume")
     public ResponseEntity<Boolean> consumeCredit(
@@ -94,6 +120,18 @@ public class UserController {
 
     /**
      * 获取用户列表（分页）
+     * API路径：GET /api/user/list
+     * 权限：需要 ADMIN 角色
+     *
+     * @param userId 用户ID筛选（可选）
+     * @param userName 用户名筛选（可选）
+     * @param phone 手机号筛选（可选）
+     * @param status 状态筛选（可选）
+     * @param startDate 开始日期筛选（可选）
+     * @param endDate 结束日期筛选（可选）
+     * @param page 页码，默认0
+     * @param size 每页大小，默认10
+     * @return 分页的用户列表
      */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
@@ -114,6 +152,11 @@ public class UserController {
 
     /**
      * 获取用户详情
+     * API路径：GET /api/user/{id}
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 用户ID
+     * @return 用户详情
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -124,6 +167,11 @@ public class UserController {
 
     /**
      * 创建用户
+     * API路径：POST /api/user
+     * 权限：需要 ADMIN 角色
+     *
+     * @param user 用户信息
+     * @return 创建的用户
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -134,6 +182,12 @@ public class UserController {
 
     /**
      * 更新用户
+     * API路径：PUT /api/user/{id}
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 用户ID
+     * @param updates 更新字段映射
+     * @return 更新后的用户
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -146,6 +200,11 @@ public class UserController {
 
     /**
      * 删除用户
+     * API路径：DELETE /api/user/{id}
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 用户ID
+     * @return 删除结果
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -159,6 +218,11 @@ public class UserController {
 
     /**
      * 封禁用户
+     * API路径：POST /api/user/{id}/ban
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 用户ID
+     * @return 封禁后的用户
      */
     @PostMapping("/{id}/ban")
     @PreAuthorize("hasRole('ADMIN')")
@@ -169,6 +233,11 @@ public class UserController {
 
     /**
      * 解封用户
+     * API路径：POST /api/user/{id}/unban
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 用户ID
+     * @return 解封后的用户
      */
     @PostMapping("/{id}/unban")
     @PreAuthorize("hasRole('ADMIN')")
@@ -179,6 +248,10 @@ public class UserController {
 
     /**
      * 获取用户统计
+     * API路径：GET /api/user/stats
+     * 权限：需要 ADMIN 角色
+     *
+     * @return 用户统计数据
      */
     @GetMapping("/stats")
     @PreAuthorize("hasRole('ADMIN')")
@@ -191,6 +264,17 @@ public class UserController {
 
     /**
      * 获取商家列表（分页）
+     * API路径：GET /api/user/merchant/list
+     * 权限：需要 ADMIN 角色
+     *
+     * @param merchantId 商家ID筛选（可选）
+     * @param shopName 店铺名称筛选（可选）
+     * @param status 状态筛选（可选）
+     * @param startDate 开始日期筛选（可选）
+     * @param endDate 结束日期筛选（可选）
+     * @param page 页码，默认0
+     * @param size 每页大小，默认10
+     * @return 分页的商家列表
      */
     @GetMapping("/merchant/list")
     @PreAuthorize("hasRole('ADMIN')")
@@ -210,6 +294,11 @@ public class UserController {
 
     /**
      * 封禁商家
+     * API路径：POST /api/user/merchant/{id}/ban
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 商家ID
+     * @return 封禁后的商家
      */
     @PostMapping("/merchant/{id}/ban")
     @PreAuthorize("hasRole('ADMIN')")
@@ -220,6 +309,11 @@ public class UserController {
 
     /**
      * 解封商家
+     * API路径：POST /api/user/merchant/{id}/unban
+     * 权限：需要 ADMIN 角色
+     *
+     * @param id 商家ID
+     * @return 解封后的商家
      */
     @PostMapping("/merchant/{id}/unban")
     @PreAuthorize("hasRole('ADMIN')")
@@ -230,6 +324,10 @@ public class UserController {
 
     /**
      * 获取商家统计
+     * API路径：GET /api/user/merchant/stats
+     * 权限：需要 ADMIN 角色
+     *
+     * @return 商家统计数据
      */
     @GetMapping("/merchant/stats")
     @PreAuthorize("hasRole('ADMIN')")

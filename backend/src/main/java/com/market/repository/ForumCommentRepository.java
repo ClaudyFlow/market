@@ -11,7 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 论坛评论数据访问接口
+ * 论坛评论数据访问层
+ * 对应实体：ForumComment
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ForumCommentRepository extends JpaRepository<ForumComment, Long> {

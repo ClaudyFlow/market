@@ -3,9 +3,7 @@
 *.log
 *.pyc
 *.swp
-.DS_Store
 .factorypath
-nginx/
 .atom/
 .build/
 .buildlog/
@@ -73,16 +71,8 @@ client/
 .npm
 .eslintcache
 
-# Nginx - 只保留配置文件，忽略运行时文件和构建产物
-frontend/nginx/contrib/
-frontend/nginx/logs/
-frontend/nginx/temp/
+# Nginx - ignore compiled assets only
 frontend/nginx/html/assets/
-frontend/nginx/html/index.html
-frontend/nginx/html/*.html
-frontend/nginx/nginx.pid
-frontend/nginx/nginx.exe
-frontend/nginx/docs/
 
 # Database
 *.db
@@ -171,3 +161,6 @@ Thumbs.db
 *.backup
 *.bak
 *.old
+
+# Todo folder (internal coordination, not for commit)
+todo/

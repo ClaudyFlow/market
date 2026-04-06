@@ -5,33 +5,61 @@ import java.time.LocalDateTime;
 
 /**
  * 抽奖奖品实体类
+ * 对应数据库表：lottery_prize
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "lottery_prize")
 public class LotteryPrize {
 
+    /**
+     * 奖品唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 奖品名称
+     */
     @Column(nullable = false, length = 100)
     private String name;
 
+    /**
+     * 奖品描述
+     */
     @Column(length = 255)
     private String description;
 
+    /**
+     * 奖品类型（1=积分，2=实物）
+     */
     @Column(nullable = false)
-    private Integer type; // 1=积分，2=实物
+    private Integer type;
 
+    /**
+     * 抽奖权重
+     */
     @Column(nullable = false)
-    private Integer weight; // 权重
+    private Integer weight;
 
+    /**
+     * 奖品图片URL
+     */
     @Column(length = 255)
     private String image;
 
+    /**
+     * 是否可用
+     */
     @Column(nullable = false)
     private Boolean available = true;
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

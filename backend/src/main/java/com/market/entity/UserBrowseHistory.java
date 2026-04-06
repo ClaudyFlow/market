@@ -5,19 +5,20 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户浏览历史实体
- * <p>
- * 记录用户浏览商品的历史记录。
- * </p>
+ * 用户浏览历史实体类
+ * 对应数据库表：user_browse_history
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "user_browse_history",
        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class UserBrowseHistory {
 
+    /**
+     * 浏览记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

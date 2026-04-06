@@ -16,6 +16,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * JWT 认证拦截器
+ * 拦截 HTTP 请求，从 Authorization 请求头中提取 JWT Token，
+ * 验证 Token 有效性后将用户信息设置到 Spring Security 上下文中
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Component
 public class JwtAuthenticationInterceptor implements HandlerInterceptor {
@@ -26,6 +31,14 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * 在请求处理前执行，提取并验证 JWT Token
+     *
+     * @param request  HTTP 请求
+     * @param response HTTP 响应
+     * @param handler  请求处理器
+     * @return 是否继续处理请求（始终返回 true）
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = getTokenFromRequest(request);
@@ -55,6 +68,12 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 从 HTTP 请求的 Authorization 头中提取 JWT Token
+     *
+     * @param request HTTP 请求
+     * @return JWT Token 字符串，如果不存在则返回 null
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

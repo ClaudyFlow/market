@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 用户关注关系数据访问接口
+ * 用户关注关系数据访问层
+ * 对应实体：UserFollow
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface UserFollowRepository extends JpaRepository<UserFollow, Long> {

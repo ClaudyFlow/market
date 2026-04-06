@@ -4,19 +4,20 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 用户收藏实体
- * <p>
- * 记录用户收藏的商品。
- * </p>
+ * 用户收藏实体类
+ * 对应数据库表：user_favorite
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "user_favorite",
        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class UserFavorite {
 
+    /**
+     * 收藏记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

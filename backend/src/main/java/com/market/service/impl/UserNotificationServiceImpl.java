@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -149,5 +151,67 @@ public class UserNotificationServiceImpl implements UserNotificationService {
             .createdAt(notification.getCreatedAt())
             .readAt(notification.getReadAt())
             .build();
+    }
+
+    @Override
+    public Page<UserNotificationResponse> getNotificationsByType(Long userId, String type, Pageable pageable) {
+        Page<UserNotification> page;
+        if (type != null && !type.isEmpty()) {
+            page = notificationRepository.findByUserIdAndType(userId, type, pageable);
+        } else {
+            page = notificationRepository.findByUserId(userId, pageable);
+        }
+        return new PageImpl<>(page.getContent().stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()), pageable, page.getTotalElements());
+    }
+
+    @Override
+    @Transactional
+    public int batchDeleteNotifications(Long userId, List<Long> notificationIds) {
+        List<UserNotification> notifications = notificationRepository.findAllById(notificationIds);
+        int count = 0;
+        for (UserNotification notification : notifications) {
+            if (notification.getUserId().equals(userId)) {
+                notificationRepository.delete(notification);
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public int clearAllNotifications(Long userId) {
+        List<UserNotification> allNotifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        notificationRepository.deleteAll(allNotifications);
+        return allNotifications.size();
+    }
+
+    @Override
+    public Map<String, Object> getNotificationStats(Long userId) {
+        Map<String, Object> stats = new HashMap<>();
+        long total = notificationRepository.countByUserId(userId);
+        long unread = notificationRepository.countByUserIdAndIsReadFalse(userId);
+        long systemUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "SYSTEM", false);
+        long activityUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ACTIVITY", false);
+        long orderUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ORDER", false);
+        long promotionUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "PROMOTION", false);
+
+        stats.put("total", total);
+        stats.put("unread", unread);
+        stats.put("systemUnread", systemUnread);
+        stats.put("activityUnread", activityUnread);
+        stats.put("orderUnread", orderUnread);
+        stats.put("promotionUnread", promotionUnread);
+        return stats;
+    }
+
+    @Override
+    public List<UserNotificationResponse> getLatestNotifications(Long userId, int limit) {
+        Pageable pageable = Pageable.ofSize(limit);
+        return notificationRepository.findByUserId(userId, pageable).getContent().stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList());
     }
 }

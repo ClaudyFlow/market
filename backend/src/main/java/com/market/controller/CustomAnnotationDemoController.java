@@ -7,6 +7,7 @@ import com.market.common.Result;
 import com.market.entity.Product;
 import com.market.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +20,17 @@ import java.util.Random;
 
 /**
  * 自定义注解使用示例控制器
- * 演示 @Cacheable、@Retryable、@AuditLog 的用法
+ * 演示 @Cacheable、@Retryable、@AuditLog 等自定义注解的用法。
+ * 权限要求：公开接口，无需登录（仅开发环境可用）
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/annotation-demo
  */
 @RestController
 @RequestMapping("/api/annotation-demo")
+@Profile("dev")
+@CrossOrigin(origins = "*")
 public class CustomAnnotationDemoController {
 
     @Autowired
@@ -31,10 +39,12 @@ public class CustomAnnotationDemoController {
     private final Random random = new Random();
 
     /**
-     * 示例 1：@Cacheable - 缓存查询结果
+     * 缓存查询商品详情示例
+     * API路径：GET /api/annotation-demo/cache/product/{id}
+     * 权限：公开
      *
-     * 第一次请求会执行方法并缓存结果
-     * 后续请求在缓存有效期内直接返回缓存数据
+     * @param id 商品ID
+     * @return 商品信息（带缓存）
      */
     @GetMapping("/cache/product/{id}")
     @Cacheable(
@@ -56,7 +66,13 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 2：@Cacheable - 使用 SpEL 表达式作为 key
+     * 缓存查询商品列表示例（使用 SpEL 表达式作为 key）
+     * API路径：GET /api/annotation-demo/cache/products
+     * 权限：公开
+     *
+     * @param page 页码，默认0
+     * @param size 每页大小，默认10
+     * @return 商品列表（带缓存）
      */
     @GetMapping("/cache/products")
     @Cacheable(
@@ -76,8 +92,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 3：@Cacheable - 条件缓存
-     * 只有当价格大于 0 时才缓存
+     * 条件缓存示例（只缓存价格大于0的商品）
+     * API路径：GET /api/annotation-demo/cache/product/conditional/{id}
+     * 权限：公开
+     *
+     * @param id 商品ID
+     * @return 商品信息（条件缓存）
      */
     @GetMapping("/cache/product/conditional/{id}")
     @Cacheable(
@@ -99,10 +119,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 4：@Retryable - 自动重试
+     * 重试机制示例（自动重试3次，指数退避）
+     * API路径：GET /api/annotation-demo/retry/external-api
+     * 权限：公开
      *
-     * 模拟可能失败的操作，自动重试 3 次
-     * 使用指数退避：第一次 1s，第二次 2s，第三次 4s
+     * @param shouldFail 是否模拟失败，默认false
+     * @return 外部API调用结果
      */
     @GetMapping("/retry/external-api")
     @Retryable(
@@ -125,9 +147,11 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 5：@Retryable - 返回默认值
+     * 重试失败返回默认值示例
+     * API路径：GET /api/annotation-demo/retry/default-value
+     * 权限：公开
      *
-     * 重试失败后返回默认值，不抛出异常
+     * @return 服务调用结果，失败返回null
      */
     @GetMapping("/retry/default-value")
     @Retryable(
@@ -141,9 +165,11 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 6：@Retryable - 模拟随机失败
+     * 随机失败重试示例（30%概率失败）
+     * API路径：GET /api/annotation-demo/retry/random-failure
+     * 权限：公开
      *
-     * 30% 概率失败，演示重试机制
+     * @return 操作结果
      */
     @GetMapping("/retry/random-failure")
     @Retryable(
@@ -163,7 +189,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 7：@AuditLog - 记录创建操作
+     * 审计日志-创建操作示例
+     * API路径：POST /api/annotation-demo/audit/create
+     * 权限：公开
+     *
+     * @param product 商品信息
+     * @return 创建的商品信息
      */
     @PostMapping("/audit/create")
     @AuditLog(
@@ -181,7 +212,13 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 8：@AuditLog - 记录更新操作
+     * 审计日志-更新操作示例
+     * API路径：PUT /api/annotation-demo/audit/update/{id}
+     * 权限：公开
+     *
+     * @param id 商品ID
+     * @param product 更新的商品信息
+     * @return 更新后的商品信息
      */
     @PutMapping("/audit/update/{id}")
     @AuditLog(
@@ -202,7 +239,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 9：@AuditLog - 记录删除操作（高日志级别）
+     * 审计日志-删除操作示例（高日志级别）
+     * API路径：DELETE /api/annotation-demo/audit/delete/{id}
+     * 权限：公开
+     *
+     * @param id 商品ID
+     * @return 操作结果
      */
     @DeleteMapping("/audit/delete/{id}")
     @AuditLog(
@@ -219,10 +261,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 10：组合使用多个注解
+     * 组合注解示例（@Cacheable + @AuditLog + @Retryable）
+     * API路径：GET /api/annotation-demo/combined/product/{id}
+     * 权限：公开
      *
-     * @Cacheable + @AuditLog + @Retryable
-     * 缓存结果 + 记录审计日志 + 失败重试
+     * @param id 商品ID
+     * @return 商品信息（带缓存、审计和重试）
      */
     @GetMapping("/combined/product/{id}")
     @Cacheable(
@@ -254,7 +298,14 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 11：@AuditLog - 记录用户操作
+     * 审计日志-用户自定义操作示例
+     * API路径：POST /api/annotation-demo/audit/user-action
+     * 权限：公开
+     *
+     * @param userId 用户ID
+     * @param actionType 操作类型
+     * @param data 附加数据（可选）
+     * @return 操作记录结果
      */
     @PostMapping("/audit/user-action")
     @AuditLog(
@@ -281,7 +332,12 @@ public class CustomAnnotationDemoController {
     }
 
     /**
-     * 示例 12：@Cacheable - 不缓存 null 值
+     * 不缓存 null 值示例
+     * API路径：GET /api/annotation-demo/cache/ignore-null/{id}
+     * 权限：公开
+     *
+     * @param id 商品ID
+     * @return 商品信息（不缓存null）
      */
     @GetMapping("/cache/ignore-null/{id}")
     @Cacheable(
@@ -292,7 +348,6 @@ public class CustomAnnotationDemoController {
     )
     public Result<Product> getWithIgnoreNull(@PathVariable Long id) {
         System.out.println(">>> 查询（可能返回 null）: " + id);
-        // 模拟返回 null
         return Result.success(null);
     }
 }

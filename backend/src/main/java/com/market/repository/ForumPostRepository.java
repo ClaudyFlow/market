@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 论坛帖子数据访问接口
+ * 论坛帖子数据访问层
+ * 对应实体：ForumPost
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ForumPostRepository extends JpaRepository<ForumPost, Long> {

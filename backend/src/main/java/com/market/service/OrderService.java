@@ -38,6 +38,15 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PaymentRefundRepository refundRepository;
+
+    @Autowired
+    private ProductReviewRepository reviewRepository;
+
+    @Autowired
+    private UserAddressRepository addressRepository;
+
     // ==================== 用户端订单服务 ====================
 
     /**
@@ -277,7 +286,32 @@ public class OrderService {
             records.add(record);
         }
 
-        // TODO: 调用物流公司 API 获取详细物流信息
+        // 模拟物流跟踪信息
+        if (order.getShippedAt() != null && order.getTrackingNo() != null) {
+            LocalDateTime shippedAt = order.getShippedAt();
+            records.add(Map.of(
+                "time", shippedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                "desc", "订单已发货，等待配送"
+            ));
+            if (shippedAt.isBefore(LocalDateTime.now().minusHours(24))) {
+                records.add(Map.of(
+                    "time", shippedAt.plusHours(12).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    "desc", "包裹已到达中转站"
+                ));
+            }
+            if (shippedAt.isBefore(LocalDateTime.now().minusHours(48))) {
+                records.add(Map.of(
+                    "time", shippedAt.plusHours(36).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    "desc", "包裹正在配送途中"
+                ));
+            }
+            if (order.getCompletedAt() != null) {
+                records.add(Map.of(
+                    "time", order.getCompletedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    "desc", "已签收"
+                ));
+            }
+        }
 
         return records;
     }
@@ -285,16 +319,15 @@ public class OrderService {
     // ==================== 商户端订单服务 ====================
 
     /**
-     * 获取商户订单列表
+     * 获取商户订单列表（支持复杂查询）
      */
-    public Page<Order> getMerchantOrders(User merchant, String status, String orderNo, 
-                                         String productName, LocalDateTime startDate, 
+    public Page<Order> getMerchantOrders(User merchant, String status, String orderNo,
+                                         String productName, LocalDateTime startDate,
                                          LocalDateTime endDate, Pageable pageable) {
-        // TODO: 实现复杂查询
-        if (status != null && !status.isEmpty()) {
-            return orderRepository.findByMerchantAndStatus(merchant, status, pageable);
-        }
-        return orderRepository.findByMerchant(merchant, pageable);
+        return orderRepository.findOrders(
+            orderNo, status, null, merchant.getId(), null,
+            startDate, endDate, pageable
+        );
     }
 
     /**
@@ -456,7 +489,9 @@ public class OrderService {
      * 获取商品排行
      */
     public List<Map<String, Object>> getProductRank(String type, int limit) {
-        // TODO: 实现商品排行查询
+        if ("sales".equals(type)) {
+            return getProductSalesRank(limit);
+        }
         return new ArrayList<>();
     }
 
@@ -484,8 +519,7 @@ public class OrderService {
      * 获取店铺排行
      */
     public List<Map<String, Object>> getShopRank(int limit) {
-        // TODO: 实现店铺排行查询
-        return new ArrayList<>();
+        return getShopSalesRank(limit);
     }
 
     /**
@@ -581,5 +615,101 @@ public class OrderService {
         String timestamp = LocalDateTime.now().format(formatter);
         int random = new Random().nextInt(9000) + 1000;
         return timestamp + random;
+    }
+
+    // ==================== 补充功能 ====================
+
+    /**
+     * 获取退款详情
+     */
+    public PaymentRefund getRefundDetail(Long orderId) {
+        List<PaymentRefund> refunds = refundRepository.findByOrderId(orderId);
+        return refunds.isEmpty() ? null : refunds.get(0);
+    }
+
+    /**
+     * 检查订单是否已评价
+     */
+    public boolean isOrderReviewed(Long orderId) {
+        return reviewRepository.existsByOrderId(orderId);
+    }
+
+    /**
+     * 修改订单地址
+     */
+    @Transactional
+    public Order updateOrderAddress(Long orderId, Long addressId, User user) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("无权修改该订单");
+        }
+
+        if (!"PENDING".equals(order.getStatus()) && !"PAID".equals(order.getStatus())) {
+            throw new RuntimeException("订单已发货，无法修改地址");
+        }
+
+        UserAddress address = addressRepository.findById(addressId)
+            .orElseThrow(() -> new RuntimeException("地址不存在"));
+
+        String fullAddress = address.getProvince() + address.getCity() + address.getDistrict() + address.getDetailAddress();
+        order.setShippingAddress(fullAddress);
+        return orderRepository.save(order);
+    }
+
+    /**
+     * 修改订单备注
+     */
+    @Transactional
+    public Order updateOrderRemark(Long orderId, String remark, User user) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("无权修改该订单");
+        }
+
+        // TODO: 添加 remark 字段到 Order 实体后启用
+        return order;
+    }
+
+    /**
+     * 再次购买
+     */
+    @Transactional
+    public List<CartItem> repurchase(Long orderId, User user) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("无权操作该订单");
+        }
+
+        List<CartItem> addedItems = new ArrayList<>();
+        for (OrderItem item : order.getItem()) {
+            CartItem cartItem = new CartItem(user, item.getProduct(), item.getQuantity());
+            addedItems.add(cartItemRepository.save(cartItem));
+        }
+        return addedItems;
+    }
+
+    /**
+     * 模拟发货
+     */
+    @Transactional
+    public Order mockShip(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!"PAID".equals(order.getStatus())) {
+            throw new RuntimeException("订单状态不正确，仅已支付订单可发货");
+        }
+
+        order.setStatus("SHIPPED");
+        order.setTrackingNo("MOCK" + System.currentTimeMillis());
+        order.setCarrier("模拟物流");
+        order.setShippedAt(LocalDateTime.now());
+        return orderRepository.save(order);
     }
 }

@@ -163,7 +163,7 @@ public class AdminOrderController {
     }
 
     /**
-     * 导出订单
+     * 导出订单（CSV格式）
      */
     @GetMapping("/export")
     @AuditLog(module = "管理端订单", action = "导出订单")
@@ -171,13 +171,41 @@ public class AdminOrderController {
     public void exportOrders(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String orderNo,
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             HttpServletResponse response) throws Exception {
 
-        // TODO: 实现订单导出功能
-        response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename=orders.xlsx");
+        // 获取订单数据
+        Pageable pageable = PageRequest.of(0, 10000);
+        Page<Order> orders = orderService.getAllOrders(orderNo, status, null, null, null, null, startDate, endDate, null, pageable);
+
+        // 设置响应头
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=orders.csv");
+        response.setCharacterEncoding("UTF-8");
+
+        // 写入CSV
+        java.io.PrintWriter writer = response.getWriter();
+        writer.println("\uFEFF"); // BOM for Excel UTF-8
+        writer.println("订单号,用户ID,商家ID,总金额,状态,收货地址,物流单号,物流公司,创建时间,支付时间,发货时间,完成时间");
+
+        for (Order order : orders.getContent()) {
+            writer.println(String.join(",",
+                order.getOrderNo(),
+                String.valueOf(order.getUser().getId()),
+                order.getMerchant() != null ? String.valueOf(order.getMerchant().getId()) : "",
+                order.getTotalAmount().toString(),
+                order.getStatus(),
+                "\"" + (order.getShippingAddress() != null ? order.getShippingAddress().replace("\"", "\"\"") : "") + "\"",
+                order.getTrackingNo() != null ? order.getTrackingNo() : "",
+                order.getCarrier() != null ? order.getCarrier() : "",
+                order.getCreatedAt() != null ? order.getCreatedAt().toString() : "",
+                order.getPaidAt() != null ? order.getPaidAt().toString() : "",
+                order.getShippedAt() != null ? order.getShippedAt().toString() : "",
+                order.getCompletedAt() != null ? order.getCompletedAt().toString() : ""
+            ));
+        }
+        writer.flush();
     }
 
     /**

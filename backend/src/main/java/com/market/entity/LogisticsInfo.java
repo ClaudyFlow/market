@@ -7,39 +7,73 @@ import java.util.List;
 
 /**
  * 物流信息实体类
+ * 对应数据库表：logistics_info
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "logistics_info")
 public class LogisticsInfo {
 
+    /**
+     * 物流信息唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 关联的订单ID
+     */
     @Column(nullable = false)
     private Long orderId;
 
+    /**
+     * 物流运单号
+     */
     @Column(nullable = false, length = 64)
     private String trackingNo;
 
+    /**
+     * 快递公司编码
+     */
     @Column(nullable = false, length = 20)
-    private String companyCode; // 快递公司编码
+    private String companyCode;
 
+    /**
+     * 快递公司名称
+     */
     @Column(length = 100)
-    private String companyName; // 快递公司名称
+    private String companyName;
 
+    /**
+     * 物流状态（PENDING待发货、IN_TRANSIT运输中、DELIVERED已签收、EXCEPTION异常）
+     */
     @Column(nullable = false, length = 20)
-    private String status; // PENDING, IN_TRANSIT, DELIVERED, EXCEPTION
+    private String status;
 
+    /**
+     * 预计送达时间
+     */
     @Column
     private LocalDateTime estimatedDelivery;
 
+    /**
+     * 物流轨迹列表
+     */
     @OneToMany(mappedBy = "logisticsInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LogisticsTrack> tracks = new ArrayList<>();
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

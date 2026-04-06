@@ -12,12 +12,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * 支付控制器（预留接口，模拟支付流程）
+ * 支付控制器
+ * 提供支付单创建、支付回调处理、支付状态查询、退款申请与审核等功能（模拟支付流程）。
+ * 权限要求：用户端需要登录，退款审核需要商家或管理员角色
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/payment
  */
 @RestController
 @RequestMapping("/api/payment")
@@ -29,7 +33,12 @@ public class PaymentController {
 
     /**
      * 创建支付单
-     * 预留接口：返回模拟支付参数，实际对接时返回真实支付参数
+     * API路径：POST /api/payment/create
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param data 请求数据（包含 orderNo、amount、paymentMethod）
+     * @return 支付参数（模拟）
      */
     @PostMapping("/create")
     @Idempotent(key = "'create_payment_' + #user.id + '_' + #data.get(\"orderNo\")", expire = 3600)
@@ -48,14 +57,12 @@ public class PaymentController {
 
         Payment payment = paymentService.createPayment(user, orderNo, amount, paymentMethod);
 
-        // 返回支付参数（模拟）
         Map<String, Object> paymentParams = new HashMap<>();
         paymentParams.put("paymentNo", payment.getPaymentNo());
         paymentParams.put("orderNo", payment.getOrderNo());
         paymentParams.put("amount", payment.getAmount());
         paymentParams.put("paymentMethod", payment.getPaymentMethod());
-        
-        // 模拟不同支付方式的参数
+
         if ("ALIPAY".equals(paymentMethod)) {
             paymentParams.put("alipayUrl", "https://openapi.alipay.com/gateway.do?app_id=xxx");
             paymentParams.put("qrCode", "模拟支付宝二维码数据");
@@ -71,8 +78,13 @@ public class PaymentController {
     }
 
     /**
-     * 模拟支付回调（预留接口）
-     * 实际对接时，支付平台会异步回调此接口
+     * 模拟支付回调
+     * API路径：POST /api/payment/callback/{method}
+     * 权限：公开（实际对接时由支付平台回调）
+     *
+     * @param method 支付方式（ALIPAY/WECHAT等）
+     * @param callbackData 回调数据（包含 paymentNo、status、transactionId）
+     * @return 回调处理结果
      */
     @PostMapping("/callback/{method}")
     @AuditLog(module = "支付管理", action = "支付回调", logLevel = AuditLog.LogLevel.INFO)
@@ -100,7 +112,6 @@ public class PaymentController {
         result.put("status", payment.getStatus());
         result.put("message", "回调处理成功");
 
-        // 实际对接时返回支付平台要求的格式
         if ("ALIPAY".equals(method)) {
             result.put("return_code", "success");
         } else if ("WECHAT".equals(method)) {
@@ -112,6 +123,11 @@ public class PaymentController {
 
     /**
      * 查询支付状态
+     * API路径：GET /api/payment/status/{paymentNo}
+     * 权限：公开
+     *
+     * @param paymentNo 支付单号
+     * @return 支付状态信息
      */
     @GetMapping("/status/{paymentNo}")
     @AuditLog(module = "支付管理", action = "查询支付状态")
@@ -132,6 +148,11 @@ public class PaymentController {
 
     /**
      * 根据订单号查询支付单
+     * API路径：GET /api/payment/order/{orderNo}
+     * 权限：公开
+     *
+     * @param orderNo 订单号
+     * @return 支付单信息
      */
     @GetMapping("/order/{orderNo}")
     @AuditLog(module = "支付管理", action = "查询订单支付单")
@@ -155,6 +176,12 @@ public class PaymentController {
 
     /**
      * 申请退款
+     * API路径：POST /api/payment/refund
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param data 退款请求数据（包含 orderId、paymentNo、amount、reason、images）
+     * @return 退款申请结果
      */
     @PostMapping("/refund")
     @Idempotent(key = "'apply_refund_' + #user.id + '_' + #data.get(\"orderId\")", expire = 3600)
@@ -187,6 +214,11 @@ public class PaymentController {
 
     /**
      * 查询退款状态
+     * API路径：GET /api/payment/refund/status/{refundNo}
+     * 权限：公开
+     *
+     * @param refundNo 退款单号
+     * @return 退款状态信息
      */
     @GetMapping("/refund/status/{refundNo}")
     @AuditLog(module = "支付管理", action = "查询退款状态")
@@ -208,6 +240,11 @@ public class PaymentController {
 
     /**
      * 获取用户退款列表
+     * API路径：GET /api/payment/refund/list
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 用户退款列表
      */
     @GetMapping("/refund/list")
     @AuditLog(module = "支付管理", action = "查询用户退款列表")
@@ -234,7 +271,13 @@ public class PaymentController {
     }
 
     /**
-     * 审核退款（商家/管理员接口）
+     * 审核退款（商家/管理员）
+     * API路径：POST /api/payment/refund/approve
+     * 权限：需要商家或管理员角色
+     *
+     * @param user 当前登录用户（商家或管理员）
+     * @param data 审核数据（包含 refundNo、approved、remark）
+     * @return 审核结果
      */
     @PostMapping("/refund/approve")
     @Idempotent(key = "'approve_refund_' + #data.get(\"refundNo\")", expire = 600)
@@ -260,7 +303,11 @@ public class PaymentController {
 
     /**
      * 模拟支付（测试用）
-     * 前端调用后直接返回支付成功，用于测试流程
+     * API路径：POST /api/payment/mock-pay/{paymentNo}
+     * 权限：公开（仅用于测试）
+     *
+     * @param paymentNo 支付单号
+     * @return 模拟支付结果
      */
     @PostMapping("/mock-pay/{paymentNo}")
     @AuditLog(module = "支付管理", action = "模拟支付", logLevel = AuditLog.LogLevel.WARNING)

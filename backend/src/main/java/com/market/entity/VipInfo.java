@@ -5,16 +5,42 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * VIP 信息实体
+ * VIP信息实体类（嵌入式）
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Embeddable
 public class VipInfo {
 
+    /**
+     * VIP等级
+     */
     private Integer level;
+
+    /**
+     * 等级名称
+     */
     private String levelName;
+
+    /**
+     * 过期时间
+     */
     private Date expireTime;
+
+    /**
+     * 权益列表
+     */
     private List<String> benefits;
+
+    /**
+     * 当前成长值
+     */
     private Integer growthValue;
+
+    /**
+     * 升级到下一级所需成长值
+     */
     private Integer nextLevelGrowth;
 
     public VipInfo() {}

@@ -6,58 +6,110 @@ import java.time.LocalDateTime;
 
 /**
  * 商品评价实体类
+ * 对应数据库表：review
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "review")
 public class Review {
 
+    /**
+     * 评价唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 用户ID
+     */
     @Column(nullable = false)
     private Long userId;
 
+    /**
+     * 商品ID
+     */
     @Column(nullable = false)
     private Long productId;
 
+    /**
+     * 评分（1-5星）
+     */
     @Column(nullable = false)
     private Integer rating;
 
+    /**
+     * 评价内容
+     */
     @Column(length = 1000)
     private String content;
 
+    /**
+     * 用户名（冗余存储）
+     */
     @Column(name = "user_name", nullable = false)
     private String userName;
 
+    /**
+     * 用户头像
+     */
     @Column(name = "user_avatar")
     private String userAvatar;
 
+    /**
+     * 商品名称（冗余存储）
+     */
     @Column(name = "product_name", nullable = false)
     private String productName;
 
+    /**
+     * 商品图片
+     */
     @Column(name = "product_image")
     private String productImage;
 
+    /**
+     * 商品价格
+     */
     @Column(name = "product_price", precision = 10, scale = 2)
     private BigDecimal productPrice;
 
+    /**
+     * 关联的订单ID
+     */
     @Column(name = "order_id")
     private Long orderId;
 
+    /**
+     * 评价图片（JSON数组）
+     */
     @Column(name = "images", length = 2000)
     private String images;
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * 关联的用户信息
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
+    /**
+     * 关联的商品信息
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productId", insertable = false, updatable = false)
     private Product product;

@@ -6,79 +6,152 @@ import java.time.LocalDateTime;
 
 /**
  * 店铺实体类
+ * 对应数据库表：shop
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "shop")
 public class Shop {
 
+    /**
+     * 店铺唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 店铺名称
+     */
     @Column(nullable = false, length = 100)
     private String name;
 
+    /**
+     * 店铺Logo
+     */
     @Column(length = 500)
     private String logo;
 
+    /**
+     * 店铺Banner图片
+     */
     @Column(length = 1000)
     private String banner;
 
+    /**
+     * 店铺描述
+     */
     @Column(length = 500)
     private String description;
 
+    /**
+     * 店铺标语
+     */
     @Column(length = 1000)
     private String slogan;
 
+    /**
+     * 店铺评分
+     */
     @Column(nullable = false)
     private Double rating = 0.0;
 
+    /**
+     * 粉丝数量
+     */
     @Column(nullable = false)
     private Integer followers = 0;
 
+    /**
+     * 商品数量
+     */
     @Column(nullable = false)
     private Integer productCount = 0;
 
+    /**
+     * 好评率
+     */
     @Column(nullable = false)
     private Double positiveRate = 0.0;
 
+    /**
+     * 开店年限
+     */
     @Column
     private Integer openYears = 0;
 
+    /**
+     * 店铺公告
+     */
     @Column(length = 1000)
     private String announcement;
 
+    /**
+     * 是否已认证
+     */
     @Column
     private Boolean certified = false;
 
+    /**
+     * 店铺标签（JSON数组）
+     */
     @Column(length = 500)
     private String tags;
 
+    /**
+     * 店铺状态（active营业中、inactive停业、closed已关闭）
+     */
     @Column(length = 100)
-    private String status = "active"; // active, inactive, closed
+    private String status = "active";
 
+    /**
+     * 营业执照信息
+     */
     @Column(length = 500)
     private String businessLicense;
 
+    /**
+     * 店铺位置
+     */
     @Column(length = 200)
     private String location;
 
+    /**
+     * 描述评分
+     */
     @Column(precision = 10, scale = 2)
     private Double descriptionScore = 0.0;
 
+    /**
+     * 服务评分
+     */
     @Column(precision = 10, scale = 2)
     private Double serviceScore = 0.0;
 
+    /**
+     * 物流评分
+     */
     @Column(precision = 10, scale = 2)
     private Double logisticsScore = 0.0;
 
+    /**
+     * 店铺所有者
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

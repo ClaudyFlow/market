@@ -5,6 +5,7 @@ import com.market.common.Result;
 import com.market.entity.Product;
 import com.market.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,18 +14,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * API 弃用注解使用示例
+ * API 弃用注解使用示例控制器
+ * 演示 @DeprecatedApi 注解的各种用法，包括不同弃用阶段的行为。
+ * 权限要求：公开接口，无需登录（仅开发环境可用）
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/example
  */
 @RestController
 @RequestMapping("/api/example")
+@Profile("dev")
+@CrossOrigin(origins = "*")
 public class DeprecatedApiExampleController {
 
     @Autowired
     private ProductService productService;
 
     /**
-     * 示例 1：尚未弃用的 API（当前日期在 since 之前）
-     * 日志：[API 弃用] 方法 xxx 尚未弃用 (since: 2026-05-01)
+     * 尚未弃用的 API 示例
+     * API路径：GET /api/example/products/not-deprecated-yet
+     * 权限：公开
+     *
+     * @return 商品列表
      */
     @GetMapping("/products/not-deprecated-yet")
     @DeprecatedApi(
@@ -40,8 +52,11 @@ public class DeprecatedApiExampleController {
     }
 
     /**
-     * 示例 2：即将弃用的 API（当前日期在 since 和 until 之间）
-     * 日志：[API 弃用] 方法 xxx 即将弃用，剩余 X 天 (since: 2026-01-01) (until: 2026-06-01)
+     * 即将弃用的 API 示例
+     * API路径：GET /api/example/products/pending-deprecated
+     * 权限：公开
+     *
+     * @return 商品列表
      */
     @GetMapping("/products/pending-deprecated")
     @DeprecatedApi(
@@ -57,8 +72,11 @@ public class DeprecatedApiExampleController {
     }
 
     /**
-     * 示例 3：已弃用的 API（当前日期在 until 之后），仅记录日志
-     * 日志：[API 弃用] 方法 xxx 已弃用 (until: 2026-03-01)，替代方案：xxx
+     * 已弃用仅记录日志的 API 示例
+     * API路径：GET /api/example/products/deprecated-logging
+     * 权限：公开
+     *
+     * @return 商品列表
      */
     @GetMapping("/products/deprecated-logging")
     @DeprecatedApi(
@@ -74,8 +92,11 @@ public class DeprecatedApiExampleController {
     }
 
     /**
-     * 示例 4：已弃用的 API，抛出异常
-     * 调用时抛出 DeprecatedApiException
+     * 已弃用并抛出异常的 API 示例
+     * API路径：GET /api/example/products/deprecated-exception
+     * 权限：公开
+     *
+     * @return 商品列表（调用时会抛出 DeprecatedApiException）
      */
     @GetMapping("/products/deprecated-exception")
     @DeprecatedApi(
@@ -96,7 +117,11 @@ public class DeprecatedApiExampleController {
     }
 
     /**
-     * 示例 5：多个替代方案
+     * 多个替代方案的弃用 API 示例
+     * API路径：GET /api/example/products/multiple-replacements
+     * 权限：公开
+     *
+     * @return 商品列表
      */
     @GetMapping("/products/multiple-replacements")
     @DeprecatedApi(
@@ -116,7 +141,13 @@ public class DeprecatedApiExampleController {
     }
 
     /**
-     * 示例 6：类级别弃用（该类所有方法都继承弃用配置）
+     * 类级别弃用示例控制器
+     * 该类所有方法都继承类级别的弃用配置。
+     * 权限要求：公开接口，无需登录
+     *
+     * @author market-team
+     * @since 1.0
+     * @RequestMapping /api/example/legacy
      */
     @DeprecatedApi(
         since = "2026-01-01",
@@ -128,9 +159,15 @@ public class DeprecatedApiExampleController {
     @RequestMapping("/api/example/legacy")
     public static class LegacyController {
 
+        /**
+         * 获取商品列表（类级别弃用）
+         * API路径：GET /api/example/legacy/items
+         * 权限：公开
+         *
+         * @return 商品列表
+         */
         @GetMapping("/items")
         public Result<List<Product>> getItems() {
-            // 此方法会继承类级别的弃用配置
             return Result.success(null);
         }
     }

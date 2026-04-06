@@ -27,8 +27,7 @@ public class RedisConfig {
         mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance);
 
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
-                new Jackson2JsonRedisSerializer<>(Object.class);
-        jackson2JsonRedisSerializer.setObjectMapper(mapper);
+                new Jackson2JsonRedisSerializer<>(mapper, Object.class);
 
         // key 采用 String 序列化
         template.setKeySerializer(new StringRedisSerializer());

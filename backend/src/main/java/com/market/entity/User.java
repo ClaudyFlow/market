@@ -12,89 +12,165 @@ import java.util.List;
 
 /**
  * 用户实体类
+ * 对应数据库表：user
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
+    /**
+     * 用户唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 用户名（登录账号）
+     */
     @Column(unique = true, nullable = false, length = 50)
     private String name;
 
+    /**
+     * 邮箱地址
+     */
     @Column(unique = true, nullable = true, length = 100)
     private String email;
 
+    /**
+     * 密码哈希值
+     */
     @Column(nullable = false, length = 255)
     private String passwordHash;
 
+    /**
+     * 头像URL
+     */
     @Column(length = 255)
     private String avatarUrl;
 
+    /**
+     * 当前积分
+     */
     @Column(name = "credit", nullable = false)
     private Integer credit = 0;
 
+    /**
+     * 累计获得积分
+     */
     @Column(name = "total_credit", nullable = false)
     private Integer totalCredit = 0;
 
+    /**
+     * 累计消费积分
+     */
     @Column(name = "consumed_credit", nullable = false)
     private Integer consumedCredit = 0;
 
+    /**
+     * VIP等级
+     */
     @Column(name = "vip_level", nullable = false)
     private Integer vipLevel = 0;
 
+    /**
+     * VIP过期时间
+     */
     @Column(name = "vip_expire_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date vipExpireTime;
 
+    /**
+     * 成长值
+     */
     @Column(name = "growth_value", nullable = false)
     private Integer growthValue = 0;
 
+    /**
+     * 连续签到天数
+     */
     @Column(name = "consecutive_checkin_days", nullable = false)
     private Integer consecutiveCheckinDays = 0;
 
+    /**
+     * 最后签到时间
+     */
     @Column(name = "last_checkin_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastCheckInTime;
 
+    /**
+     * 账号创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 账号更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * 手机号码
+     */
     @Column(name = "phone", length = 20)
     private String phone;
 
     /**
-     * 用户简介
+     * 用户简介/个性签名
      */
     @Column(name = "bio", length = 500)
     private String bio;
 
+    /**
+     * 是否为商家
+     */
     @Column(name = "is_merchant", nullable = false)
     private Boolean isMerchant = false;
 
+    /**
+     * 店铺名称
+     */
     @Column(name = "shop_name", length = 100)
     private String shopName;
 
+    /**
+     * 店铺描述
+     */
     @Column(name = "shop_description", length = 500)
     private String shopDescription;
 
+    /**
+     * 商家状态（INACTIVE未激活、ACTIVE正常、BANNED封禁）
+     */
     @Column(name = "merchant_status", length = 20)
-    private String merchantStatus = "INACTIVE"; // INACTIVE, ACTIVE, BANNED
+    private String merchantStatus = "INACTIVE";
 
+    /**
+     * 用户状态（ACTIVE正常、BANNED封禁）
+     */
     @Column(name = "status", length = 20)
-    private String status = "ACTIVE"; // ACTIVE, BANNED
+    private String status = "ACTIVE";
 
+    /**
+     * 用户角色（USER普通用户、MERCHANT商家、ADMIN管理员）
+     */
     @Column(name = "role", length = 20)
-    private String role = "USER"; // USER, MERCHANT, ADMIN
+    private String role = "USER";
 
+    /**
+     * 最后登录时间
+     */
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
+    /**
+     * VIP详细信息（非持久化字段）
+     */
     @Transient
     private VipInfo vipInfo;
 

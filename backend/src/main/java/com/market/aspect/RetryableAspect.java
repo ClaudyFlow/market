@@ -6,8 +6,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -24,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 public class RetryableAspect {
-
-    private static final Logger log = LoggerFactory.getLogger(RetryableAspect.class);
 
     /**
      * 围绕带有 @Retryable 注解的方法执行

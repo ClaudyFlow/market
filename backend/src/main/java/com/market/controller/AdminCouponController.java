@@ -4,6 +4,7 @@ import com.market.common.Result;
 import com.market.entity.Coupon;
 import com.market.entity.User;
 import com.market.entity.UserCoupon;
+import com.market.repository.CouponRepository;
 import com.market.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,9 @@ public class AdminCouponController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private CouponRepository couponRepository;
 
     /**
      * 创建平台优惠券
@@ -140,9 +144,21 @@ public class AdminCouponController {
     public Result<List<Map<String, Object>>> getCouponRank(
             @RequestParam(defaultValue = "usedCount") String type,
             @RequestParam(defaultValue = "10") Integer limit) {
-        
-        // TODO: 实现优惠券排行查询
-        List<Map<String, Object>> rank = new java.util.ArrayList<>();
+
+        List<Coupon> coupons = couponRepository.findAll();
+        List<Map<String, Object>> rank = coupons.stream()
+            .sorted((c1, c2) -> {
+                if ("usedCount".equals(type)) {
+                    return Integer.compare(c2.getUsedCount(), c1.getUsedCount());
+                } else if ("remainCount".equals(type)) {
+                    return Integer.compare(c2.getRemainCount(), c1.getRemainCount());
+                }
+                return c2.getCreatedAt().compareTo(c1.getCreatedAt());
+            })
+            .limit(limit)
+            .map(this::convertCouponToMap)
+            .collect(java.util.stream.Collectors.toList());
+
         return Result.success(rank);
     }
 

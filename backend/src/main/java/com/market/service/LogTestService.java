@@ -3,6 +3,7 @@ package com.market.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,11 @@ import java.util.Random;
 /**
  * 日志测试服务
  * 模拟用户操作并写入日志到 log 目录
+ * 注意：仅在 dev/profile 环境下启用
  */
 @Service
 @RequiredArgsConstructor
+@Profile("dev")
 public class LogTestService {
 
     private static final Logger log = LoggerFactory.getLogger(LogTestService.class);

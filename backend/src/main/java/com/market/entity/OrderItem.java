@@ -5,26 +5,45 @@ import java.math.BigDecimal;
 
 /**
  * 订单项实体类
+ * 对应数据库表：order_item
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
-    
+
+    /**
+     * 订单项唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    /**
+     * 所属订单
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-    
+
+    /**
+     * 商品
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-    
+
+    /**
+     * 购买数量
+     */
     @Column(nullable = false)
     private Integer quantity;
-    
+
+    /**
+     * 商品单价
+     */
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
     

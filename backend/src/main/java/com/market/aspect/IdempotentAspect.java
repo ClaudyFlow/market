@@ -7,8 +7,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -30,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 public class IdempotentAspect {
-
-    private static final Logger log = LoggerFactory.getLogger(IdempotentAspect.class);
 
     /**
      * SpEL 表达式解析器

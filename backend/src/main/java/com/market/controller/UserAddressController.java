@@ -20,9 +20,12 @@ import java.util.Map;
 
 /**
  * 用户地址控制器
+ * 提供用户收货地址的增删改查、默认地址设置、地址数量统计等功能。
+ * 权限要求：需要登录
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/address
  */
 @RestController
 @RequestMapping("/api/address")
@@ -34,6 +37,11 @@ public class UserAddressController {
 
     /**
      * 获取用户地址列表
+     * API路径：GET /api/address/list
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 用户地址列表
      */
     @GetMapping("/list")
     public ResponseEntity<List<UserAddressResponse>> getUserAddresses(
@@ -44,6 +52,13 @@ public class UserAddressController {
 
     /**
      * 获取用户地址列表（分页）
+     * API路径：GET /api/address/page
+     * 权限：需要登录
+     *
+     * @param page 页码，默认0
+     * @param size 每页大小，默认10
+     * @param user 当前登录用户
+     * @return 分页的用户地址列表
      */
     @GetMapping("/page")
     public ResponseEntity<Page<UserAddressResponse>> getUserAddressesPage(
@@ -58,6 +73,11 @@ public class UserAddressController {
 
     /**
      * 获取默认地址
+     * API路径：GET /api/address/default
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 默认地址
      */
     @GetMapping("/default")
     public ResponseEntity<UserAddressResponse> getDefaultAddress(
@@ -68,6 +88,12 @@ public class UserAddressController {
 
     /**
      * 获取地址详情
+     * API路径：GET /api/address/{id}
+     * 权限：需要登录
+     *
+     * @param id 地址ID
+     * @param user 当前登录用户
+     * @return 地址详情
      */
     @GetMapping("/{id}")
     public ResponseEntity<UserAddressResponse> getAddressDetail(
@@ -79,6 +105,12 @@ public class UserAddressController {
 
     /**
      * 创建地址
+     * API路径：POST /api/address
+     * 权限：需要登录
+     *
+     * @param request 地址信息
+     * @param user 当前登录用户
+     * @return 创建的地址
      */
     @PostMapping
     public ResponseEntity<UserAddressResponse> createAddress(
@@ -90,6 +122,13 @@ public class UserAddressController {
 
     /**
      * 更新地址
+     * API路径：PUT /api/address/{id}
+     * 权限：需要登录
+     *
+     * @param id 地址ID
+     * @param request 更新的地址信息
+     * @param user 当前登录用户
+     * @return 更新后的地址
      */
     @PutMapping("/{id}")
     public ResponseEntity<UserAddressResponse> updateAddress(
@@ -103,6 +142,12 @@ public class UserAddressController {
 
     /**
      * 设置默认地址
+     * API路径：POST /api/address/{id}/default
+     * 权限：需要登录
+     *
+     * @param id 地址ID
+     * @param user 当前登录用户
+     * @return 设置结果
      */
     @PostMapping("/{id}/default")
     public ResponseEntity<Map<String, Object>> setDefaultAddress(
@@ -117,6 +162,12 @@ public class UserAddressController {
 
     /**
      * 删除地址
+     * API路径：DELETE /api/address/{id}
+     * 权限：需要登录
+     *
+     * @param id 地址ID
+     * @param user 当前登录用户
+     * @return 删除结果
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteAddress(
@@ -131,6 +182,11 @@ public class UserAddressController {
 
     /**
      * 获取地址数量
+     * API路径：GET /api/address/count
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 地址数量
      */
     @GetMapping("/count")
     public ResponseEntity<Map<String, Long>> getAddressCount(

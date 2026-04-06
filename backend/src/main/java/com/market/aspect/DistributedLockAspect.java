@@ -7,8 +7,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -33,8 +31,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Aspect
 @Component
 public class DistributedLockAspect {
-
-    private static final Logger log = LoggerFactory.getLogger(DistributedLockAspect.class);
 
     /**
      * SpEL 表达式解析器

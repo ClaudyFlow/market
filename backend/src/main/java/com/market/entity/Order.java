@@ -8,68 +8,129 @@ import java.util.List;
 
 /**
  * 订单实体类
+ * 对应数据库表：order
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "\"order\"")
 public class Order {
 
+    /**
+     * 订单唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 订单编号
+     */
     @Column(unique = true, nullable = false)
     private String orderNo;
 
+    /**
+     * 下单用户
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * 商家用户
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "merchant_id")
     private User merchant;
 
+    /**
+     * 订单商品项列表
+     */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> item = new ArrayList<>();
 
+    /**
+     * 订单总金额
+     */
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
+    /**
+     * 订单状态（PENDING待支付、PAID已支付、SHIPPED已发货、COMPLETED已完成、CANCELLED已取消、REFUNDING退款中）
+     */
     @Column(nullable = false, length = 50)
-    private String status = "PENDING"; // PENDING, PAID, SHIPPED, COMPLETED, CANCELLED, REFUNDING
+    private String status = "PENDING";
 
+    /**
+     * 收货地址
+     */
     @Column(length = 500)
     private String shippingAddress;
 
+    /**
+     * 支付方式（ALIPAY支付宝、WECHAT微信、CARD银行卡）
+     */
     @Column(length = 50)
-    private String paymentMethod; // ALIPAY, WECHAT, CARD
+    private String paymentMethod;
 
+    /**
+     * 物流运单号
+     */
     @Column(length = 100)
     private String trackingNo;
 
+    /**
+     * 物流承运商
+     */
     @Column(length = 50)
     private String carrier;
 
+    /**
+     * 退款原因
+     */
     @Column(length = 500)
     private String refundReason;
 
+    /**
+     * 退款图片（JSON格式）
+     */
     @Column(columnDefinition = "TEXT")
     private String refundImages;
 
+    /**
+     * 订单创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * 订单更新时间
+     */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * 支付时间
+     */
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    /**
+     * 发货时间
+     */
     @Column(name = "shipped_at")
     private LocalDateTime shippedAt;
 
+    /**
+     * 完成时间
+     */
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
+    /**
+     * 取消时间
+     */
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
 

@@ -18,6 +18,12 @@ import java.util.stream.Collectors;
 
 /**
  * 搜索控制器
+ * 提供综合搜索、商品搜索、帖子搜索、用户搜索、热词和搜索建议等功能。
+ * 权限要求：公开接口，无需登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/search
  */
 @RestController
 @RequestMapping("/api/search")
@@ -28,7 +34,14 @@ public class SearchController {
     private SearchService searchService;
 
     /**
-     * 综合搜索
+     * 综合搜索（商品、帖子、用户）
+     * API路径：GET /api/search/all
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 综合搜索结果（包含商品、帖子、用户）
      */
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> searchAll(
@@ -41,7 +54,6 @@ public class SearchController {
 
         Map<String, Object> response = new HashMap<>();
 
-        // 商品结果
         List<Map<String, Object>> productList = result.getProducts().getContent().stream()
             .map(product -> {
                 Map<String, Object> map = new HashMap<>();
@@ -56,7 +68,6 @@ public class SearchController {
             })
             .collect(Collectors.toList());
 
-        // 帖子结果
         List<Map<String, Object>> postList = result.getPosts().getContent().stream()
             .map(post -> {
                 Map<String, Object> map = new HashMap<>();
@@ -71,7 +82,6 @@ public class SearchController {
             })
             .collect(Collectors.toList());
 
-        // 用户结果
         List<Map<String, Object>> userList = result.getUsers().getContent().stream()
             .map(user -> {
                 Map<String, Object> map = new HashMap<>();
@@ -95,6 +105,13 @@ public class SearchController {
 
     /**
      * 搜索商品
+     * API路径：GET /api/search/products
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的商品搜索结果
      */
     @GetMapping("/products")
     public ResponseEntity<Map<String, Object>> searchProducts(
@@ -130,6 +147,13 @@ public class SearchController {
 
     /**
      * 搜索帖子
+     * API路径：GET /api/search/posts
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的帖子搜索结果
      */
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> searchPosts(
@@ -167,6 +191,13 @@ public class SearchController {
 
     /**
      * 搜索用户
+     * API路径：GET /api/search/users
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的用户搜索结果
      */
     @GetMapping("/users")
     public ResponseEntity<Map<String, Object>> searchUsers(
@@ -199,6 +230,10 @@ public class SearchController {
 
     /**
      * 获取热门搜索词
+     * API路径：GET /api/search/hot
+     * 权限：公开
+     *
+     * @return 热门搜索词列表
      */
     @GetMapping("/hot")
     public ResponseEntity<List<String>> getHotKeywords() {
@@ -208,6 +243,11 @@ public class SearchController {
 
     /**
      * 获取搜索建议
+     * API路径：GET /api/search/suggestions
+     * 权限：公开
+     *
+     * @param keyword 搜索关键词
+     * @return 搜索建议列表
      */
     @GetMapping("/suggestions")
     public ResponseEntity<List<String>> getSuggestions(@RequestParam String keyword) {

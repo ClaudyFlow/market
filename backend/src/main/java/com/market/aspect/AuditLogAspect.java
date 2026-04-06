@@ -40,7 +40,6 @@ import java.util.concurrent.Executors;
 public class AuditLogAspect {
 
     private static final Logger auditLog = LoggerFactory.getLogger("AUDIT_LOG");
-    private static final Logger log = LoggerFactory.getLogger(AuditLogAspect.class);
 
     /**
      * JSON 序列化器

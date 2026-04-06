@@ -5,38 +5,69 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * VIP 充值订单实体类
+ * VIP充值订单实体类
+ * 对应数据库表：vip_recharge_order
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "vip_recharge_order")
 public class VipRechargeOrder {
 
+    /**
+     * 充值订单唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 充值用户
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * 订单编号
+     */
     @Column(name = "order_no", unique = true, nullable = false, length = 50)
     private String orderNo;
 
+    /**
+     * 充值金额
+     */
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
+    /**
+     * 获得的成长值
+     */
     @Column(name = "growth_value", nullable = false)
     private Integer growthValue;
 
+    /**
+     * 订单状态（PENDING待支付、PAID已支付、CANCELLED已取消）
+     */
     @Column(nullable = false, length = 20)
-    private String status = "PENDING"; // PENDING, PAID, CANCELLED
+    private String status = "PENDING";
 
+    /**
+     * 支付方式
+     */
     @Column(name = "payment_method", length = 50)
     private String paymentMethod;
 
+    /**
+     * 支付时间
+     */
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    /**
+     * 创建时间
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

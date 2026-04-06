@@ -4,12 +4,19 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 论坛帖子实体
+ * 论坛帖子实体类
+ * 对应数据库表：forum_post
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "forum_post")
 public class ForumPost {
 
+    /**
+     * 帖子唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

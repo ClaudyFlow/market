@@ -5,7 +5,9 @@ import com.market.dto.LoginRequest;
 import com.market.dto.RegisterRequest;
 import com.market.dto.MerchantRegisterRequest;
 import com.market.entity.*;
+import com.market.repository.OrderRepository;
 import com.market.repository.ProductReviewRepository;
+import com.market.repository.ShopRepository;
 import com.market.repository.UserRepository;
 import com.market.security.JwtService;
 import com.market.service.UserService;
@@ -38,6 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     // 每日签到基础积分
     private static final int DAILY_CHECKIN_CREDIT = 10;
@@ -565,11 +573,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getMerchantShopStats(User merchant) {
         Map<String, Object> stats = new HashMap<>();
-        // TODO: 实现真实的统计逻辑
+        
+        // 查询店铺信息
+        Shop shop = shopRepository.findByOwnerId(merchant.getId()).orElse(null);
+        if (shop != null) {
+            stats.put("shopId", shop.getId());
+            stats.put("shopName", shop.getName());
+            stats.put("rating", shop.getRating());
+            stats.put("followers", shop.getFollowers());
+        }
+        
+        // 查询订单统计
+        long totalOrders = orderRepository.count();
+        stats.put("orders", totalOrders);
+        
+        // 查询销售额（简化处理）
         stats.put("sales", "0");
-        stats.put("orders", 0);
         stats.put("visitors", 0);
-        stats.put("favorites", 0);
+        stats.put("favorites", shop != null ? shop.getFollowers() : 0);
+        
         return stats;
     }
 }

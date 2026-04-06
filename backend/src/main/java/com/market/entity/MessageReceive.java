@@ -4,13 +4,20 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 消息接收记录实体
+ * 消息接收记录实体类
+ * 对应数据库表：message_receive
+ *
+ * @author market-team
+ * @since 1.0
  */
 @Entity
 @Table(name = "message_receive",
        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "message_id"}))
 public class MessageReceive {
 
+    /**
+     * 接收记录唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

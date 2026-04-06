@@ -11,10 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 商品评价数据访问接口
+ * 商品评价数据访问层
+ * 对应实体：ProductReview
  *
- * @author Market Team
- * @since 1.0.0
+ * @author market-team
+ * @since 1.0
  */
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
@@ -95,6 +96,14 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
      * @return 评价对象
      */
     ProductReview findByOrderId(Long orderId);
+
+    /**
+     * 检查订单是否已评价
+     *
+     * @param orderId 订单 ID
+     * @return 是否已评价
+     */
+    boolean existsByOrderId(Long orderId);
 
     /**
      * 获取商品各评分等级的数量

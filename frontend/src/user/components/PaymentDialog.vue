@@ -58,7 +58,7 @@
               @click="selectedMethod = 'BANK'"
             >
               <div class="method-icon">
-                <el-icon :size="30"><BankCard /></el-icon>
+                <el-icon :size="30"><CreditCard /></el-icon>
               </div>
               <div class="method-name">
                 <div class="name">银行卡支付</div>
@@ -84,7 +84,7 @@
         <!-- 支付二维码（模拟） -->
         <div class="qr-code-area" v-if="showQrCode">
           <div class="qr-placeholder">
-            <el-icon :size="80"><QRCode /></el-icon>
+            <el-icon :size="80"><Picture /></el-icon>
             <p>模拟支付二维码</p>
             <p class="tip">请使用{{ selectedMethod === 'ALIPAY' ? '支付宝' : selectedMethod === 'WECHAT' ? '微信' : '银行 APP' }}扫码</p>
           </div>
@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Wallet, ChatDotRound, BankCard, QRCode } from '@element-plus/icons-vue'
+import { Wallet, ChatDotRound, CreditCard, Expand, Picture } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
