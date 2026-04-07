@@ -6,39 +6,46 @@ REM ============================================================
 
 echo [Start Database] Checking PostgreSQL...
 
-set PG_BIN=C:\Program Files\PostgreSQL\18\bin
-set PG_DATA=C:\Program Files\PostgreSQL\18\data
-
 REM Check if PostgreSQL is installed
-"%PG_BIN%\pg_isready.exe" >nul 2>&1
+winget list PostgreSQL.PostgreSQL.18 >nul 2>nul
 if %errorlevel% neq 0 (
-    echo [Error] PostgreSQL not installed, installing via winget...
+    echo [Info] PostgreSQL not found, installing...
     winget install -e --id PostgreSQL.PostgreSQL.18 --accept-package-agreements --accept-source-agreements
     if %errorlevel% neq 0 (
         echo [Error] PostgreSQL installation failed
         exit /b 1
     )
     echo [Success] PostgreSQL installed
+    echo [Info] Please restart the script to apply environment changes
+    exit /b 1
 )
+echo [Success] PostgreSQL is installed
+echo.
 
-REM Check if PostgreSQL is running
-"%PG_BIN%\pg_isready.exe" >nul 2>&1
+REM Stop PostgreSQL service if running
+sc query postgresql-x64-18 >nul 2>&1
+if %errorlevel% equ 0 (
+    net stop postgresql-x64-18 >nul 2>&1
+    echo [Success] PostgreSQL stopped
+)
+echo.
+
+REM Start PostgreSQL service
+echo [Start] Starting PostgreSQL...
+net start postgresql-x64-18 >nul 2>&1
+timeout /t 3 /nobreak >nul
+
+sc query postgresql-x64-18 | findstr "RUNNING" >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [Start] PostgreSQL not running, starting...
-    "%PG_BIN%\pg_ctl.exe" start -D "%PG_DATA%" -l "%PG_DATA%\log\postgresql.log" >nul 2>&1
-    timeout /t 3 /nobreak >nul
-
-    "%PG_BIN%\pg_isready.exe" >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo [Error] PostgreSQL startup failed
-        exit /b 1
-    )
-    echo [Success] PostgreSQL started
+    echo [Error] PostgreSQL startup failed
+    exit /b 1
 )
+echo [Success] PostgreSQL started
+echo.
 
 REM Verify database connection
 set PGPASSWORD=market
-"%PG_BIN%\psql.exe" -U market -d market -c "SELECT 1;" >nul 2>&1
+psql -U market -d market -c "SELECT 1;" >nul 2>&1
 if %errorlevel% neq 0 (
     echo [Error] Cannot connect to market database
     exit /b 1
