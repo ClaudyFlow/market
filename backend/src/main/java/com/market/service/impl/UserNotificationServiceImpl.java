@@ -193,10 +193,10 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         Map<String, Object> stats = new HashMap<>();
         long total = notificationRepository.countByUserId(userId);
         long unread = notificationRepository.countByUserIdAndIsReadFalse(userId);
-        long systemUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "SYSTEM", false);
-        long activityUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ACTIVITY", false);
-        long orderUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ORDER", false);
-        long promotionUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "PROMOTION", false);
+        long systemUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "SYSTEM");
+        long activityUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ACTIVITY");
+        long orderUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "ORDER");
+        long promotionUnread = notificationRepository.countByUserIdAndTypeAndIsReadFalse(userId, "PROMOTION");
 
         stats.put("total", total);
         stats.put("unread", unread);

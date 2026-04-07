@@ -87,9 +87,9 @@ public interface UserFavoriteRepository extends JpaRepository<UserFavorite, Long
      * @return 收藏列表分页
      */
     @Query("SELECT uf FROM UserFavorite uf WHERE uf.userId = :userId " +
-           "AND (uf.productName LIKE %:keyword% OR uf.shopName LIKE %:keyword%) " +
+           "AND (uf.productName LIKE CONCAT('%', :keyword, '%') OR uf.shopName LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY uf.createdAt DESC")
-    Page<UserFavorite> searchByUserId(@Param("userId") Long userId, 
+    Page<UserFavorite> searchByUserId(@Param("userId") Long userId,
                                        @Param("keyword") String keyword,
                                        Pageable pageable);
 }

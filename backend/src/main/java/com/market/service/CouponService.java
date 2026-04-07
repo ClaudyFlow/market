@@ -440,10 +440,10 @@ public class CouponService {
     public Page<Coupon> getCouponTemplates(Long merchantId, Pageable pageable) {
         LocalDateTime now = LocalDateTime.now();
         if (merchantId != null) {
-            return couponRepository.findByMerchantIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+            return couponRepository.findByMerchantIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
                 merchantId, "ACTIVE", now, now, pageable);
         }
-        return couponRepository.findByStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+        return couponRepository.findByStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
             "ACTIVE", now, now, pageable);
     }
 
@@ -512,7 +512,7 @@ public class CouponService {
      */
     public List<Coupon> getShopCoupons(Long shopId) {
         LocalDateTime now = LocalDateTime.now();
-        return couponRepository.findByShopIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+        return couponRepository.findByShopIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
             shopId, "ACTIVE", now, now);
     }
 
@@ -521,7 +521,7 @@ public class CouponService {
      */
     public List<Coupon> getProductCoupons(Long productId) {
         LocalDateTime now = LocalDateTime.now();
-        return couponRepository.findByProductIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+        return couponRepository.findByProductIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
             productId, "ACTIVE", now, now);
     }
 }

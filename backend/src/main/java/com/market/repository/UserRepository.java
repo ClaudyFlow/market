@@ -78,7 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return 用户列表分页
      */
     @Query("SELECT u FROM User u WHERE " +
-           "u.name LIKE %:keyword% OR u.email LIKE %:keyword% OR u.phone LIKE %:keyword%")
+           "u.name LIKE CONCAT('%', :keyword, '%') OR u.email LIKE CONCAT('%', :keyword, '%') OR u.phone LIKE CONCAT('%', :keyword, '%')")
     Page<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
 
     /**

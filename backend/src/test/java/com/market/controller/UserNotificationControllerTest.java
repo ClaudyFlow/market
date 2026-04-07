@@ -1,8 +1,8 @@
 package com.market.controller;
 
 import com.market.common.Result;
+import com.market.dto.UserNotificationResponse;
 import com.market.entity.User;
-import com.market.entity.UserNotification;
 import com.market.service.UserNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class UserNotificationControllerTest {
     private UserNotificationController userNotificationController;
 
     private User testUser;
-    private UserNotification testNotification;
+    private UserNotificationResponse testNotification;
 
     @BeforeEach
     void setUp() {
@@ -43,7 +43,7 @@ class UserNotificationControllerTest {
         testUser.setId(1L);
         testUser.setName("testuser");
 
-        testNotification = new UserNotification();
+        testNotification = new UserNotificationResponse();
         testNotification.setId(1L);
         testNotification.setUserId(1L);
         testNotification.setTitle("系统通知");
@@ -55,7 +55,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetNotificationsNoUser() {
-        Result<Page<UserNotification>> result = userNotificationController.getNotifications(
+        Result<Page<UserNotificationResponse>> result = userNotificationController.getNotifications(
             null, 1, 10, null);
 
         assertNotNull(result);
@@ -65,7 +65,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetNotificationDetailNoUser() {
-        Result<UserNotification> result = userNotificationController.getNotificationDetail(1L, null);
+        Result<UserNotificationResponse> result = userNotificationController.getNotificationDetail(1L, null);
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
@@ -74,7 +74,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testMarkAsReadNoUser() {
-        Result<Void> result = userNotificationController.markAsRead(1L, null);
+        Result<Integer> result = userNotificationController.markAsRead(1L, null);
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
@@ -83,7 +83,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testBatchMarkAsReadNoUser() {
-        Result<Void> result = userNotificationController.batchMarkAsRead(Arrays.asList(1L, 2L), null);
+        Result<Integer> result = userNotificationController.batchMarkAsRead(Arrays.asList(1L, 2L), null);
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
@@ -92,7 +92,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testMarkAllAsReadNoUser() {
-        Result<Void> result = userNotificationController.markAllAsRead(null);
+        Result<Integer> result = userNotificationController.markAllAsRead(null);
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
@@ -110,7 +110,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testBatchDeleteNotificationsNoUser() {
-        Result<Void> result = userNotificationController.batchDeleteNotifications(
+        Result<Integer> result = userNotificationController.batchDeleteNotifications(
             Arrays.asList(1L, 2L), null);
 
         assertNotNull(result);
@@ -120,7 +120,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testClearNotificationsNoUser() {
-        Result<Void> result = userNotificationController.clearNotifications(null);
+        Result<Integer> result = userNotificationController.clearNotifications(null);
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
@@ -160,7 +160,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetSystemNotificationsNoUser() {
-        Result<Page<UserNotification>> result = userNotificationController.getSystemNotifications(
+        Result<Page<UserNotificationResponse>> result = userNotificationController.getSystemNotifications(
             null, 1, 10);
 
         assertNotNull(result);
@@ -170,7 +170,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetActivityNotificationsNoUser() {
-        Result<Page<UserNotification>> result = userNotificationController.getActivityNotifications(
+        Result<Page<UserNotificationResponse>> result = userNotificationController.getActivityNotifications(
             null, 1, 10);
 
         assertNotNull(result);
@@ -180,7 +180,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetOrderNotificationsNoUser() {
-        Result<Page<UserNotification>> result = userNotificationController.getOrderNotifications(
+        Result<Page<UserNotificationResponse>> result = userNotificationController.getOrderNotifications(
             null, 1, 10);
 
         assertNotNull(result);
@@ -190,7 +190,7 @@ class UserNotificationControllerTest {
 
     @Test
     void testGetLatestNotificationsNoUser() {
-        Result<List<UserNotification>> result = userNotificationController.getLatestNotifications(
+        Result<List<UserNotificationResponse>> result = userNotificationController.getLatestNotifications(
             null, 5);
 
         assertNotNull(result);

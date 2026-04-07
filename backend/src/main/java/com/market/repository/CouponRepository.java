@@ -181,7 +181,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
      * @param pageable 分页参数
      * @return 优惠券分页
      */
-    Page<Coupon> findByMerchantIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+    Page<Coupon> findByMerchantIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
         Long merchantId, String status, LocalDateTime now, LocalDateTime now2, Pageable pageable);
 
     /**
@@ -193,11 +193,12 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
      * @param pageable 分页参数
      * @return 优惠券分页
      */
-    Page<Coupon> findByStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
+    Page<Coupon> findByStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
         String status, LocalDateTime now, LocalDateTime now2, Pageable pageable);
 
     /**
-     * 查询店铺优惠券
+     * 查询店铺优惠券（通过自定义SQL查询）
+     * 店铺的优惠券即店铺所有者（商家）创建的优惠券
      *
      * @param shopId 店铺ID
      * @param status 优惠券状态
@@ -205,11 +206,15 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
      * @param now2 当前时间（有效期结束）
      * @return 优惠券列表
      */
-    List<Coupon> findByShopIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
-        Long shopId, String status, LocalDateTime now, LocalDateTime now2);
+    @Query("SELECT c FROM Coupon c WHERE c.merchant.id = " +
+           "(SELECT s.owner.id FROM Shop s WHERE s.id = :shopId) " +
+           "AND c.status = :status AND c.validFrom <= :now AND c.validTo >= :now2")
+    List<Coupon> findByShopIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
+        @Param("shopId") Long shopId, @Param("status") String status, 
+        @Param("now") LocalDateTime now, @Param("now2") LocalDateTime now2);
 
     /**
-     * 查询商品优惠券
+     * 查询商品优惠券（通过自定义SQL查询匹配productIds字段）
      *
      * @param productId 商品ID
      * @param status 优惠券状态
@@ -217,6 +222,11 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
      * @param now2 当前时间（有效期结束）
      * @return 优惠券列表
      */
-    List<Coupon> findByProductIdAndStatusAndValidStartLessThanEqualAndValidEndGreaterThanEqual(
-        Long productId, String status, LocalDateTime now, LocalDateTime now2);
+    @Query("SELECT c FROM Coupon c WHERE c.status = :status " +
+           "AND c.validFrom <= :now AND c.validTo >= :now2 " +
+           "AND (c.productIds LIKE CONCAT('%', :productId, '%') " +
+           "OR c.scope = 'ALL')")
+    List<Coupon> findByProductIdAndStatusAndValidFromLessThanEqualAndValidToGreaterThanEqual(
+        @Param("productId") Long productId, @Param("status") String status,
+        @Param("now") LocalDateTime now, @Param("now2") LocalDateTime now2);
 }

@@ -44,7 +44,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * 搜索商品
      */
     @Query("SELECT p FROM Product p WHERE p.status = 1 AND " +
-           "(p.name LIKE %:keyword% OR p.description LIKE %:keyword% OR p.category LIKE %:keyword%) " +
+           "(p.name LIKE CONCAT('%', :keyword, '%') OR p.description LIKE CONCAT('%', :keyword, '%') OR p.category LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY p.createdAt DESC")
     Page<Product> searchProducts(@Param("keyword") String keyword, Pageable pageable);
 

@@ -35,7 +35,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     /**
      * 获取优质店铺（评分高、关注多）
      */
-    @Query("SELECT s FROM Shop s WHERE s.status = 'ACTIVE' AND s.certified = true ORDER BY s.rating DESC, s.followerCount DESC")
+    @Query("SELECT s FROM Shop s WHERE s.status = 'ACTIVE' AND s.certified = true ORDER BY s.rating DESC, s.followers DESC")
     List<Shop> findTopShops(Pageable pageable);
 
     /**
@@ -51,8 +51,8 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     /**
      * 搜索店铺
      */
-    @Query("SELECT s FROM Shop s WHERE s.status = 'active' AND " +
-           "(s.name LIKE %:keyword% OR s.description LIKE %:keyword%) " +
+    @Query("SELECT s FROM Shop s WHERE s.status = 'ACTIVE' AND " +
+           "(s.name LIKE CONCAT('%', :keyword, '%') OR s.description LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY s.rating DESC, s.followers DESC")
     Page<Shop> searchShops(@Param("keyword") String keyword, Pageable pageable);
 
@@ -64,7 +64,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     /**
      * 获取高评分店铺
      */
-    @Query("SELECT s FROM Shop s WHERE s.status = 'active' AND s.rating >= :minRating ORDER BY s.rating DESC")
+    @Query("SELECT s FROM Shop s WHERE s.status = 'ACTIVE' AND s.rating >= :minRating ORDER BY s.rating DESC")
     Page<Shop> findByRatingGreaterThanEqual(@Param("minRating") Double minRating, Pageable pageable);
 
     /**

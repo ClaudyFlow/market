@@ -119,8 +119,7 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
      *
      * @param userId 用户 ID
      * @param type 通知类型
-     * @param isRead 是否已读
      * @return 未读通知数量
      */
-    long countByUserIdAndTypeAndIsReadFalse(Long userId, String type, boolean isRead);
+    long countByUserIdAndTypeAndIsReadFalse(Long userId, String type);
 }

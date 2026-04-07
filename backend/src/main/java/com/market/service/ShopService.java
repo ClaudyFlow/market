@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -69,10 +70,10 @@ public class ShopService {
         }
 
         shop.setOwner(owner);
-        shop.setRating(0.0);
+        shop.setRating(BigDecimal.ZERO);
         shop.setFollowers(0);
         shop.setProductCount(0);
-        shop.setPositiveRate(0.0);
+        shop.setPositiveRate(BigDecimal.ZERO);
         shop.setOpenYears(0);
         shop.setStatus("active");
         shop.setCertified(false);
@@ -184,7 +185,10 @@ public class ShopService {
     public Shop updateRating(Long id, Double rating) {
         Shop shop = getShopDetail(id);
         // 简单平均（实际应该更复杂）
-        Double newRating = (shop.getRating() * shop.getFollowers() + rating) / (shop.getFollowers() + 1);
+        BigDecimal newRating = shop.getRating()
+            .multiply(BigDecimal.valueOf(shop.getFollowers()))
+            .add(BigDecimal.valueOf(rating))
+            .divide(BigDecimal.valueOf(shop.getFollowers() + 1), 2, java.math.RoundingMode.HALF_UP);
         shop.setRating(newRating);
         return shopRepository.save(shop);
     }
@@ -194,9 +198,9 @@ public class ShopService {
      */
     public Shop updateServiceScores(Long id, Double descriptionScore, Double serviceScore, Double logisticsScore) {
         Shop shop = getShopDetail(id);
-        shop.setDescriptionScore(descriptionScore);
-        shop.setServiceScore(serviceScore);
-        shop.setLogisticsScore(logisticsScore);
+        shop.setDescriptionScore(BigDecimal.valueOf(descriptionScore));
+        shop.setServiceScore(BigDecimal.valueOf(serviceScore));
+        shop.setLogisticsScore(BigDecimal.valueOf(logisticsScore));
         return shopRepository.save(shop);
     }
 

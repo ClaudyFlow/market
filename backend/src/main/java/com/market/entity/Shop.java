@@ -55,8 +55,8 @@ public class Shop {
     /**
      * 店铺评分
      */
-    @Column(nullable = false)
-    private Double rating = 0.0;
+    @Column(nullable = false, precision = 3, scale = 2)
+    private BigDecimal rating = BigDecimal.ZERO;
 
     /**
      * 粉丝数量
@@ -73,8 +73,8 @@ public class Shop {
     /**
      * 好评率
      */
-    @Column(nullable = false)
-    private Double positiveRate = 0.0;
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal positiveRate = BigDecimal.ZERO;
 
     /**
      * 开店年限
@@ -121,20 +121,20 @@ public class Shop {
     /**
      * 描述评分
      */
-    @Column(precision = 10, scale = 2)
-    private Double descriptionScore = 0.0;
+    @Column(precision = 3, scale = 2)
+    private BigDecimal descriptionScore = BigDecimal.ZERO;
 
     /**
      * 服务评分
      */
-    @Column(precision = 10, scale = 2)
-    private Double serviceScore = 0.0;
+    @Column(precision = 3, scale = 2)
+    private BigDecimal serviceScore = BigDecimal.ZERO;
 
     /**
      * 物流评分
      */
-    @Column(precision = 10, scale = 2)
-    private Double logisticsScore = 0.0;
+    @Column(precision = 3, scale = 2)
+    private BigDecimal logisticsScore = BigDecimal.ZERO;
 
     /**
      * 店铺所有者
@@ -193,8 +193,8 @@ public class Shop {
     public String getSlogan() { return slogan; }
     public void setSlogan(String slogan) { this.slogan = slogan; }
 
-    public Double getRating() { return rating; }
-    public void setRating(Double rating) { this.rating = rating; }
+    public BigDecimal getRating() { return rating; }
+    public void setRating(BigDecimal rating) { this.rating = rating; }
 
     public Integer getFollowers() { return followers; }
     public void setFollowers(Integer followers) { this.followers = followers; }
@@ -202,8 +202,8 @@ public class Shop {
     public Integer getProductCount() { return productCount; }
     public void setProductCount(Integer productCount) { this.productCount = productCount; }
 
-    public Double getPositiveRate() { return positiveRate; }
-    public void setPositiveRate(Double positiveRate) { this.positiveRate = positiveRate; }
+    public BigDecimal getPositiveRate() { return positiveRate; }
+    public void setPositiveRate(BigDecimal positiveRate) { this.positiveRate = positiveRate; }
 
     public Integer getOpenYears() { return openYears; }
     public void setOpenYears(Integer openYears) { this.openYears = openYears; }
@@ -226,14 +226,14 @@ public class Shop {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    public Double getDescriptionScore() { return descriptionScore; }
-    public void setDescriptionScore(Double descriptionScore) { this.descriptionScore = descriptionScore; }
+    public BigDecimal getDescriptionScore() { return descriptionScore; }
+    public void setDescriptionScore(BigDecimal descriptionScore) { this.descriptionScore = descriptionScore; }
 
-    public Double getServiceScore() { return serviceScore; }
-    public void setServiceScore(Double serviceScore) { this.serviceScore = serviceScore; }
+    public BigDecimal getServiceScore() { return serviceScore; }
+    public void setServiceScore(BigDecimal serviceScore) { this.serviceScore = serviceScore; }
 
-    public Double getLogisticsScore() { return logisticsScore; }
-    public void setLogisticsScore(Double logisticsScore) { this.logisticsScore = logisticsScore; }
+    public BigDecimal getLogisticsScore() { return logisticsScore; }
+    public void setLogisticsScore(BigDecimal logisticsScore) { this.logisticsScore = logisticsScore; }
 
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }

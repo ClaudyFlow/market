@@ -135,11 +135,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @return 订单分页
      */
     @Query("SELECT o FROM Order o WHERE " +
-           "(:orderNo IS NULL OR o.orderNo LIKE %:orderNo%) AND " +
+           "(:orderNo IS NULL OR o.orderNo LIKE CONCAT('%', :orderNo, '%')) AND " +
            "(:status IS NULL OR o.status = :status) AND " +
            "(:userId IS NULL OR o.user.id = :userId) AND " +
            "(:merchantId IS NULL OR o.merchant.id = :merchantId) AND " +
-           "(:shopName IS NULL OR o.merchant.shopName LIKE %:shopName%) AND " +
+           "(:shopName IS NULL OR o.merchant.shopName LIKE CONCAT('%', :shopName, '%')) AND " +
            "(:startDate IS NULL OR o.createdAt >= :startDate) AND " +
            "(:endDate IS NULL OR o.createdAt <= :endDate)")
     Page<Order> findOrders(@Param("orderNo") String orderNo,

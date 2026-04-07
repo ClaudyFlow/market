@@ -133,7 +133,7 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
      */
     @Query("SELECT pr FROM ProductReview pr WHERE pr.productId = :productId " +
            "AND pr.status = 'APPROVED' " +
-           "AND (pr.content LIKE %:keyword% OR pr.userName LIKE %:keyword%) " +
+           "AND (pr.content LIKE CONCAT('%', :keyword, '%') OR pr.userName LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY pr.createdAt DESC")
     Page<ProductReview> searchByProductId(@Param("productId") Long productId,
                                            @Param("keyword") String keyword,
