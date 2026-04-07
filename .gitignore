@@ -72,7 +72,14 @@ client/
 .eslintcache
 
 # Nginx - ignore compiled assets only
-frontend/nginx/html/assets/
+depend/nginx/html/assets/
+depend/nginx/logs/
+
+# Monitoring and Logging
+monitoring/data/
+loki/data/
+loki/rules/
+promtail/data/
 
 # Database
 *.db

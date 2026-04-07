@@ -50,7 +50,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: resolve(__dirname, 'nginx/html'),
+    outDir: resolve(__dirname, '../depend/nginx/html'),
     emptyOutDir: false,
     minify: 'esbuild',
     esbuildOptions: {
