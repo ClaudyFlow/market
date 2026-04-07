@@ -10,10 +10,13 @@
 
 ```
 market/
-├── docker-compose.yml      # Docker 编排配置
-├── Dockerfile              # Java 应用镜像
+├── depend/
+│   ├── docker-compose.yml      # Docker 编排配置
+│   └── Dockerfile              # Java 应用镜像
+├── backend/
+│   └── pom.xml                 # Maven 构建配置
 ├── frontend/nginx/
-│   ├── Dockerfile          # Nginx 镜像
+│   ├── Dockerfile              # Nginx 镜像
 │   ├── conf/nginx.conf     # Nginx 配置
 │   └── html/               # 前端静态文件
 ├── monitoring/             # Prometheus 配置
@@ -30,6 +33,9 @@ market/
 ```bash
 # 创建必要目录
 mkdir -p data/postgres data/redis logs frontend/nginx/html
+
+# 进入 depend 目录
+cd depend
 
 # 构建并启动所有服务
 docker-compose up -d --build
@@ -100,7 +106,8 @@ npm run build
 # 2. 复制构建文件到 nginx/html
 cp -r dist/* nginx/html/
 
-# 3. 重启 Nginx
+# 3. 重启 Nginx (在 depend 目录下执行)
+cd ../depend
 docker-compose restart nginx
 ```
 
@@ -108,7 +115,7 @@ docker-compose restart nginx
 
 ### 容器启动失败
 ```bash
-# 查看日志
+# 查看日志 (在 depend 目录下执行)
 docker-compose logs app
 
 # 检查配置
@@ -117,7 +124,7 @@ docker-compose config
 
 ### 数据库连接问题
 ```bash
-# 进入数据库容器
+# 进入数据库容器 (在 depend 目录下执行)
 docker exec -it market-postgres psql -U market -d market
 
 # 检查数据库

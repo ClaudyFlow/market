@@ -15,8 +15,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../data/postgres:/var/lib/postgresql/data
+      - ../scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - market-network
     healthcheck:
@@ -34,7 +34,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./data/redis:/data
+      - ../data/redis:/data
     command: redis-server --appendonly yes --requirepass 123456
     networks:
       - market-network
@@ -48,8 +48,8 @@ services:
   # Spring Boot 应用
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: depend/Dockerfile
     container_name: market-app
     restart: always
     ports:
@@ -67,8 +67,8 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME:-2481036245@qq.com}
       - MAIL_PASSWORD=${MAIL_PASSWORD:-your-app-password}
     volumes:
-      - ./logs:/app/logs
-      - ./data/uploads:/app/uploads
+      - ../logs:/app/logs
+      - ../data/uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -87,14 +87,14 @@ services:
   # Node.js + Vue + TypeScript 开发环境
   frontend-dev:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
     container_name: market-frontend-dev
     restart: always
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app
+      - ../frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
@@ -110,7 +110,7 @@ services:
     image: ghcr.io/typst/typst:latest
     container_name: market-typst
     volumes:
-      - ./doc:/doc
+      - ../doc:/doc
     working_dir: /doc
     command: typst compile --root /doc
     profiles:
@@ -120,7 +120,7 @@ services:
   # Nginx 反向代理 + 前端静态资源
   nginx:
     build:
-      context: ./frontend/nginx
+      context: ../frontend/nginx
       dockerfile: Dockerfile
     container_name: market-nginx
     restart: always
@@ -143,8 +143,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./data/prometheus:/prometheus
+      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../data/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -163,7 +163,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin123
     volumes:
-      - ./data/grafana:/var/lib/grafana
+      - ../data/grafana:/var/lib/grafana
     depends_on:
       - prometheus
     networks:
@@ -180,8 +180,8 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./loki:/etc/loki
-      - ./data/loki:/loki
+      - ../loki:/etc/loki
+      - ../data/loki:/loki
     command: -config.file=/etc/loki/loki.yml
     networks:
       - market-network
@@ -194,8 +194,8 @@ services:
     container_name: market-promtail
     restart: always
     volumes:
-      - ./logs:/var/log/app
-      - ./promtail:/etc/promtail
+      - ../logs:/var/log/app
+      - ../promtail:/etc/promtail
     command: -config.file=/etc/promtail/promtail.yml
     networks:
       - market-network

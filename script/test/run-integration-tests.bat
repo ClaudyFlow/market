@@ -52,9 +52,9 @@ echo [2/5] 清理之前的测试数据...
 echo.
 
 REM 清理之前的构建
-cd backend
+cd ..\..\backend
 call mvn clean -q
-cd ..
+cd ..\..\script\test
 
 echo ✅ 清理完成
 echo.
@@ -63,9 +63,9 @@ echo [3/5] 启动后端服务 (测试模式)...
 echo.
 
 REM 启动后端（后台运行）
-cd backend
+cd ..\..\backend
 start "Market Backend (Integration Test)" cmd /k "mvn spring-boot:run -Dspring-boot.run.profiles=%TEST_PROFILE% -Dserver.port=%BACKEND_PORT%"
-cd ..
+cd ..\..\script\test
 
 echo ⏳ 等待后端服务启动 (%WAIT_TIME% 秒)...
 timeout /t %WAIT_TIME% /nobreak >nul
