@@ -30,7 +30,11 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+# Build artifacts (exclude script/build which contains build scripts)
 /build/
+build/
+!script/build/
+
 /coverage/
 
 # Symbolication related
