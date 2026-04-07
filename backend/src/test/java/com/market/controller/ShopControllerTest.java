@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ class ShopControllerTest {
         testShop.setId(1L);
         testShop.setName("测试店铺");
         testShop.setDescription("这是一个测试店铺");
-        testShop.setRating(4.5);
+        testShop.setRating(new BigDecimal("4.5"));
         testShop.setCreatedAt(LocalDateTime.now());
 
         shopList = Arrays.asList(testShop);

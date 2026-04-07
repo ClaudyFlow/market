@@ -45,14 +45,14 @@ public interface ForumPostRepository extends JpaRepository<ForumPost, Long> {
     /**
      * 按标签搜索帖子
      */
-    @Query("SELECT p FROM ForumPost p WHERE p.tags LIKE %:tag% AND p.status = 'ACTIVE' ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM ForumPost p WHERE p.tags LIKE CONCAT('%', :tag, '%') AND p.status = 'ACTIVE' ORDER BY p.createdAt DESC")
     Page<ForumPost> findByTag(@Param("tag") String tag, Pageable pageable);
 
     /**
      * 搜索帖子
      */
     @Query("SELECT p FROM ForumPost p WHERE p.status = 'ACTIVE' AND " +
-           "(p.title LIKE %:keyword% OR p.content LIKE %:keyword% OR p.userName LIKE %:keyword%) " +
+           "(p.title LIKE CONCAT('%', :keyword, '%') OR p.content LIKE CONCAT('%', :keyword, '%') OR p.userName LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY p.isPinned DESC, p.createdAt DESC")
     Page<ForumPost> searchPosts(@Param("keyword") String keyword, Pageable pageable);
 

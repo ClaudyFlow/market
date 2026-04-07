@@ -66,7 +66,7 @@ public interface UserBrowseHistoryRepository extends JpaRepository<UserBrowseHis
      * 搜索用户浏览历史
      */
     @Query("SELECT h FROM UserBrowseHistory h WHERE h.userId = :userId " +
-           "AND h.productName LIKE %:keyword% ORDER BY h.browseTime DESC")
+           "AND h.productName LIKE CONCAT('%', :keyword, '%') ORDER BY h.browseTime DESC")
     org.springframework.data.domain.Page<UserBrowseHistory> searchByUserId(
         @Param("userId") Long userId, @Param("keyword") String keyword,
         org.springframework.data.domain.Pageable pageable);

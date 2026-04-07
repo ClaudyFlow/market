@@ -77,9 +77,9 @@ public interface UserAddressRepository extends JpaRepository<UserAddress, Long> 
      * @return 地址列表分页
      */
     @Query("SELECT ua FROM UserAddress ua WHERE ua.userId = :userId " +
-           "AND (ua.receiverName LIKE %:keyword% OR ua.receiverPhone LIKE %:keyword% " +
-           "OR ua.province LIKE %:keyword% OR ua.city LIKE %:keyword% " +
-           "OR ua.detailAddress LIKE %:keyword%) " +
+           "AND (ua.receiverName LIKE CONCAT('%', :keyword, '%') OR ua.receiverPhone LIKE CONCAT('%', :keyword, '%') " +
+           "OR ua.province LIKE CONCAT('%', :keyword, '%') OR ua.city LIKE CONCAT('%', :keyword, '%') " +
+           "OR ua.detailAddress LIKE CONCAT('%', :keyword, '%')) " +
            "ORDER BY ua.isDefault DESC, ua.createdAt DESC")
     Page<UserAddress> searchByUserId(@Param("userId") Long userId,
                                       @Param("keyword") String keyword,

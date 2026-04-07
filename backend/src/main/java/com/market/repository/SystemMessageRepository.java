@@ -25,7 +25,7 @@ public interface SystemMessageRepository extends JpaRepository<SystemMessage, Lo
      * 获取用户可接收的消息（分页）
      */
     @Query("SELECT m FROM SystemMessage m WHERE m.isBroadcast = true " +
-           "OR m.targetUserIds LIKE %:userId% " +
+           "OR m.targetUserIds LIKE CONCAT('%', :userId, '%') " +
            "ORDER BY m.priority DESC, m.sendTime DESC")
     Page<SystemMessage> findUserMessages(@Param("userId") String userId, Pageable pageable);
 
