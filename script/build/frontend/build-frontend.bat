@@ -21,6 +21,18 @@ if %errorlevel% neq 0 (
         exit /b 1
     )
     call "%COLOR%" Green "Node.js installed"
+    winget list OpenJS.NodeJS.LTS >nul 2>nul
+    if %errorlevel% neq 0 (
+        call "%COLOR%" Red "Node.js installation verification failed, please install manually: https://nodejs.org/"
+        exit /b 1
+    )
+    call "%COLOR%" Green "Node.js installation verified"
+    where node >nul 2>nul
+    if %errorlevel% neq 0 (
+        cls
+        start "" cmd /c "%SCRIPT_DIR%start-frontend.bat"
+        exit /b 1
+    )
 ) else (
     call "%COLOR%" Green "Node.js is installed"
 )

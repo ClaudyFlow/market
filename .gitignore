@@ -64,6 +64,7 @@ buildNumber.properties
 node_modules/
 dist/
 build/
+!script/build/
 .nuxt/
 .cache/
 .vuepress/dist/

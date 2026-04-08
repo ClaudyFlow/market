@@ -4,6 +4,9 @@ REM ============================================================
 REM Start Database Service - PostgreSQL
 REM ============================================================
 
+set "CALLER=%~1"
+if "%CALLER%"=="" set "CALLER=%~dp0start-backend.bat"
+
 echo [Start Database] Checking PostgreSQL...
 
 REM Check if PostgreSQL is installed
@@ -16,8 +19,18 @@ if %errorlevel% neq 0 (
         exit /b 1
     )
     echo [Success] PostgreSQL installed
-    echo [Info] Please restart the script to apply environment changes
-    exit /b 1
+    winget list PostgreSQL.PostgreSQL.18 >nul 2>nul
+    if %errorlevel% neq 0 (
+        echo [Error] PostgreSQL installation verification failed
+        exit /b 1
+    )
+    echo [Success] PostgreSQL installation verified
+    where psql >nul 2>nul
+    if %errorlevel% neq 0 (
+        cls
+        start "" cmd /c "%CALLER%"
+        exit /b 1
+    )
 )
 echo [Success] PostgreSQL is installed
 echo.
@@ -50,5 +63,30 @@ if %errorlevel% neq 0 (
     echo [Error] Cannot connect to market database
     exit /b 1
 )
+
+echo [Success] Database service is ready
+echo.
+
+:: Start Redis
+echo [Start] Starting Redis...
+winget list Redis.Redis >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [Info] Redis not found, installing...
+    winget install -e --id Redis.Redis --accept-package-agreements --accept-source-agreements
+    if %errorlevel% neq 0 (
+        echo [Error] Redis installation failed
+        exit /b 1
+    )
+    echo [Success] Redis installed
+    winget list Redis.Redis >nul 2>nul
+    if %errorlevel% neq 0 (
+        echo [Error] Redis installation verification failed
+        exit /b 1
+    )
+    echo [Success] Redis installation verified
+)
+net start Redis >nul 2>&1
+echo [Success] Redis started
+echo.
 
 echo [Success] Database service is ready
