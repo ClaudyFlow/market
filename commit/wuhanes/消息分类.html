@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商场购物系统 - 消息中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        /* 整体布局 */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* 顶部导航 */
+        .header {
+            background-color: #ff4a4a;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 分类侧边栏 */
+        .category-sidebar {
+            width: 260px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #eee;
+            border-radius: 25px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .category-item:hover, .category-item.active {
+            background-color: #fff0f0;
+            color: #ff4a4a;
+        }
+
+        .badge {
+            background-color: #ff4a4a;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* 消息内容区 */
+        .message-content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 消息列表 */
+        .message-item {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .message-item:hover {
+            background-color: #fafafa;
+        }
+
+        .message-item.unread {
+            background-color: #fff9f9;
+            font-weight: 500;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-title {
+            font-size: 15px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .message-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 空状态 */
+        .empty {
+            text-align: center;
+            padding: 60px 0;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">优品商场购物系统</div>
+        <div class="user-info">
+            <span>欢迎，会员用户</span>
+            <span>个人中心</span>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <!-- 消息分类侧边栏 -->
+        <div class="category-sidebar">
+            <input type="text" class="search-box" placeholder="搜索消息...">
+            <h3 class="category-title">消息分类</h3>
+            <ul class="category-list">
+                <li class="category-item active">
+                    <span>全部消息</span>
+                    <span class="badge">12</span>
+                </li>
+                <li class="category-item">
+                    <span>订单通知</span>
+                    <span class="badge">5</span>
+                </li>
+                <li class="category-item">
+                    <span>物流提醒</span>
+                    <span class="badge">3</span>
+                </li>
+                <li class="category-item">
+                    <span>优惠活动</span>
+                    <span class="badge">4</span>
+                </li>
+                <li class="category-item">
+                    <span>系统公告</span>
+                </li>
+                <li class="category-item">
+                    <span>售后通知</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 消息列表区域 -->
+        <div class="message-content">
+            <h2 class="content-title">全部消息</h2>
+            
+            <!-- 未读消息 -->
+            <div class="message-item unread">
+                <div class="message-header">
+                    <span class="message-title">订单支付成功</span>
+                    <span class="message-time">10分钟前</span>
+                </div>
+                <div class="message-desc">您的订单已支付成功，我们将尽快为您发货，订单号：2025052000123，感谢您的购买！</div>
+            </div>
+
+            <div class="message-item unread">
+                <div class="message-header">
+                    <span class="message-title">商品物流已发出</span>
+                    <span class="message-time">30分钟前</span>
+                </div>
+                <div class="message-desc">您购买的商品已由顺丰快递发出，快递单号：SF123456789，请注意查收~</div>
+            </div>
+
+            <!-- 已读消息 -->
+            <div class="message-item">
+                <div class="message-header">
+                    <span class="message-title">520限时优惠活动</span>
+                    <span class="message-time">昨天</span>
+                </div>
+                <div class="message-desc">520情人节全场满300减50、满500减100，限时3天，点击立即查看优惠！</div>
+            </div>
+
+            <div class="message-item">
+                <div class="message-header">
+                    <span class="message-title">会员积分到账</span>
+                    <span class="message-time">2天前</span>
+                </div>
+                <div class="message-desc">您的消费积分已自动到账，当前总积分：860分，可用于兑换礼品或抵扣现金。</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 分类切换效果
+        const categoryItems = document.querySelectorAll('.category-item');
+        categoryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有激活状态
+                categoryItems.forEach(i => i.classList.remove('active'));
+                // 添加当前激活
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
