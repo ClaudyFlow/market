@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的购物车</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* 购物车容器 */
+        .cart-container {
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* 标题 */
+        .cart-title {
+            height: 60px;
+            line-height: 60px;
+            padding: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        /* 表头 */
+        .cart-header {
+            display: flex;
+            height: 50px;
+            line-height: 50px;
+            background: #fafafa;
+            padding: 0 20px;
+            color: #666;
+        }
+
+        /* 通用列样式 */
+        .col {
+            text-align: center;
+        }
+
+        .col-check {
+            width: 80px;
+        }
+
+        .col-goods {
+            width: 450px;
+            text-align: left;
+        }
+
+        .col-price {
+            width: 150px;
+        }
+
+        .col-num {
+            width: 200px;
+        }
+
+        .col-total {
+            width: 150px;
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .col-op {
+            width: 120px;
+        }
+
+        /* 商品列表 */
+        .cart-list {
+            padding: 0 20px;
+        }
+
+        /* 单个商品项 */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 商品图片 */
+        .goods-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+            border: 1px solid #eee;
+        }
+
+        /* 商品名称 */
+        .goods-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* 数量操作 */
+        .num-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .num-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .num-input {
+            width: 50px;
+            height: 28px;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            outline: none;
+        }
+
+        /* 操作按钮 */
+        .del-btn {
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .del-btn:hover {
+            color: #e53935;
+        }
+
+        /* 底部结算栏 */
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            padding: 0 20px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .total-price {
+            font-size: 20px;
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        /* 结算按钮 */
+        .pay-btn {
+            width: 120px;
+            height: 40px;
+            background: #e53935;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .pay-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* 复选框样式 */
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <div class="cart-title">我的购物车</div>
+
+        <!-- 表头 -->
+        <div class="cart-header">
+            <div class="col col-check">
+                <input type="checkbox" id="checkAll"> 全选
+            </div>
+            <div class="col col-goods">商品</div>
+            <div class="col col-price">单价</div>
+            <div class="col col-num">数量</div>
+            <div class="col col-total">小计</div>
+            <div class="col col-op">操作</div>
+        </div>
+
+        <!-- 商品列表 -->
+        <div class="cart-list" id="cartList">
+            <!-- 商品1 -->
+            <div class="cart-item">
+                <div class="col col-check">
+                    <input type="checkbox" class="checkItem">
+                </div>
+                <div class="col col-goods" style="display: flex; align-items: center;">
+                    <img src="https://picsum.photos/80/80?1" alt="商品图片" class="goods-img">
+                    <div>
+                        <div class="goods-name">Apple iPhone 15 256G 蓝色</div>
+                    </div>
+                </div>
+                <div class="col col-price">¥5999</div>
+                <div class="col col-num">
+                    <div class="num-box">
+                        <button class="num-btn minus">-</button>
+                        <input type="text" class="num-input" value="1">
+                        <button class="num-btn plus">+</button>
+                    </div>
+                </div>
+                <div class="col col-total">¥5999</div>
+                <div class="col col-op">
+                    <span class="del-btn">删除</span>
+                </div>
+            </div>
+
+            <!-- 商品2 -->
+            <div class="cart-item">
+                <div class="col col-check">
+                    <input type="checkbox" class="checkItem">
+                </div>
+                <div class="col col-goods" style="display: flex; align-items: center;">
+                    <img src="https://picsum.photos/80/80?2" alt="商品图片" class="goods-img">
+                    <div>
+                        <div class="goods-name">华为 Mate60 Pro 12+512G</div>
+                    </div>
+                </div>
+                <div class="col col-price">¥6499</div>
+                <div class="col col-num">
+                    <div class="num-box">
+                        <button class="num-btn minus">-</button>
+                        <input type="text" class="num-input" value="1">
+                        <button class="num-btn plus">+</button>
+                    </div>
+                </div>
+                <div class="col col-total">¥6499</div>
+                <div class="col col-op">
+                    <span class="del-btn">删除</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部结算 -->
+        <div class="cart-footer">
+            <div class="footer-left">
+                <label><input type="checkbox" id="checkAllFoot"> 全选</label>
+                <span>已选 <span id="selectedCount">0</span> 件商品</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div>合计：<span class="total-price" id="totalPrice">¥0.00</span></div>
+                <button class="pay-btn">去结算</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取元素
+        const checkAll = document.getElementById('checkAll');
+        const checkAllFoot = document.getElementById('checkAllFoot');
+        const checkItems = document.querySelectorAll('.checkItem');
+        const cartItems = document.querySelectorAll('.cart-item');
+        const selectedCount = document.getElementById('selectedCount');
+        const totalPrice = document.getElementById('totalPrice');
+
+        // 全选功能（顶部+底部同步）
+        function bindCheckAll() {
+            checkAll.addEventListener('change', syncAllCheck);
+            checkAllFoot.addEventListener('change', syncAllCheck);
+
+            function syncAllCheck() {
+                let isCheck = this.checked;
+                checkAll.checked = isCheck;
+                checkAllFoot.checked = isCheck;
+                checkItems.forEach(item => item.checked = isCheck);
+                calcTotal();
+            }
+        }
+
+        // 单个商品选择
+        function bindItemCheck() {
+            checkItems.forEach(item => {
+                item.addEventListener('change', () => {
+                    // 判断是否全部选中
+                    let allChecked = Array.from(checkItems).every(i => i.checked);
+                    checkAll.checked = allChecked;
+                    checkAllFoot.checked = allChecked;
+                    calcTotal();
+                });
+            });
+        }
+
+        // 数量增减 + 小计计算
+        function bindNumChange() {
+            cartItems.forEach(item => {
+                const minus = item.querySelector('.minus');
+                const plus = item.querySelector('.plus');
+                const input = item.querySelector('.num-input');
+                const priceText = item.querySelector('.col-price').innerText;
+                const price = parseFloat(priceText.replace('¥', ''));
+                const total = item.querySelector('.col-total');
+
+                // 减
+                minus.addEventListener('click', () => {
+                    let num = parseInt(input.value);
+                    if (num > 1) {
+                        num--;
+                        input.value = num;
+                        total.innerText = '¥' + (price * num).toFixed(0);
+                        calcTotal();
+                    }
+                });
+
+                // 加
+                plus.addEventListener('click', () => {
+                    let num = parseInt(input.value);
+                    num++;
+                    input.value = num;
+                    total.innerText = '¥' + (price * num).toFixed(0);
+                    calcTotal();
+                });
+            });
+        }
+
+        // 删除商品
+        function bindDelete() {
+            document.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (confirm('确定要删除该商品吗？')) {
+                        btn.closest('.cart-item').remove();
+                        // 重新获取元素并计算
+                        refreshElements();
+                        calcTotal();
+                    }
+                });
+            });
+        }
+
+        // 计算总价格 + 已选数量
+        function calcTotal() {
+            let count = 0;
+            let total = 0;
+
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const isCheck = item.querySelector('.checkItem').checked;
+                if (isCheck) {
+                    count++;
+                    const price = parseFloat(item.querySelector('.col-total').innerText.replace('¥', ''));
+                    total += price;
+                }
+            });
+
+            selectedCount.innerText = count;
+            totalPrice.innerText = '¥' + total.toFixed(2);
+        }
+
+        // 删除后刷新元素
+        function refreshElements() {
+            checkItems = document.querySelectorAll('.checkItem');
+            cartItems = document.querySelectorAll('.cart-item');
+            bindItemCheck();
+            bindNumChange();
+            bindDelete();
+        }
+
+        // 初始化
+        bindCheckAll();
+        bindItemCheck();
+        bindNumChange();
+        bindDelete();
+    </script>
+</body>
+</html>
