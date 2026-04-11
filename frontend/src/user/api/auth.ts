@@ -12,7 +12,12 @@ const BASE_URL = '/auth'
  * 账号密码登录
  */
 export function login(data: LoginParams): Promise<AuthToken> {
-  return post(`${BASE_URL}/login`, data)
+  // 确保使用 name 字段
+  const requestData = {
+    name: (data as any).name || (data as any).username,
+    password: data.password
+  };
+  return post(`${BASE_URL}/login`, requestData);
 }
 
 /**
@@ -40,7 +45,14 @@ export function logout(): Promise<void> {
  * 注册账号
  */
 export function register(data: RegisterParams): Promise<AuthToken> {
-  return post(`${BASE_URL}/register`, data)
+  // 支持两种字段名: name (Login.vue使用) 或 username (类型定义使用)
+  const requestData = {
+    name: (data as any).name || (data as any).username,
+    password: data.password,
+    email: (data as any).email,
+    confirmPassword: (data as any).confirmPassword
+  };
+  return post(`${BASE_URL}/register`, requestData);
 }
 
 /**

@@ -32,9 +32,9 @@
                 <div class="item-name">{{ item.name }}</div>
                 <div class="item-spec">颜色:{{ item.selectedColor || '默认' }} | 版本:{{ item.selectedVersion || '默认' }}</div>
               </div>
-              <div class="item-price">¥{{ item.price }}</div>
-              <div class="item-quantity">x{{ item.quantity }}</div>
-              <div class="item-total">¥{{ (item.price * item.quantity).toFixed(2) }}</div>
+              <div class="item-price">¥{{ item.price || 0 }}</div>
+              <div class="item-quantity">x{{ item.quantity || 0 }}</div>
+              <div class="item-total">¥{{ ((item.price || 0) * (item.quantity || 0)).toFixed(2) }}</div>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
           <div class="footer-left">
             <div class="amount-item">
               <span>商品总额:</span>
-              <span class="amount">¥{{ 购物车.totalPrice.toFixed (2) }}</span>
+              <span class="amount">¥{{ 商品总额.toFixed(2) }}</span>
             </div>
             <div class="amount-item">
               <span>运费:</span>
@@ -104,7 +104,7 @@
           </div>
           <div class="footer-right">
             <div class="total-label">应付总额:</div>
-            <div class="total-price">¥{{ 购物车.totalPrice.toFixed (2) }}</div>
+            <div class="total-price">¥{{ 商品总额.toFixed(2) }}</div>
             <el-button type="danger" size="large" @click="提交订单">提交订单</el-button>
           </div>
         </div>
@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
 import { ElMessage } from 'element-plus'
@@ -125,6 +125,11 @@ const 购物车 = useCartStore()
 const 配送方式 = ref('express')
 const 支付方式 = ref('wechat')
 const 订单备注 = ref('')
+
+// 安全计算总价,避免 undefined 错误
+const 商品总额 = computed(() => {
+  return 购物车.totalPrice || 0
+})
 
 const 提交订单 = () => {
   ElMessage.success('订单提交成功!')

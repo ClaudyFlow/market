@@ -74,8 +74,12 @@ service.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     const res = response.data
 
-    // 业务错误处理
-    if (res.code !== 200 && res.code !== 0) {
+    // 支持两种响应格式:
+    // 1. {code: 200, message: "...", data: {...}}
+    // 2. {success: true, message: "...", token: "...", user: {...}}
+    const isSuccess = res.code === 200 || res.code === 0 || (res as any).success === true
+
+    if (!isSuccess) {
       // 401: 未授权
       if (res.code === 401) {
         ElMessageBox.confirm('登录已过期，请重新登录', '提示', {

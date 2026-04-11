@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import { login, register } from '@/user/api/auth'
 
 const router = useRouter()
@@ -194,7 +194,16 @@ const handleLogin = async () => {
       if (res.success) {
         localStorage.setItem('token', res.token)
         localStorage.setItem('user', JSON.stringify(res.user))
-        ElMessage.success('登录成功')
+        
+        // 显示成功通知(只显示一次,使用绿色对勾图标)
+        ElNotification({
+          title: '登录成功',
+          message: `欢迎回来,${res.user?.name || '用户'}!`,
+          type: 'success',
+          duration: 3000,
+          position: 'bottom-right'
+        })
+        
         window.dispatchEvent(new Event('storage'))
 
         const redirect = route.query.redirect as string
@@ -243,7 +252,16 @@ const handleRegister = async () => {
       if (res.success) {
         localStorage.setItem('token', res.token)
         localStorage.setItem('user', JSON.stringify(res.user))
-        ElMessage.success('注册并登录成功')
+        
+        // 显示成功通知(只显示一次,使用绿色对勾图标)
+        ElNotification({
+          title: '注册成功',
+          message: '欢迎加入,开始您的探索之旅吧!',
+          type: 'success',
+          duration: 3000,
+          position: 'bottom-right'
+        })
+        
         window.dispatchEvent(new Event('storage'))
         router.push('/')
       } else {
