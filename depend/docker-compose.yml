@@ -44,6 +44,29 @@ services:
       timeout: 5s
       retries: 5
 
+  # ==================== 消息队列服务 ====================
+  # RabbitMQ 消息队列 (含管理界面)
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: market-rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"    # AMQP 端口
+      - "15672:15672"  # 管理界面端口
+    volumes:
+      - ../data/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - market-network
+
   # ==================== 应用服务 ====================
   # Spring Boot 应用
   app:
@@ -62,6 +85,11 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_DATA_REDIS_PASSWORD=123456
+      - RABBITMQ_ENABLED=true
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
       - JWT_SECRET=${JWT_SECRET:-market-platform-secret-key-2024}
       - JWT_EXPIRATION=86400000
       - MAIL_USERNAME=${MAIL_USERNAME:-2481036245@qq.com}
@@ -73,6 +101,8 @@ services:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - market-network
