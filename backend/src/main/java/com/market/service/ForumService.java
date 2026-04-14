@@ -5,9 +5,15 @@ import com.market.entity.ForumPost;
 import com.market.entity.User;
 import com.market.repository.ForumCommentRepository;
 import com.market.repository.ForumPostRepository;
+import com.market.service.SensitiveWordFilterService.DetectionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +28,19 @@ import java.util.Map;
 @Service
 public class ForumService {
 
+    private static final Logger log = LoggerFactory.getLogger(ForumService.class);
+
     @Autowired
     private ForumPostRepository forumPostRepository;
 
     @Autowired
     private ForumCommentRepository forumCommentRepository;
+
+    @Autowired
+    private SensitiveWordFilterService sensitiveWordFilterService;
+
+    @Value("${market.forum.auto-audit-enabled:true}")
+    private boolean autoAuditEnabled;
 
     // ==================== 帖子管理 ====================
 
@@ -44,7 +58,50 @@ public class ForumService {
         post.setTags(tags);
         post.setCategory(category);
 
+        // 自动审核
+        if (autoAuditEnabled) {
+            autoAuditPost(post);
+        }
+
         return forumPostRepository.save(post);
+    }
+
+    /**
+     * 自动审核论坛帖子
+     */
+    private void autoAuditPost(ForumPost post) {
+        // 检测标题
+        DetectionResult titleDetection = sensitiveWordFilterService.detectSensitiveWords(post.getTitle());
+        // 检测内容
+        DetectionResult contentDetection = sensitiveWordFilterService.detectSensitiveWords(post.getContent());
+
+        boolean hasSensitive = titleDetection.hasSensitive() || contentDetection.hasSensitive();
+
+        if (hasSensitive) {
+            boolean hasHighRisk = titleDetection.getFoundWords().stream()
+                    .anyMatch(w -> "HIGH".equals(w.getLevel()))
+                    || contentDetection.getFoundWords().stream()
+                    .anyMatch(w -> "HIGH".equals(w.getLevel()));
+
+            if (hasHighRisk) {
+                // 高危敏感词，直接拒绝
+                post.setAuditStatus("REJECTED");
+                post.setAuditReason("包含违规内容，审核不通过");
+                post.setStatus("HIDDEN"); // 隐藏帖子
+                log.warn("论坛帖子审核拒绝 (高危敏感词): userId={}, title={}", post.getUserId(), post.getTitle());
+            } else {
+                // 低/中危敏感词，替换后通过
+                post.setFilteredTitle(titleDetection.getFilteredText());
+                post.setFilteredContent(contentDetection.getFilteredText());
+                post.setAuditStatus("FILTERED");
+                post.setAuditReason("已自动过滤敏感词");
+                log.info("论坛帖子审核过滤 (敏感词): userId={}, title={}", post.getUserId(), post.getTitle());
+            }
+        } else {
+            // 无敏感词，自动通过
+            post.setAuditStatus("APPROVED");
+            log.info("论坛帖子审核自动通过: userId={}, title={}", post.getUserId(), post.getTitle());
+        }
     }
 
     /**
@@ -240,5 +297,70 @@ public class ForumService {
 
         comment.setLikeCount(comment.getLikeCount() + 1);
         forumCommentRepository.save(comment);
+    }
+
+    // ==================== 审核管理 ====================
+
+    /**
+     * 获取审核统计
+     */
+    public Map<String, Object> getAuditStats() {
+        List<ForumPost> allPosts = forumPostRepository.findAll();
+        
+        long approved = allPosts.stream().filter(p -> "APPROVED".equals(p.getAuditStatus())).count();
+        long rejected = allPosts.stream().filter(p -> "REJECTED".equals(p.getAuditStatus())).count();
+        long filtered = allPosts.stream().filter(p -> "FILTERED".equals(p.getAuditStatus())).count();
+        long pending = allPosts.stream().filter(p -> "PENDING".equals(p.getAuditStatus())).count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalPosts", allPosts.size());
+        stats.put("approved", approved);
+        stats.put("rejected", rejected);
+        stats.put("filtered", filtered);
+        stats.put("pending", pending);
+        stats.put("approvalRate", allPosts.size() > 0 ? approved * 100.0 / allPosts.size() : 0);
+
+        return stats;
+    }
+
+    /**
+     * 获取待审核帖子列表
+     */
+    public Map<String, Object> getPendingPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<ForumPost> allPosts = forumPostRepository.findAll(pageable);
+        
+        // 过滤出待审核或已过滤的帖子
+        List<ForumPost> pendingPosts = allPosts.getContent().stream()
+                .filter(p -> "PENDING".equals(p.getAuditStatus()) || "FILTERED".equals(p.getAuditStatus()))
+                .collect(java.util.stream.Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", pendingPosts);
+        result.put("total", pendingPosts.size());
+        result.put("pages", (int) Math.ceil((double) pendingPosts.size() / size));
+
+        return result;
+    }
+
+    /**
+     * 审核帖子 (管理员手动审核)
+     */
+    @Transactional
+    public void auditPost(Long postId, String status, String reason) {
+        ForumPost post = forumPostRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("帖子不存在"));
+
+        post.setAuditStatus(status);
+        post.setAuditReason(reason);
+
+        if ("REJECTED".equals(status)) {
+            post.setStatus("HIDDEN");
+        } else if ("APPROVED".equals(status) || "FILTERED".equals(status)) {
+            post.setStatus("ACTIVE");
+        }
+
+        forumPostRepository.save(post);
+        log.info("论坛帖子手动审核: postId={}, status={}, reason={}", postId, status, reason);
     }
 }

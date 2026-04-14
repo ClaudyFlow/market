@@ -89,6 +89,24 @@ public class Review {
     private String images;
 
     /**
+     * 审核状态 (PENDING-待审核, APPROVED-已通过, REJECTED-已拒绝, FILTERED-已过滤)
+     */
+    @Column(name = "audit_status", length = 20)
+    private String auditStatus = "PENDING";
+
+    /**
+     * 审核原因（拒绝或过滤原因）
+     */
+    @Column(name = "audit_reason", length = 500)
+    private String auditReason;
+
+    /**
+     * 过滤后的内容（敏感词替换后）
+     */
+    @Column(name = "filtered_content", length = 1000)
+    private String filteredContent;
+
+    /**
      * 创建时间
      */
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -177,6 +195,15 @@ public class Review {
 
     public String getImages() { return images; }
     public void setImages(String images) { this.images = images; }
+
+    public String getAuditStatus() { return auditStatus; }
+    public void setAuditStatus(String auditStatus) { this.auditStatus = auditStatus; }
+
+    public String getAuditReason() { return auditReason; }
+    public void setAuditReason(String auditReason) { this.auditReason = auditReason; }
+
+    public String getFilteredContent() { return filteredContent; }
+    public void setFilteredContent(String filteredContent) { this.filteredContent = filteredContent; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

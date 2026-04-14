@@ -100,6 +100,30 @@ public class ForumPost {
     private String status = "ACTIVE";
 
     /**
+     * 审核状态 (PENDING-待审核, APPROVED-已通过, REJECTED-已拒绝, FILTERED-已过滤)
+     */
+    @Column(name = "audit_status", length = 20)
+    private String auditStatus = "APPROVED"; // 默认通过
+
+    /**
+     * 审核原因
+     */
+    @Column(name = "audit_reason", length = 500)
+    private String auditReason;
+
+    /**
+     * 过滤后的内容
+     */
+    @Column(name = "filtered_content", columnDefinition = "TEXT")
+    private String filteredContent;
+
+    /**
+     * 过滤后的标题
+     */
+    @Column(name = "filtered_title", length = 200)
+    private String filteredTitle;
+
+    /**
      * 创建时间
      */
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -244,6 +268,18 @@ public class ForumPost {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getAuditStatus() { return auditStatus; }
+    public void setAuditStatus(String auditStatus) { this.auditStatus = auditStatus; }
+
+    public String getAuditReason() { return auditReason; }
+    public void setAuditReason(String auditReason) { this.auditReason = auditReason; }
+
+    public String getFilteredContent() { return filteredContent; }
+    public void setFilteredContent(String filteredContent) { this.filteredContent = filteredContent; }
+
+    public String getFilteredTitle() { return filteredTitle; }
+    public void setFilteredTitle(String filteredTitle) { this.filteredTitle = filteredTitle; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
