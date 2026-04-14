@@ -99,6 +99,12 @@ public class Order {
     private String refundImages;
 
     /**
+     * 取消原因
+     */
+    @Column(length = 500)
+    private String cancelReason;
+
+    /**
      * 订单创建时间
      */
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -196,6 +202,9 @@ public class Order {
 
     public String getRefundImages() { return refundImages; }
     public void setRefundImages(String refundImages) { this.refundImages = refundImages; }
+
+    public String getCancelReason() { return cancelReason; }
+    public void setCancelReason(String cancelReason) { this.cancelReason = cancelReason; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

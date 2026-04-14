@@ -1,11 +1,16 @@
 package com.market.service;
 
+import com.market.dto.mq.NotificationMessage;
 import com.market.entity.SystemMessage;
 import com.market.entity.User;
 import com.market.entity.UserNotification;
+import com.market.mq.MQProducer;
 import com.market.repository.SystemMessageRepository;
 import com.market.repository.UserNotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,8 @@ import java.util.List;
 @Service
 public class NotificationService {
 
+    private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -29,11 +36,31 @@ public class NotificationService {
     @Autowired
     private SystemMessageRepository systemMessageRepository;
 
+    @Autowired(required = false)
+    private MQProducer mqProducer;
+
+    @Value("${market.mq.async-notification:true}")
+    private boolean asyncNotificationEnabled;
+
     /**
-     * 发送站内通知给用户
+     * 发送站内通知给用户 (支持异步)
      */
-    @Async
     public void sendNotification(Long userId, String title, String content, String type) {
+        if (asyncNotificationEnabled && mqProducer != null) {
+            // 通过消息队列异步发送
+            NotificationMessage message = NotificationMessage.general(userId, title, content, type);
+            mqProducer.sendNotification(message);
+            log.info("通知消息已发送到队列: userId={}, title={}", userId, title);
+        } else {
+            // 降级为直接发送
+            sendNotificationDirect(userId, title, content, type);
+        }
+    }
+
+    /**
+     * 直接发送站内通知 (同步)
+     */
+    private void sendNotificationDirect(Long userId, String title, String content, String type) {
         UserNotification notification = new UserNotification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -41,7 +68,7 @@ public class NotificationService {
         notification.setUserId(userId);
         notification.setIsRead(false);
         notification.setCreatedAt(LocalDateTime.now());
-        
+
         notificationRepository.save(notification);
 
         // 通过 WebSocket 推送实时通知
@@ -100,7 +127,7 @@ public class NotificationService {
         message.setPriority(1);
         message.setIsBroadcast(true);
         message.setSendTime(LocalDateTime.now());
-        
+
         systemMessageRepository.save(message);
 
         // 通过 WebSocket 广播
@@ -120,6 +147,7 @@ public class NotificationService {
             );
         } catch (Exception e) {
             // WebSocket 发送失败不影响站内信保存
+            log.warn("WebSocket 推送失败: userId={}", userId);
         }
     }
 

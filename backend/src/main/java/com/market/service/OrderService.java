@@ -1,8 +1,15 @@
 package com.market.service;
 
+import com.market.dto.mq.CreditMessage;
+import com.market.dto.mq.NotificationMessage;
+import com.market.dto.mq.OrderDelayMessage;
 import com.market.entity.*;
+import com.market.mq.MQProducer;
 import com.market.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +26,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
     private OrderRepository orderRepository;
@@ -46,6 +55,15 @@ public class OrderService {
 
     @Autowired
     private UserAddressRepository addressRepository;
+
+    @Autowired(required = false)
+    private MQProducer mqProducer;
+
+    @Value("${market.mq.order-timeout-enabled:true}")
+    private boolean orderTimeoutEnabled;
+
+    @Value("${market.mq.order-timeout-ms:1800000}")
+    private long orderTimeoutMs;
 
     // ==================== 用户端订单服务 ====================
 
@@ -156,10 +174,30 @@ public class OrderService {
         // 清空购物车
         cartItemRepository.deleteByUser(user);
 
-        // 奖励积分
+        // 奖励积分 (异步 - 通过消息队列)
         int creditToAdd = order.getTotalAmount().intValue() / 10;
-        if (creditToAdd > 0) {
+        if (creditToAdd > 0 && mqProducer != null) {
+            CreditMessage creditMsg = CreditMessage.orderReward(
+                    user.getId(),
+                    order.getTotalAmount(),
+                    savedOrder.getOrderNo()
+            );
+            mqProducer.sendCredit(creditMsg);
+            log.info("订单积分奖励消息已发送到队列: userId={}, credit={}", user.getId(), creditToAdd);
+        } else if (creditToAdd > 0) {
+            // 降级为直接调用
             creditService.addCredit(user.getId(), creditToAdd, "订单奖励：" + savedOrder.getOrderNo());
+        }
+
+        // 发送订单超时取消消息 (延迟队列)
+        if (orderTimeoutEnabled && mqProducer != null && "PENDING".equals(savedOrder.getStatus())) {
+            OrderDelayMessage delayMessage = OrderDelayMessage.of(
+                    savedOrder.getId(),
+                    savedOrder.getOrderNo(),
+                    user.getId()
+            );
+            mqProducer.sendOrderDelay(delayMessage, orderTimeoutMs);
+            log.info("订单超时取消消息已发送: orderId={}, timeout={}ms", savedOrder.getId(), orderTimeoutMs);
         }
 
         return savedOrder;
@@ -189,6 +227,12 @@ public class OrderService {
         }
 
         orderRepository.save(order);
+
+        // 取消订单延迟消息 (防止用户手动取消时延迟队列还未触发)
+        if (mqProducer != null) {
+            mqProducer.cancelOrderDelay(orderId);
+            log.info("订单取消消息已发送到队列: orderId={}", orderId);
+        }
     }
 
     /**
@@ -224,7 +268,20 @@ public class OrderService {
         order.setPaymentMethod(paymentMethod);
         order.setPaidAt(LocalDateTime.now());
 
-        return orderRepository.save(order);
+        Order paidOrder = orderRepository.save(order);
+
+        // 发送支付成功通知 (异步)
+        if (mqProducer != null) {
+            NotificationMessage notifyMsg = NotificationMessage.paymentSuccess(
+                    user.getId(),
+                    order.getOrderNo(),
+                    order.getTotalAmount().doubleValue()
+            );
+            mqProducer.sendNotification(notifyMsg);
+            log.info("支付成功通知已发送到队列: userId={}, orderNo={}", user.getId(), order.getOrderNo());
+        }
+
+        return paidOrder;
     }
 
     /**

@@ -21,6 +21,9 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
 
+    /* Ignore deprecation warnings for TypeScript 6.0+ */
+    "ignoreDeprecations": "6.0",
+
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
