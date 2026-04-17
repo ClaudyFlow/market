@@ -5,6 +5,8 @@
       <router-view />
     </main>
     <Footer />
+    <!-- 客服聊天组件 -->
+    <ChatWidget />
   </div>
 </template>
 
@@ -13,6 +15,7 @@ import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from '@user/components/Header.vue'
 import Footer from '@user/components/Footer.vue'
+import ChatWidget from '@user/components/ChatWidget.vue'
 
 const route = useRoute()
 

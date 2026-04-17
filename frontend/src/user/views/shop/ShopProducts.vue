@@ -388,16 +388,9 @@ onMounted(() => {
   font-size: 11px;
   border-radius: 4px;
   font-weight: bold;
-}
-
-.product-tags .tag:first-child {
-  background: linear-gradient(135deg, #ff6600, #ff8800);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
-}
-
-.product-tags .tag:last-child {
-  background: linear-gradient(135deg, #00d4ff, #00a8cc);
-  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .product-detail {

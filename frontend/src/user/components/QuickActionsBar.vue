@@ -76,8 +76,15 @@ const router = useRouter()
 
 .action-item:hover {
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
-  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+}
+
+.action-item:hover .el-icon {
+  font-size: 42px;
+}
+
+.action-item:hover span {
+  font-size: 21px;
 }
 
 .action-item .el-icon {
@@ -107,5 +114,10 @@ const router = useRouter()
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.35), rgba(255, 170, 0, 0.3));
   border-color: rgba(255, 215, 0, 0.8);
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.action-item.vip-action:hover .el-icon,
+.action-item.vip-action:hover span {
+  color: #ffd700;
 }
 </style>

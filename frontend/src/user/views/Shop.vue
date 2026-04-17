@@ -509,12 +509,12 @@ const handleCurrentChange = () => {
 }
 
 .tag {
-  background: rgba(0, 212, 255, 0.15);
-  color: #00d4ff;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
   padding: 4px 12px;
   border-radius: 4px;
   font-size: 12px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .shop-actions {
