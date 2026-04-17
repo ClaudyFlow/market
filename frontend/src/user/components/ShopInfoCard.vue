@@ -368,9 +368,9 @@ const CountUp = {
 }
 
 .tag-item {
-  --el-tag-bg-color: rgba(0, 212, 255, 0.1);
-  --el-tag-border-color: rgba(0, 212, 255, 0.3);
-  --el-tag-text-color: var(--mall-primary);
+  --el-tag-bg-color: rgba(0, 0, 0, 0.6);
+  --el-tag-border-color: rgba(255, 255, 255, 0.2);
+  --el-tag-text-color: #fff;
 }
 
 /* ==================== 操作按钮 ==================== */

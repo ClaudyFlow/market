@@ -455,11 +455,11 @@ const goToProduct = (productId: number) => {
 
 .shop-tags .tag {
   padding: 4px 10px;
-  background: rgba(0, 212, 255, 0.2);
-  border: 1px solid var(--mall-primary);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   font-size: 12px;
-  color: var(--mall-primary);
+  color: #fff;
 }
 
 .shop-rating {

@@ -26,7 +26,7 @@
         <div class="order-section">
           <div class="section-title">商品清单</div>
           <div class="order-items">
-            <div class="order-item" v-for="item in 购物车.cartItems" :key="item.id">
+            <div class="order-item" v-for="item in cart.cartItems" :key="item.id">
               <img v-lazyload="item.image" :alt="item.name" />
               <div class="item-info">
                 <div class="item-name">{{ item.name }}</div>
@@ -44,12 +44,12 @@
           <div class="section-title">配送方式</div>
           <div class="delivery-options">
             <div class="delivery-item active">
-              <el-radio v-model="配送方式" label="express">京东快递</el-radio>
+              <el-radio v-model="deliveryMethod" label="express">京东快递</el-radio>
               <span class="delivery-price">免运费</span>
               <span class="delivery-time">预计明天送达</span>
             </div>
             <div class="delivery-item">
-              <el-radio v-model="配送方式" label="self">自提</el-radio>
+              <el-radio v-model="deliveryMethod" label="self">自提</el-radio>
               <span class="delivery-price">免运费</span>
               <span class="delivery-time">预计 2 小时后可取</span>
             </div>
@@ -60,19 +60,19 @@
         <div class="order-section">
           <div class="section-title">支付方式</div>
           <div class="payment-options">
-            <div class="payment-item" :class="{ active: 支付方式 === 'wechat' }" @click="支付方式 = 'wechat'">
+            <div class="payment-item" :class="{ active: paymentMethod === 'wechat' }" @click="paymentMethod = 'wechat'">
               <el-icon size="24" color="#07c160"><ChatDotRound /></el-icon>
               <span>微信支付</span>
             </div>
-            <div class="payment-item" :class="{ active: 支付方式 === 'alipay' }" @click="支付方式 = 'alipay'">
+            <div class="payment-item" :class="{ active: paymentMethod === 'alipay' }" @click="paymentMethod = 'alipay'">
               <el-icon size="24" color="#1677ff"><Alipay /></el-icon>
               <span>支付宝</span>
             </div>
-            <div class="payment-item" :class="{ active: 支付方式 === 'card' }" @click="支付方式 = 'card'">
+            <div class="payment-item" :class="{ active: paymentMethod === 'card' }" @click="paymentMethod = 'card'">
               <el-icon size="24" color="#e1251b"><CreditCard /></el-icon>
               <span>银行卡</span>
             </div>
-            <div class="payment-item" :class="{ active: 支付方式 === 'cod' }" @click="支付方式 = 'cod'">
+            <div class="payment-item" :class="{ active: paymentMethod === 'cod' }" @click="paymentMethod = 'cod'">>
               <el-icon size="24" color="#666"><Money /></el-icon>
               <span>货到付款</span>
             </div>
@@ -83,7 +83,7 @@
         <div class="order-section">
           <div class="section-title">订单备注</div>
           <el-input
-            v-model="订单备注"
+            v-model="orderRemark"
             type="textarea"
             placeholder="选填:对本订单的说明(如:送货时间要求等)"
             :rows="3"
@@ -95,7 +95,7 @@
           <div class="footer-left">
             <div class="amount-item">
               <span>商品总额:</span>
-              <span class="amount">¥{{ 商品总额.toFixed(2) }}</span>
+              <span class="amount">¥{{ totalAmount.toFixed(2) }}</span>
             </div>
             <div class="amount-item">
               <span>运费:</span>
@@ -104,8 +104,8 @@
           </div>
           <div class="footer-right">
             <div class="total-label">应付总额:</div>
-            <div class="total-price">¥{{ 商品总额.toFixed(2) }}</div>
-            <el-button type="danger" size="large" @click="提交订单">提交订单</el-button>
+            <div class="total-price">¥{{ totalAmount.toFixed(2) }}</div>
+            <el-button type="danger" size="large" @click="submitOrder">提交订单</el-button>
           </div>
         </div>
       </div>
@@ -113,29 +113,29 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
 import { ElMessage } from 'element-plus'
 
-const 路由 = useRouter()
-const 购物车 = useCartStore()
+const router = useRouter()
+const cart = useCartStore()
 
-const 配送方式 = ref('express')
-const 支付方式 = ref('wechat')
-const 订单备注 = ref('')
+const deliveryMethod = ref('express')
+const paymentMethod = ref('wechat')
+const orderRemark = ref('')
 
 // 安全计算总价,避免 undefined 错误
-const 商品总额 = computed(() => {
-  return 购物车.totalPrice || 0
+const totalAmount = computed(() => {
+  return cart.totalPrice || 0
 })
 
-const 提交订单 = () => {
+const submitOrder = () => {
   ElMessage.success('订单提交成功!')
   setTimeout(() => {
-    购物车.clearCart()
-    路由.push('/')
+    cart.clearCart()
+    router.push('/')
   }, 1500)
 }
 </script>
@@ -291,25 +291,25 @@ const 提交订单 = () => {
 
 .item-name {
   font-size: 14px;
-  color: #333;
+  color: var(--mall-text-primary, #eee);
   
 }
 
 .item-spec {
   font-size: 12px;
-  color: #999;
+  color: var(--mall-text-muted);
 }
 
 .item-price {
   width: 100px;
   text-align: center;
-  color: #666;
+  color: var(--mall-text-secondary);
 }
 
 .item-quantity {
   width: 60px;
   text-align: center;
-  color: #999;
+  color: var(--mall-text-muted);
 }
 
 .item-total {

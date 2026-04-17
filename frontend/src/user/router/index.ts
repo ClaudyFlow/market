@@ -95,7 +95,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/shop',
     name: 'Shop',
-    component: () => import('@user/views/user/Shop.vue'),  //店铺route
+    component: () => import('@user/views/shop/ShopDetail.vue'),
+    meta: { title: '店铺详情' }
+  },
+  {
+    path: '/shop/:id',
+    name: 'ShopDetail',
+    component: () => import('@user/views/shop/ShopDetail.vue'),
     meta: { title: '店铺详情' }
   },
 
@@ -154,6 +160,24 @@ const routes: RouteRecordRaw[] = [
         name: 'OrderCenter',
         component: () => import('@user/views/order/OrderCenter.vue'),
         meta: { title: '订单中心' }
+      },
+      {
+        path: 'orders/:id',
+        name: 'OrderDetail',
+        component: () => import('@user/views/order/OrderDetail.vue'),
+        meta: { title: '订单详情' }
+      },
+      {
+        path: 'orders/:id/review',
+        name: 'OrderReview',
+        component: () => import('@user/views/order/OrderReview.vue'),
+        meta: { title: '评价订单' }
+      },
+      {
+        path: 'orders/:id/refund',
+        name: 'OrderRefund',
+        component: () => import('@user/views/order/OrderRefund.vue'),
+        meta: { title: '退款详情' }
       },
       {
         path: 'address',

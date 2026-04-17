@@ -85,6 +85,14 @@ article.brand-card:hover {
   box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
 }
 
+article.brand-card:hover .brand-logo {
+  font-size: 33px;
+}
+
+article.brand-card:hover .brand-desc {
+  font-size: 19.5px;
+}
+
 .brand-content {
   display: flex;
   flex-direction: column;
@@ -126,10 +134,15 @@ article.brand-card:hover .brand-overlay {
   border: none;
   color: #000;
   font-weight: bold;
+  font-size: 19.5px;
   padding: 8px 25px;
   border-radius: 6px;
   transition: all 0.3s;
   cursor: pointer;
+}
+
+article.brand-card:hover .brand-btn {
+  font-size: 22.5px;
 }
 
 .brand-btn:hover {

@@ -56,11 +56,11 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCartStore } from '@user/stores/cart'
+import { useLocalCartStore } from '@user/stores/cart-local'
 import SearchBar from './SearchBar.vue'
 
 const router = useRouter()
-const cartStore = useCartStore()
+const cartStore = useLocalCartStore()
 
 // 购物车数量
 const 购物车数量 = computed(() => cartStore.totalCount)

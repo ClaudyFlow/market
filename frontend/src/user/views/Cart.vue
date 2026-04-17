@@ -3,12 +3,12 @@
     <div class="container">
       <h1 class="page-title">我的购物车</h1>
 
-      <div v-if="购物车.cartItems.length > 0" class="cart-content">
+      <div v-if="cartItems.length > 0" class="cart-content">
         <!-- 购物车列表 -->
         <div class="cart-table">
           <div class="cart-header">
             <div class="col-check">
-              <el-checkbox v-model="全选" @change="切换全选" /> 全选
+              <el-checkbox v-model="selectAll" @change="toggleSelectAll" /> 全选
             </div>
             <div class="col-product">商品信息</div>
             <div class="col-price">单价</div>
@@ -18,23 +18,23 @@
           </div>
 
           <div class="cart-body">
-            <div class="cart-item" v-for="item in 购物车.cartItems" :key="item.id">
+            <div class="cart-item" v-for="item in cartItems" :key="item.id">
               <div class="col-check">
                 <el-checkbox v-model="item.selected" />
               </div>
               <div class="col-product">
                 <div class="product-info">
-                  <img v-lazyload="item.image" :alt="item.name" />
+                  <img :src="item.image" :alt="item.name" />
                   <div class="product-name">{{ item.name }}</div>
                 </div>
               </div>
               <div class="col-price">¥{{ item.price }}</div>
               <div class="col-quantity">
-                <el-input-number v-model="item.quantity" :min="1" :max="99" size="small" @change="更新数量 (item)" />
+                <el-input-number v-model="item.quantity" :min="1" :max="99" size="small" @change="updateQuantity(item)" />
               </div>
               <div class="col-total">¥{{ (item.price * item.quantity).toFixed(2) }}</div>
               <div class="col-action">
-                <el-button type="danger" text size="small" @click="删除商品 (item.id)">删除</el-button>
+                <el-button type="danger" text size="small" @click="removeItem(item.id)">删除</el-button>
               </div>
             </div>
           </div>
@@ -43,18 +43,18 @@
         <!-- 结算栏 -->
         <div class="cart-footer">
           <div class="footer-left">
-            <el-button @click="清空购物车">清空购物车</el-button>
-            <el-button @click="继续购物">继续购物</el-button>
+            <el-button @click="clearCart">清空购物车</el-button>
+            <el-button @click="continueShopping">继续购物</el-button>
           </div>
           <div class="footer-right">
             <div class="selected-info">
-              已选 <span class="highlight">{{ 已选数量 }}</span> 件商品
+              已选 <span class="highlight">{{ selectedCount }}</span> 件商品
             </div>
             <div class="total-info">
               <span class="label">合计:</span>
-              <span class="total-price">¥{{ 已选总额.toFixed (2) }}</span>
+              <span class="total-price">¥{{ selectedTotal.toFixed(2) }}</span>
             </div>
-            <el-button type="danger" size="large" @click="去结算">去结算</el-button>
+            <el-button type="danger" size="large" @click="goToCheckout">去结算</el-button>
           </div>
         </div>
       </div>
@@ -69,87 +69,82 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCartStore } from '@user/stores/cart'
+import { useLocalCartStore } from '@user/stores/cart-local'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ShoppingCart } from '@element-plus/icons-vue'
 
-const 路由 = useRouter()
-const 购物车 = useCartStore()
+const router = useRouter()
+const cartStore = useLocalCartStore()
 
-const 全选 = ref(true)
+const selectAll = ref(true)
 
-const 已选数量 = computed(() => {
-  return 购物车.cartItems.filter(商品 => 商品.selected !== false).length
+const selectedCount = computed(() => {
+  return cartStore.selectedCount
 })
 
-const 已选总额 = computed(() => {
-  return 购物车.cartItems
-    .filter(商品 => 商品.selected !== false)
-    .reduce((总计,商品) => 总计 + 商品.price * 商品.quantity, 0)
+const selectedTotal = computed(() => {
+  return cartStore.totalAmount
 })
 
-const 切换全选 = () => {
-  购物车.cartItems.forEach(商品 => {
-    商品.selected = 全选.value
-  })
+const cartItems = computed(() => {
+  return cartStore.cartItems
+})
+
+const toggleSelectAll = () => {
+  cartStore.selectAll(selectAll.value)
 }
 
-const 更新数量 = (商品) => {
-  购物车.updateQuantity(商品.id, 商品.quantity)
+const updateQuantity = (item: any) => {
+  cartStore.updateQuantity(item.id, item.quantity)
 }
 
-const 删除商品 = (id) => {
+const removeItem = (id: number) => {
   ElMessageBox.confirm('确定要删除该商品吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    购物车.removeFromCart(id)
+    cartStore.removeItem(id)
     ElMessage.success('已删除')
   }).catch(() => {})
 }
 
-const 清空购物车 = () => {
+const clearCart = () => {
   ElMessageBox.confirm('确定要清空购物车吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    购物车.clearCart()
+    cartStore.clearCart()
     ElMessage.success('购物车已清空')
   }).catch(() => {})
 }
 
-const 继续购物 = () => {
-  路由.push('/products')
+const continueShopping = () => {
+  router.push('/item')
 }
 
-// 别名用于模板
-const continueShopping = 继续购物
-
-const 去结算 = () => {
-  if (已选数量.value === 0) {
+const goToCheckout = () => {
+  if (selectedCount.value === 0) {
     ElMessage.warning('请选择要结算的商品')
     return
   }
-  console.log('跳转支付页面', {
+  router.push({
     path: '/payment',
     query: {
-      amount: 已选总额.value.toFixed(2),
-      quantity: 已选数量.value
-    }
-  })
-  // 跳转到支付页面
-  路由.push({
-    path: '/payment',
-    query: {
-      amount: 已选总额.value.toFixed(2),
-      quantity: 已选数量.value
+      amount: selectedTotal.value.toFixed(2),
+      quantity: selectedCount.value
     }
   })
 }
+
+onMounted(() => {
+  // 初始化全选状态
+  selectAll.value = cartStore.allSelected
+})
 </script>
 
 <style scoped>
