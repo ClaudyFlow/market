@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,38 @@ public class ForumController {
 
     @Autowired
     private ForumService forumService;
+
+    /**
+     * 获取版块列表
+     * API路径：GET /api/forum/boards
+     * 权限：公开
+     *
+     * @return 版块列表
+     */
+    @GetMapping("/boards")
+    public Result<List<Map<String, Object>>> getBoards() {
+        List<Map<String, Object>> boards = new java.util.ArrayList<>();
+
+        Map<String, Object> general = new HashMap<>();
+        general.put("id", 1);
+        general.put("name", "综合讨论");
+        general.put("description", "综合讨论板块");
+        boards.add(general);
+
+        Map<String, Object> trade = new HashMap<>();
+        trade.put("id", 2);
+        trade.put("name", "交易经验");
+        trade.put("description", "交易经验分享");
+        boards.add(trade);
+
+        Map<String, Object> question = new HashMap<>();
+        question.put("id", 3);
+        question.put("name", "问答求助");
+        question.put("description", "问题解答板块");
+        boards.add(question);
+
+        return Result.success(boards);
+    }
 
     /**
      * 获取帖子列表

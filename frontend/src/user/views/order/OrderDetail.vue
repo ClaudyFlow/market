@@ -278,6 +278,22 @@
         <el-empty v-if="!order.logistics.traces?.length" description="暂无物流轨迹" />
       </div>
     </el-dialog>
+
+    <!-- 服务评价弹窗 -->
+    <el-dialog v-model="showServiceReview" :title="serviceReviewType === 'logistics' ? '评价物流' : '评价客服'" width="400px" destroy-on-close>
+      <el-form :model="serviceReviewForm" label-position="top">
+        <el-form-item :label="serviceReviewType === 'logistics' ? '物流评分' : '服务评分'">
+          <el-rate v-model="serviceReviewForm.score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" />
+        </el-form-item>
+        <el-form-item label="评价内容（选填）">
+          <el-input v-model="serviceReviewForm.content" type="textarea" :rows="3" placeholder="分享您的体验..." />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showServiceReview = false">取消</el-button>
+        <el-button type="primary" @click="submitServiceReview" :loading="submittingServiceReview">提交</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -392,7 +408,9 @@ const bottomActions = computed(() => {
       { key: 'repurchase', label: '再买一单', icon: RefreshRight, plain: true },
       { key: 'favorite', label: '收藏商品', icon: Star, plain: true },
       { key: 'refund', label: '申请售后', plain: true, type: 'warning' },
-      { key: 'review', label: '评价', type: 'primary' }
+      { key: 'review', label: '评价商品', type: 'primary' },
+      { key: 'review_logistics', label: '评价物流', plain: true },
+      { key: 'review_service', label: '评价客服', plain: true }
     )
   }
 
@@ -450,6 +468,12 @@ const handleAction = async (key: string) => {
       break
     case 'share':
       doShare()
+      break
+    case 'review_logistics':
+      showServiceReviewDialog('logistics')
+      break
+    case 'review_service':
+      showServiceReviewDialog('customer')
       break
     case 'delete':
       await doDelete()
@@ -547,6 +571,40 @@ const doDelete = async () => {
     ElMessage.success('订单已删除')
     router.push('/user/orders')
   } catch (e) { /* 取消 */ }
+}
+
+// 服务评价相关
+const showServiceReview = ref(false)
+const serviceReviewType = ref<'logistics' | 'customer'>('logistics')
+const serviceReviewForm = ref({
+  score: 5,
+  content: ''
+})
+const submittingServiceReview = ref(false)
+
+const showServiceReviewDialog = (type: 'logistics' | 'customer') => {
+  serviceReviewType.value = type
+  serviceReviewForm.value = { score: 5, content: '' }
+  showServiceReview.value = true
+}
+
+const submitServiceReview = async () => {
+  submittingServiceReview.value = true
+  try {
+    const { createServiceReview } = await import('@user/api/review')
+    await createServiceReview({
+      orderId: Number(orderId.value),
+      type: serviceReviewType.value,
+      score: serviceReviewForm.value.score,
+      content: serviceReviewForm.value.content
+    })
+    ElMessage.success('评价提交成功')
+    showServiceReview.value = false
+  } catch (error: any) {
+    ElMessage.error(error.message || '提交失败')
+  } finally {
+    submittingServiceReview.value = false
+  }
 }
 
 // 辅助方法

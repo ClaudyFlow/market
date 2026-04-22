@@ -51,6 +51,16 @@ import { reactive, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import ImageUploader from '@user/components/ImageUploader.vue'
+import { createReview } from '@user/api/review'
+
+const props = defineProps<{
+  orderId: number
+  productId?: number
+}>()
+
+const emit = defineEmits<{
+  (e: 'success'): void
+}>()
 
 const maxImages = 5
 const submitting = ref(false)
@@ -78,32 +88,20 @@ const submitReview = async () => {
   submitting.value = true
 
   try {
-    // 发送到后端
-    const response = await fetch('http://localhost:8080/api/review', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rating: form.rating,
-        content: form.content,
-        images: form.images.filter(img => img !== '') // 过滤空值
-      })
+    await createReview({
+      orderId: props.orderId,
+      productId: props.productId,
+      score: form.rating,
+      content: form.content,
+      images: form.images.filter(img => img !== '')
     })
-
-    const result = await response.json()
-    
-    if (result.code === 200) {
-      ElMessage.success('评价提交成功')
-      // 重置表单
-      form.rating = 5
-      form.content = ''
-      form.images = []
-    } else {
-      ElMessage.error(result.message || '提交失败')
-    }
-  } catch (error) {
-    ElMessage.error('提交失败，请重试')
+    ElMessage.success('评价提交成功')
+    form.rating = 5
+    form.content = ''
+    form.images = []
+    emit('success')
+  } catch (error: any) {
+    ElMessage.error(error.message || '提交失败')
   } finally {
     submitting.value = false
   }

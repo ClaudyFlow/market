@@ -80,7 +80,7 @@
             <template #default>
               <div class="mock-actions">
                 <span>当前无真实物流数据，可生成模拟轨迹用于测试：</span>
-                <el-button type="primary" size="small" @click="generateMockLogistics">
+                <el-button type="primary" size="small" @click="handleGenerateMock">
                   生成模拟物流
                 </el-button>
               </div>
@@ -103,6 +103,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { CopyDocument, Location } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { getLogisticsByOrder, generateMockLogistics } from '@user/api/logistics'
 
 const props = defineProps({
   modelValue: {
@@ -157,20 +158,13 @@ const fetchLogistics = async () => {
   tracks.value = []
 
   try {
-    const response = await fetch(`http://localhost:8080/api/logistics/order/${props.orderId}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-
-    const result = await response.json()
-    if (result.code === 200 && result.data.trackingNo) {
-      logisticsInfo.trackingNo = result.data.trackingNo
-      logisticsInfo.companyCode = result.data.companyCode
-      logisticsInfo.companyName = result.data.companyName
-      logisticsInfo.status = result.data.status
-      logisticsInfo.estimatedDelivery = result.data.estimatedDelivery
-      tracks.value = result.data.tracks || []
+    const res = await getLogisticsByOrder(props.orderId)
+    if (res.trackingNo) {
+      logisticsInfo.trackingNo = res.trackingNo
+      logisticsInfo.companyCode = res.companyCode
+      logisticsInfo.companyName = res.companyName
+      logisticsInfo.status = res.status
+      logisticsInfo.estimatedDelivery = res.estimatedDelivery || ''
     } else {
       logisticsInfo.trackingNo = ''
     }
@@ -190,26 +184,15 @@ const copyTrackingNo = () => {
 }
 
 // 生成模拟物流（测试用）
-const generateMockLogistics = async () => {
+const handleGenerateMock = async () => {
   loading.value = true
 
   try {
-    const response = await fetch(`http://localhost:8080/api/logistics/mock-generate/${props.orderId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        trackingNo: props.trackingNo || undefined
-      })
-    })
-
-    const result = await response.json()
-    if (result.code === 200) {
-      ElMessage.success('模拟物流已生成')
-      await fetchLogistics()
-    } else {
-      ElMessage.error(result.message || '生成失败')
+    await generateMockLogistics(props.orderId)
+    ElMessage.success('模拟物流已生成')
+    await fetchLogistics()
+  } catch (error: any) {
+    ElMessage.error(error.message || '生成失败')
     }
   } catch (error) {
     ElMessage.error('生成失败，请重试')

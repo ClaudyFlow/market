@@ -64,9 +64,13 @@ public class SecurityConfig {
                 // 评论查询公开
                 .requestMatchers("/api/review/product/**").permitAll()
                 .requestMatchers("/api/review/rating/**").permitAll()
+                // 论坛查询公开
+                .requestMatchers("/api/forum/**").permitAll()
                 // WebSocket 端点
                 .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/ws").permitAll()
+                // Actuator 端点公开
+                .requestMatchers("/actuator/**").permitAll()
                 // 需要认证的接口
                 .requestMatchers("/api/cart/**").authenticated()
                 .requestMatchers("/api/order/**").authenticated()

@@ -13,7 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * 物流控制器（预留接口，模拟物流查询）
+ * 物流控制器
+ * 提供快递公司列表查询、物流轨迹查询（按订单/运单号）、模拟物流生成、物流状态回调等功能。
+ * 权限要求：查询接口需要登录，模拟生成和回调接口公开
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/logistics
  */
 @RestController
 @RequestMapping("/api/logistics")
@@ -25,6 +31,10 @@ public class LogisticsController {
 
     /**
      * 获取快递公司列表
+     * API路径：GET /api/logistics/companies
+     * 权限：需要登录
+     *
+     * @return 快递公司列表（包含编码和名称）
      */
     @GetMapping("/companies")
     @AuditLog(module = "物流管理", action = "查询快递公司列表")
@@ -35,6 +45,12 @@ public class LogisticsController {
 
     /**
      * 查询物流轨迹（根据订单 ID）
+     * API路径：GET /api/logistics/order/{orderId}
+     * 权限：需要登录
+     *
+     * @param orderId 订单ID
+     * @param user 当前登录用户
+     * @return 物流信息（包含运单号、物流公司、物流轨迹等）
      */
     @GetMapping("/order/{orderId}")
     @AuditLog(module = "物流管理", action = "查询订单物流")
@@ -74,6 +90,12 @@ public class LogisticsController {
 
     /**
      * 查询物流轨迹（根据运单号）
+     * API路径：POST /api/logistics/track
+     * 权限：需要登录
+     *
+     * @param data 请求体（包含trackingNo运单号、companyCode快递公司编码）
+     * @param user 当前登录用户
+     * @return 物流轨迹列表
      */
     @PostMapping("/track")
     @AuditLog(module = "物流管理", action = "查询物流轨迹", recordParams = true)
@@ -114,7 +136,12 @@ public class LogisticsController {
 
     /**
      * 模拟物流轨迹（测试用）
-     * 为指定订单生成模拟物流信息
+     * API路径：POST /api/logistics/mock-generate/{orderId}
+     * 权限：公开
+     *
+     * @param orderId 订单ID
+     * @param data 请求体（包含trackingNo运单号、companyCode快递公司编码、companyName快递公司名称）
+     * @return 生成结果
      */
     @PostMapping("/mock-generate/{orderId}")
     @AuditLog(module = "物流管理", action = "生成模拟物流", logLevel = AuditLog.LogLevel.WARNING)
@@ -156,7 +183,11 @@ public class LogisticsController {
 
     /**
      * 物流状态更新回调（预留接口）
-     * 实际对接时，物流公司会异步回调此接口
+     * API路径：POST /api/logistics/webhook
+     * 权限：公开（实际对接时需验证来源）
+     *
+     * @param data 请求体（包含trackingNo运单号、status状态、description描述、location地点）
+     * @return 处理结果
      */
     @PostMapping("/webhook")
     @AuditLog(module = "物流管理", action = "物流状态回调", logLevel = AuditLog.LogLevel.INFO)
