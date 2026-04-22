@@ -22,6 +22,12 @@ import java.util.Map;
 
 /**
  * 商品控制器
+ * 提供商品列表、详情、搜索、分类、推荐、收藏、浏览历史等用户端功能。
+ * 权限要求：大部分接口公开，收藏和浏览历史需要登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/product
  */
 @RestController
 @RequestMapping("/api/product")

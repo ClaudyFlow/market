@@ -4,7 +4,9 @@ import com.market.annotation.*;
 import com.market.common.Result;
 import com.market.entity.Shop;
 import com.market.entity.User;
+import com.market.entity.ShopReview;
 import com.market.service.ShopService;
+import com.market.service.ShopReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,9 @@ public class ShopController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private ShopReviewService shopReviewService;
 
     /**
      * 获取店铺列表
@@ -390,6 +395,160 @@ public class ShopController {
         result.put("shareUrl", "https://market.com/shop/" + id);
         result.put("shareCode", "shop_" + id);
         return Result.success(result);
+    }
+
+    /**
+     * 评价店铺
+     * API路径：POST /api/shop/{id}/review
+     * 权限：需要登录
+     *
+     * @param id 店铺ID
+     * @param data 评价数据（包含orderId、rating、descriptionScore、serviceScore、logisticsScore、content、images）
+     * @param user 当前登录用户
+     * @return 评价结果
+     */
+    @PostMapping("/{id}/review")
+    @Idempotent(key = "'shop_review_' + #id + '_' + #user.id", expire = 3600)
+    @AuditLog(module = "店铺管理", action = "评价店铺", recordParams = true)
+    public Result<ShopReview> reviewShop(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> data,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        Integer rating = data.get("rating") != null ? Integer.valueOf(data.get("rating").toString()) : null;
+        if (rating == null || rating < 1 || rating > 5) {
+            return Result.error(400, "评分必须在1-5之间");
+        }
+
+        Long orderId = data.get("orderId") != null ? Long.valueOf(data.get("orderId").toString()) : null;
+        String content = data.get("content") != null ? data.get("content").toString() : "";
+        String images = data.get("images") != null ? data.get("images").toString() : null;
+
+        java.math.BigDecimal descriptionScore = data.get("descriptionScore") != null 
+            ? new java.math.BigDecimal(data.get("descriptionScore").toString()) : null;
+        java.math.BigDecimal serviceScore = data.get("serviceScore") != null 
+            ? new java.math.BigDecimal(data.get("serviceScore").toString()) : null;
+        java.math.BigDecimal logisticsScore = data.get("logisticsScore") != null 
+            ? new java.math.BigDecimal(data.get("logisticsScore").toString()) : null;
+
+        try {
+            ShopReview review = shopReviewService.createReview(
+                user.getId(), id, orderId, rating, descriptionScore, serviceScore, logisticsScore, content, images
+            );
+            return Result.success(review);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
+    }
+
+    /**
+     * 获取店铺评价列表
+     * API路径：GET /api/shop/{id}/reviews
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 分页的店铺评价列表
+     */
+    @GetMapping("/{id}/reviews")
+    @Cacheable(key = "'shop_reviews_' + #id + '_' + #page", cacheName = "shops", expire = 300)
+    @AuditLog(module = "店铺管理", action = "查询店铺评价")
+    public Result<Map<String, Object>> getShopReviews(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<ShopReview> reviewPage = shopReviewService.getShopReviews(id, pageable);
+
+        List<Map<String, Object>> reviewList = reviewPage.getContent().stream()
+            .map(this::convertShopReviewToMap)
+            .collect(java.util.stream.Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", reviewList);
+        response.put("total", reviewPage.getTotalElements());
+        response.put("page", page);
+        response.put("size", size);
+
+        return Result.success(response);
+    }
+
+    /**
+     * 获取店铺评分统计
+     * API路径：GET /api/shop/{id}/rating-stats
+     * 权限：公开
+     *
+     * @param id 店铺ID
+     * @return 店铺评分统计（总评数、平均评分、描述评分、服务评分、物流评分）
+     */
+    @GetMapping("/{id}/rating-stats")
+    @Cacheable(key = "'shop_rating_stats_' + #id", cacheName = "shops", expire = 600)
+    @AuditLog(module = "店铺管理", action = "查询店铺评分统计")
+    public Result<Map<String, Object>> getShopRatingStats(@PathVariable Long id) {
+        Map<String, Object> stats = shopReviewService.getShopRatingStats(id);
+        return Result.success(stats);
+    }
+
+    /**
+     * 商家回复店铺评价
+     * API路径：POST /api/shop/review/{reviewId}/reply
+     * 权限：需要商家角色
+     *
+     * @param reviewId 评价ID
+     * @param data 回复内容
+     * @param user 当前登录商家
+     * @return 回复结果
+     */
+    @PostMapping("/review/{reviewId}/reply")
+    @AuditLog(module = "店铺管理", action = "回复店铺评价")
+    public Result<Void> replyToReview(
+            @PathVariable Long reviewId,
+            @RequestBody Map<String, String> data,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        String reply = data.get("reply");
+        if (reply == null || reply.isEmpty()) {
+            return Result.error(400, "回复内容不能为空");
+        }
+
+        try {
+            shopReviewService.replyToReview(reviewId, reply, user.getId());
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(400, e.getMessage());
+        }
+    }
+
+    /**
+     * 转换店铺评价为Map
+     */
+    private Map<String, Object> convertShopReviewToMap(ShopReview review) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", review.getId());
+        map.put("userId", review.getUserId());
+        map.put("shopId", review.getShopId());
+        map.put("orderId", review.getOrderId());
+        map.put("rating", review.getRating());
+        map.put("descriptionScore", review.getDescriptionScore());
+        map.put("serviceScore", review.getServiceScore());
+        map.put("logisticsScore", review.getLogisticsScore());
+        map.put("content", review.getContent());
+        map.put("images", review.getImages());
+        map.put("merchantReply", review.getMerchantReply());
+        map.put("merchantReplyAt", review.getMerchantReplyAt());
+        map.put("status", review.getStatus());
+        map.put("createdAt", review.getCreatedAt());
+        return map;
     }
 
     /**

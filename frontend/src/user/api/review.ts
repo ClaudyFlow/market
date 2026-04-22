@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 评价相关 API
  */
 
@@ -144,4 +144,64 @@ export type RatingInfo = {
   averageRating: number
   reviewCount: number
   ratingDistribution: Record<number, number>
+}
+
+/**
+ * 评价商家
+ */
+export function createMerchantReview(data: {
+  merchantId: number
+  orderId?: number
+  score: number
+  serviceScore?: number
+  deliveryScore?: number
+  qualityScore?: number
+  content?: string
+  images?: string[]
+  anonymous?: boolean
+}): Promise<Review> {
+  return post(`${BASE_URL}/merchant`, data)
+}
+
+/**
+ * 获取商家评价列表
+ */
+export function getMerchantReviews(merchantId: number, params?: PageParams): Promise<PageData<Review>> {
+  return get(`${BASE_URL}/merchant/${merchantId}`, params)
+}
+
+/**
+ * 获取商家评价统计
+ */
+export function getMerchantReviewStats(merchantId: number): Promise<{
+  averageScore: number
+  serviceScore: number
+  deliveryScore: number
+  qualityScore: number
+  totalReviews: number
+}> {
+  return get(`${BASE_URL}/merchant/${merchantId}/stats`)
+}
+
+/**
+ * 评价服务（物流/客服）
+ */
+export function createServiceReview(data: {
+  orderId: number
+  type: 'logistics' | 'customer'
+  score: number
+  content?: string
+}): Promise<void> {
+  return post(`${BASE_URL}/service`, data)
+}
+
+/**
+ * 获取服务评价详情
+ */
+export function getServiceReview(orderId: number, type: 'logistics' | 'customer'): Promise<{
+  score: number
+  content?: string
+  createTime: string
+}> {
+  return get(`${BASE_URL}/service`, { orderId, type })
 }

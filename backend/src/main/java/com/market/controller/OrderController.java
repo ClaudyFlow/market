@@ -486,6 +486,42 @@ public class OrderController {
     }
 
     /**
+     * 分享订单
+     * API路径：POST /api/order/{id}/share
+     * 权限：需要登录
+     *
+     * @param id 订单ID
+     * @param user 当前登录用户
+     * @return 分享链接和分享信息
+     */
+    @PostMapping("/{id}/share")
+    @AuditLog(module = "订单管理", action = "分享订单")
+    public Result<Map<String, Object>> shareOrder(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        Order order = orderService.getOrderById(id)
+            .orElseThrow(() -> new RuntimeException("订单不存在"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            return Result.error(403, "无权访问该订单");
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("shareUrl", "https://market.com/order/" + order.getOrderNo());
+        result.put("shareCode", "order_" + order.getOrderNo());
+        result.put("orderNo", order.getOrderNo());
+        result.put("totalAmount", order.getTotalAmount());
+        result.put("status", order.getStatus());
+
+        return Result.success(result);
+    }
+
+    /**
      * 转换 Order 对象为 Map
      */
     private Map<String, Object> convertOrderToMap(Order order) {

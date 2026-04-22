@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,10 +20,10 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '商品管理', requiresAuth: true }
   },
   {
-    path: '/product/edit',
+    path: '/product/edit/:id?',
     name: 'ProductEdit',
     component: () => import('@merchant/views/product/ProductEdit.vue'),
-    meta: { title: '编辑商品', requiresAuth: true }
+    meta: { title: '商品编辑', requiresAuth: true }
   },
   {
     path: '/order',
@@ -48,6 +48,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Review',
     component: () => import('@merchant/views/review/ReviewList.vue'),
     meta: { title: '评价管理', requiresAuth: true }
+  },
+  {
+    path: '/activity',
+    name: 'Activity',
+    component: () => import('@merchant/views/activity/ActivityList.vue'),
+    meta: { title: '活动管理', requiresAuth: true }
   },
   {
     path: '/coupon',

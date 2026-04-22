@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
 
 /**
  * 推荐控制器
+ * 提供推荐商品、热门商品、看了又看、买了又买、店铺推荐等个性化推荐接口。
+ * 权限要求：大部分接口公开，推荐商品需要登录可获得更精准结果
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/recommend
  */
 @RestController
 @RequestMapping("/api/recommend")
@@ -28,6 +34,12 @@ public class RecommendController {
 
     /**
      * 获取推荐商品列表（猜你喜欢）
+     * API路径：GET /api/recommend/products
+     * 权限：公开（登录后可获得更精准推荐）
+     *
+     * @param limit 返回数量，默认10
+     * @param user 当前登录用户（可选）
+     * @return 推荐商品列表
      */
     @GetMapping("/products")
     @Cacheable(key = "'recommend_products_' + #user.id + '_' + #limit", cacheName = "recommend", expire = 600)
@@ -43,6 +55,11 @@ public class RecommendController {
 
     /**
      * 获取热门商品
+     * API路径：GET /api/recommend/hot
+     * 权限：公开
+     *
+     * @param limit 返回数量，默认10
+     * @return 热门商品列表
      */
     @GetMapping("/hot")
     @Cacheable(key = "'hot_products_' + #limit", cacheName = "recommend", expire = 600)
@@ -55,7 +72,14 @@ public class RecommendController {
     }
 
     /**
-     * 获取看了又看
+     * 获取看了又看（浏览该商品的用户还看了哪些商品）
+     * API路径：GET /api/recommend/viewed-also-viewed
+     * 权限：公开
+     *
+     * @param productId 商品ID
+     * @param limit 返回数量，默认6
+     * @param user 当前登录用户（可选）
+     * @return 推荐商品列表
      */
     @GetMapping("/viewed-also-viewed")
     @Cacheable(key = "'viewed_also_viewed_' + #productId + '_' + #limit", cacheName = "recommend", expire = 600)
@@ -71,7 +95,14 @@ public class RecommendController {
     }
 
     /**
-     * 获取买了又买
+     * 获取买了又买（购买该商品的用户还购买了哪些商品）
+     * API路径：GET /api/recommend/bought-also-bought
+     * 权限：公开
+     *
+     * @param productId 商品ID
+     * @param limit 返回数量，默认6
+     * @param user 当前登录用户（可选）
+     * @return 推荐商品列表
      */
     @GetMapping("/bought-also-bought")
     @Cacheable(key = "'bought_also_bought_' + #productId + '_' + #limit", cacheName = "recommend", expire = 600)
@@ -88,6 +119,12 @@ public class RecommendController {
 
     /**
      * 获取店铺推荐商品
+     * API路径：GET /api/recommend/shop
+     * 权限：公开
+     *
+     * @param merchantId 商家ID
+     * @param limit 返回数量，默认6
+     * @return 店铺推荐商品列表
      */
     @GetMapping("/shop")
     @Cacheable(key = "'shop_recommend_' + #merchantId + '_' + #limit", cacheName = "recommend", expire = 600)

@@ -1,4 +1,4 @@
-﻿import request from '@merchant/api/request'
+import request from '@merchant/api/request'
 
 export interface Product {
   id: number
@@ -41,6 +41,14 @@ export function createProduct(data: Partial<Product>) {
     url: '/merchant/product',
     method: 'post',
     data
+  })
+}
+
+// 获取商品详情
+export function getProductDetail(id: number) {
+  return request({
+    url: `/merchant/product/${id}`,
+    method: 'get'
   })
 }
 

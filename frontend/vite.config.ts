@@ -65,11 +65,24 @@ export default defineConfig({
         admin: resolve(__dirname, 'admin.html')
       },
       output: {
-        manualChunks: {
-          'vendor-vue': ['vue', 'vue-router', 'pinia'],
-          'vendor-element': ['element-plus'],
-          'vendor-icons': ['@element-plus/icons-vue'],
-          'vendor-utils': ['axios']
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('vue') || id.includes('pinia')) {
+              return 'vendor-vue'
+            }
+            if (id.includes('element-plus')) {
+              return 'vendor-element'
+            }
+            if (id.includes('@element-plus/icons')) {
+              return 'vendor-icons'
+            }
+            if (id.includes('axios') || id.includes('stomp')) {
+              return 'vendor-utils'
+            }
+            if (id.includes('echarts')) {
+              return 'vendor-charts'
+            }
+          }
         },
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
@@ -79,7 +92,9 @@ export default defineConfig({
     cssCodeSplit: true,
     assetsInlineLimit: 4096,
     reportCompressedSize: true,
-    chunkSizeWarningLimit: 500
+    chunkSizeWarningLimit: 500,
+    sourcemap: false,
+    target: 'es2020'
   },
 
   optimizeDeps: {

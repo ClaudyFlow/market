@@ -51,6 +51,8 @@ import { ref, computed, watch } from 'vue'
 import { Plus, Close } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { compressImage, getBase64Size, formatFileSize } from '@user/utils/imageCompress'
+import { base64ToFile } from '@user/utils/imageDecode'
+import { uploadImage } from '@user/api/upload'
 
 const props = defineProps({
   modelValue: {
@@ -203,20 +205,9 @@ const getImageDimension = (base64: string) => {
 // 上传到后端（只存储，不处理）
 const uploadToBackend = async (base64: string) => {
   try {
-    const response = await fetch('http://localhost:8080/api/upload/image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        base64,
-        compressed: true // 标记已压缩
-      })
-    })
-    const result = await response.json()
-    if (result.code !== 200) {
-      throw new Error(result.message || '上传失败')
-    }
+    const filename = `image_${Date.now()}.jpg`
+    const file = base64ToFile(base64, filename)
+    await uploadImage(file)
   } catch (error: any) {
     // 上传失败不影响使用，只是不能存储到服务器
     console.warn('上传到后端失败，但图片仍可使用:', error.message)

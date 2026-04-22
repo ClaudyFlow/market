@@ -19,6 +19,12 @@ import java.util.stream.Collectors;
 
 /**
  * VIP 中心控制器
+ * 提供VIP等级列表、VIP信息查询、礼包领取、充值订单创建、充值记录查询等功能。
+ * 权限要求：需要登录
+ *
+ * @author market-team
+ * @since 1.0
+ * @RequestMapping /api/user/vip
  */
 @RestController
 @RequestMapping("/api/user/vip")
@@ -30,6 +36,10 @@ public class VipController {
 
     /**
      * 获取 VIP 等级列表
+     * API路径：GET /api/user/vip/levels
+     * 权限：需要登录
+     *
+     * @return VIP等级列表（包含等级名称、升级积分、权益等）
      */
     @GetMapping("/levels")
     public Result<List<Map<String, Object>>> getVipLevels() {
@@ -44,6 +54,11 @@ public class VipController {
 
     /**
      * 获取我的 VIP 信息
+     * API路径：GET /api/user/vip/my
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 我的VIP信息（当前等级、成长值、进度等）
      */
     @GetMapping("/my")
     public Result<Map<String, Object>> getMyVipInfo(@AuthenticationPrincipal User user) {
@@ -59,6 +74,11 @@ public class VipController {
 
     /**
      * 获取 VIP 权益详情
+     * API路径：GET /api/user/vip/privileges
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return VIP权益详情（折扣、积分、免运费次数等）
      */
     @GetMapping("/privileges")
     public Result<Map<String, Object>> getPrivileges(@AuthenticationPrincipal User user) {
@@ -83,6 +103,11 @@ public class VipController {
 
     /**
      * 获取每日礼包列表
+     * API路径：GET /api/user/vip/gifts/daily
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 每日礼包列表（含领取状态）
      */
     @GetMapping("/gifts/daily")
     public Result<List<Map<String, Object>>> getDailyGifts(@AuthenticationPrincipal User user) {
@@ -101,6 +126,11 @@ public class VipController {
 
     /**
      * 获取每月礼包列表
+     * API路径：GET /api/user/vip/gifts/monthly
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 每月礼包列表（含领取状态）
      */
     @GetMapping("/gifts/monthly")
     public Result<List<Map<String, Object>>> getMonthlyGifts(@AuthenticationPrincipal User user) {
@@ -119,6 +149,11 @@ public class VipController {
 
     /**
      * 获取所有礼包
+     * API路径：GET /api/user/vip/gifts
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 所有可用礼包列表（含领取状态）
      */
     @GetMapping("/gifts")
     public Result<List<Map<String, Object>>> getAllGifts(@AuthenticationPrincipal User user) {
@@ -137,6 +172,12 @@ public class VipController {
 
     /**
      * 领取礼包
+     * API路径：POST /api/user/vip/gifts/{id}/claim
+     * 权限：需要登录
+     *
+     * @param id 礼包ID
+     * @param user 当前登录用户
+     * @return 领取结果
      */
     @PostMapping("/gifts/{id}/claim")
     public Result<Map<String, Object>> claimGift(
@@ -149,6 +190,12 @@ public class VipController {
 
     /**
      * 获取礼包领取记录
+     * API路径：GET /api/user/vip/gifts/records
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param type 礼包类型（可选，daily/monthly）
+     * @return 礼包领取记录列表
      */
     @GetMapping("/gifts/records")
     public Result<List<Map<String, Object>>> getGiftRecords(
@@ -176,6 +223,12 @@ public class VipController {
 
     /**
      * 创建充值订单
+     * API路径：POST /api/user/vip/recharge
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param amount 充值金额
+     * @return 充值订单信息
      */
     @PostMapping("/recharge")
     public Result<Map<String, Object>> createRechargeOrder(
@@ -196,6 +249,12 @@ public class VipController {
 
     /**
      * 支付充值订单
+     * API路径：POST /api/user/vip/recharge/{orderNo}/pay
+     * 权限：需要登录
+     *
+     * @param orderNo 充值订单号
+     * @param paymentMethod 支付方式（alipay/wechat/bank）
+     * @return 支付结果
      */
     @PostMapping("/recharge/{orderNo}/pay")
     public Result<VipRechargeOrder> payRechargeOrder(
@@ -208,6 +267,13 @@ public class VipController {
 
     /**
      * 获取充值记录
+     * API路径：GET /api/user/vip/recharge/records
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @param page 页码，默认1
+     * @param size 每页大小，默认10
+     * @return 充值记录分页列表
      */
     @GetMapping("/recharge/records")
     public Result<List<Map<String, Object>>> getRechargeRecords(@AuthenticationPrincipal User user) {
@@ -232,6 +298,11 @@ public class VipController {
 
     /**
      * 获取充值统计
+     * API路径：GET /api/user/vip/recharge/stats
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 充值统计数据（累计充值、可用积分等）
      */
     @GetMapping("/recharge/stats")
     public Result<Map<String, Object>> getRechargeStats(@AuthenticationPrincipal User user) {

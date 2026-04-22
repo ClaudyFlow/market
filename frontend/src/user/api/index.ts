@@ -60,3 +60,12 @@ export * as vipApi from './vip'
 
 // 首页
 export * as homeApi from './home'
+
+// 推荐
+export * as recommendApi from './recommend'
+
+// 支付
+export * as paymentApi from './payment'
+
+// 物流
+export * as logisticsApi from './logistics'

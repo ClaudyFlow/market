@@ -112,6 +112,7 @@
 import { ref, computed, watch } from 'vue'
 import { Wallet, ChatDotRound, CreditCard, Expand, Picture } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { createPayment, mockPay } from '@user/api/payment'
 
 const props = defineProps({
   modelValue: {
@@ -160,26 +161,11 @@ watch(() => props.modelValue, async (val) => {
 const initPayment = async () => {
   loading.value = true
   try {
-    const response = await fetch('http://localhost:8080/api/payment/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        orderNo: props.orderNo,
-        amount: props.amount,
-        paymentMethod: selectedMethod.value
-      })
-    })
-
-    const result = await response.json()
-    if (result.code === 200) {
-      paymentNo.value = result.data.paymentNo
-      showQrCode.value = true
-    } else {
-      ElMessage.error(result.message || '创建支付单失败')
-    }
-  } catch (error) {
+    const res = await createPayment(props.orderNo, selectedMethod.value)
+    paymentNo.value = res.paymentNo
+    showQrCode.value = true
+  } catch (error: any) {
+    ElMessage.error(error.message || '创建支付单失败')
     console.error('创建支付单失败:', error)
   } finally {
     loading.value = false
@@ -196,21 +182,12 @@ const handlePay = async () => {
   paying.value = true
 
   try {
-    // 模拟支付（测试用）
-    const response = await fetch(`http://localhost:8080/api/payment/mock-pay/${paymentNo.value}`, {
-      method: 'POST'
-    })
-
-    const result = await response.json()
-    if (result.code === 200) {
-      ElMessage.success('支付成功')
-      emit('success', paymentNo.value)
-      dialogVisible.value = false
-    } else {
-      ElMessage.error(result.message || '支付失败')
-    }
-  } catch (error) {
-    ElMessage.error('支付失败，请重试')
+    const res = await mockPay(paymentNo.value)
+    ElMessage.success('支付成功')
+    emit('success', paymentNo.value)
+    dialogVisible.value = false
+  } catch (error: any) {
+    ElMessage.error(error.message || '支付失败')
   } finally {
     paying.value = false
   }

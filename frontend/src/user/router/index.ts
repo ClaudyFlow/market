@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -208,6 +208,12 @@ const routes: RouteRecordRaw[] = [
         name: 'UserSettings',
         component: () => import('@user/views/Settings.vue'),
         meta: { title: '设置' }
+      },
+      {
+        path: 'notice',
+        name: 'UserNotice',
+        component: () => import('@user/views/NoticeCenter.vue'),
+        meta: { title: '通知中心' }
       }
     ]
   },
@@ -277,6 +283,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Feedback',
     component: () => import('@user/views/feedback/FeedbackCenter.vue'),
     meta: { title: '购物评分反馈' }
+  },
+  {
+    path: '/notice',
+    name: 'NoticeCenter',
+    component: () => import('@user/views/NoticeCenter.vue'),
+    meta: { title: '通知中心' }
   }
 ]
 

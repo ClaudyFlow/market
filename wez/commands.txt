@@ -1,0 +1,21 @@
+wezterm cli list
+wezterm cli send-text --pane-id <id> "<消息>"
+
+wezterm cli send-text --pane-id 1 "你是编号1，职责是前端开发"
+wezterm cli send-text --pane-id 2 "你是编号2，职责是后端开发"
+wezterm cli send-text --pane-id 3 "你是编号3，职责是测试"
+wezterm cli send-text --pane-id 4 "你是编号4，职责是文档"
+
+wezterm cli send-text --pane-id 1 "0是管理"
+wezterm cli send-text --pane-id 2 "0是管理"
+wezterm cli send-text --pane-id 3 "0是管理"
+wezterm cli send-text --pane-id 4 "0是管理"
+
+wezterm cli send-text --pane-id 1 "F管理T前端：<内容>。<时间戳>"
+wezterm cli send-text --pane-id 2 "F管理T后端：<内容>。<时间戳>"
+wezterm cli send-text --pane-id 3 "F管理T测试：<内容>。<时间戳>"
+wezterm cli send-text --pane-id 4 "F管理T文档：<内容>。<时间戳>"
+
+wezterm cli send-text --pane-id 5 "<命令>"
+
+# GPL-3.0 License

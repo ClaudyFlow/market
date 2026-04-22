@@ -290,6 +290,71 @@
             </div>
           </div>
         </el-tab-pane>
+
+        <!-- 店铺评价标签 -->
+        <el-tab-pane label="店铺评价" name="reviews">
+          <div class="tab-content">
+            <div class="shop-reviews-section">
+              <div class="reviews-stats">
+                <div class="stat-card">
+                  <div class="stat-value">{{ merchantStats.averageScore }}</div>
+                  <div class="stat-label">综合评分</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">{{ merchantStats.serviceScore }}</div>
+                  <div class="stat-label">服务评分</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">{{ merchantStats.deliveryScore }}</div>
+                  <div class="stat-label">物流评分</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">{{ merchantStats.qualityScore }}</div>
+                  <div class="stat-label">质量评分</div>
+                </div>
+              </div>
+
+              <div class="review-form-section" v-if="canReviewMerchant">
+                <h4>评价商家</h4>
+                <el-form :model="reviewForm" label-position="top">
+                  <el-form-item label="综合评分">
+                    <el-rate v-model="reviewForm.score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" />
+                  </el-form-item>
+                  <el-form-item label="服务评分">
+                    <el-rate v-model="reviewForm.serviceScore" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" />
+                  </el-form-item>
+                  <el-form-item label="物流评分">
+                    <el-rate v-model="reviewForm.deliveryScore" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" />
+                  </el-form-item>
+                  <el-form-item label="评价内容">
+                    <el-input v-model="reviewForm.content" type="textarea" :rows="3" placeholder="分享您的购物体验..." />
+                  </el-form-item>
+                  <el-button type="primary" @click="submitMerchantReview" :loading="reviewing">
+                    提交评价
+                  </el-button>
+                </el-form>
+              </div>
+
+              <div class="reviews-list">
+                <div v-for="review in reviews" :key="review.id" class="review-item">
+                  <div class="review-header">
+                    <el-avatar :size="32" :src="review.userAvatar" />
+                    <div class="review-info">
+                      <div class="review-user">{{ review.anonymous ? '匿名用户' : review.userName }}</div>
+                      <div class="review-scores">
+                        <el-rate v-model="review.score" disabled size="small" />
+                        <span class="score-text">综合{{ review.score }}分</span>
+                      </div>
+                    </div>
+                    <div class="review-time">{{ review.createTime }}</div>
+                  </div>
+                  <div class="review-content">{{ review.content }}</div>
+                </div>
+                <el-empty v-if="reviews.length === 0" description="暂无评价" />
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -483,6 +548,61 @@ const selectCategory = (category: any) => {
   filter.value.category = category.id
   activeTab.value = 'products'
   loadProducts()
+}
+
+// 商家评价相关
+const merchantStats = ref({
+  averageScore: 4.8,
+  serviceScore: 4.9,
+  deliveryScore: 4.7,
+  qualityScore: 4.8,
+  totalReviews: 0
+})
+const reviews = ref<any[]>([])
+const canReviewMerchant = ref(true)
+const reviewing = ref(false)
+const reviewForm = ref({
+  score: 5,
+  serviceScore: 5,
+  deliveryScore: 5,
+  qualityScore: 5,
+  content: ''
+})
+
+const loadMerchantReviews = async () => {
+  try {
+    const { getMerchantReviews, getMerchantReviewStats } = await import('@user/api/review')
+    const [reviewsRes, statsRes] = await Promise.all([
+      getMerchantReviews(shop.value.id, { current: 1, size: 20 }),
+      getMerchantReviewStats(shop.value.id)
+    ])
+    reviews.value = reviewsRes.data?.list || reviewsRes.list || []
+    merchantStats.value = statsRes.data || statsRes
+  } catch (error) {
+    console.error('加载评价失败:', error)
+  }
+}
+
+const submitMerchantReview = async () => {
+  reviewing.value = true
+  try {
+    const { createMerchantReview } = await import('@user/api/review')
+    await createMerchantReview({
+      merchantId: shop.value.id,
+      score: reviewForm.value.score,
+      serviceScore: reviewForm.value.serviceScore,
+      deliveryScore: reviewForm.value.deliveryScore,
+      qualityScore: reviewForm.value.qualityScore,
+      content: reviewForm.value.content
+    })
+    ElMessage.success('评价提交成功')
+    reviewForm.value = { score: 5, serviceScore: 5, deliveryScore: 5, qualityScore: 5, content: '' }
+    loadMerchantReviews()
+  } catch (error: any) {
+    ElMessage.error(error.message || '提交失败')
+  } finally {
+    reviewing.value = false
+  }
 }
 
 // 加入购物车
@@ -1026,6 +1146,98 @@ onMounted(() => {
 .price-box .current-price {
   font-size: 24px;
   display: block;
+}
+
+/* ==================== 店铺评价 ==================== */
+.shop-reviews-section {
+  padding: 20px 0;
+}
+
+.reviews-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.reviews-stats .stat-card {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.reviews-stats .stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--mall-primary);
+  margin-bottom: 8px;
+}
+
+.reviews-stats .stat-label {
+  font-size: 14px;
+  color: var(--mall-text-secondary);
+}
+
+.review-form-section {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.review-form-section h4 {
+  margin-bottom: 20px;
+  color: var(--mall-text-primary);
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-item {
+  background: var(--mall-bg-card);
+  border: 1px solid var(--mall-border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.review-info {
+  flex: 1;
+}
+
+.review-user {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.review-scores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--mall-text-secondary);
+}
+
+.review-time {
+  font-size: 13px;
+  color: var(--mall-text-secondary);
+}
+
+.review-content {
+  color: var(--mall-text-primary);
+  line-height: 1.6;
 }
 
 /* ==================== 分类网格 ==================== */
