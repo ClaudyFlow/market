@@ -156,7 +156,7 @@ const filteredProduct = computed(() => {
 const totalProduct = computed(() => filteredProduct.value.length)
 
 const goToDetail = (id) => {
-  router.push(`/product/${id}`)
+  router.push(`/item/${id}`)
 }
 
 const addToCart = (product) => {

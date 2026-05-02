@@ -192,10 +192,7 @@ const handleGenerateMock = async () => {
     ElMessage.success('模拟物流已生成')
     await fetchLogistics()
   } catch (error: any) {
-    ElMessage.error(error.message || '生成失败')
-    }
-  } catch (error) {
-    ElMessage.error('生成失败，请重试')
+    ElMessage.error(error.message || '生成失败，请重试')
   } finally {
     loading.value = false
   }

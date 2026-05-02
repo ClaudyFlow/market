@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
-    name: 'Login',
+    name: 'MerchantLogin',
     component: () => import('@merchant/views/login/Login.vue'),
     meta: { title: '商家登录' }
   },

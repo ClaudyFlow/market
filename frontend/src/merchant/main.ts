@@ -14,11 +14,11 @@ const pinia = createPinia()
 // 使用 Pinia 日志插件
 pinia.use(piniaPluginLogger)
 
-// 初始化应用日志 (1024 条缓冲)
+// 初始化应用日志 (1024 条缓冲，禁用上传到后端)
 const appLogger = createLogger('MERCHANT', {
   bufferSize: 1024,
-  flushInterval: 10000,
-  apiEndpoint: '/api/log'
+  flushInterval: 0,
+  apiEndpoint: ''
 })
 
 appLogger.info('商家端启动')

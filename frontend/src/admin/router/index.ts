@@ -3,7 +3,7 @@
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
-    name: 'Login',
+    name: 'AdminLogin',
     component: () => import('@admin/views/login/Login.vue'),
     meta: { title: '管理员登录' }
   },

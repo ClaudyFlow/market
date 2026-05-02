@@ -129,3 +129,9 @@ export function getNotificationPreference(): Promise<{
 }> {
   return get(`${BASE_URL}/preference`)
 }
+
+/**
+ * 别名导出
+ */
+export const getNotifications = getNotificationList
+export const clearAllNotifications = clearNotifications
