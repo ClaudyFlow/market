@@ -141,7 +141,7 @@ const removeFavoriteItem = async (productId) => {
 
 // 查看详情
 const viewProduct = (productId) => {
-  router.push(`/product/${productId}`)
+  router.push(`/item/${productId}`)
 }
 
 // 加入购物车
@@ -157,7 +157,7 @@ const addToCart = async (productId) => {
 
 // 去逛逛
 const goToProducts = () => {
-  router.push('/product')
+  router.push('/item')
 }
 
 onMounted(() => {

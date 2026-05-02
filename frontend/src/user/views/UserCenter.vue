@@ -654,7 +654,7 @@ const deleteHistory = async (id) => {
 
 // 跳转商品详情
 const goToProduct = (productId) => {
-  router.push(`/product/${productId}`)
+  router.push(`/item/${productId}`)
 }
 
 // 导航

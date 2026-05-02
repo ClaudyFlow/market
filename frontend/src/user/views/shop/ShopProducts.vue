@@ -254,7 +254,7 @@ const addToCart = async (product: any) => {
 
 // 跳转商品详情
 const goToProduct = (productId: number) => {
-  router.push(`/product/${productId}`)
+  router.push(`/item/${productId}`)
 }
 
 onMounted(() => {

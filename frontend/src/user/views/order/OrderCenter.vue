@@ -678,7 +678,7 @@ const formatTime = (date?: string) => {
 }
 
 // 导航到店铺
-const goToShop = () => router.push('/shops')
+const goToShop = () => router.push('/shop')
 const goToShopDetail = (shopId?: number) => {
   if (shopId) router.push(`/shop/${shopId}`)
 }

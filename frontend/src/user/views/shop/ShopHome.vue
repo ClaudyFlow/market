@@ -323,7 +323,7 @@ const contactMerchant = () => {
     icon: 'fas fa-comments'
   })
   setTimeout(() => {
-    router.push('/customer-service')
+    router.push('/service')
   }, 1000)
 }
 
@@ -372,7 +372,7 @@ const addToCart = (product: any) => {
 
 // 跳转商品详情
 const goToProduct = (productId: number) => {
-  router.push(`/product/${productId}`)
+  router.push(`/item/${productId}`)
 }
 </script>
 
