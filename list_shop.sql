@@ -1,0 +1,1 @@
+SELECT id, name FROM shop ORDER BY id;

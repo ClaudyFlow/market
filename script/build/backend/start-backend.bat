@@ -28,3 +28,4 @@ echo.
 echo ========================================
 echo [Success] Backend Service Started!
 echo ========================================
+pause

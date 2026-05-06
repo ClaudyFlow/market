@@ -3,25 +3,22 @@ package com.market.controller;
 import com.market.common.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * 日志测试控制器
- * 用于生成测试日志和模拟用户操作流程，辅助开发和调试。
- * 权限要求：公开接口，无需登录（仅开发环境可用）
- *
- * @author market-team
- * @since 1.0
- * @RequestMapping /api/test
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/test")
 @Profile("dev")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class LogTestController {
+    
+    private static final Logger log = LoggerFactory.getLogger(LogTestController.class);
 
     /**
      * 生成测试日志

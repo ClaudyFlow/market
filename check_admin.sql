@@ -1,0 +1,1 @@
+SELECT id, name, LEFT(password_hash, 30) as pwd_prefix FROM "user" WHERE name='admin';

@@ -1,0 +1,1 @@
+SELECT id, level, name, discount FROM "vip_level" ORDER BY level;

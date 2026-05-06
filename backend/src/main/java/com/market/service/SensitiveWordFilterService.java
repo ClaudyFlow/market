@@ -50,10 +50,17 @@ public class SensitiveWordFilterService {
      * 从数据库加载敏感词
      */
     public synchronized void loadSensitiveWords() {
-        List<SensitiveWord> words = sensitiveWordRepository.findByEnabledTrue();
-        cachedSensitiveWords = words;
-        buildDfaTree(words);
-        log.info("重新加载敏感词库，共 {} 个词", words.size());
+        try {
+            List<SensitiveWord> words = sensitiveWordRepository.findByEnabledTrue();
+            cachedSensitiveWords = words;
+            buildDfaTree(words);
+            log.info("重新加载敏感词库，共 {} 个词", words.size());
+        } catch (Exception e) {
+            // 表不存在或数据库未就绪时，使用空列表
+            log.warn("加载敏感词失败（表可能不存在），使用空词典: {}", e.getMessage());
+            cachedSensitiveWords = new ArrayList<>();
+            sensitiveWordMap.clear();
+        }
     }
 
     /**

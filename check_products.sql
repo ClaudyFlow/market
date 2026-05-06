@@ -1,0 +1,1 @@
+SELECT id, name, available, status, merchant_id FROM "product" ORDER BY id;

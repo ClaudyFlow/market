@@ -90,3 +90,4 @@ echo [Success] Redis started
 echo.
 
 echo [Success] Database service is ready
+pause
