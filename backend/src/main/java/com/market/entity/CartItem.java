@@ -1,5 +1,6 @@
 package com.market.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -64,9 +65,11 @@ public class CartItem {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
-    
+     
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
     

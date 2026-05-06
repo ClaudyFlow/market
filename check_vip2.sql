@@ -1,0 +1,1 @@
+SELECT level, name, discount_rate FROM "vip_level" ORDER BY level;

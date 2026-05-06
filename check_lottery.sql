@@ -1,0 +1,1 @@
+SELECT name, probability, stock, total_stock FROM "lottery_prize" LIMIT 5;

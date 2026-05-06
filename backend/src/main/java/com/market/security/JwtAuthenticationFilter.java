@@ -12,63 +12,26 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 /**
  * JWT认证过滤器
- * <p>
- * 继承OncePerRequestFilter，确保每个请求只执行一次过滤。
- * 负责从请求头中提取JWT令牌，验证令牌有效性，并设置用户认证信息。
- * </p>
- *
- * @author Market Team
- * @since 1.0.0
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    /**
-     * JWT服务
-     */
     private final JwtService jwtService;
-
-    /**
-     * 用户详情服务
-     * 使用@Lazy注解避免循环依赖
-     */
     private final UserDetailsService userDetailsService;
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    /**
-     * 构造函数
-     *
-     * @param jwtService JWT服务
-     * @param userDetailsService 用户详情服务
-     */
     public JwtAuthenticationFilter(JwtService jwtService, @Lazy UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
 
-    /**
-     * 执行JWT认证过滤
-     * <p>
-     * 过滤流程：
-     * <ol>
-     *   <li>从请求头中提取Authorization字段</li>
-     *   <li>验证是否为Bearer令牌</li>
-     *   <li>从令牌中提取用户名</li>
-     *   <li>验证令牌有效性</li>
-     *   <li>如果有效，设置认证信息到SecurityContext</li>
-     * </ol>
-     * </p>
-     *
-     * @param request HTTP请求
-     * @param response HTTP响应
-     * @param filterChain 过滤器链
-     * @throws ServletException Servlet异常
-     * @throws IOException IO异常
-     */
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -85,7 +48,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        username = jwtService.extractUsername(jwt);
+        log.info("JWT Filter: Received token (first 30 chars): " + 
+                 (jwt != null ? jwt.substring(0, Math.min(30, jwt.length())) : "null") + 
+                 ", length: " + (jwt != null ? jwt.length() : 0));
+        log.info("JWT Filter: Token contains " + 
+                 (jwt != null ? (jwt.split("\\.").length - 1) : 0) + " dots");
+
+        try {
+            username = jwtService.extractUsername(jwt);
+            log.info("JWT Filter: Extracted username: " + username);
+        } catch (Exception e) {
+            log.error("JWT Filter: Failed to extract username - " + e.getClass().getSimpleName() + 
+                      ": " + e.getMessage(), e);
+            throw e;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -6,6 +6,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -14,14 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 重试切面
- *
- * 拦截带有 @Retryable 注解的方法，实现自动重试功能
- * 支持指数退避、异常过滤、自定义重试条件
  */
-@Slf4j
 @Aspect
 @Component
 public class RetryableAspect {
+    
+    private static final Logger log = LoggerFactory.getLogger(RetryableAspect.class);
 
     /**
      * 围绕带有 @Retryable 注解的方法执行

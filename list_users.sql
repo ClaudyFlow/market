@@ -1,0 +1,1 @@
+SELECT name, email FROM "user" ORDER BY id;

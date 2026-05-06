@@ -1,5 +1,6 @@
 package com.market.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -66,10 +67,12 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "merchant_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User merchant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -151,9 +154,11 @@ public class Product {
     public Integer getSales() { return sales; }
     public void setSales(Integer sales) { this.sales = sales; }
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public User getMerchant() { return merchant; }
     public void setMerchant(User merchant) { this.merchant = merchant; }
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 

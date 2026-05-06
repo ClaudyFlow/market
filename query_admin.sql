@@ -1,0 +1,1 @@
+SELECT id, name, email, LEFT(password_hash, 40) as pwd FROM "user" WHERE name='admin';

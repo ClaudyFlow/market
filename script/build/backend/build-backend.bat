@@ -85,3 +85,4 @@ echo.
 echo ========================================
 call "%COLOR%" Green "Backend Build & Start Success!"
 echo ========================================
+pause
