@@ -8,7 +8,7 @@ echo ========================================
 echo.
 
 :: Maven 短路径（8.3 格式，兼容空格和 CMD）
-set "MAVEN_CMD=C:\PROGRA~1\APACHE~1\bin\mvn.cmd"
+set "MAVEN_CMD=C:\Program Files\apache-maven-3.9.11\bin\mvn.cmd"
 if not exist "%MAVEN_CMD%" (
     echo [Error] Maven not found at: %MAVEN_CMD%
     echo [Hint] Please verify Maven is installed in "C:\Program Files\apache-maven-3.9.11"

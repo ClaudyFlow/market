@@ -80,14 +80,17 @@ public class LogTestService {
     }
     
     /**
-     * 定时测试：每分钟执行一次，模拟 10-15 个用户
+     * 定时测试：已禁用
+     * 如需测试请手动调用 batchTest()
      */
+    /*
     @Scheduled(fixedRate = 60000)
     public void scheduledTest() {
         int userCount = 10 + random.nextInt(6);
         log.info("【定时任务】开始第 {} 轮压力测试", (System.currentTimeMillis() / 60000));
         batchTest(userCount);
     }
+    */
     
     /**
      * 启动时执行一次测试
@@ -100,8 +103,9 @@ public class LogTestService {
         log.info("测试场景：用户登录 → 浏览 → 加购 → 下单 → 支付");
         log.info("===========================================");
         
-        // 执行一次小规模测试
-        batchTest(5);
+        // 执行一次用户测试
+        log.info("执行一次用户测试 (user=0)");
+        simulateUserFlow(0);
     }
     
     private void sleep(int ms) {
