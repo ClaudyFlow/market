@@ -10,19 +10,12 @@ echo [Start Backend] Starting backend services...
 echo.
 
 echo [1/5] Checking PostgreSQL...
-scoop list postgresql
+where psql >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] PostgreSQL found, updating...
-    scoop update postgresql
-    if %errorlevel% neq 0 (
-        echo [Error] PostgreSQL update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] PostgreSQL updated
+    echo [Info] PostgreSQL found
 ) else (
     echo [Info] PostgreSQL not found, installing...
-    scoop install postgresql
+    scoop install -q postgresql
     if %errorlevel% neq 0 (
         echo [Error] PostgreSQL install failed
         pause
@@ -33,19 +26,12 @@ if %errorlevel% equ 0 (
 echo.
 
 echo [2/5] Checking Redis...
-scoop list redis
+where redis-server >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] Redis found, updating...
-    scoop update redis
-    if %errorlevel% neq 0 (
-        echo [Error] Redis update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] Redis updated
+    echo [Info] Redis found
 ) else (
     echo [Info] Redis not found, installing...
-    scoop install redis
+    scoop install -q redis
     if %errorlevel% neq 0 (
         echo [Error] Redis install failed
         pause
@@ -56,16 +42,9 @@ if %errorlevel% equ 0 (
 echo.
 
 echo [3/5] Checking Java...
-winget list Oracle.JDK.21 >nul 2>nul
+where java >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] Java found, updating...
-    winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo [Error] Java update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] Java updated
+    echo [Info] Java found
 ) else (
     echo [Info] Java not found, installing...
     winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements >nul 2>&1
@@ -118,4 +97,3 @@ echo.
 echo ========================================
 echo [Success] Backend Service Started!
 echo ========================================
-pause

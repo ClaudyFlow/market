@@ -6,19 +6,12 @@ REM ============================================================
 
 echo [Start Database] Checking PostgreSQL...
 
-scoop list postgresql
+where psql >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] PostgreSQL found, updating...
-    scoop update postgresql
-    if %errorlevel% neq 0 (
-        echo [Error] PostgreSQL update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] PostgreSQL updated
+    echo [Info] PostgreSQL found
 ) else (
     echo [Info] PostgreSQL not found, installing...
-    scoop install postgresql
+    scoop install -q postgresql
     if %errorlevel% neq 0 (
         echo [Error] PostgreSQL install failed
         pause
@@ -47,19 +40,12 @@ echo.
 
 echo [Start Database] Checking Redis...
 
-scoop list redis
+where redis-server >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] Redis found, updating...
-    scoop update redis
-    if %errorlevel% neq 0 (
-        echo [Error] Redis update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] Redis updated
+    echo [Info] Redis found
 ) else (
     echo [Info] Redis not found, installing...
-    scoop install redis
+    scoop install -q redis
     if %errorlevel% neq 0 (
         echo [Error] Redis install failed
         pause

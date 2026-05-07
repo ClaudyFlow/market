@@ -9,25 +9,18 @@ echo.
 set "PROJECT_ROOT=D:\Code\Project\market"
 
 echo [1/5] Checking Node.js...
-scoop list nodejs
-if %errorlevel% equ 0 (
-    echo [Info] Node.js found, updating...
-    scoop update nodejs
-    if %errorlevel% neq 0 (
-        echo [Error] Node.js update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] Node.js updated
-) else (
-    echo [Info] Node.js not found, installing...
-    scoop install nodejs
+where node >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [Warning] Node.js not found, installing...
+    scoop install -q nodejs
     if %errorlevel% neq 0 (
         echo [Error] Node.js install failed
         pause
         exit /b 1
     )
     echo [Success] Node.js installed
+) else (
+    echo [Info] Node.js found
 )
 echo.
 
@@ -80,6 +73,12 @@ start /b nginx.exe
 timeout /t 2 /nobreak >nul
 echo [Success] Nginx started
 echo.
+echo Starting Vite dev server on port 5173...
+cd /d "%PROJECT_ROOT%\frontend"
+start npm run dev
+timeout /t 3 /nobreak >nul
+echo [Success] Vite dev server started
+echo.
 
 echo ========================================
 echo [Success] Frontend Service Started!
@@ -91,4 +90,3 @@ echo   - Production: http://localhost/
 echo   - Dev Server: http://localhost:5173
 echo   - Merchant: http://localhost/merchant.html
 echo   - Admin: http://localhost/admin.html
-pause

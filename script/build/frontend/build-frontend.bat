@@ -9,19 +9,12 @@ echo.
 set "PROJECT_ROOT=D:\Code\Project\market"
 
 echo [1/2] Checking Node.js...
-scoop list nodejs
+where node >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [Info] Node.js found, updating...
-    scoop update nodejs
-    if %errorlevel% neq 0 (
-        echo [Error] Node.js update failed
-        pause
-        exit /b 1
-    )
-    echo [Success] Node.js updated
+    echo [Info] Node.js found
 ) else (
     echo [Info] Node.js not found, installing...
-    scoop install nodejs
+    scoop install -q nodejs
     if %errorlevel% neq 0 (
         echo [Error] Node.js install failed
         pause
