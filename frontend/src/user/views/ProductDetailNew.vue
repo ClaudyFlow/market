@@ -103,7 +103,7 @@ import {
   ProductSpecsTab,
   ProductReviewsTab,
   CommonTagsSection,
-  FloatingActionButton
+  FloatingActionBar
 } from '@user/components/product'
 
 // 获取路由参数

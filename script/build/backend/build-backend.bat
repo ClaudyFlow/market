@@ -1,88 +1,74 @@
 @echo off
 chcp 65001 >nul
-setlocal EnableDelayedExpansion
 
 echo ========================================
 echo     Backend Build Script
 echo ========================================
 echo.
 
-set "SCRIPT_DIR=%~dp0"
-set "PROJECT_ROOT=%SCRIPT_DIR%..\..\.."
-set "COLOR=%SCRIPT_DIR%..\color.bat"
+set "PROJECT_ROOT=D:\Code\Project\market"
 
-:: 检查 Java
-echo [1/2] Checking Java...
-where java >nul 2>nul
-if !errorlevel! neq 0 (
-    winget list Oracle.JDK.21 >nul 2>nul
-    if !errorlevel! neq 0 (
-        echo [Info] Java not found, installing...
-        winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements
-        if !errorlevel! neq 0 (
-            call "%COLOR%" Red "Java installation failed"
-            exit /b 1
-        )
-        call "%COLOR%" Green "Java 21 installed"
-    )
-    winget list Oracle.JDK.21 >nul 2>nul
-    if !errorlevel! neq 0 (
-        call "%COLOR%" Red "Java installation verification failed"
+echo [1/3] Checking Java...
+winget list Oracle.JDK.21 >nul 2>nul
+if %errorlevel% equ 0 (
+    echo [Info] Java found, updating...
+    winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo [Error] Java update failed
+        pause
         exit /b 1
     )
-    call "%COLOR%" Green "Java 21 installation verified"
-    where java >nul 2>nul
-    if !errorlevel! neq 0 (
-        cls
-        start "" cmd /c "%SCRIPT_DIR%start-backend.bat"
-        exit /b 1
-    )
+    echo [Success] Java updated
 ) else (
-    call "%COLOR%" Green "Java 21 is installed"
+    echo [Info] Java not found, installing...
+    winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo [Error] Java install failed
+        pause
+        exit /b 1
+    )
+    echo [Success] Java installed
 )
 echo.
 
-:: 编译后端
-echo [2/2] Compiling backend...
+echo [2/3] Compiling backend...
 cd /d "%PROJECT_ROOT%\backend"
 if exist "target" (
     echo [Clean] Cleaning old build...
     rmdir /s /q target >nul 2>&1
 )
 
-:: 优先使用 mvnd，没有则降级 mvn
-where mvnd >nul 2>nul
-if !errorlevel! equ 0 (
-    echo [Build] Compiling with mvnd...
-    call mvnd clean compile -DskipTests
-) else (
-    echo [Build] mvnd not found, using mvn...
+where mvn >nul 2>nul
+if %errorlevel% equ 0 (
+    echo [Build] Compiling with mvn...
     call mvn clean compile -DskipTests
 )
-if !errorlevel! neq 0 (
-    call "%COLOR%" Red "Backend compilation failed"
+if %errorlevel% neq 0 (
+    echo [Error] Backend compilation failed
+    pause
     exit /b 1
 )
-call "%COLOR%" Green "Backend compilation completed"
+echo [Success] Backend compilation completed
 echo.
 
-:: 启动 Spring Boot
 echo [3/3] Starting Spring Boot service...
 if not exist "pom.xml" (
-    call "%COLOR%" Red "pom.xml not found"
+    echo [Error] pom.xml not found
+    pause
     exit /b 1
 )
 
 echo [Start] Starting Spring Boot backend service...
-start "Spring Boot Server" cmd /c "mvn spring-boot:run"
-if !errorlevel! neq 0 (
-    call "%COLOR%" Red "Backend service startup failed"
+start "Spring Boot Server" cmd /c "cd /d "%PROJECT_ROOT%\backend" && mvn spring-boot:run"
+if %errorlevel% neq 0 (
+    echo [Error] Backend service startup failed
+    pause
     exit /b 1
 )
-call "%COLOR%" Green "Backend service started"
+echo [Success] Backend service started
 echo.
 
 echo ========================================
-call "%COLOR%" Green "Backend Build & Start Success!"
+echo [Success] Backend Build and Start Success!
 echo ========================================
 pause

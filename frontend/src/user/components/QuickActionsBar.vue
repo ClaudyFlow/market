@@ -20,7 +20,7 @@
       <el-icon><StarFilled /></el-icon>
       <span>VIP 中心</span>
     </button>
-    <button class="action-item" @click="router.push('/favorite')" aria-label="我的收藏">
+    <button class="action-item" @click="router.push('/user/favorite')" aria-label="我的收藏">
       <el-icon><Star /></el-icon>
       <span>收藏</span>
     </button>

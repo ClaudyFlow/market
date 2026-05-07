@@ -278,9 +278,13 @@ watch(() => messages.value.length, () => {
 
 onMounted(() => {
   // 初始化 WebSocket 连接
-  chatStore.initWebSocket()
-  // 设置当前会话为客服
-  chatStore.setCurrentSession(1) // 客服ID
+  try {
+    chatStore.initWebSocket()
+    // 设置当前会话为客服
+    chatStore.setCurrentSession(1) // 客服ID
+  } catch (e) {
+    console.warn('WebSocket 连接失败（后端未运行）:', e)
+  }
 })
 
 onUnmounted(() => {

@@ -67,11 +67,8 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
-            if (id.includes('vue') || id.includes('pinia')) {
-              return 'vendor-vue'
-            }
-            if (id.includes('element-plus')) {
-              return 'vendor-element'
+            if (id.includes('vue') || id.includes('pinia') || id.includes('element-plus')) {
+              return 'vendor'
             }
             if (id.includes('@element-plus/icons')) {
               return 'vendor-icons'

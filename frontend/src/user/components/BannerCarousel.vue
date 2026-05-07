@@ -1,9 +1,9 @@
 <template>
-  <el-carousel 
-    height="100%" 
+  <el-carousel
+    height="100%"
     :interval="4000"
     :autoplay="true"
-    indicator-position="inside"
+    indicator-position=""
     aria-label="促销轮播"
   >
     <el-carousel-item v-for="(banner, index) in banners" :key="index">

@@ -63,17 +63,23 @@ export const useChatStore = defineStore('chat', () => {
   function initWebSocket(url?: string) {
     if (wsClient.value) return
 
-    wsClient.value = createWebSocketClient(url)
+    try {
+      wsClient.value = createWebSocketClient(url)
 
-    wsClient.value.on('status', (data) => {
-      isConnected.value = data.status === WSStatus.CONNECTED
-    })
+      wsClient.value.on('status', (data) => {
+        isConnected.value = data.status === WSStatus.CONNECTED
+      })
 
-    wsClient.value.on('message', (data) => {
-      handleIncomingMessage(data)
-    })
+      wsClient.value.on('message', (data) => {
+        handleIncomingMessage(data)
+      })
 
-    wsClient.value.connect()
+      wsClient.value.on('error', () => {
+      })
+
+      wsClient.value.connect()
+    } catch (e) {
+    }
   }
 
   function disconnect() {

@@ -16,6 +16,9 @@
 import { ref, onMounted, watch } from 'vue'
 import { toggleFavorite, checkFavorite } from '@user/api/favorite'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@user/stores/user'
+
+const userStore = useUserStore()
 
 const props = defineProps({
   productId: {
@@ -43,26 +46,31 @@ const loading = ref(false)
 
 // 检查是否已收藏
 const checkIsFavorite = async () => {
+  if (!userStore.isLoggedIn) {
+    return
+  }
   try {
-    const res = await checkFavorite(props.productId)
-    isFavorited.value = res.data.isFavorite
+    const res = await checkFavorite('product', props.productId)
+    isFavorited.value = res.data.favorite
   } catch (error) {
-    console.error('检查收藏状态失败:', error)
   }
 }
 
 // 切换收藏状态
 const handleToggleFavorite = async () => {
   if (loading.value) return
-  
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    return
+  }
+
   loading.value = true
   try {
-    const res = await toggleFavorite(props.productId)
-    isFavorited.value = res.data.isFavorite
-    ElMessage.success(res.data.message)
+    const res = await toggleFavorite('product', props.productId)
+    isFavorited.value = res.data.favorited
+    ElMessage.success(res.data.favorited ? '收藏成功' : '已取消收藏')
     emit('change', { productId: props.productId, isFavorited: isFavorited.value })
   } catch (error) {
-    console.error('切换收藏失败:', error)
     ElMessage.error(error.response?.data?.message || '操作失败')
   } finally {
     loading.value = false

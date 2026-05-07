@@ -6,23 +6,64 @@ echo     Start Frontend Service
 echo ========================================
 echo.
 
-set "SCRIPT_DIR=%~dp0"
-set "PROJECT_ROOT=%SCRIPT_DIR%..\..\.."
-set "COLOR=%SCRIPT_DIR%..\color.bat"
+set "PROJECT_ROOT=D:\Code\Project\market"
 
-:: [1/2] 检查环境
-echo [1/2] Check environment...
-if exist "%PROJECT_ROOT%\depend\nginx\nginx.exe" (
-    call "%COLOR%" Green "Nginx found"
+echo [1/5] Checking Node.js...
+scoop list nodejs
+if %errorlevel% equ 0 (
+    echo [Info] Node.js found, updating...
+    scoop update nodejs
+    if %errorlevel% neq 0 (
+        echo [Error] Node.js update failed
+        pause
+        exit /b 1
+    )
+    echo [Success] Node.js updated
 ) else (
-    call "%COLOR%" Red "Nginx not found"
-    exit /b 1
+    echo [Info] Node.js not found, installing...
+    scoop install nodejs
+    if %errorlevel% neq 0 (
+        echo [Error] Node.js install failed
+        pause
+        exit /b 1
+    )
+    echo [Success] Node.js installed
 )
-call "%COLOR%" Green "Environment check passed"
 echo.
 
-:: [2/2] 停止旧服务
-echo [2/2] Stop services...
+echo [2/5] Building frontend...
+cd /d "%PROJECT_ROOT%\frontend"
+if not exist "node_modules" (
+    echo [Install] Installing npm dependencies...
+    call npm install
+    if %errorlevel% neq 0 (
+        echo [Error] npm install failed
+        pause
+        exit /b 1
+    )
+)
+echo [Build] Building with Vite...
+call npm run build
+if %errorlevel% neq 0 (
+    echo [Error] Frontend build failed
+    pause
+    exit /b 1
+)
+echo [Success] Frontend build completed
+echo.
+
+echo [3/5] Checking environment...
+if exist "%PROJECT_ROOT%\depend\nginx\nginx.exe" (
+    echo [Success] Nginx found
+) else (
+    echo [Error] Nginx not found
+    pause
+    exit /b 1
+)
+echo [Success] Environment check passed
+echo.
+
+echo [4/5] Stopping services...
 for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":5173" ^| findstr "LISTENING"') do (
     taskkill /PID %%a /F >nul 2>nul
 )
@@ -30,28 +71,24 @@ cd /d "%PROJECT_ROOT%\depend\nginx"
 nginx.exe -s stop >nul 2>nul
 timeout /t 2 /nobreak >nul
 taskkill /IM nginx.exe /F >nul 2>nul
-call "%COLOR%" Green "Services stopped"
+echo [Success] Services stopped
 echo.
 
-:: [3/2] 构建并启动
-echo [3/2] Build and start frontend...
-call "%SCRIPT_DIR%build-frontend.bat"
-if %errorlevel% neq 0 (
-    call "%COLOR%" Red "Build failed"
-    exit /b 1
-)
+echo [5/5] Starting Nginx...
 cd /d "%PROJECT_ROOT%\depend\nginx"
 start /b nginx.exe
 timeout /t 2 /nobreak >nul
-call "%COLOR%" Green "Nginx started"
+echo [Success] Nginx started
 echo.
 
 echo ========================================
-call "%COLOR%" Green "Frontend Service Started!"
+echo [Success] Frontend Service Started!
 echo ========================================
 echo.
+
 echo Access URLs:
 echo   - Production: http://localhost/
 echo   - Dev Server: http://localhost:5173
 echo   - Merchant: http://localhost/merchant.html
 echo   - Admin: http://localhost/admin.html
+pause
