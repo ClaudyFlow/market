@@ -5,6 +5,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-@ConditionalOnProperty(name = "spring.mail.enabled", havingValue = "true", matchIfMissing = false)
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
@@ -31,7 +31,8 @@ public class EmailService {
     @Value("${market.mq.async-email:true}")
     private boolean asyncEmailEnabled;
 
-    public EmailService(JavaMailSender mailSender, MQProducer mqProducer) {
+    public EmailService(JavaMailSender mailSender,
+                        @Autowired(required = false) MQProducer mqProducer) {
         this.mailSender = mailSender;
         this.mqProducer = mqProducer;
     }
@@ -49,13 +50,11 @@ public class EmailService {
      * 发送验证码 (异步 - 通过消息队列)
      */
     public boolean sendVerificationCode(String email, String code) {
-        if (asyncEmailEnabled) {
-            // 通过消息队列异步发送
+        if (asyncEmailEnabled && mqProducer != null) {
             mqProducer.sendVerificationEmail(email, code, codeExpireMinutes);
             log.info("验证码邮件消息已发送到队列: {}", email);
             return true;
         } else {
-            // 降级为同步发送
             return sendVerificationCodeSync(email, code);
         }
     }
@@ -96,7 +95,7 @@ public class EmailService {
      * 发送欢迎邮件 (异步 - 通过消息队列)
      */
     public boolean sendWelcomeEmail(String email, String username) {
-        if (asyncEmailEnabled) {
+        if (asyncEmailEnabled && mqProducer != null) {
             mqProducer.sendWelcomeEmail(email, username);
             log.info("欢迎邮件消息已发送到队列: {}", email);
             return true;

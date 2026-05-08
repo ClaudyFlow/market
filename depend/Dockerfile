@@ -16,24 +16,17 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# 安装 wget 用于健康检查
 RUN apk add --no-cache wget
 
-# 从构建阶段复制 jar 包
 COPY --from=builder /build/target/*.jar app.jar
 
-# 创建日志目录
 RUN mkdir -p /app/logs
 
-# 暴露端口
 EXPOSE 8080
 
-# JVM 参数优化
 ENV JAVA_OPTS="-Xms512m -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 
-# 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD wget -q --spider http://localhost:8080/actuator/health || exit 1
 
-# 启动应用
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

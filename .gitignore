@@ -87,14 +87,10 @@ loki/rules/
 promtail/data/
 
 # Database
+data/
 *.db
 *.sqlite
 *.sqlite3
-data/*.db
-data/*.sqlite
-data/*.sqlite3
-# 允许 SQL 文件上传
-!data/*.sql
 
 # Logs
 *.log
