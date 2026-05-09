@@ -13,7 +13,7 @@ if %errorLevel% neq 0 (
 docker info >nul 2>&1
 if %errorLevel% neq 0 (
     echo Docker not running. Starting Docker Desktop...
-    start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+    start "" "Docker Desktop.exe"
     echo Waiting for Docker to start...
     :wait_loop
     timeout /t 3 /nobreak >nul
@@ -27,20 +27,5 @@ if %errorLevel% neq 0 (
 
 echo.
 echo Cleaning up old containers...
-cd /d "%~dp0..\..\depend"
-docker-compose down
-
-echo.
-echo Starting all services...
-docker-compose up -d
-
-echo.
-echo ========================================
-echo Services Started!
-echo.
-echo Access URLs:
-echo   API: http://localhost:8080
-echo   Nginx: http://localhost
-echo   RabbitMQ: http://localhost:15672
-echo ========================================
-pause
+cd /d "%~dp0..\..\..\depend"
+docker-compose down --remove-orphans

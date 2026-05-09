@@ -8,22 +8,23 @@ set "PROJECT_ROOT=D:\Code\Project\market"
 echo [Start Frontend] Starting frontend via Docker...
 echo.
 
-echo [1/2] Starting Nginx...
+echo [1/2] Building frontend...
+call "%~dp0build-frontend.bat"
+if %errorlevel% neq 0 (
+    echo [Error] Frontend build failed
+    pause
+    exit /b 1
+)
+echo.
+
+echo [2/2] Starting nginx (port 80)...
 docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d nginx
-echo.
+if %errorlevel% neq 0 (
+    echo [Error] Failed to start nginx
+    pause
+    exit /b 1
+)
 
-echo [2/2] Starting Node.js dev server...
-docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d frontend-dev
 echo.
-
-echo ========================================
-echo [Success] Frontend Service Started!
-echo ========================================
-echo.
-echo Access URLs:
-echo   - Production: http://localhost/
-echo   - Dev Server: http://localhost:5173
-echo   - Merchant: http://localhost/merchant.html
-echo   - Admin: http://localhost/admin.html
-echo.
+echo [Success] Frontend started
 pause

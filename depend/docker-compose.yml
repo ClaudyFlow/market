@@ -3,9 +3,9 @@ version: '3.8'
 services:
   # ==================== 数据库服务 ====================
   # PostgreSQL 数据库
-  postgres:
+  postgresql:
     image: postgres:18-alpine
-    container_name: market-postgres
+    container_name: postgresql
     restart: always
     environment:
       POSTGRES_DB: market
@@ -29,7 +29,7 @@ services:
   # Redis 缓存
   redis:
     image: redis:7-alpine
-    container_name: market-redis
+    container_name: redis
     restart: always
     ports:
       - "6379:6379"
@@ -69,17 +69,17 @@ services:
 
   # ==================== 应用服务 ====================
   # Spring Boot 应用
-  app:
+  springboot:
     build:
       context: ..
       dockerfile: depend/Dockerfile
-    container_name: market-app
+    container_name: springboot
     restart: always
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/market
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/market
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=123456
       - SPRING_DATA_REDIS_HOST=redis
@@ -98,7 +98,7 @@ services:
       - ../logs:/app/logs
       - ../data/uploads:/app/uploads
     depends_on:
-      postgres:
+      postgresql:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -117,7 +117,7 @@ services:
   # Node.js + Vue + TypeScript 开发环境
   frontend-dev:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
     container_name: market-frontend-dev
     restart: always
@@ -172,9 +172,8 @@ services:
     volumes:
       - ../frontend/dist:/usr/share/nginx/html:ro
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ../logs/nginx:/var/log/nginx
-    depends_on:
-      - app
+      - ../log/nginx:/var/log/nginx
+
     networks:
       - market-network
     profiles:
