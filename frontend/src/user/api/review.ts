@@ -205,3 +205,10 @@ export function getServiceReview(orderId: number, type: 'logistics' | 'customer'
 }> {
   return get(`${BASE_URL}/service`, { orderId, type })
 }
+
+/**
+ * 获取用户自己的评价列表
+ */
+export function getUserReviews(params?: PageParams): Promise<PageData<Review>> {
+  return get(`${BASE_URL}/user`, params)
+}

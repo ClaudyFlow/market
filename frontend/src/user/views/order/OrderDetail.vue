@@ -158,6 +158,14 @@
         <div v-else class="no-logistics">暂无物流信息</div>
       </section>
 
+      <!-- 购物记录 -->
+      <section class="info-section">
+        <div class="section-title">
+          <el-icon><Clock /></el-icon> 购物记录
+        </div>
+        <PurchaseRecords :records="purchaseRecords" />
+      </section>
+
       <!-- 退款信息 -->
       <section class="info-section" v-if="order.refundInfo && ['REFUNDING', 'REFUNDED'].includes(order.status)">
         <div class="section-title">
@@ -310,6 +318,7 @@ import {
 import * as orderApi from '@user/api/order'
 import { useLocalCartStore } from '@user/stores/cart-local'
 import type { Order, OrderDetail as OrderDetailType, OrderLogistics, RefundInfo } from '@user/types/order'
+import PurchaseRecords from './PurchaseRecords.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -360,6 +369,89 @@ const statusTips: Record<string, string> = {
 
 const statusIcon = computed(() => statusIconMap[order.value?.status] || ShoppingCart)
 const statusTip = computed(() => statusTips[order.value?.status] || '')
+
+// 购物记录时间线数据
+interface PurchaseRecord {
+  status: string
+  timestamp: string
+  description?: string
+  location?: string
+  hash?: string
+  verified?: boolean
+}
+
+const purchaseRecords = computed<PurchaseRecord[]>(() => {
+  if (!order.value) return []
+  const records: PurchaseRecord[] = []
+  const o = order.value
+
+  // 创建订单
+  records.push({
+    status: 'CREATE',
+    timestamp: o.createdAt || new Date().toISOString(),
+    description: `订单创建成功，商品${o.items?.length || 0}件`,
+    verified: true,
+    hash: generateHash(o.orderNo + 'CREATE')
+  })
+
+  // 支付
+  if (o.payTime || o.paymentInfo?.payTime) {
+    records.push({
+      status: 'PAID',
+      timestamp: o.payTime || o.paymentInfo?.payTime,
+      description: `支付成功，实付金额 ¥${o.payAmount?.toFixed(2) || o.totalAmount?.toFixed(2)}`,
+      verified: true,
+      hash: generateHash(o.orderNo + 'PAID')
+    })
+  }
+
+  // 发货
+  if (o.deliveryTime || o.status === 'SHIPPED' || o.status === 'COMPLETED') {
+    records.push({
+      status: 'SHIPPED',
+      timestamp: o.deliveryTime || new Date().toISOString(),
+      description: o.logistics?.trackingNo ? `商品已发货，运单号：${o.logistics.trackingNo}` : '商品已发货',
+      location: o.logistics?.company || '物流公司',
+      verified: true,
+      hash: generateHash(o.orderNo + 'SHIPPED')
+    })
+  }
+
+  // 确认收货
+  if (o.receiveTime || o.status === 'COMPLETED') {
+    records.push({
+      status: 'COMPLETED',
+      timestamp: o.receiveTime || new Date().toISOString(),
+      description: '确认收货，订单完成',
+      verified: true,
+      hash: generateHash(o.orderNo + 'COMPLETED')
+    })
+  }
+
+  // 取消
+  if (o.cancelReason || o.status === 'CANCELLED') {
+    records.push({
+      status: 'CANCELLED',
+      timestamp: o.updatedAt || new Date().toISOString(),
+      description: o.cancelReason || '订单已取消',
+      verified: true,
+      hash: generateHash(o.orderNo + 'CANCELLED')
+    })
+  }
+
+  return records.reverse()
+})
+
+// 简单哈希生成（模拟）
+const generateHash = (data: string): string => {
+  let hash = 0
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0')
+}
 
 // 是否可编辑地址
 const canEditAddress = computed(() =>

@@ -204,6 +204,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '我的关注' }
       },
       {
+        path: 'reviews',
+        name: 'ReviewRecords',
+        component: () => import('@user/views/user/ReviewRecords.vue'),
+        meta: { title: '我的评价' }
+      },
+      {
         path: 'coupon',
         name: 'UserCoupon',
         component: () => import('@user/views/coupon/CouponCenter.vue'),
