@@ -14,6 +14,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 聊天控制器
@@ -142,5 +144,20 @@ public class ChatController {
             @AuthenticationPrincipal User user) {
         ChatMessageResponse response = chatService.sendMessage(user.getId(), request);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 获取用户会话列表
+     * API路径：GET /api/chat/sessions
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 会话列表（包含对方用户信息和最后一条消息）
+     */
+    @GetMapping("/sessions")
+    public ResponseEntity<List<Map<String, Object>>> getSessions(
+            @AuthenticationPrincipal User user) {
+        List<Map<String, Object>> sessions = chatService.getUserSessions(user.getId());
+        return ResponseEntity.ok(sessions);
     }
 }

@@ -50,6 +50,48 @@
       </el-row>
     </section>
 
+    <!-- 消费统计 -->
+    <section class="stats-cards spending-stats">
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <div class="stat-card primary">
+            <div class="stat-icon"><i class="fas fa-coins"></i></div>
+            <div class="stat-info">
+              <div class="stat-value">¥{{ 消费统计.今日.toLocaleString() }}</div>
+              <div class="stat-label">今日消费</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-calendar-month"></i></div>
+            <div class="stat-info">
+              <div class="stat-value">¥{{ 消费统计.本月.toLocaleString() }}</div>
+              <div class="stat-label">本月消费</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card info">
+            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-info">
+              <div class="stat-value">¥{{ 消费统计.本年.toLocaleString() }}</div>
+              <div class="stat-label">本年消费</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="stat-card success">
+            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="stat-info">
+              <div class="stat-value">¥{{ 消费统计.累计.toLocaleString() }}</div>
+              <div class="stat-label">累计消费</div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </section>
+
     <!-- 搜索筛选栏 -->
     <section class="search-bar">
       <el-form :inline="true" :model="筛选表单">
@@ -197,6 +239,7 @@
 // Font Awesome 图标直接使用类名，无需导入
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { getOrderList, getOrderStats, confirmReceive, cancelOrder, getSpendingStats } from '@user/api/order'
 
 interface 订单项 {
   orderNo: string
@@ -244,11 +287,48 @@ const 筛选表单 = reactive<筛选表单类型>({
 })
 
 const 订单统计 = ref<订单统计类型>({
-  全部:156,
-  待付款:12,
-  待发货:8,
-  已完成:126
+  全部:0,
+  待付款:0,
+  待发货:0,
+  已完成:0
 })
+
+const 消费统计 = ref({
+  今日: 0,
+  本月: 0,
+  本年: 0,
+  累计: 0
+})
+
+const 加载订单统计 = async () => {
+  try {
+    const res = await getOrderStats()
+    const data = res.data || res
+    订单统计.value = {
+      全部: (data.pending || 0) + (data.paid || 0) + (data.shipped || 0) + (data.completed || 0),
+      待付款: data.pending || 0,
+      待发货: data.paid || 0,
+      已完成: data.completed || 0
+    }
+  } catch (error) {
+    console.error('加载订单统计失败', error)
+  }
+}
+
+const 加载消费统计 = async () => {
+  try {
+    const res = await getSpendingStats()
+    const data = res.data || res
+    消费统计.value = {
+      今日: Number(data.today) || 0,
+      本月: Number(data.month) || 0,
+      本年: Number(data.year) || 0,
+      累计: Number(data.total) || 0
+    }
+  } catch (error) {
+    console.error('加载消费统计失败', error)
+  }
+}
 
 const 分页 = reactive<分页类型>({
   当前页:1,
@@ -347,7 +427,9 @@ const 申请退款 = (订单:订单项) => {
 }
 
 onMounted(() => {
-  加载订单列表 ()
+  加载订单列表()
+  加载订单统计()
+  加载消费统计()
 })
 </script>
 

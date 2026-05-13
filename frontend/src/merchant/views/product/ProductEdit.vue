@@ -18,7 +18,7 @@
               <SciInput v-model="form.name" placeholder="请输入商品名称" />
             </el-form-item>
             <el-form-item label="商品分类" required>
-              <SciSelect v-model="form.categoryId" :options="categoryOptions" placeholder="请选择分类" />
+              <SciSelect v-model="form.category" :options="categoryOptions" placeholder="请选择分类" />
             </el-form-item>
             <el-form-item label="商品品牌">
               <SciInput v-model="form.brand" placeholder="请输入品牌" />
@@ -54,11 +54,11 @@
           <div class="image-upload-area">
             <div class="main-image">
               <span class="label">主图</span>
-              <SciImage v-model="form.image" :limit="1" />
+              <SciImage v-model="form.imageUrl" :limit="1" />
             </div>
             <div class="detail-images">
               <span class="label">详情图</span>
-              <SciImage v-model="form.images" :limit="9" multiple />
+              <SciImage v-model="form.imageUrls" :limit="9" multiple />
             </div>
           </div>
         </SciCard>
@@ -110,15 +110,15 @@ const isEdit = computed(() => !!route.params.id)
 
 const form = reactive({
   name: '',
-  categoryId: '',
+  category: '',
   brand: '',
   description: '',
   price: 0,
   originalPrice: 0,
   stock: 0,
   productNo: '',
-  image: '',
-  images: [] as string[],
+  imageUrl: '',
+  imageUrls: [] as string[],
   detail: '',
   available: true,
   hot: false,
@@ -127,12 +127,12 @@ const form = reactive({
 })
 
 const categoryOptions = [
-  { label: '手机数码', value: 1 },
-  { label: '电脑办公', value: 2 },
-  { label: '家用电器', value: 3 },
-  { label: '服装鞋包', value: 4 },
-  { label: '美妆护肤', value: 5 },
-  { label: '食品生鲜', value: 6 }
+  { label: '手机数码', value: '手机数码' },
+  { label: '电脑办公', value: '电脑办公' },
+  { label: '家用电器', value: '家用电器' },
+  { label: '服装鞋包', value: '服装鞋包' },
+  { label: '美妆护肤', value: '美妆护肤' },
+  { label: '食品生鲜', value: '食品生鲜' }
 ]
 
 const goBack = () => router.back()
@@ -140,8 +140,25 @@ const goBack = () => router.back()
 const loadProduct = async () => {
   if (!isEdit.value) return
   try {
-    const data = await getProductDetail(Number(route.params.id))
-    Object.assign(form, data)
+    const res = await getProductDetail(Number(route.params.id))
+    const data = res.data || res
+    Object.assign(form, {
+      name: data.name || '',
+      category: data.category || '',
+      brand: data.brand || '',
+      description: data.description || '',
+      price: data.price || 0,
+      originalPrice: data.originalPrice || 0,
+      stock: data.stock || 0,
+      productNo: data.productNo || '',
+      imageUrl: data.imageUrl || data.image || '',
+      imageUrls: data.imageUrls || [],
+      detail: data.detail || '',
+      available: data.available !== undefined ? data.available : true,
+      hot: data.hot || false,
+      new: data.new || false,
+      recommend: data.recommend || false
+    })
   } catch (error) {
     ElMessage.error('加载商品失败')
   }

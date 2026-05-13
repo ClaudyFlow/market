@@ -4,14 +4,17 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useCartStore } from '@user/stores/cart'
+import { addToCart as cartApiAddToCart } from '@user/api/cart'
 import type { Product, SelectedSpecs } from '@user/types/product'
 
 export function useProductActions(
-  product: ReturnType<typeof useProductDetail>['product'],
+  product: { value: Product },
   selectedSpecs: SelectedSpecs,
-  quantity: ReturnType<typeof useProductSpecs>['quantity']
+  quantity: { value: number }
 ) {
   const router = useRouter()
+  const cartStore = useCartStore()
 
   // 收藏状态
   const isFavorited = ref(false)
@@ -21,38 +24,35 @@ export function useProductActions(
   const cartCount = ref(0)
 
   // 加入购物车
-  const addToCart = () => {
+  const addToCart = async () => {
     if (!selectedSpecs.color || !selectedSpecs.version) {
       ElMessage.warning('请选择商品规格')
       return
     }
 
-    // TODO: 调用购物车 API
-    // cartStore.addToCart({
-    //   productId: product.value.id,
-    //   specs: { ...selectedSpecs },
-    //   quantity: quantity.value
-    // })
-
-    ElMessage.success('已加入购物车')
-    cartCount.value += quantity.value
+    try {
+      await cartApiAddToCart(product.value.id, undefined, quantity.value)
+      await cartStore.fetchCart()
+      ElMessage.success('已加入购物车')
+      cartCount.value = cartStore.itemCount
+    } catch (error) {
+      ElMessage.error('添加购物车失败')
+    }
   }
 
   // 立即购买
-  const buyNow = () => {
+  const buyNow = async () => {
     if (!selectedSpecs.color || !selectedSpecs.version) {
       ElMessage.warning('请选择商品规格')
       return
     }
 
-    // 跳转到订单确认页，携带商品信息
-    router.push({
-      path: '/order',
-      query: {
-        productId: product.value.id,
-        quantity: quantity.value.toString()
-      }
-    })
+    try {
+      await cartApiAddToCart(product.value.id, undefined, quantity.value)
+      router.push('/order')
+    } catch (error) {
+      ElMessage.error('操作失败')
+    }
   }
 
   // 切换收藏

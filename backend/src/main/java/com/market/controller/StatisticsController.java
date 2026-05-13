@@ -70,6 +70,21 @@ public class StatisticsController {
     }
 
     /**
+     * 获取用户增长趋势
+     * API路径：GET /api/statistics/user-growth
+     * 权限：公开
+     *
+     * @param days 天数范围，默认7
+     * @return 用户增长趋势数据
+     */
+    @GetMapping("/user-growth")
+    public Result<Map<String, Object>> getUserGrowthTrend(
+            @RequestParam(defaultValue = "7") Integer days) {
+        Map<String, Object> trend = statisticsService.getUserGrowthTrend(days);
+        return Result.success(trend);
+    }
+
+    /**
      * 获取平台统计信息（管理员）
      * API路径：GET /api/statistics/platform
      * 权限：需要 ADMIN 角色

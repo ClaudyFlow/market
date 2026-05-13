@@ -100,6 +100,35 @@ public class OrderService {
     }
 
     /**
+     * 获取用户消费统计（今日/本月/本年）
+     */
+    public Map<String, Object> getUserSpendingStats(User user) {
+        Map<String, Object> stats = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime todayStart = now.toLocalDate().atStartOfDay();
+        LocalDateTime todayEnd = todayStart.plusDays(1);
+        LocalDateTime monthStart = now.toLocalDate().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime yearStart = now.toLocalDate().withDayOfYear(1).atStartOfDay();
+
+        BigDecimal todaySpending = orderRepository.sumTotalAmountByUserAndStatusAndCreatedAtBetween(
+            user, "COMPLETED", todayStart, todayEnd);
+        BigDecimal monthSpending = orderRepository.sumTotalAmountByUserAndStatusAndCreatedAtBetween(
+            user, "COMPLETED", monthStart, now);
+        BigDecimal yearSpending = orderRepository.sumTotalAmountByUserAndStatusAndCreatedAtBetween(
+            user, "COMPLETED", yearStart, now);
+        BigDecimal totalSpending = orderRepository.sumTotalAmountByUserAndStatusAndCreatedAtBetween(
+            user, "COMPLETED", LocalDateTime.of(2000, 1, 1, 0, 0), now);
+
+        stats.put("today", todaySpending != null ? todaySpending : BigDecimal.ZERO);
+        stats.put("month", monthSpending != null ? monthSpending : BigDecimal.ZERO);
+        stats.put("year", yearSpending != null ? yearSpending : BigDecimal.ZERO);
+        stats.put("total", totalSpending != null ? totalSpending : BigDecimal.ZERO);
+
+        return stats;
+    }
+
+    /**
      * 创建订单
      */
     @Transactional
@@ -399,6 +428,52 @@ public class OrderService {
         stats.put("completed", orderRepository.countByMerchantAndStatus(merchant, "COMPLETED"));
         stats.put("cancelled", orderRepository.countByMerchantAndStatus(merchant, "CANCELLED"));
         stats.put("refunding", orderRepository.countByMerchantAndStatus(merchant, "REFUNDING"));
+        return stats;
+    }
+
+    /**
+     * 获取商户销售趋势
+     */
+    public Map<String, Object> getMerchantSalesTrend(User merchant, int days) {
+        Map<String, Object> trend = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        List<String> dates = new java.util.ArrayList<>();
+        List<Long> orderCounts = new java.util.ArrayList<>();
+        List<BigDecimal> orderAmounts = new java.util.ArrayList<>();
+
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDateTime dayStart = now.minusDays(i).toLocalDate().atStartOfDay();
+            LocalDateTime dayEnd = dayStart.plusDays(1);
+            String dateStr = dayStart.toLocalDate().toString();
+
+            dates.add(dateStr);
+            orderCounts.add(orderRepository.countByMerchantAndCreatedAtBetween(merchant, dayStart, dayEnd));
+            orderAmounts.add(orderRepository.sumTotalAmountByMerchantAndStatusAndCreatedAtBetween(merchant, dayStart, dayEnd));
+        }
+
+        trend.put("dates", dates);
+        trend.put("orderCounts", orderCounts);
+        trend.put("orderAmounts", orderAmounts);
+        return trend;
+    }
+
+    /**
+     * 获取商户订单统计（增强版）
+     */
+    public Map<String, Object> getMerchantOrderStatsEnhanced(User merchant) {
+        Map<String, Object> stats = getMerchantOrderStats(merchant);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime todayStart = now.toLocalDate().atStartOfDay();
+        LocalDateTime monthStart = now.toLocalDate().withDayOfMonth(1).atStartOfDay();
+
+        BigDecimal todayAmount = orderRepository.sumTotalAmountByMerchantAndStatusAndCreatedAtBetween(merchant, todayStart, now);
+        BigDecimal monthAmount = orderRepository.sumTotalAmountByMerchantAndStatusAndCreatedAtBetween(merchant, monthStart, now);
+
+        stats.put("todayAmount", todayAmount != null ? todayAmount : BigDecimal.ZERO);
+        stats.put("monthAmount", monthAmount != null ? monthAmount : BigDecimal.ZERO);
+        stats.put("totalAmount", orderRepository.sumTotalAmountByMerchantAndStatusAndCreatedAtBetween(merchant, LocalDateTime.of(2000, 1, 1, 0, 0), now));
+
         return stats;
     }
 

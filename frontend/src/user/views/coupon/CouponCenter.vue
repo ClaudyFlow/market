@@ -183,43 +183,20 @@ const 加载优惠券 = async () => {
 
 const 加载可领取优惠券 = async () => {
   try {
-    // 这里可以调用后端 API 获取可领取的优惠券列表
-    // 暂时使用模拟数据
-    可领取优惠券.value = [
-      {
-        id: 1,
-        name: '新人专享券',
-        value: 50,
-        threshold: 200,
-        description: '新人专享满减优惠',
-        validFrom: new Date().toISOString(),
-        validTo: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    const res = await getCouponTemplates({ page: 1, size: 100 })
+    if (res.code === 200 && res.data) {
+      可领取优惠券.value = (res.data.list || []).map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        value: item.discountValue,
+        threshold: item.minPurchase || 0,
+        description: item.description || '',
+        validFrom: item.validFrom || '',
+        validTo: item.validTo || '',
         status: 'available',
-        remainCount: 100
-      },
-      {
-        id: 2,
-        name: '数码电器券',
-        value: 100,
-        threshold: 500,
-        description: '数码电器类商品专用',
-        validFrom: new Date().toISOString(),
-        validTo: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'available',
-        remainCount: 50
-      },
-      {
-        id: 3,
-        name: '无门槛券',
-        value: 10,
-        threshold: 0,
-        description: '无门槛现金券',
-        validFrom: new Date().toISOString(),
-        validTo: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'available',
-        remainCount: 0
-      }
-    ]
+        remainCount: item.remainCount ?? item.totalCount - item.usedCount
+      }))
+    }
   } catch (error) {
     console.error('加载可领取优惠券失败', error)
   }

@@ -206,11 +206,11 @@ const handleSubmit = async () => {
     return
   }
 
+  // 校验表单并提交
   await validateAndSubmit()
 }
 
-  // 校验表单并提交
-  const validateAndSubmit = async () => {
+const validateAndSubmit = async () => {
   if (!formRef.value) return
   try {
     await formRef.value.validate()

@@ -464,6 +464,22 @@ public class OrderController {
     }
 
     /**
+     * 获取用户消费统计（今日/本月/本年）
+     * API路径：GET /api/order/spending-stats
+     * 权限：需要登录
+     */
+    @GetMapping("/spending-stats")
+    @Cacheable(key = "'user_spending_stats_' + #user.id", cacheName = "orders", expire = 300)
+    @AuditLog(module = "订单管理", action = "查询消费统计")
+    public Result<Map<String, Object>> getUserSpendingStats(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+        Map<String, Object> stats = orderService.getUserSpendingStats(user);
+        return Result.success(stats);
+    }
+
+    /**
      * 模拟发货（测试用）
      */
     @PostMapping("/{id}/mock-ship")

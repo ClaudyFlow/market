@@ -1,4 +1,5 @@
 ﻿import request from '@merchant/api/request'
+import axios from 'axios'
 
 export interface Order {
   id: number
@@ -105,4 +106,31 @@ export function getRefundList(params?: { page?: number; size?: number }): Promis
 // 处理退款申请
 export function handleRefund(id: number, approved: boolean, reason?: string): Promise<ApiResponse<void>> {
   return request.post(`/order/${id}/refund`, { approved, reason })
+}
+
+// 获取销售趋势
+export function getSalesTrend(days?: number): Promise<ApiResponse<{
+  dates: string[]
+  orderCounts: number[]
+  orderAmounts: number[]
+}>> {
+  return request.get('/order/sales-trend', { params: { days } })
+}
+
+// 获取分类统计
+export function getCategoryStats(): Promise<ApiResponse<Record<string, number>>> {
+  return axios.get('http://localhost:8080/api/statistics/category-distribution', {
+    headers: { Authorization: `Bearer ${localStorage.getItem('merchant_token')}` }
+  }).then(res => res.data)
+}
+
+// 获取用户增长趋势
+export function getUserGrowthTrend(days?: number): Promise<ApiResponse<{
+  dates: string[]
+  counts: number[]
+}>> {
+  return axios.get('http://localhost:8080/api/statistics/user-growth', {
+    headers: { Authorization: `Bearer ${localStorage.getItem('merchant_token')}` },
+    params: { days }
+  }).then(res => res.data)
 }

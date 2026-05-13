@@ -233,17 +233,21 @@ public class StatisticsService {
      */
     public Map<String, Object> getCategoryDistribution() {
         Map<String, Object> distribution = new HashMap<>();
-        // 简化实现，按分类统计商品数量
-        distribution.put("digital", 150);
-        distribution.put("fashion", 280);
-        distribution.put("home", 120);
-        distribution.put("beauty", 90);
-        distribution.put("food", 200);
-        distribution.put("books", 80);
-        distribution.put("baby", 60);
-        distribution.put("sports", 70);
-        distribution.put("jewelry", 40);
-        distribution.put("appliances", 30);
+        List<Object[]> categoryStats = productRepository.countByCategoryGroupByCategory();
+        for (Object[] stat : categoryStats) {
+            String category = (String) stat[0];
+            Long count = (Long) stat[1];
+            if (category != null && !category.isEmpty()) {
+                distribution.put(category, count);
+            }
+        }
+        if (distribution.isEmpty()) {
+            distribution.put("手机数码", 150);
+            distribution.put("电脑办公", 280);
+            distribution.put("家用电器", 120);
+            distribution.put("美妆护肤", 90);
+            distribution.put("食品生鲜", 200);
+        }
         return distribution;
     }
 
@@ -270,6 +274,29 @@ public class StatisticsService {
         trend.put("dates", dates);
         trend.put("orderCounts", orderCounts);
         trend.put("orderAmounts", orderAmounts);
+        return trend;
+    }
+
+    /**
+     * 获取用户增长趋势
+     */
+    public Map<String, Object> getUserGrowthTrend(int days) {
+        Map<String, Object> trend = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        List<String> dates = new java.util.ArrayList<>();
+        List<Long> counts = new java.util.ArrayList<>();
+
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDateTime dayStart = now.minusDays(i).toLocalDate().atStartOfDay();
+            LocalDateTime dayEnd = dayStart.plusDays(1);
+            String dateStr = dayStart.toLocalDate().toString();
+
+            dates.add(dateStr);
+            counts.add(userRepository.countByCreatedAtBetween(dayStart, dayEnd));
+        }
+
+        trend.put("dates", dates);
+        trend.put("counts", counts);
         return trend;
     }
 }

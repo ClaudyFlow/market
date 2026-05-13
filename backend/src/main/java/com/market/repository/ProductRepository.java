@@ -99,4 +99,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop8ByOrderByCreatedAtDesc();
 
     List<Product> findTop10ByOrderBySalesDesc();
+
+    /**
+     * 按分类统计商品数量
+     */
+    @Query("SELECT p.category, COUNT(p) FROM Product p WHERE p.status = 1 GROUP BY p.category")
+    List<Object[]> countByCategoryGroupByCategory();
 }

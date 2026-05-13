@@ -55,6 +55,13 @@
               <div class="stat-label">今日销售</div>
             </div>
           </div>
+          <div class="stat-card info">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <div class="stat-value">{{ onlineCount }}</div>
+              <div class="stat-label">在线用户</div>
+            </div>
+          </div>
         </div>
 
         <div class="charts-section">
@@ -297,6 +304,7 @@ const activeTab = ref('dashboard')
 const adminName = ref('管理员')
 const loading = ref(false)
 const stats = ref({})
+const onlineCount = ref(0)
 
 // 商品数据
 const products = ref([])
@@ -336,6 +344,18 @@ const loadStats = async () => {
     stats.value = res.data || res
   } catch (error) {
     console.error('加载统计数据失败', error)
+  }
+}
+
+// 加载在线用户数
+const loadOnlineCount = async () => {
+  try {
+    const res = await axios.get('http://localhost:8080/api/online/count', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('admin_token')}` }
+    })
+    onlineCount.value = res.data?.data?.count || 0
+  } catch (error) {
+    console.error('加载在线用户数失败', error)
   }
 }
 
@@ -534,6 +554,7 @@ const logout = () => {
 
 onMounted(() => {
   loadStats()
+  loadOnlineCount()
 })
 </script>
 

@@ -87,6 +87,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Ticket, Plus } from '@element-plus/icons-vue'
 import { PageHeader, SciButton, SciInput, SciSelect, SciTag, SearchPanel, DataPanel } from '@merchant/components'
+import { getActivityList, createActivity, updateActivity, deleteActivity } from '@merchant/api/activity'
 
 const loading = ref(false)
 const submitting = ref(false)
@@ -154,12 +155,16 @@ const getStatusType = (status: string) => {
 const loadActivityList = async () => {
   loading.value = true
   try {
-    const res = await fetch('/api/merchant/activity', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    const res = await getActivityList({
+      page: pagination.currentPage,
+      size: pagination.pageSize,
+      type: filterForm.type || undefined,
+      status: filterForm.status || undefined
     })
-    const result = await res.json()
-    activityList.value = result.data?.list || []
-    pagination.total = result.data?.total || 0
+    if (res.code === 200) {
+      activityList.value = res.data?.list || []
+      pagination.total = res.data?.total || 0
+    }
   } catch (error) {
     activityList.value = []
   } finally {
@@ -202,13 +207,11 @@ const submitForm = async () => {
   }
   submitting.value = true
   try {
-    const method = isEdit.value ? 'PUT' : 'POST'
-    const url = isEdit.value ? `/api/merchant/activity/${activityId.value}` : '/api/merchant/activity'
-    await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
-      body: JSON.stringify(form)
-    })
+    if (isEdit.value) {
+      await updateActivity(activityId.value!, form)
+    } else {
+      await createActivity(form)
+    }
     ElMessage.success(isEdit.value ? '保存成功' : '创建成功')
     dialogVisible.value = false
     loadActivityList()

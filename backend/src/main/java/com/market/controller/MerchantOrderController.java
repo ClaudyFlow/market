@@ -110,6 +110,22 @@ public class MerchantOrderController {
     }
 
     /**
+     * 获取商户销售趋势
+     */
+    @GetMapping("/sales-trend")
+    @Cacheable(key = "'merchant_sales_trend_' + #user.id + '_' + #days", cacheName = "merchant_orders", expire = 300)
+    @AuditLog(module = "商户端订单", action = "查询销售趋势")
+    public Result<Map<String, Object>> getSalesTrend(
+            @AuthenticationPrincipal User user,
+            @RequestParam(defaultValue = "7") Integer days) {
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+        Map<String, Object> trend = orderService.getMerchantSalesTrend(user, days);
+        return Result.success(trend);
+    }
+
+    /**
      * 发货
      */
     @PostMapping("/{id}/ship")

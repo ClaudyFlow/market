@@ -14,7 +14,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findByStatus(String status, Pageable pageable);
     Page<Activity> findByMerchantId(Long merchantId, Pageable pageable);
     Page<Activity> findByType(String type, Pageable pageable);
-    List<Activity> findByStatusAndStartTimeBeforeAndEndTimeAfter(String status, LocalDateTime now, LocalDateTime now2);
+    List<Activity> findByStatusAndStartTimeBeforeAndEndTimeAfter(String status, LocalDateTime startTime, LocalDateTime endTime);
     List<Activity> findByProductId(Long productId);
     boolean existsByProductIdAndStatus(Long productId, String status);
 }

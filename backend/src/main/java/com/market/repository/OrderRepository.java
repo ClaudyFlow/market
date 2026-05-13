@@ -188,6 +188,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countByUserAndStatus(User user, String status);
 
     /**
+     * 统计用户已完成订单在指定时间范围内的总金额
+     *
+     * @param user 用户对象
+     * @param status 订单状态
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 总金额
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.user = :user AND o.status = :status AND o.createdAt BETWEEN :start AND :end")
+    java.math.BigDecimal sumTotalAmountByUserAndStatusAndCreatedAtBetween(@org.springframework.data.repository.query.Param("user") User user, @org.springframework.data.repository.query.Param("status") String status, @org.springframework.data.repository.query.Param("start") LocalDateTime start, @org.springframework.data.repository.query.Param("end") LocalDateTime end);
+
+    /**
      * 统计商家订单数量
      *
      * @param merchant 商家对象
@@ -203,6 +215,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @return 订单数量
      */
     long countByMerchantAndStatus(User merchant, String status);
+
+    /**
+     * 统计商家已完成订单在指定时间范围内的总金额
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.merchant = :merchant AND o.status = 'COMPLETED' AND o.createdAt BETWEEN :start AND :end")
+    java.math.BigDecimal sumTotalAmountByMerchantAndStatusAndCreatedAtBetween(@org.springframework.data.repository.query.Param("merchant") User merchant, @org.springframework.data.repository.query.Param("start") LocalDateTime start, @org.springframework.data.repository.query.Param("end") LocalDateTime end);
+
+    /**
+     * 统计商家指定时间范围内的订单数量
+     */
+    long countByMerchantAndCreatedAtBetween(User merchant, LocalDateTime start, LocalDateTime end);
 
     /**
      * 统计指定状态的订单数量

@@ -135,12 +135,31 @@ export function repurchase(orderId: number | string): Promise<void> {
  * 获取订单统计
  */
 export function getOrderStats(): Promise<{
-  unpaid: number
-  unshipped: number
-  unreceived: number
-  reviewed: number
+  total?: number
+  pending?: number
+  paid?: number
+  shipped?: number
+  completed?: number
+  cancelled?: number
+  refunding?: number
+  unpaid?: number
+  unshipped?: number
+  unreceived?: number
+  reviewed?: number
 }> {
   return get(`${BASE_URL}/stats`)
+}
+
+/**
+ * 获取用户消费统计（今日/本月/本年）
+ */
+export function getSpendingStats(): Promise<{
+  today: number | string
+  month: number | string
+  year: number | string
+  total: number | string
+}> {
+  return get(`${BASE_URL}/spending-stats`)
 }
 
 /**

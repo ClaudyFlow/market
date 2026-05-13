@@ -301,6 +301,18 @@ const routes: RouteRecordRaw[] = [
     name: 'NoticeCenter',
     component: () => import('@user/views/NoticeCenter.vue'),
     meta: { title: '通知中心' }
+  },
+  {
+    path: '/activity',
+    name: 'Activity',
+    component: () => import('@user/views/activity/ActivityList.vue'),
+    meta: { title: '活动中心' }
+  },
+  {
+    path: '/activity/:id',
+    name: 'ActivityDetail',
+    component: () => import('@user/views/activity/ActivityDetail.vue'),
+    meta: { title: '活动详情' }
   }
 ]
 

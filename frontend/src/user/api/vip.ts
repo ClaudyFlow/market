@@ -4,7 +4,7 @@
 
 import { get, post } from './request'
 
-const BASE_URL = '/vip'
+const BASE_URL = '/user/vip'
 
 /**
  * 获取 VIP 信息
@@ -19,7 +19,7 @@ export function getVipInfo(): Promise<{
   expireTime: string
   isVip: boolean
 }> {
-  return get(`${BASE_URL}/info`)
+  return get(`${BASE_URL}/my`)
 }
 
 /**
@@ -39,7 +39,7 @@ export function getVipLevels(): Promise<{
  * 获取 VIP 特权
  */
 export function getVipBenefits(): Promise<VipBenefit[]> {
-  return get(`${BASE_URL}/benefits`)
+  return get(`${BASE_URL}/privileges`)
 }
 
 /**
@@ -51,7 +51,7 @@ export function purchaseVip(months: number, autoRenew?: boolean): Promise<{
   originalPrice: number
   discountPrice: number
 }> {
-  return post(`${BASE_URL}/purchase`, { months, autoRenew })
+  return post(`${BASE_URL}/recharge`, { months, autoRenew })
 }
 
 /**
@@ -61,7 +61,7 @@ export function renewVip(months?: number): Promise<{
   orderId: string
   amount: number
 }> {
-  return post(`${BASE_URL}/renew`, { months })
+  return post(`${BASE_URL}/recharge`, { months })
 }
 
 /**
@@ -113,42 +113,42 @@ export function getVipCoupons(): Promise<{
  * 获取每日礼包
  */
 export function getDailyGifts(): Promise<{ data: VipGift[] }> {
-  return get(`${BASE_URL}/daily-gifts`)
+  return get(`${BASE_URL}/gifts/daily`)
 }
 
 /**
  * 获取每月礼包
  */
 export function getMonthlyGifts(): Promise<{ data: VipGift[] }> {
-  return get(`${BASE_URL}/monthly-gifts`)
+  return get(`${BASE_URL}/gifts/monthly`)
 }
 
 /**
  * 获取充值记录
  */
 export function getRechargeRecords(params?: { page?: number; size?: number }): Promise<{ data: any[] }> {
-  return get(`${BASE_URL}/records`, params)
+  return get(`${BASE_URL}/gifts/records`, params)
 }
 
 /**
  * 领取礼包
  */
 export function claimGift(giftId: number): Promise<void> {
-  return post(`${BASE_URL}/claim-gift/${giftId}`)
+  return post(`${BASE_URL}/gifts/${giftId}/claim`, {})
 }
 
 /**
  * 创建充值订单
  */
 export function createRechargeOrder(amount: number, growthValue?: number): Promise<{ orderId: string; amount: number }> {
-  return post(`${BASE_URL}/recharge/order`, { amount, growthValue })
+  return post(`${BASE_URL}/recharge`, { amount })
 }
 
 /**
  * 支付充值订单
  */
 export function payRechargeOrder(orderId: string): Promise<void> {
-  return post(`${BASE_URL}/recharge/pay/${orderId}`)
+  return post(`${BASE_URL}/recharge/pay/${orderId}`, {})
 }
 
 export interface VipBenefit {

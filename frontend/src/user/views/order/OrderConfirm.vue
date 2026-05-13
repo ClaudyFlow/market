@@ -8,15 +8,21 @@
         <div class="order-section">
           <div class="section-title">收货地址</div>
           <div class="address-list">
-            <div class="address-item active">
+            <div
+              v-for="addr in addresses"
+              :key="addr.id"
+              class="address-item"
+              :class="{ active: selectedAddressId === addr.id }"
+              @click="selectedAddressId = addr.id"
+            >
               <div class="address-header">
-                <span class="name">张三</span>
-                <span class="phone">138****8888</span>
+                <span class="name">{{ addr.name }}</span>
+                <span class="phone">{{ addr.phone }}</span>
               </div>
-              <div class="address-detail">北京市朝阳区 xxx 街道 xxx 小区 1 号楼 1 单元 101 室</div>
-              <div class="address-tag">默认地址</div>
+              <div class="address-detail">{{ addr.province }} {{ addr.city }} {{ addr.district }} {{ addr.detail }}</div>
+              <div class="address-tag" v-if="addr.isDefault">默认地址</div>
             </div>
-            <div class="address-item">
+            <div class="address-item" @click="router.push('/user/address')">
               <el-icon><Plus /></el-icon> 添加新地址
             </div>
           </div>
@@ -114,30 +120,80 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useCartStore } from '@user/stores/cart'
+import { getAddressList, type UserAddress } from '@user/api/user'
+import { createOrder } from '@user/api/order'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
+const route = useRoute()
 const cart = useCartStore()
 
 const deliveryMethod = ref('express')
 const paymentMethod = ref('wechat')
 const orderRemark = ref('')
+const loading = ref(false)
+const addresses = ref<UserAddress[]>([])
+const selectedAddressId = ref<number | null>(null)
 
 // 安全计算总价,避免 undefined 错误
 const totalAmount = computed(() => {
   return cart.totalPrice || 0
 })
 
-const submitOrder = () => {
-  ElMessage.success('订单提交成功!')
-  setTimeout(() => {
-    cart.clearCart()
-    router.push('/')
-  }, 1500)
+const selectedAddress = computed(() => {
+  return addresses.value.find(a => a.id === selectedAddressId.value) || addresses.value.find(a => a.isDefault) || null
+})
+
+// 加载地址列表
+const loadAddresses = async () => {
+  try {
+    addresses.value = await getAddressList()
+    const defaultAddr = addresses.value.find(a => a.isDefault)
+    if (defaultAddr) {
+      selectedAddressId.value = defaultAddr.id
+    }
+  } catch (error) {
+    console.error('加载地址失败:', error)
+  }
 }
+
+const submitOrder = async () => {
+  if (!selectedAddressId.value) {
+    ElMessage.warning('请选择收货地址')
+    return
+  }
+
+  if (!cart.hasItems) {
+    ElMessage.warning('购物车为空')
+    return
+  }
+
+  loading.value = true
+  try {
+    await createOrder({
+      addressId: selectedAddressId.value,
+      remark: orderRemark.value,
+      deliveryType: deliveryMethod.value as 'express' | 'pickup' | 'virtual'
+    })
+    ElMessage.success('订单提交成功!')
+    cart.clearCart()
+    setTimeout(() => {
+      router.push('/order')
+    }, 1500)
+  } catch (error: any) {
+    ElMessage.error(error?.message || '订单提交失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(async () => {
+  await cart.fetchCart()
+  await loadAddresses()
+})
 </script>
 
 <style scoped>

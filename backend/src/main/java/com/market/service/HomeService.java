@@ -3,9 +3,11 @@ package com.market.service;
 import com.market.entity.Product;
 import com.market.entity.Shop;
 import com.market.entity.User;
+import com.market.entity.Activity;
 import com.market.repository.ProductRepository;
 import com.market.repository.ShopRepository;
 import com.market.repository.UserRepository;
+import com.market.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,9 @@ public class HomeService {
     private UserRepository userRepository;
 
     @Autowired
+    private ActivityRepository activityRepository;
+
+    @Autowired
     private RecommendService recommendService;
 
     /**
@@ -37,27 +42,45 @@ public class HomeService {
      */
     public List<Map<String, Object>> getBanners() {
         List<Map<String, Object>> banners = new ArrayList<>();
-        banners.add(Map.of(
-            "id", 1,
-            "title", "新品上市",
-            "image", "/images/banner1.jpg",
-            "link", "/sale",
-            "type", "activity"
-        ));
-        banners.add(Map.of(
-            "id", 2,
-            "title", "限时秒杀",
-            "image", "/images/banner2.jpg",
-            "link", "/sale",
-            "type", "flash_sale"
-        ));
-        banners.add(Map.of(
-            "id", 3,
-            "title", "品牌特惠",
-            "image", "/images/banner3.jpg",
-            "link", "/brands",
-            "type", "brand"
-        ));
+
+        LocalDateTime now = LocalDateTime.now();
+        List<Activity> activeActivities = activityRepository.findByStatusAndStartTimeBeforeAndEndTimeAfter("ACTIVE", now, now);
+
+        if (activeActivities.isEmpty()) {
+            banners.add(Map.of(
+                "id", 1,
+                "title", "新品上市",
+                "image", "/images/banner1.jpg",
+                "link", "/activity",
+                "type", "activity"
+            ));
+            banners.add(Map.of(
+                "id", 2,
+                "title", "限时秒杀",
+                "image", "/images/banner2.jpg",
+                "link", "/activity",
+                "type", "flash_sale"
+            ));
+            banners.add(Map.of(
+                "id", 3,
+                "title", "品牌特惠",
+                "image", "/images/banner3.jpg",
+                "link", "/activity",
+                "type", "brand"
+            ));
+        } else {
+            for (Activity activity : activeActivities) {
+                if (banners.size() >= 5) break;
+                Map<String, Object> banner = new HashMap<>();
+                banner.put("id", activity.getId());
+                banner.put("title", activity.getName());
+                banner.put("image", activity.getImage() != null ? activity.getImage() : "/images/default-banner.jpg");
+                banner.put("link", "/activity/" + activity.getId());
+                banner.put("type", activity.getType());
+                banner.put("description", activity.getDescription());
+                banners.add(banner);
+            }
+        }
         return banners;
     }
 

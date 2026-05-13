@@ -11,13 +11,15 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from '@user/components/Header.vue'
 import Footer from '@user/components/Footer.vue'
 import ChatWidget from '@user/components/ChatWidget.vue'
+import { heartbeat } from '@user/api/online'
 
 const route = useRoute()
+let heartbeatTimer: ReturnType<typeof setInterval> | null = null
 
 // 路由切换时滚动到顶部
 watch(
@@ -26,6 +28,29 @@ watch(
     window.scrollTo(0, 0)
   }
 )
+
+// 心跳上报
+const startHeartbeat = () => {
+  heartbeat()
+  heartbeatTimer = setInterval(() => {
+    heartbeat()
+  }, 60000)
+}
+
+const stopHeartbeat = () => {
+  if (heartbeatTimer) {
+    clearInterval(heartbeatTimer)
+    heartbeatTimer = null
+  }
+}
+
+onMounted(() => {
+  startHeartbeat()
+})
+
+onUnmounted(() => {
+  stopHeartbeat()
+})
 </script>
 
 <style>

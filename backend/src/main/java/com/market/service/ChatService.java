@@ -3,7 +3,9 @@ package com.market.service;
 import com.market.dto.ChatMessageRequest;
 import com.market.dto.ChatMessageResponse;
 import com.market.entity.ChatMessage;
+import com.market.entity.User;
 import com.market.repository.ChatMessageRepository;
+import com.market.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +28,9 @@ public class ChatService {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * 发送消息
@@ -81,6 +86,66 @@ public class ChatService {
     @Transactional
     public void markAsRead(Long userId, Long senderId) {
         chatMessageRepository.markAllAsRead(userId, senderId);
+    }
+
+    /**
+     * 获取用户会话列表
+     */
+    public List<Map<String, Object>> getUserSessions(Long userId) {
+        PageRequest pageRequest = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<ChatMessage> sentMessages = chatMessageRepository.findBySenderIdOrderByCreatedAtDesc(userId, pageRequest);
+        Page<ChatMessage> receivedMessages = chatMessageRepository.findByReceiverIdOrderByCreatedAtDesc(userId, pageRequest);
+
+        Map<Long, ChatMessage> latestMessageMap = new LinkedHashMap<>();
+
+        for (ChatMessage msg : sentMessages.getContent()) {
+            Long otherId = msg.getReceiverId();
+            latestMessageMap.putIfAbsent(otherId, msg);
+        }
+
+        for (ChatMessage msg : receivedMessages.getContent()) {
+            Long otherId = msg.getSenderId();
+            if (!latestMessageMap.containsKey(otherId)) {
+                latestMessageMap.put(otherId, msg);
+            }
+        }
+
+        List<Map<String, Object>> sessions = new ArrayList<>();
+        for (Map.Entry<Long, ChatMessage> entry : latestMessageMap.entrySet()) {
+            Long otherUserId = entry.getKey();
+            ChatMessage lastMsg = entry.getValue();
+
+            Map<String, Object> session = new HashMap<>();
+            session.put("id", otherUserId);
+
+            Optional<User> otherUser = userRepository.findById(otherUserId);
+            if (otherUser.isPresent()) {
+                session.put("name", otherUser.get().getUsername());
+                session.put("avatar", otherUser.get().getAvatarUrl());
+            } else {
+                session.put("name", "用户" + otherUserId);
+                session.put("avatar", null);
+            }
+
+            session.put("lastMessage", lastMsg.getContent());
+            session.put("lastTime", lastMsg.getCreatedAt());
+
+            long unreadCount = chatMessageRepository.countByReceiverIdAndIsRead(userId, false);
+            session.put("unreadCount", unreadCount);
+            session.put("isOnline", false);
+
+            sessions.add(session);
+        }
+
+        sessions.sort((a, b) -> {
+            Object timeA = a.get("lastTime");
+            Object timeB = b.get("lastTime");
+            if (timeA == null) return 1;
+            if (timeB == null) return -1;
+            return ((java.time.LocalDateTime) timeB).compareTo((java.time.LocalDateTime) timeA);
+        });
+
+        return sessions;
     }
 
     /**
