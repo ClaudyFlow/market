@@ -69,6 +69,19 @@ public class StatisticsController {
         return Result.success(trend);
     }
 
+    @GetMapping("/user-growth")
+    public Result<Map<String, Object>> getUserGrowthTrend(
+            @RequestParam(defaultValue = "7") Integer days) {
+        Map<String, Object> trend = statisticsService.getUserGrowthTrend(days);
+        return Result.success(trend);
+    }
+
+    @GetMapping("/active-users")
+    public Result<Map<String, Object>> getActiveUserStats() {
+        Map<String, Object> stats = statisticsService.getActiveUserStats();
+        return Result.success(stats);
+    }
+
     /**
      * 获取平台统计信息（管理员）
      * API路径：GET /api/statistics/platform

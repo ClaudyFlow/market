@@ -267,9 +267,37 @@ public class StatisticsService {
             orderAmounts.add(orderRepository.sumTotalAmountByCreatedAtBetween(dayStart, dayEnd));
         }
 
-        trend.put("dates", dates);
+trend.put("dates", dates);
         trend.put("orderCounts", orderCounts);
         trend.put("orderAmounts", orderAmounts);
         return trend;
+    }
+
+    public Map<String, Object> getUserGrowthTrend(int days) {
+        Map<String, Object> trend = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        List<String> dates = new java.util.ArrayList<>();
+        List<Long> counts = new java.util.ArrayList<>();
+
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDateTime dayStart = now.minusDays(i).toLocalDate().atStartOfDay();
+            LocalDateTime dayEnd = dayStart.plusDays(1);
+            String dateStr = dayStart.toLocalDate().toString();
+
+            dates.add(dateStr);
+            counts.add(userRepository.countByCreatedAtBetween(dayStart, dayEnd));
+        }
+
+        trend.put("dates", dates);
+        trend.put("counts", counts);
+        return trend;
+    }
+
+public Map<String, Object> getActiveUserStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", userRepository.count());
+        stats.put("activeToday", userRepository.countTodayNewUsers(LocalDateTime.now().toLocalDate().atStartOfDay()));
+        stats.put("activeWeek", userRepository.countActiveUsers(LocalDateTime.now().minusDays(7)));
+        return stats;
     }
 }

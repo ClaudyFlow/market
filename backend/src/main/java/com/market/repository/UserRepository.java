@@ -157,4 +157,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     boolean existsByShopName(String shopName);
     long countByCreatedAtAfter(LocalDateTime createdAt);
+    long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }
