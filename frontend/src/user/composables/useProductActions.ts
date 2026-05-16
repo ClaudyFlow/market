@@ -65,17 +65,34 @@ export function useProductActions(
   }
 
   // 分享商品
-  const shareProduct = () => {
+  const shareProduct = async () => {
     const shareUrl = `${window.location.origin}/item/${product.value.id}`
 
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareUrl).then(() => {
+      try {
+        await navigator.clipboard.writeText(shareUrl)
         ElMessage.success('链接已复制，快去分享吧！')
-      }).catch(() => {
+      } catch {
         ElMessage.error('复制失败，请手动复制')
+      }
+    }
+
+    // 调用分享API获取积分奖励（静默失败）
+    try {
+      const res = await fetch('/api/product/' + product.value.id + '/share', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       })
-    } else {
-      ElMessage.warning('当前浏览器不支持剪贴板，请手动复制链接')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.data?.creditReward) {
+          setTimeout(() => {
+            ElMessage.success('分享成功！+' + data.data.creditReward + '积分')
+          }, 500)
+        }
+      }
+    } catch {
+      // 静默失败，不影响用户体验
     }
   }
 

@@ -2,9 +2,11 @@ package com.market.service;
 
 import com.market.entity.Product;
 import com.market.entity.UserBrowseHistory;
+import com.market.entity.ProductReview;
 import com.market.repository.OrderRepositoryCustom;
 import com.market.repository.ProductRepository;
 import com.market.repository.UserBrowseHistoryRepository;
+import com.market.repository.ProductReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class RecommendService {
 
     @Autowired
     private OrderRepositoryCustom orderRepository;
+
+    @Autowired
+    private ProductReviewRepository reviewRepository;
 
     /**
      * 获取推荐商品列表（基于浏览历史和购买历史）
@@ -117,6 +122,67 @@ public class RecommendService {
                 .stream()
                 .limit(limit)
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * 获取综合热门商品（基于好评率 + 成交率 + 销量加权）
+     * 用于 /api/recommend/hot-products 端点
+     */
+    public List<Product> getHotProductsV2(int limit) {
+        List<Product> products = productRepository.findByStatus(1);
+        
+        // 计算综合分数并排序
+        List<Product> scored = products.stream()
+            .filter(p -> p.getSales() > 0)
+            .map(p -> {
+                // 好评率 (0-1)
+                double ratingScore = p.getRating() != null ? p.getRating() / 5.0 : 0;
+                // 销量对数 (避免头部效应)
+                double salesScore = Math.log1p(p.getSales()) / 10.0;
+                // 评价数量（反映热度）
+                double reviewScore = Math.min(p.getReviewCount() != null ? p.getReviewCount() : 0, 10000) / 10000.0;
+                // 综合分数 = 40%好评率 + 35%销量 + 25%评价热度
+                double compositeScore = 0.4 * ratingScore + 0.35 * salesScore + 0.25 * reviewScore;
+                p.setSales((int)(compositeScore * 100000)); // 临时借用 sales 字段排序
+                return p;
+            })
+            .sorted((a, b) -> Double.compare(b.getSales(), a.getSales()))
+            .limit(limit)
+            .collect(Collectors.toList());
+        
+        return scored;
+    }
+    
+    /**
+     * 基于协同过滤的推荐（买了这个商品的用户也买了...）
+     */
+    public List<Product> getCollaborativeFilteringRecommendations(Long userId, Long productId, int limit) {
+        if (productId == null) {
+            return new ArrayList<>();
+        }
+        
+        // 获取当前商品
+        Product currentProduct = productRepository.findById(productId).orElse(null);
+        if (currentProduct == null) {
+            return new ArrayList<>();
+        }
+        
+        // 找购买过当前商品的其他用户买过的其他商品
+        // 使用 productId 作为线索，用 JPA 原生查询
+        List<Long> coBuyProductIds = orderRepository.findCoPurchasedProductIds(productId);
+        
+        if (coBuyProductIds.isEmpty()) {
+            return getHotProducts(limit);
+        }
+        
+        List<Product> recommendations = productRepository.findAllById(coBuyProductIds).stream()
+            .filter(p -> !p.getId().equals(productId))
+            .filter(p -> p.getStatus() == 1) // 上架状态
+            .sorted(Comparator.comparing(Product::getSales).reversed())
+            .limit(limit)
+            .collect(Collectors.toList());
+        
+        return recommendations;
     }
 
     /**

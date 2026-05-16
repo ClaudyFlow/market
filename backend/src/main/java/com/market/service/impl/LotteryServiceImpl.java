@@ -5,6 +5,7 @@ import com.market.entity.LotteryRecord;
 import com.market.entity.User;
 import com.market.repository.LotteryPrizeRepository;
 import com.market.repository.LotteryRecordRepository;
+import com.market.repository.OrderRepository;
 import com.market.repository.UserRepository;
 import com.market.service.LotteryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class LotteryServiceImpl implements LotteryService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     // 每抽 10 次必出保底奖品
     private static final int GUARANTEED_INTERVAL = 10;
 
@@ -46,6 +50,14 @@ public class LotteryServiceImpl implements LotteryService {
         // 检查是否为测试模式（测试模式下无抽奖次数限制）
         boolean isTestMode = "test".equals(System.getProperty("spring.profiles.active"));
 
+        // 检查是否购买过商品（必须购买过才能抽奖）
+        if (!isTestMode && !hasPurchased(user.getId())) {
+            result.setSuccess(false);
+            result.setMessage("需要先购买商品才能参与抽奖");
+            result.setRemainingCredit(user.getCredit());
+            return result;
+        }
+
         // 检查当天抽奖次数是否超过限制（测试模式除外）
         if (!isTestMode) {
             Long todayDraws = recordRepository.countTodayByUserId(user.getId());
@@ -57,7 +69,7 @@ public class LotteryServiceImpl implements LotteryService {
             }
         }
 
-        // 检查积分是否足够
+        // 检查积分是否足够（每次抽100积分）
         if (user.getCredit() < 100) {
             result.setSuccess(false);
             result.setMessage("积分不足，需要 100 积分");
@@ -160,6 +172,15 @@ public class LotteryServiceImpl implements LotteryService {
         if (name.contains("75")) return 75;
         if (name.contains("100")) return 100;
         return 0;
+    }
+
+    /**
+     * 检查用户是否购买过商品
+     * @param userId 用户ID
+     * @return 是否有购买记录
+     */
+    private boolean hasPurchased(Long userId) {
+        return orderRepository.countByUserIdAndStatusCompleted(userId) > 0;
     }
 
     private LotteryRecordDto convertToDto(LotteryRecord record) {

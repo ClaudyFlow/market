@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private com.market.service.UserNotificationService notificationService;
+
     // 每日签到基础积分
     private static final int DAILY_CHECKIN_CREDIT = 10;
 
@@ -545,11 +548,27 @@ public class UserServiceImpl implements UserService {
         }
 
         if (newLevel > user.getVipLevel()) {
+            int oldLevel = user.getVipLevel();
             user.setVipLevel(newLevel);
             // 设置 VIP 过期时间为一年后
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.YEAR, 1);
             user.setVipExpireTime(calendar.getTime());
+
+            // 发送升级通知
+            String levelNames[] = {"普通会员", "白银会员", "黄金会员", "铂金会员", "钻石会员", "至尊会员"};
+            String title = "恭喜升至 " + levelNames[newLevel];
+            String content = "您的会员等级已从 " + levelNames[oldLevel] + " 升级为 " + levelNames[newLevel] 
+                + "！感谢您的支持，继续购物获取更多成长值吧~";
+            try {
+                notificationService.sendNotification(
+                    user.getId(), title, content, "SYSTEM", "URGENT",
+                    "VIP_UPGRADE", Long.valueOf(newLevel),
+                    "/user?tab=vip"
+                );
+            } catch (Exception e) {
+                // 通知发送失败不影响主流程
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.market.annotation.*;
 import com.market.common.Result;
 import com.market.entity.Product;
 import com.market.entity.User;
+import com.market.service.CreditService;
 import com.market.service.FavoriteService;
 import com.market.service.ProductService;
 import com.market.service.UserBrowseHistoryService;
@@ -42,6 +43,9 @@ public class ProductController {
 
     @Autowired
     private UserBrowseHistoryService browseHistoryService;
+
+    @Autowired
+    private CreditService creditService;
 
     /**
      * 获取商品列表
@@ -463,4 +467,51 @@ public class ProductController {
             default -> Sort.by(Sort.Direction.DESC, "createdAt");
         };
     }
+    /**
+     * 分享商品（奖励积分）
+     * API路径：POST /api/product/{id}/share
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户（可选）
+     * @param id 商品ID
+     * @return 分享结果
+     */
+    @PostMapping("/{id}/share")
+    @AuditLog(module = "商品", action = "分享商品")
+    public Result<Map<String, Object>> shareProduct(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long id) {
+        
+        if (user == null) {
+            return Result.error(401, "请先登录");
+        }
+        
+        Product product = productService.getProductDetail(id);
+        if (product == null) {
+            return Result.error(404, "商品不存在");
+        }
+        
+        // 检查今日分享次数（限制3次/天）
+        int todayShareCount = productService.getTodayShareCount(user.getId());
+        if (todayShareCount >= 3) {
+            return Result.error(400, "今日分享次数已达上限（3次），明天再来吧~");
+        }
+        
+        // 记录分享行为
+        productService.recordShare(user.getId(), id);
+        
+        // 奖励积分（每日上限3次，每次+5积分）
+        Map<String, Object> result = new HashMap<>();
+        result.put("shared", true);
+        result.put("creditReward", 5);
+        result.put("todayShareCount", todayShareCount + 1);
+        result.put("message", "分享成功！+" + 5 + "积分");
+        
+        // 增加积分
+        creditService.addCredit(user.getId(), 5, "分享商品：" + product.getName());
+        
+        return Result.success(result);
+    }
+
+
 }

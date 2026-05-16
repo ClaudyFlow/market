@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 // Font Awesome 图标直接使用类名，无需导入
 import { useCartStore } from "@user/stores/cart";
@@ -35,21 +35,38 @@ interface Product {
 const router = useRouter()
 const cartStore = useCartStore()
 
-// 推荐商品 - 15 个
-const recommendedItem = ref<Product[]>([
-  {
-    id: 101,
-    name: "iPhone 15 Pro",
-    price: 7999,
-    originalPrice: 9999,
-    description: "256GB / 钛金属 / A17 Pro 芯片",
-    rating: 4.9,
-    type: "digital",
-    sales: "10 万+",
-    salesPercent: 85,
-    remaining: 1500,
-    image: "https://via.placeholder.com/250x250/1a2a4a/00d4ff?text=iPhone",
-  },
+// 推荐商品 - 从 API 加载
+const recommendedItem = ref<Product[]>([])
+
+const loadRecommended = async () => {
+  try {
+    const res = await fetch("/api/recommend/products?limit=8", {
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      recommendedItem.value = (data.data || []).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        originalPrice: p.originalPrice || p.price,
+        description: p.description || "",
+        rating: p.rating || 5.0,
+        type: p.type || "digital",
+        sales: p.sales || "0",
+        salesPercent: p.salesPercent || 70,
+        remaining: p.remaining || Math.floor(Math.random() * 1000),
+        image: p.image || `https://via.placeholder.com/250x250/1a2a4a/00d4ff?text=${encodeURIComponent(p.name)}`,
+      }))
+    }
+  } catch {
+    // 如果失败使用空数组，不影响页面渲染
+  }
+}
+
+onMounted(() => {
+  loadRecommended()
+})
   {
     id: 102,
     name: "MacBook Pro 14",
@@ -247,8 +264,8 @@ const recommendedItem = ref<Product[]>([
   },
 ]);
 
-// 推荐商品 (computed 属性)
-const recommendedItems = computed(() => recommendedItem.value);
+// 推荐商品
+const recommendedItems = recommendedItem;
 
 const goToDetail = (id: number) => {
   router.push(`/item/${id}`)

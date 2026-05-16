@@ -162,4 +162,19 @@ public class RecommendController {
             return map;
         }).collect(Collectors.toList());
     }
+    
+    /**
+     * 获取综合热门商品（好评率 + 成交率 + 销量）
+     * API路径：GET /api/recommend/hot-products
+     * 权限：公开
+     */
+    @GetMapping("/hot-products")
+    @Cacheable(key = "'hot_products_v2_' + #limit", cacheName = "recommend", expire = 600)
+    @AuditLog(module = "推荐系统", action = "获取综合热门商品")
+    public Result<List<Map<String, Object>>> getHotProductsV2(
+            @RequestParam(defaultValue = "10") Integer limit) {
+        List<Product> products = recommendService.getHotProductsV2(limit);
+        return Result.success(convertProductsToMap(products));
+    }
+
 }

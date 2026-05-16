@@ -4,6 +4,24 @@
     <div class="product-title">
       <h1>{{ product.name }}</h1>
       <p class="product-subtitle">{{ product.description }}</p>
+
+      <!-- 分类标签 -->
+      <div class="category-tags" v-if="product.category">
+        <el-tag size="small" type="info">{{ product.category }}</el-tag>
+      </div>
+
+      <!-- 活动标签 -->
+      <div class="activity-tags" v-if="product.activities?.length">
+        <el-tag
+          v-for="activity in product.activities"
+          :key="activity.id"
+          type="danger"
+          effect="plain"
+          size="small"
+        >
+          {{ activity.name }} {{ (activity.discountRate * 10).toFixed(1) }}折
+        </el-tag>
+      </div>
     </div>
 
     <!-- 价格区域 -->
@@ -149,6 +167,18 @@ defineEmits<{
   margin: 8px 0 0;
   color: #666;
   font-size: 14px;
+}
+
+.category-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.activity-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .price-section {

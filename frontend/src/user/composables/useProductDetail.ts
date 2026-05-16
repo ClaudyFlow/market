@@ -15,10 +15,15 @@ export function useProductDetail(productId: string) {
     discount: 69,
     stock: 156,
     category: '数码电器',
+    categoryId: 1,
     brand: 'Cappuccino Lab',
     colors: ['曜石黑', '珍珠白', '天空蓝'],
     versions: ['标准版', '旗舰版', '尊享版'],
     promotions: ['限时直降 ¥400', '买即赠耳机架', '顺丰包邮'],
+    // 进行中的平台活动（实际应从API获取）
+    activities: [
+      { id: 1, name: '618大促', discountRate: 0.85, endTime: '2026-06-30' }
+    ],
     specifications: {
       '蓝牙版本': '5.4',
       '续航时间': '48 小时',

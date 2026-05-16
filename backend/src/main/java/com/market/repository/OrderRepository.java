@@ -188,6 +188,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countByUserAndStatus(User user, String status);
 
     /**
+     * 统计用户已完成订单数量（用于判断是否有购买记录）
+     * @param userId 用户ID
+     * @return 已完成订单数量
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(o) FROM Order o WHERE o.user.id = ?1 AND o.status = 'COMPLETED'")
+    long countByUserIdAndStatusCompleted(Long userId);
+
+    /**
      * 统计商家订单数量
      *
      * @param merchant 商家对象

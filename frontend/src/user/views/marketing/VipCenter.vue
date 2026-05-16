@@ -148,7 +148,7 @@
     <!-- VIP 充值 -->
     <section class="recharge-section">
       <h2 class="section-title">VIP 充值</h2>
-      <div class="recharge-desc">充值可获得成长值，1 元 = 10 成长值</div>
+      <div class="recharge-desc">充值可获得成长值，1 元 = 1 成长值</div>
       <div class="recharge-grid">
         <div 
           v-for="option in rechargeOptions" 

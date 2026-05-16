@@ -196,12 +196,9 @@ public class ForumController {
     @PostMapping("/posts")
     public Result<Map<String, Object>> createPost(
             @AuthenticationPrincipal User user,
-            @RequestParam String title,
-            @RequestParam String content,
-            @RequestParam(required = false) String tags,
-            @RequestParam(required = false) String category) {
+            @RequestBody Map<String, String> postData) {
 
-        ForumPost post = forumService.createPost(user, title, content, tags, category);
+        ForumPost post = forumService.createPost(user, postData.get("title"), postData.get("content"), postData.get("tags"), postData.get("category"));
         Map<String, Object> result = convertPostToMap(post);
         return Result.success(result);
     }
@@ -222,11 +219,9 @@ public class ForumController {
     public Result<Map<String, Object>> updatePost(
             @PathVariable Long id,
             @AuthenticationPrincipal User user,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String content,
-            @RequestParam(required = false) String tags) {
+            @RequestBody Map<String, String> postData) {
 
-        ForumPost post = forumService.updatePost(id, user, title, content, tags);
+        ForumPost post = forumService.updatePost(id, user, postData.get("title"), postData.get("content"), postData.get("tags"));
         Map<String, Object> result = convertPostToMap(post);
         return Result.success(result);
     }
@@ -357,10 +352,9 @@ public class ForumController {
     public Result<Map<String, Object>> createComment(
             @PathVariable Long postId,
             @AuthenticationPrincipal User user,
-            @RequestParam String content,
-            @RequestParam(required = false) Long parentId) {
+            @RequestBody Map<String, Object> commentData) {
 
-        ForumComment comment = forumService.createComment(user, postId, content, parentId);
+        ForumComment comment = forumService.createComment(user, postId, (String) commentData.get("content"), commentData.get("parentId") != null ? ((Number) commentData.get("parentId")).longValue() : null);
         Map<String, Object> result = convertCommentToMap(comment);
         return Result.success(result);
     }

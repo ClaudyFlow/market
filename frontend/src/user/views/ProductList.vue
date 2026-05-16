@@ -69,6 +69,9 @@ const cartStore = useCartStore()
 const category = ['手机数码', '电脑办公', '家用电器', '服装鞋包', '美妆护肤', '图书文娱', '食品生鲜', '母婴玩具']
 
 const selectedCategory = ref(route.query.category || '')
+
+// 是否限时特惠页 - 过滤有折扣的商品
+const isSale = computed(() => route.path === '/sale')
 const priceRange = ref('')
 const sortBy = ref('default')
 const currentPage = ref(1)
@@ -126,6 +129,11 @@ const getProgressColor = (percent) => {
 
 const filteredProduct = computed(() => {
   let result = [...allProduct.value]
+
+  // 限时特惠：只显示有折扣的商品
+  if (isSale.value) {
+    result = result.filter(p => p.originalPrice && p.originalPrice > p.price)
+  }
 
   // 分类筛选
   if (selectedCategory.value) {

@@ -29,7 +29,7 @@ interface ProductListParams {
 // 获取商品列表
 export function getProductList(params?: ProductListParams) {
   return request<ApiResponse<Product[]>>({
-    url: '/merchant/product',
+    url: '/product',
     method: 'get',
     params
   })
@@ -38,7 +38,7 @@ export function getProductList(params?: ProductListParams) {
 // 创建商品
 export function createProduct(data: Partial<Product>) {
   return request({
-    url: '/merchant/product',
+    url: '/product',
     method: 'post',
     data
   })
@@ -47,7 +47,7 @@ export function createProduct(data: Partial<Product>) {
 // 获取商品详情
 export function getProductDetail(id: number) {
   return request({
-    url: `/merchant/product/${id}`,
+    url: `/product/${id}`,
     method: 'get'
   })
 }
@@ -55,7 +55,7 @@ export function getProductDetail(id: number) {
 // 更新商品
 export function updateProduct(id: number, data: Partial<Product>) {
   return request({
-    url: `/merchant/product/${id}`,
+    url: `/product/${id}`,
     method: 'put',
     data
   })
@@ -64,7 +64,7 @@ export function updateProduct(id: number, data: Partial<Product>) {
 // 删除商品
 export function deleteProduct(id: number) {
   return request({
-    url: `/merchant/product/${id}`,
+    url: `/product/${id}`,
     method: 'delete'
   })
 }
@@ -72,7 +72,7 @@ export function deleteProduct(id: number) {
 // 上架/下架
 export function toggleProductStatus(id: number, status: number) {
   return request({
-    url: `/merchant/product/${id}/status`,
+    url: `/product/${id}/status`,
     method: 'put',
     data: { status }
   })

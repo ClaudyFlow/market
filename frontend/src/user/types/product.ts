@@ -14,7 +14,9 @@ export interface Product {
   discount: number
   stock: number
   category: string
+  categoryId?: number
   brand: string
+  activities?: ActivityInfo[]
   colors: string[]
   versions: string[]
   promotions: string[]
@@ -126,4 +128,14 @@ export interface ReviewStats {
   tags: ReviewTag[]
   withImagesCount: number
   withAdditionalCount: number
+}
+
+/**
+ * 平台活动信息
+ */
+export interface ActivityInfo {
+  id: number
+  name: string
+  discountRate: number
+  endTime?: string
 }

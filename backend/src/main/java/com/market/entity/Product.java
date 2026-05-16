@@ -41,6 +41,12 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String category;
 
+    /**
+     * 分类ID（关联category表）
+     */
+    @Column(name = "category_id")
+    private Long categoryId;
+
     @Column(length = 100)
     private String brand;
 
@@ -167,6 +173,9 @@ public class Product {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
     /**
      * 获取商品图片 URL（别名方法）

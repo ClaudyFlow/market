@@ -156,6 +156,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '我的订单' }
       },
       {
+        path: 'vip-recharge',
+        name: 'VipRecharge',
+        component: () => import('@user/views/user/VipRecharge.vue'),
+        meta: { title: 'VIP充值' }
+      },
+      {
         path: 'orders',
         name: 'OrderCenter',
         component: () => import('@user/views/order/OrderCenter.vue'),

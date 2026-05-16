@@ -51,6 +51,12 @@ public class OrderService {
     private PaymentRefundRepository refundRepository;
 
     @Autowired
+    private PlatformActivityService platformActivityService;
+
+    @Autowired
+    private MerchantActivityOptOutService merchantActivityOptOutService;
+
+    @Autowired
     private ProductReviewRepository reviewRepository;
 
     @Autowired
@@ -126,7 +132,24 @@ public class OrderService {
                 throw new RuntimeException("商品 " + product.getName() + " 库存不足");
             }
 
-            OrderItem orderItem = new OrderItem(product, quantity, product.getPrice());
+            // 获取商品适用的活动折扣价
+            BigDecimal itemPrice = product.getPrice();
+            List<PlatformActivity> activeActivities = platformActivityService.getActiveActivities();
+            if (!activeActivities.isEmpty()) {
+                Long merchantId = product.getMerchant() != null ? product.getMerchant().getId() : null;
+                if (merchantId != null) {
+                    // 遍历所有活动，取最优（最低）价
+                    for (PlatformActivity activity : activeActivities) {
+                        BigDecimal discountedPrice = merchantActivityOptOutService.calculateDiscountedPrice(
+                            itemPrice, merchantId, activity);
+                        if (discountedPrice != null && discountedPrice.compareTo(itemPrice) < 0) {
+                            itemPrice = discountedPrice;
+                        }
+                    }
+                }
+            }
+
+            OrderItem orderItem = new OrderItem(product, quantity, itemPrice);
             order.addItem(orderItem);
 
             totalAmount = totalAmount.add(orderItem.getSubtotal());
@@ -175,7 +198,7 @@ public class OrderService {
         cartItemRepository.deleteByUser(user);
 
         // 奖励积分 (异步 - 通过消息队列)
-        int creditToAdd = order.getTotalAmount().intValue() / 10;
+        int creditToAdd = order.getTotalAmount().intValue();  // 1元=1积分
         if (creditToAdd > 0 && mqProducer != null) {
             CreditMessage creditMsg = CreditMessage.orderReward(
                     user.getId(),

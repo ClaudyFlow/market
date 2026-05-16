@@ -44,6 +44,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '评价审核', requiresAuth: true }
   },
   {
+    path: '/forum-audit',
+    name: 'ForumAudit',
+    component: () => import('@admin/views/content/ForumAudit.vue'),
+    meta: { title: '论坛审核', requiresAuth: true }
+  },
+  {
     path: '/statistic',
     name: 'Statistic',
     component: () => import('@admin/views/system/Statistics.vue'),
@@ -66,6 +72,18 @@ const routes: RouteRecordRaw[] = [
     name: 'Coupon',
     component: () => import('@admin/views/marketing/Coupon.vue'),
     meta: { title: '优惠券管理', requiresAuth: true }
+  },
+  {
+    path: '/category',
+    name: 'Category',
+    component: () => import('@admin/views/system/Category.vue'),
+    meta: { title: '分类管理', requiresAuth: true }
+  },
+  {
+    path: '/platform-activity',
+    name: 'PlatformActivity',
+    component: () => import('@admin/views/marketing/Activity.vue'),
+    meta: { title: '平台活动', requiresAuth: true }
   }
 ]
 

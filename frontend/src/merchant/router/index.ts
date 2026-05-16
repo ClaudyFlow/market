@@ -53,7 +53,13 @@ const routes: RouteRecordRaw[] = [
     path: '/activity',
     name: 'Activity',
     component: () => import('@merchant/views/activity/ActivityList.vue'),
-    meta: { title: '活动管理', requiresAuth: true }
+    meta: { title: '我的活动', requiresAuth: true }
+  },
+  {
+    path: '/platform-activity',
+    name: 'PlatformActivity',
+    component: () => import('@merchant/views/activity/PlatformActivitySettings.vue'),
+    meta: { title: '平台活动', requiresAuth: true }
   },
   {
     path: '/coupon',

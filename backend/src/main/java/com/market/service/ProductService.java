@@ -3,6 +3,7 @@ package com.market.service;
 import com.market.entity.Product;
 import com.market.entity.User;
 import com.market.repository.ProductRepository;
+import com.market.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * 获取商品列表
@@ -46,14 +50,12 @@ public class ProductService {
     }
 
     /**
-     * 获取分类列表
+     * 获取分类列表（从数据库读取）
      */
     public List<String> getCategories() {
-        return Arrays.asList(
-            "数码电子", "服装鞋帽", "家居生活", "美妆护肤",
-            "食品饮料", "图书文具", "母婴用品", "运动户外",
-            "珠宝首饰", "钟表眼镜", "宠物用品", "汽车用品"
-        );
+        return categoryService.getAllActiveCategories().stream()
+            .map(c -> c.getName())
+            .toList();
     }
 
     /**
@@ -198,4 +200,20 @@ public class ProductService {
     public boolean isMerchantProduct(Product product, User merchant) {
         return product.getMerchant() != null && product.getMerchant().getId().equals(merchant.getId());
     }
+    
+    /**
+     * 获取用户今日分享次数
+     */
+    public int getTodayShareCount(Long userId) {
+        return 0; // 默认无限制，实际可查 ProductShareLog 表
+    }
+    
+    /**
+     * 记录分享行为
+     */
+    @Transactional
+    public void recordShare(Long userId, Long productId) {
+        // 实际可记录到 ProductShareLog 表用于统计
+    }
+
 }

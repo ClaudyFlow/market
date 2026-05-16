@@ -2,6 +2,7 @@ package com.market.service;
 
 import com.market.entity.*;
 import com.market.repository.*;
+import com.market.service.UserNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,9 @@ public class VipService {
 
     @Autowired
     private UserCouponRepository userCouponRepository;
+
+    @Autowired
+    private UserNotificationService notificationService;
 
     // ==================== VIP 等级管理 ====================
 
@@ -283,7 +287,7 @@ public class VipService {
         order.setOrderNo(generateOrderNo());
         order.setAmount(amount);
         // 充值比例：1 元 = 10 成长值
-        order.setGrowthValue(amount.multiply(new BigDecimal("10")).intValue());
+        order.setGrowthValue(amount.intValue());  // 1元=1成长值
         order.setStatus("PENDING");
         
         return vipRechargeOrderRepository.save(order);
@@ -318,6 +322,24 @@ public class VipService {
         user.setGrowthValue(user.getGrowthValue() + order.getGrowthValue());
         userRepository.save(user);
         
+        // 检查充值后是否升级
+        VipLevel newLevel = vipLevelRepository.findHighestLevelByGrowthValue(user.getGrowthValue())
+            .orElse(null);
+        if (newLevel != null && newLevel.getLevel() > user.getVipLevel()) {
+            int oldLevel = user.getVipLevel();
+            user.setVipLevel(newLevel.getLevel());
+            userRepository.save(user);
+            
+            String[] levelNames = {"普通会员", "白银会员", "黄金会员", "铂金会员", "钻石会员", "至尊会员"};
+            String title = "恭喜升至 " + levelNames[newLevel.getLevel()];
+            String msg = "充值成功！成长值 +" + order.getGrowthValue() + "，会员等级从 " 
+                + levelNames[oldLevel] + " 升级为 " + levelNames[newLevel.getLevel()] + "！";
+            try {
+                notificationService.sendNotification(user.getId(), title, msg, "SYSTEM", "URGENT",
+                    "VIP_RECHARGE_UPGRADE", order.getId(), "/user?tab=vip");
+            } catch (Exception e) {}
+        }
+
         return vipRechargeOrderRepository.save(order);
     }
 
