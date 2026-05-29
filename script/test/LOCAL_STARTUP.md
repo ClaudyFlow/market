@@ -9,35 +9,13 @@
 - `application-dev.properties`：`market/market` 凭据
 - DatabaseInitConfig：仅在 dev 运行，自动建表
 
-❌ **Docker 部署**：因网络限制无法拉取基础镜像（eclipse-temurin），已放弃
-
 ⚠️ **本地 PostgreSQL**：已安装 PostgreSQL 10（端口 5432）和 18（端口 5433），但 `market` 用户/数据库可能不存在
 
 ---
 
 ## 快速启动方案
 
-### 方案 1：使用已有的 Docker 基础镜像（如果已缓存）
-
-若之前已成功拉取镜像，可尝试：
-```cmd
-cd D:\market\depend
-docker-compose up -d
-```
-
-检查容器：
-```cmd
-docker-compose ps
-```
-
-查看日志：
-```cmd
-docker-compose logs -f app
-```
-
----
-
-### 方案 2：本地 PostgreSQL + 直接启动（推荐）
+### 方案 1：本地 PostgreSQL + 直接启动（推荐）
 
 #### 步骤 1：确保 PostgreSQL 10 在运行（端口 5432）
 
@@ -166,7 +144,7 @@ netstat -ano | findstr :8080
 - Redis：可选（localhost:6379）
 - RabbitMQ：禁用（默认）
 
-### 生产环境（Docker）
+### 生产环境
 - 文件：`application-prod.properties`
 - 所有敏感信息通过环境变量注入
 - DDL 策略：`validate`（不自动修改表）
@@ -193,9 +171,3 @@ netstat -ano | findstr :8080
 | `script/build/init-db.bat` | 仅初始化数据库 |
 | `script/build/init-pg10-trust.bat` | 自动修复并初始化（管理员） |
 | `script/build/test-postgresql.ps1` | 连接诊断脚本 |
-
----
-
-**最后建议**：如果本地 PostgreSQL 配置复杂，直接用 Docker Desktop 是最快的（但需解决网络问题）。可以配置 Docker 使用国内镜像源加速。
-
-需要我帮你执行某个具体命令吗？

@@ -1,31 +1,34 @@
 @echo off
-set "PROJECT_ROOT=D:\Code\Project\market"
+set "PROJECT_ROOT=D:\market"
 
-echo [Start Database] Starting database services via Docker...
+echo [Start Database] Starting database services...
 echo.
 
-echo [1/2] Starting PostgreSQL...
-docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d postgresql
-
-echo Checking PostgreSQL health...
-for /f "tokens=*" %%i in ('docker inspect --format "{{.State.Health.Status}}" postgresql 2^>nul') do set PG_STATUS=%%i
-if "%PG_STATUS%"=="healthy" (
-    echo [OK] PostgreSQL is healthy
+echo [1/2] Checking PostgreSQL...
+sc query postgresql-x64-18 >nul 2>&1
+if %errorlevel% equ 0 (
+    echo PostgreSQL service found. Use 'net start postgresql-x64-18' to start.
 ) else (
-    echo [Warning] PostgreSQL status: %PG_STATUS%
+    echo [Warning] PostgreSQL service not found
 )
 
 echo.
-echo [2/2] Starting Redis...
-docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d redis
-
-echo Checking Redis health...
-for /f "tokens=*" %%i in ('docker inspect --format "{{.State.Health.Status}}" redis 2^>nul') do set REDIS_STATUS=%%i
-if "%REDIS_STATUS%"=="healthy" (
-    echo [OK] Redis is healthy
+echo [2/2] Checking Redis...
+sc query redis >nul 2>&1
+if %errorlevel% equ 0 (
+    echo Redis service found. Use 'net start redis' to start.
 ) else (
-    echo [Warning] Redis status: %REDIS_STATUS%
+    echo [Warning] Redis service not found
 )
 
 echo.
-echo [Success] Database services started via Docker
+echo ========================================
+echo Please ensure the following services are running:
+echo - PostgreSQL (port 5432)
+echo - Redis (port 6379)
+echo ========================================
+echo.
+echo To start services manually:
+echo   net start postgresql-x64-18
+echo   net start redis
+pause

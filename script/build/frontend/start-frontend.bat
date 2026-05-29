@@ -1,30 +1,30 @@
 @echo off
 REM ============================================================
-REM Start Frontend Service via Docker
+REM Start Frontend Service
 REM ============================================================
 
-set "PROJECT_ROOT=D:\Code\Project\market"
+set "PROJECT_ROOT=D:\market"
 
-echo [Start Frontend] Starting frontend via Docker...
+echo [Start Frontend] Starting frontend service...
 echo.
 
-echo [1/2] Building frontend...
-call "%~dp0build-frontend.bat"
+echo [1/2] Checking Node.js...
+where node >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [Error] Frontend build failed
+    echo [Error] Node.js not found. Please install Node.js.
     pause
     exit /b 1
 )
-echo.
-
-echo [2/2] Starting nginx (port 80)...
-docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d nginx
-if %errorlevel% neq 0 (
-    echo [Error] Failed to start nginx
-    pause
-    exit /b 1
-)
+echo [OK] Node.js found
 
 echo.
-echo [Success] Frontend started
+echo [2/2] Starting frontend development server...
+cd /d "%PROJECT_ROOT%\frontend"
+start "Frontend Dev Server" cmd /c "npm run dev"
+echo.
+echo ========================================
+echo [Success] Frontend Service Starting!
+echo ========================================
+echo NOTE: Frontend dev server is starting in a separate window
+echo Visit: http://localhost:5173
 pause

@@ -17,8 +17,6 @@ market/
 │   │   │   ├── build-backend.bat
 │   │   │   ├── start-backend.bat
 │   │   │   └── start-database.bat
-│   │   ├── docker/                # Docker相关脚本
-│   │   │   └── start-docker.bat
 │   │   ├── frontend/              # 前端构建脚本
 │   │   │   ├── build-frontend.bat
 │   │   │   └── start-frontend.bat

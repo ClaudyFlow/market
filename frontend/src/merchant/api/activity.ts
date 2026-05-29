@@ -24,14 +24,14 @@ export const merchantActivityApi = {
     customDiscountRate?: number
     remark?: string
   }) => request({
-    url: \`/activity/\${activityId}/setting\`,
+    url: `/activity/${activityId}/setting`,
     method: 'put',
     data,
   }),
 
   // 快速退出活动
   optOut: (activityId: number, data: { remark?: string }) => request({
-    url: \`/activity/\${activityId}/optout\`,
+    url: `/activity/${activityId}/optout`,
     method: 'post',
     data,
   }),

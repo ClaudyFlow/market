@@ -1,36 +1,29 @@
 @echo off
 REM ============================================================
-REM Start Backend Service via Docker
+REM Start Backend Service
 REM ============================================================
 
-set "PROJECT_ROOT=D:\Code\Project\market"
+set "PROJECT_ROOT=D:\market"
 
-echo [Start Backend] Starting backend via Docker...
+echo [Start Backend] Starting backend service...
 echo.
 
-echo [1/2] Starting database services...
-call "%~dp0start-database.bat"
-if %errorlevel% neq 0 (
-    echo [Error] Database startup failed
-    pause
-    exit /b 1
+echo [1/2] Checking database services...
+sc query postgresql-x64-18 >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [OK] PostgreSQL service exists
+) else (
+    echo [Warning] PostgreSQL service not found
 )
-echo.
 
-echo [2/2] Building and starting Spring Boot...
-call "%~dp0build-backend.bat"
-if %errorlevel% neq 0 (
-    echo [Error] Backend build failed
-    pause
-    exit /b 1
-)
 echo.
-
-echo [3/3] Starting Spring Boot container in new window...
-start "Spring Boot" cmd /c "docker-compose -f "%PROJECT_ROOT%\depend\docker-compose.yml" up -d springboot & pause"
+echo [2/2] Starting Spring Boot...
+cd /d "%PROJECT_ROOT%\backend"
+start "Spring Boot" cmd /c "mvn spring-boot:run"
 echo.
 echo ========================================
-echo [Success] Backend Service Started!
+echo [Success] Backend Service Starting!
 echo ========================================
 echo NOTE: Spring Boot is starting in a separate window
+echo Visit: http://localhost:8080
 pause

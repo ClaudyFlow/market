@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/merchant/activity")
+@RequestMapping("/api/merchant/activity-setting")
 @CrossOrigin(origins = "*")
 public class MerchantActivitySettingController {
 

@@ -10,56 +10,7 @@
 
 ## 解决方案
 
-### 方案一：使用 Docker Compose（推荐⭐）
-
-**优点**：一键启动，无需配置数据库，完全隔离环境
-
-1. 启动 Docker Desktop（如果未运行）
-
-2. 执行启动脚本：
-   ```cmd
-   cd D:\market\script\build
-   start-docker.bat
-   ```
-   或手动执行：
-   ```cmd
-   cd D:\market\depend
-   docker-compose up -d
-   ```
-
-3. 等待所有服务启动（约 30-60 秒）
-
-4. 验证服务状态：
-   ```cmd
-   docker-compose ps
-   ```
-
-5. 启动后端（**注意：需要使用 Docker 网络配置**）:
-   ```cmd
-   cd D:\market\backend
-   mvn spring-boot:run -Dspring-boot.run.profiles=prod
-   ```
-   或修改本地配置使用 Docker 网络：
-   ```properties
-   # backend/src/main/resources/application-docker.properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/market
-   spring.datasource.username=admin
-   spring.datasource.password=123456
-   ```
-
-6. 访问应用：http://localhost:8080
-
-**注意**：Docker Compose 已在 `depend/docker-compose.yml` 中定义：
-- PostgreSQL: `admin/123456`, 端口 `5432`
-- Redis: 密码 `123456`, 端口 `6379`
-- RabbitMQ: `guest/guest`, 管理界面 `15672`
-- 后端: 端口 `8080`
-
----
-
-### 方案二：修复本地 PostgreSQL 连接
-
-如果不想使用 Docker，需要修复本地 PostgreSQL 的认证配置。
+### 方案一：修复本地 PostgreSQL 连接（推荐）
 
 #### 步骤 1: 修改 pg_hba.conf
 
@@ -133,7 +84,7 @@ mvn spring-boot:run
 
 ---
 
-### 方案三：使用 pgAdmin 图形化工具
+### 方案二：使用 pgAdmin 图形化工具
 
 1. 下载安装 pgAdmin 4（随 PostgreSQL 安装包一起安装或单独下载）
 
@@ -190,7 +141,7 @@ netstat -ano | findstr :5432
 
 **原因**：pg_hba.conf 未允许本地连接
 
-**解决**：参考**方案二**修改配置
+**解决**：参考**方案一**修改配置
 
 ---
 
@@ -211,14 +162,12 @@ diagnose-postgresql.bat
 
 ```yaml
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/market
-SPRING_DATASOURCE_USERNAME=admin
+SPRING_DATASOURCE_USERNAME=market
 SPRING_DATASOURCE_PASSWORD=your_secure_password
 JWT_SECRET=your_jwt_secret_here
 MAIL_USERNAME=your_email@qq.com
 MAIL_PASSWORD=your_app_password
 ```
-
-或使用 Docker Compose 的生产配置（已包含在 docker-compose.yml 中）。
 
 ---
 

@@ -16,7 +16,7 @@ export const forumApi = {
 
   // 审核帖子（通过/拒绝）
   auditPost: (postId: number, status: string, reason?: string) => request({
-    url: \`/operations/forum-audit/\${postId}\`,
+    url: `/operations/forum-audit/${postId}`,
     method: 'put',
     data: { status, reason },
   }),

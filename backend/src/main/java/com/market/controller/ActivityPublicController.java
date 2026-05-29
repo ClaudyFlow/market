@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activity")
+@RequestMapping("/api/platform/activity")
 @CrossOrigin(origins = "*")
 public class ActivityPublicController {
 
@@ -25,10 +25,10 @@ public class ActivityPublicController {
     }
 
     /**
-     * 获取活动详情
+     * 获取平台活动详情
      */
     @GetMapping("/{id}")
-    public Result<PlatformActivity> getById(@PathVariable Long id) {
+    public Result<PlatformActivity> getPlatformActivityById(@PathVariable Long id) {
         PlatformActivity activity = platformActivityService.getById(id);
         return activity != null ? Result.success(activity) : Result.error(404, "活动不存在");
     }

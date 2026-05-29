@@ -8,6 +8,7 @@ import com.market.repository.ProductRepository;
 import com.market.repository.UserBrowseHistoryRepository;
 import com.market.repository.ProductReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -129,7 +130,7 @@ public class RecommendService {
      * 用于 /api/recommend/hot-products 端点
      */
     public List<Product> getHotProductsV2(int limit) {
-        List<Product> products = productRepository.findByStatus(1);
+        List<Product> products = productRepository.findByStatus(1, PageRequest.of(0, 1000)).getContent();
         
         // 计算综合分数并排序
         List<Product> scored = products.stream()
