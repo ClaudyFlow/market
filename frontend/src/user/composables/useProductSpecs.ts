@@ -16,7 +16,18 @@ export function useProductSpecs(product: ReturnType<typeof useProductDetail>['pr
 
   // 是否有选中规格
   const hasSelectedSpecs = computed(() => {
-    return selectedSpecs.color !== '' && selectedSpecs.version !== ''
+    const hasColors = product.value?.colors?.length
+    const hasVersions = product.value?.versions?.length
+    if (hasColors && hasVersions) {
+      return selectedSpecs.color !== '' && selectedSpecs.version !== ''
+    }
+    if (hasColors) {
+      return selectedSpecs.color !== ''
+    }
+    if (hasVersions) {
+      return selectedSpecs.version !== ''
+    }
+    return true
   })
 
   // 获取选中规格的描述文本

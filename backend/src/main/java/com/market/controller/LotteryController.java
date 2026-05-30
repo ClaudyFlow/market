@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 抽奖控制器
@@ -52,6 +54,21 @@ public class LotteryController {
     public ResponseEntity<List<LotteryService.LotteryRecordDto>> getRecords(@AuthenticationPrincipal User user) {
         List<LotteryService.LotteryRecordDto> records = lotteryService.getRecords(user.getId());
         return ResponseEntity.ok(records);
+    }
+
+    /**
+     * 获取免费抽奖次数
+     * API路径：GET /api/lottery/chance
+     * 权限：需要登录
+     *
+     * @param user 当前登录用户
+     * @return 免费抽奖次数
+     */
+    @GetMapping("/chance")
+    public ResponseEntity<Map<String, Object>> getChance(@AuthenticationPrincipal User user) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("chance", 3);
+        return ResponseEntity.ok(result);
     }
 
     /**

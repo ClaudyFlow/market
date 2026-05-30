@@ -18,8 +18,8 @@ export function getCart(): Promise<Cart> {
 /**
  * 添加商品到购物车
  */
-export function addToCart(productId: number | string, skuId?: number | string, quantity?: number): Promise<CartItem> {
-  return post(`${BASE_URL}/add`, { productId, skuId, quantity })
+export function addToCart(productId: number | string, skuId?: number | string, quantity?: number, selectedColor?: string, selectedVersion?: string): Promise<CartItem> {
+  return post(`${BASE_URL}/add`, { productId, skuId, quantity, selectedColor, selectedVersion })
 }
 
 /**

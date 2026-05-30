@@ -61,38 +61,41 @@ public class DatabaseInitConfig {
         try {
             jdbcTemplate.update("""
                 INSERT INTO product (
-                    user_id, name, description, category, 
-                    price, stock, available, 
-                    created_at, updated_at, image_url
+                    user_id, name, description, category,
+                    price, stock, available,
+                    created_at, updated_at, image_url, colors, versions
                 )
-                SELECT 1, '无线蓝牙耳机', '高品质无线蓝牙耳机，降噪效果好', 
-                       '数码', 199.00, 100, true, 
-                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 
-                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=耳机'
+                SELECT 1, '无线蓝牙耳机', '高品质无线蓝牙耳机，降噪效果好',
+                       '数码', 199.00, 100, true,
+                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=耳机',
+                       '曜石黑,珍珠白,天空蓝', '标准版,旗舰版,尊享版'
                 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = '无线蓝牙耳机')
             """);
             jdbcTemplate.update("""
                 INSERT INTO product (
-                    user_id, name, description, category, 
-                    price, stock, available, 
-                    created_at, updated_at, image_url
+                    user_id, name, description, category,
+                    price, stock, available,
+                    created_at, updated_at, image_url, colors, versions
                 )
-                SELECT 1, '智能手环', '运动健康监测，长续航', 
-                       '数码', 149.00, 100, true, 
-                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 
-                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=手环'
+                SELECT 1, '智能手环', '运动健康监测，长续航',
+                       '数码', 149.00, 100, true,
+                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=手环',
+                       '黑色,绿色', '基础版,专业版'
                 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = '智能手环')
             """);
             jdbcTemplate.update("""
                 INSERT INTO product (
-                    user_id, name, description, category, 
-                    price, stock, available, 
-                    created_at, updated_at, image_url
+                    user_id, name, description, category,
+                    price, stock, available,
+                    created_at, updated_at, image_url, colors, versions
                 )
-                SELECT 1, '机械键盘', 'Cherry 轴，RGB 背光', 
-                       '数码', 329.00, 50, true, 
-                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 
-                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=键盘'
+                SELECT 1, '机械键盘', 'Cherry 轴，RGB 背光',
+                       '数码', 329.00, 50, true,
+                       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+                       'https://via.placeholder.com/200x200/1a2a4a/00d4ff?text=键盘',
+                       '黑色,白色', '茶轴,红轴,青轴'
                 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = '机械键盘')
             """);
         } catch (Exception e) {

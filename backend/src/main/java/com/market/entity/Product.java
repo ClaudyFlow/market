@@ -1,6 +1,8 @@
 package com.market.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -86,6 +88,18 @@ public class Product {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(length = 500)
+    private String colors;
+
+    @Column(length = 500)
+    private String versions;
+
+    @Column(name = "detail_images", length = 2000)
+    private String detailImages;
+
+    @Column(name = "detail_text", length = 5000)
+    private String detailText;
 
     public Product() {}
 
@@ -176,6 +190,71 @@ public class Product {
 
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+
+    public String getColors() { return colors; }
+    public void setColors(String colors) { this.colors = colors; }
+
+    public String getVersions() { return versions; }
+    public void setVersions(String versions) { this.versions = versions; }
+
+    public String getDetailImages() { return detailImages; }
+    public void setDetailImages(String detailImages) { this.detailImages = detailImages; }
+
+    public String getDetailText() { return detailText; }
+    public void setDetailText(String detailText) { this.detailText = detailText; }
+
+    public java.util.List<String> getColorsList() {
+        if (colors == null || colors.isEmpty()) return new java.util.ArrayList<>();
+        return java.util.Arrays.asList(colors.split(","));
+    }
+
+    @JsonProperty("colors")
+    public java.util.List<String> getColorsListJson() {
+        return getColorsList();
+    }
+
+    @JsonProperty("versions")
+    public java.util.List<String> getVersionsList() {
+        if (versions == null || versions.isEmpty()) return new java.util.ArrayList<>();
+        return java.util.Arrays.asList(versions.split(","));
+    }
+
+    @JsonProperty("detailImages")
+    public java.util.List<String> getDetailImagesList() {
+        if (detailImages == null || detailImages.isEmpty()) return new java.util.ArrayList<>();
+        return java.util.Arrays.asList(detailImages.split(","));
+    }
+
+    public void setColorsList(java.util.List<String> colorsList) {
+        if (colorsList == null || colorsList.isEmpty()) {
+            this.colors = "";
+        } else {
+            this.colors = String.join(",", colorsList);
+        }
+    }
+
+    public void setVersionsList(java.util.List<String> versionsList) {
+        if (versionsList == null || versionsList.isEmpty()) {
+            this.versions = "";
+        } else {
+            this.versions = String.join(",", versionsList);
+        }
+    }
+
+    public void setDetailImagesList(java.util.List<String> imagesList) {
+        if (imagesList == null || imagesList.isEmpty()) {
+            this.detailImages = "";
+        } else {
+            this.detailImages = String.join(",", imagesList);
+        }
+    }
+
+    public int getDiscount() {
+        if (originalPrice == null || originalPrice.compareTo(BigDecimal.ZERO) == 0) {
+            return 100;
+        }
+        return (int) (price.multiply(BigDecimal.valueOf(100)).divide(originalPrice, 0).doubleValue());
+    }
 
     /**
      * 获取商品图片 URL（别名方法）

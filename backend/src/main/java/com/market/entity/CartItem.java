@@ -48,6 +48,18 @@ public class CartItem {
     @Column(nullable = false)
     private Boolean selected = true;
 
+    /**
+     * 选择的颜色
+     */
+    @Column(length = 50)
+    private String selectedColor;
+
+    /**
+     * 选择的版本
+     */
+    @Column(length = 50)
+    private String selectedVersion;
+
     public CartItem() {}
 
     public CartItem(User user, Product product, Integer quantity) {
@@ -78,4 +90,10 @@ public class CartItem {
 
     public Boolean getSelected() { return selected; }
     public void setSelected(Boolean selected) { this.selected = selected; }
+
+    public String getSelectedColor() { return selectedColor; }
+    public void setSelectedColor(String selectedColor) { this.selectedColor = selectedColor; }
+
+    public String getSelectedVersion() { return selectedVersion; }
+    public void setSelectedVersion(String selectedVersion) { this.selectedVersion = selectedVersion; }
 }

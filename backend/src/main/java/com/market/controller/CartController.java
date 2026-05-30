@@ -15,6 +15,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+class AddToCartRequest {
+    private Long productId;
+    private Long skuId;
+    private Integer quantity = 1;
+    private String selectedColor;
+    private String selectedVersion;
+
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
+    public Long getSkuId() { return skuId; }
+    public void setSkuId(Long skuId) { this.skuId = skuId; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getSelectedColor() { return selectedColor; }
+    public void setSelectedColor(String selectedColor) { this.selectedColor = selectedColor; }
+    public String getSelectedVersion() { return selectedVersion; }
+    public void setSelectedVersion(String selectedVersion) { this.selectedVersion = selectedVersion; }
+}
+
 /**
  * 购物车控制器
  * 提供购物车的增删改查、选中状态管理、库存检查等功能。
@@ -62,21 +81,21 @@ public class CartController {
      * @return 添加后的购物车商品项
      */
     @PostMapping("/add")
-    @Idempotent(key = "'add_cart_' + #user.id + '_' + #productId", expire = 600, message = "正在添加到购物车，请勿重复提交")
-    @DistributedLock(key = "'add_cart_' + #user.id + '_' + #productId", waitTime = 3000)
+    @Idempotent(key = "'add_cart_' + #user.id + '_' + #request.productId", expire = 600, message = "正在添加到购物车，请勿重复提交")
+    @DistributedLock(key = "'add_cart_' + #user.id + '_' + #request.productId", waitTime = 3000)
     @AuditLog(module = "购物车管理", action = "添加到购物车", recordParams = true)
     @Retryable(maxAttempts = 3, delay = 500)
     public Result<CartItem> addToCart(
             @AuthenticationPrincipal User user,
-            @RequestParam Long productId,
-            @RequestParam(defaultValue = "1") Integer quantity) {
+            @RequestBody AddToCartRequest request) {
 
         if (user == null) {
             return Result.error(401, "请先登录");
         }
 
         try {
-            CartItem item = cartService.addToCart(user, productId, quantity);
+            CartItem item = cartService.addToCart(user, request.getProductId(), request.getQuantity(),
+                    request.getSelectedColor(), request.getSelectedVersion());
             return Result.success(item);
         } catch (RuntimeException e) {
             return Result.error(400, e.getMessage());

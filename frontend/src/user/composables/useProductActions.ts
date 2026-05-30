@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { Product, SelectedSpecs } from '@user/types/product'
+import { useCartStore } from '@user/stores/cart'
 
 export function useProductActions(
   product: ReturnType<typeof useProductDetail>['product'],
@@ -12,6 +13,7 @@ export function useProductActions(
   quantity: ReturnType<typeof useProductSpecs>['quantity']
 ) {
   const router = useRouter()
+  const cartStore = useCartStore()
 
   // 收藏状态
   const isFavorited = ref(false)
@@ -21,27 +23,38 @@ export function useProductActions(
   const cartCount = ref(0)
 
   // 加入购物车
-  const addToCart = () => {
-    if (!selectedSpecs.color || !selectedSpecs.version) {
-      ElMessage.warning('请选择商品规格')
+  const addToCart = async () => {
+    if (product.value.colors?.length && !selectedSpecs.color) {
+      ElMessage.warning('请选择商品颜色')
+      return
+    }
+    if (product.value.versions?.length && !selectedSpecs.version) {
+      ElMessage.warning('请选择商品版本')
       return
     }
 
-    // TODO: 调用购物车 API
-    // cartStore.addToCart({
-    //   productId: product.value.id,
-    //   specs: { ...selectedSpecs },
-    //   quantity: quantity.value
-    // })
-
-    ElMessage.success('已加入购物车')
-    cartCount.value += quantity.value
+    try {
+      await cartStore.addToCart({
+        id: product.value.id,
+        quantity: quantity.value,
+        selectedColor: selectedSpecs.color,
+        selectedVersion: selectedSpecs.version
+      })
+      ElMessage.success('已加入购物车')
+      cartCount.value += quantity.value
+    } catch (error) {
+      ElMessage.error('添加失败，请重试')
+    }
   }
 
   // 立即购买
   const buyNow = () => {
-    if (!selectedSpecs.color || !selectedSpecs.version) {
-      ElMessage.warning('请选择商品规格')
+    if (product.value.colors?.length && !selectedSpecs.color) {
+      ElMessage.warning('请选择商品颜色')
+      return
+    }
+    if (product.value.versions?.length && !selectedSpecs.version) {
+      ElMessage.warning('请选择商品版本')
       return
     }
 
@@ -50,7 +63,9 @@ export function useProductActions(
       path: '/order',
       query: {
         productId: product.value.id,
-        quantity: quantity.value.toString()
+        quantity: quantity.value.toString(),
+        selectedColor: selectedSpecs.color,
+        selectedVersion: selectedSpecs.version
       }
     })
   }

@@ -30,14 +30,14 @@ public class CartService {
     }
     
     @Transactional
-    public CartItem addToCart(User user, Long productId, Integer quantity) {
+    public CartItem addToCart(User user, Long productId, Integer quantity, String selectedColor, String selectedVersion) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("商品不存在"));
-        
+
         if (product.getStock() < quantity) {
             throw new RuntimeException("库存不足");
         }
-        
+
         List<CartItem> existingItems = cartItemRepository.findByUser(user);
         for (CartItem item : existingItems) {
             if (item.getProduct().getId().equals(productId)) {
@@ -49,8 +49,10 @@ public class CartService {
                 return cartItemRepository.save(item);
             }
         }
-        
+
         CartItem newItem = new CartItem(user, product, quantity);
+        newItem.setSelectedColor(selectedColor);
+        newItem.setSelectedVersion(selectedVersion);
         return cartItemRepository.save(newItem);
     }
     

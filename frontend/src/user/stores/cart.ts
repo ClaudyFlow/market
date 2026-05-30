@@ -40,9 +40,23 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   // 添加到购物车
-  async function addToCart(productId: number | string, skuId?: number | string, quantity: number = 1) {
+  async function addToCart(productIdOrObj: number | string | Record<string, any>, skuId?: number | string, quantity: number = 1) {
     try {
-      const item = await cartApi.addToCart(productId, skuId, quantity)
+      let actualProductId: number | string
+      let actualQuantity = quantity
+      let actualSelectedColor: string | undefined
+      let actualSelectedVersion: string | undefined
+
+      if (typeof productIdOrObj === 'object' && productIdOrObj !== null) {
+        actualProductId = productIdOrObj.id
+        actualQuantity = productIdOrObj.quantity || quantity
+        actualSelectedColor = productIdOrObj.selectedColor
+        actualSelectedVersion = productIdOrObj.selectedVersion
+      } else {
+        actualProductId = productIdOrObj
+      }
+
+      const item = await cartApi.addToCart(actualProductId, skuId, actualQuantity, actualSelectedColor, actualSelectedVersion)
       await fetchCart()
       return item
     } catch (error) {

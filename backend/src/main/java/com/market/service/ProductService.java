@@ -114,6 +114,10 @@ public class ProductService {
         if (product.getStock() != null) existingProduct.setStock(product.getStock());
         if (product.getCategory() != null) existingProduct.setCategory(product.getCategory());
         if (product.getImageUrl() != null) existingProduct.setImageUrl(product.getImageUrl());
+        if (product.getColors() != null) existingProduct.setColors(product.getColors());
+        if (product.getVersions() != null) existingProduct.setVersions(product.getVersions());
+        if (product.getDetailImages() != null) existingProduct.setDetailImages(product.getDetailImages());
+        if (product.getDetailText() != null) existingProduct.setDetailText(product.getDetailText());
 
         return productRepository.save(existingProduct);
     }
@@ -130,6 +134,10 @@ public class ProductService {
         if (product.getStock() != null) existingProduct.setStock(product.getStock());
         if (product.getCategory() != null) existingProduct.setCategory(product.getCategory());
         if (product.getImageUrl() != null) existingProduct.setImageUrl(product.getImageUrl());
+        if (product.getColors() != null) existingProduct.setColors(product.getColors());
+        if (product.getVersions() != null) existingProduct.setVersions(product.getVersions());
+        if (product.getDetailImages() != null) existingProduct.setDetailImages(product.getDetailImages());
+        if (product.getDetailText() != null) existingProduct.setDetailText(product.getDetailText());
         return productRepository.save(existingProduct);
     }
 

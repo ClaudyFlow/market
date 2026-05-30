@@ -184,7 +184,8 @@ const 加入购物车 = () => {
   购物车.addToCart({
     ...商品.value,
     selectedColor: 选中颜色.value,
-    selectedVersion: 选中版本.value
+    selectedVersion: 选中版本.value,
+    quantity: 数量.value
   })
   ElMessage.success('已加入购物车')
 }
