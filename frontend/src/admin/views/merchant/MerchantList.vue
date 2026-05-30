@@ -200,12 +200,179 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { Shop, CircleCheck, Clock, CircleClose } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-// ... 脚本内容 ...
+interface Merchant {
+  id: number
+  shopName: string
+  ownerName: string
+  phone: string
+  category: string
+  joinTime: string
+  status: string
+  logo?: string
+  description?: string
+  businessLicense?: string
+  license?: string
+}
+
+interface FilterForm {
+  merchantId: string
+  shopName: string
+  status: string
+  dateRange: [Date, Date] | null
+}
+
+interface MerchantStats {
+  total: number
+  approved: number
+  pending: number
+  rejected: number
+}
+
+interface Pagination {
+  currentPage: number
+  pageSize: number
+  total: number
+}
+
+interface AuditDialog {
+  visible: boolean
+  merchant: Merchant | null
+}
+
+interface AuditForm {
+  comment: string
+}
+
+const loading = ref(false)
+const merchantList = ref<Merchant[]>([])
+const filterForm = reactive<FilterForm>({
+  merchantId: '',
+  shopName: '',
+  status: '',
+  dateRange: null
+})
+
+const merchantStats = ref<MerchantStats>({
+  total: 320,
+  approved: 245,
+  pending: 52,
+  rejected: 23
+})
+
+const pagination = reactive<Pagination>({
+  currentPage: 1,
+  pageSize: 10,
+  total: 0
+})
+
+const auditDialog = reactive<AuditDialog>({
+  visible: false,
+  merchant: null
+})
+
+const auditForm = reactive<AuditForm>({
+  comment: ''
+})
+
+const currentMerchant = ref<Merchant | null>(null)
+
+const mockMerchantData: Merchant[] = [
+  { id: 2001, shopName: '潮流数码旗舰店', ownerName: '张明', phone: '138****1234', category: '数码电子', joinTime: '2026-01-10', status: 'approved', logo: '', description: '专业数码产品供应商', businessLicense: '', license: '' },
+  { id: 2002, shopName: '优品服饰专营店', ownerName: '李华', phone: '139****5678', category: '服装鞋帽', joinTime: '2026-01-15', status: 'approved', logo: '', description: '时尚潮流服饰', businessLicense: '', license: '' },
+  { id: 2003, shopName: '家居生活馆', ownerName: '王芳', phone: '137****9012', category: '家居生活', joinTime: '2026-01-20', status: 'pending', logo: '', description: '品质家居用品', businessLicense: '', license: '' },
+  { id: 2004, shopName: '美食天地', ownerName: '赵伟', phone: '136****3456', category: '食品保健', joinTime: '2026-02-01', status: 'pending', logo: '', description: '特色美食专营', businessLicense: '', license: '' },
+  { id: 2005, shopName: '美妆护肤小屋', ownerName: '钱琳', phone: '135****7890', category: '美妆护肤', joinTime: '2026-02-05', status: 'approved', logo: '', description: '正品美妆产品', businessLicense: '', license: '' },
+  { id: 2006, shopName: '运动户外专营', ownerName: '孙强', phone: '134****2345', category: '运动户外', joinTime: '2026-02-10', status: 'rejected', logo: '', description: '运动装备专营', businessLicense: '', license: '' }
+]
+
+const loadMerchantList = () => {
+  loading.value = true
+  setTimeout(() => {
+    let data = mockMerchantData
+    if (filterForm.status) {
+      data = data.filter(m => m.status === filterForm.status)
+    }
+    merchantList.value = data
+    pagination.total = data.length
+    loading.value = false
+  }, 500)
+}
+
+const searchMerchants = () => {
+  pagination.currentPage = 1
+  loadMerchantList()
+}
+
+const resetFilter = () => {
+  filterForm.merchantId = ''
+  filterForm.shopName = ''
+  filterForm.status = ''
+  filterForm.dateRange = null
+  loadMerchantList()
+}
+
+const getStatusType = (status: string) => {
+  const map: Record<string, string> = { approved: 'success', pending: 'warning', rejected: 'danger', banned: 'info' }
+  return map[status] || 'info'
+}
+
+const getStatusText = (status: string) => {
+  const map: Record<string, string> = { approved: '已通过', pending: '待审核', rejected: '已拒绝', banned: '已封禁' }
+  return map[status] || status
+}
+
+const viewMerchant = (merchant: Merchant) => {
+  currentMerchant.value = merchant
+  auditDialog.visible = true
+  auditDialog.merchant = merchant
+}
+
+const approveMerchant = (merchant: Merchant) => {
+  ElMessageBox.confirm(`确定要通过商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'success'
+  }).then(() => {
+    merchant.status = 'approved'
+    ElMessage.success('审核已通过')
+  }).catch(() => {})
+}
+
+const rejectMerchant = (merchant: Merchant) => {
+  ElMessageBox.confirm(`确定要拒绝商家"${merchant.shopName}"的入驻申请吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error'
+  }).then(() => {
+    merchant.status = 'rejected'
+    ElMessage.success('已拒绝')
+  }).catch(() => {})
+}
+
+const banMerchant = (merchant: Merchant) => {
+  ElMessageBox.confirm(`确定要封禁商家"${merchant.shopName}"吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    merchant.status = 'banned'
+    ElMessage.success('已封禁')
+  }).catch(() => {})
+}
+
+const submitAudit = () => {
+  ElMessage.success('提交成功')
+  auditDialog.visible = false
+}
+
+onMounted(() => {
+  loadMerchantList()
+})
 </script>
 
 <style scoped>

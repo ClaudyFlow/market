@@ -146,3 +146,49 @@ body {
 .item-type-tag.appliance { background: rgba(0,255,136,0.8); color: #000; }
 .item-type-tag.fashion { background: rgba(255,51,102,0.8); color: #fff; }
 .item-type-tag.beauty { background: rgba(163,53,238,0.8); color: #fff; }
+
+/* Element Plus Tabs 组件样式修复 */
+.el-tabs__content {
+  background: var(--mall-bg-medium);
+  padding: 20px;
+  border-radius: 0 0 var(--mall-radius) var(--mall-radius);
+}
+
+.el-tab-pane {
+  background: var(--mall-bg-dark);
+  color: var(--mall-text-primary);
+}
+
+.el-tabs--border-card {
+  background: var(--mall-bg-dark);
+  border: 1px solid var(--mall-border);
+  border-radius: var(--mall-radius);
+}
+
+.el-tabs--border-card > .el-tabs__header {
+  background: var(--mall-bg-medium);
+  border-bottom: 1px solid var(--mall-border);
+  margin: 0;
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item {
+  color: var(--mall-text-secondary);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--mall-border);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+  color: var(--mall-primary);
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+  color: var(--mall-primary);
+  background: var(--mall-bg-dark);
+  border-right-color: var(--mall-border);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item:last-child {
+  border-right: none;
+}

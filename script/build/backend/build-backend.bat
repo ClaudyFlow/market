@@ -1,53 +1,67 @@
 @echo off
-set "PROJECT_ROOT=D:\market"
+chcp 65001 >nul
 
-echo [Build Backend] Building backend via Maven...
+echo ========================================
+echo     Backend Build Script
+echo ========================================
 echo.
 
-echo [1/4] Checking JDK and Maven...
-where mvn >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [Error] Maven not found. Please install Maven.
-    pause
-    exit /b 1
-)
+set "PROJECT_ROOT=D:\Code\Project\market"
+
+echo [1/3] Checking Java...
 where java >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [Error] JDK not found. Please install JDK 21.
-    pause
-    exit /b 1
+if %errorlevel% equ 0 (
+    echo [Info] Java found
+) else (
+    echo [Info] Java not found, installing...
+    winget install -e --id Oracle.JDK.21 --accept-package-agreements --accept-source-agreements >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo [Error] Java install failed
+        pause
+        exit /b 1
+    )
+    echo [Success] Java installed
 )
-echo [OK] Environment check complete
-
 echo.
-echo [2/4] Compiling with Maven...
+
+echo [2/3] Compiling backend...
 cd /d "%PROJECT_ROOT%\backend"
-call mvn clean package -DskipTests
+if exist "target" (
+    echo [Clean] Cleaning old build...
+    rmdir /s /q target >nul 2>&1
+)
+
+where mvn >nul 2>nul
+if %errorlevel% equ 0 (
+    echo [Build] Compiling with mvn...
+    call mvn clean compile -DskipTests
+)
 if %errorlevel% neq 0 (
     echo [Error] Backend compilation failed
     pause
     exit /b 1
 )
-echo [OK] Backend compiled
-
+echo [Success] Backend compilation completed
 echo.
-echo [3/4] Checking PostgreSQL...
-where psql >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [Warning] psql not found. Ensure PostgreSQL is installed and running.
-) else (
-    echo [OK] PostgreSQL client found
+
+echo [3/3] Starting Spring Boot service...
+if not exist "pom.xml" (
+    echo [Error] pom.xml not found
+    pause
+    exit /b 1
 )
 
-echo.
-echo [4/4] Checking Redis...
-where redis-cli >nul 2>&1
+echo [Start] Starting Spring Boot backend service...
+start "Spring Boot Server" cmd /c "cd /d "%PROJECT_ROOT%\backend" && mvn spring-boot:run"
 if %errorlevel% neq 0 (
-    echo [Warning] redis-cli not found. Ensure Redis is installed and running.
-) else (
-    echo [OK] Redis client found
+    echo [Error] Backend service startup failed
+    pause
+    exit /b 1
 )
-
+echo [Success] Backend service started
 echo.
-echo [Success] Backend built successfully
-echo JAR file: %PROJECT_ROOT%\backend\target\market-*.jar
+
+echo ========================================
+echo [Success] Backend Build and Start Success!
+echo ========================================
+pause

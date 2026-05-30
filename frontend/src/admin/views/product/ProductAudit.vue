@@ -179,12 +179,153 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { DocumentChecked, Goods, CircleCheck, Clock, CircleClose } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { DocumentChecked, Goods, CircleCheck, CircleClose, Clock } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-// ... 脚本内容 ...
+interface Product {
+  id: number
+  name: string
+  shopName: string
+  category: string
+  price: number
+  stock: number
+  image?: string
+  description?: string
+  submitTime: string
+  status: string
+  rejectReason?: string
+}
+
+interface FilterForm {
+  productId: string
+  productName: string
+  shopName: string
+  status: string
+}
+
+interface AuditStats {
+  total: number
+  pending: number
+  approved: number
+  rejected: number
+}
+
+interface Pagination {
+  currentPage: number
+  pageSize: number
+  total: number
+}
+
+interface DetailDialog {
+  visible: boolean
+}
+
+const loading = ref(false)
+const productList = ref<Product[]>([])
+const filterForm = reactive<FilterForm>({
+  productId: '',
+  productName: '',
+  shopName: '',
+  status: ''
+})
+
+const auditStats = ref<AuditStats>({
+  total: 2560,
+  pending: 128,
+  approved: 2305,
+  rejected: 127
+})
+
+const pagination = reactive<Pagination>({
+  currentPage: 1,
+  pageSize: 10,
+  total: 0
+})
+
+const detailDialog = reactive<DetailDialog>({
+  visible: false
+})
+
+const currentProduct = ref<Product | null>(null)
+
+const mockProductData: Product[] = [
+  { id: 4001, name: 'iPhone 15 Pro Max', shopName: '潮流数码旗舰店', category: '数码电子', price: 9999, stock: 50, image: '', description: '苹果旗舰手机，A17 Pro芯片', submitTime: '2026-05-28 10:30', status: 'pending' },
+  { id: 4002, name: '华为Mate60 Pro', shopName: '数码世界', category: '数码电子', price: 6999, stock: 100, image: '', description: '华为旗舰手机，麒麟芯片', submitTime: '2026-05-28 09:15', status: 'pending' },
+  { id: 4003, name: '小米14 Ultra', shopName: '优品数码', category: '数码电子', price: 5999, stock: 80, image: '', description: '小米旗舰手机，骁龙8 Gen3', submitTime: '2026-05-27 16:45', status: 'approved' },
+  { id: 4004, name: '索尼WH-1000XM5', shopName: '音频专营店', category: '数码电子', price: 2499, stock: 30, image: '', description: '索尼降噪耳机旗舰款', submitTime: '2026-05-27 14:20', status: 'approved' },
+  { id: 4005, name: '耐克Air Jordan 1', shopName: '潮流运动馆', category: '服装鞋帽', price: 1499, stock: 200, image: '', description: '经典篮球鞋款', submitTime: '2026-05-26 11:30', status: 'rejected', rejectReason: '商品图片不清晰' },
+  { id: 4006, name: '联想拯救者R9000P', shopName: '电脑专营', category: '数码电子', price: 8999, stock: 45, image: '', description: '游戏笔记本电脑', submitTime: '2026-05-26 09:00', status: 'approved' }
+]
+
+const loadProductList = () => {
+  loading.value = true
+  setTimeout(() => {
+    let data = mockProductData
+    if (filterForm.status) {
+      data = data.filter(p => p.status === filterForm.status)
+    }
+    productList.value = data
+    pagination.total = data.length
+    loading.value = false
+  }, 500)
+}
+
+const searchProducts = () => {
+  pagination.currentPage = 1
+  loadProductList()
+}
+
+const resetFilter = () => {
+  filterForm.productId = ''
+  filterForm.productName = ''
+  filterForm.shopName = ''
+  filterForm.status = ''
+  loadProductList()
+}
+
+const getStatusType = (status: string) => {
+  const map: Record<string, string> = { approved: 'success', pending: 'warning', rejected: 'danger' }
+  return map[status] || 'info'
+}
+
+const getStatusText = (status: string) => {
+  const map: Record<string, string> = { approved: '已通过', pending: '待审核', rejected: '已拒绝' }
+  return map[status] || status
+}
+
+const viewProduct = (product: Product) => {
+  currentProduct.value = product
+  detailDialog.visible = true
+}
+
+const approveProduct = (product: Product) => {
+  ElMessageBox.confirm(`确定要通过商品"${product.name}"的审核吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'success'
+  }).then(() => {
+    product.status = 'approved'
+    ElMessage.success('审核已通过')
+  }).catch(() => {})
+}
+
+const rejectProduct = (product: Product) => {
+  ElMessageBox.confirm(`确定要拒绝商品"${product.name}"的审核吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error'
+  }).then(() => {
+    product.status = 'rejected'
+    product.rejectReason = '商品信息不符合规范'
+    ElMessage.success('已拒绝')
+  }).catch(() => {})
+}
+
+onMounted(() => {
+  loadProductList()
+})
 </script>
 
 <style scoped>

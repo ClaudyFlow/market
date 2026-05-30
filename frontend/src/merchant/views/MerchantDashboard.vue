@@ -9,10 +9,10 @@
         <SciCard variant="gradient">
           <template #header><h3>快捷操作</h3></template>
           <div class="quick-actions">
-            <SciButton type="primary" block @click="$router.push('/merchant/product')">商品管理</SciButton>
-            <SciButton type="success" block @click="$router.push('/merchant/order')">订单管理</SciButton>
-            <SciButton type="warning" block @click="$router.push('/merchant/coupon')">优惠券管理</SciButton>
-            <SciButton type="info" block @click="$router.push('/merchant/review')">评价管理</SciButton>
+            <SciButton type="primary" block @click="$router.push('/product')">商品管理</SciButton>
+            <SciButton type="success" block @click="$router.push('/order')">订单管理</SciButton>
+            <SciButton type="warning" block @click="$router.push('/coupon')">优惠券管理</SciButton>
+            <SciButton type="info" block @click="$router.push('/review')">评价管理</SciButton>
           </div>
         </SciCard>
       </el-col>

@@ -33,7 +33,7 @@
       <aside class="sidebar">
         <el-menu :default-active="activeMenu" router background-color="#1a1f3a" text-color="#b0d4ff"
           active-text-color="#00d4ff">
-          <el-menu-item index="/merchant/dashboard">
+          <el-menu-item index="/">
             <el-icon><DataAnalysis /></el-icon>
             <span>数据概览</span>
           </el-menu-item>
@@ -42,38 +42,38 @@
               <el-icon><Goods /></el-icon>
               <span>商品管理</span>
             </template>
-            <el-menu-item index="/merchant/product/list">商品列表</el-menu-item>
-            <el-menu-item index="/merchant/product/add">添加商品</el-menu-item>
+            <el-menu-item index="/product">商品列表</el-menu-item>
+            <el-menu-item index="/product/add">添加商品</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="order">
             <template #title>
               <el-icon><ShoppingCart /></el-icon>
               <span>订单管理</span>
             </template>
-            <el-menu-item index="/merchant/order/list">订单列表</el-menu-item>
-            <el-menu-item index="/merchant/order/refund">退款处理</el-menu-item>
+            <el-menu-item index="/order">订单列表</el-menu-item>
+            <el-menu-item index="/order/refund">退款处理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="coupon">
             <template #title>
               <el-icon><Ticket /></el-icon>
               <span>优惠券管理</span>
             </template>
-            <el-menu-item index="/merchant/coupon/list">优惠券列表</el-menu-item>
-            <el-menu-item index="/merchant/coupon/add">添加优惠券</el-menu-item>
+            <el-menu-item index="/coupon">优惠券列表</el-menu-item>
+            <el-menu-item index="/coupon/add">添加优惠券</el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="/merchant/review/list">
+          <el-menu-item index="/review">
             <el-icon><Comment /></el-icon>
             <span>评价管理</span>
           </el-menu-item>
-          <el-menu-item index="/merchant/shop/info">
+          <el-menu-item index="/shop">
             <el-icon><Shop /></el-icon>
             <span>店铺管理</span>
           </el-menu-item>
-          <el-menu-item index="/merchant/stats">
+          <el-menu-item index="/statistic">
             <el-icon><TrendCharts /></el-icon>
             <span>数据统计</span>
           </el-menu-item>
-          <el-menu-item index="/merchant/customer/chat">
+          <el-menu-item index="/chat">
             <el-icon><ChatDotRound /></el-icon>
             <span>客服聊天</span>
           </el-menu-item>
@@ -113,18 +113,18 @@ const handleCommand = (command) => {
   if (command === 'logout') {
     localStorage.removeItem('token')
     localStorage.removeItem('merchantInfo')
-    router.push('/merchant/login')
+    router.push('/login')
     ElMessage.success('已退出登录')
   } else if (command === 'shop') {
-    router.push('/merchant/shop/info')
+    router.push('/shop/info')
   } else if (command === 'profile') {
-    router.push('/merchant/profile')
+    router.push('/profile')
   }
 }
 
 // 跳转到通知
 const goToNotifications = () => {
-  router.push('/merchant/notifications')
+  router.push('/notifications')
 }
 
 // 获取未读消息数
@@ -139,6 +139,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@merchant/assets/mall-style.css';
+
 .merchant-dashboard {
   min-height: 100vh;
   background: #0a0f1a;

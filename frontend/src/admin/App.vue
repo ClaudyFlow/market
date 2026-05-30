@@ -32,7 +32,7 @@
       <aside class="sidebar">
         <el-menu :default-active="activeMenu" router background-color="#1a1f3a" text-color="#b0d4ff"
           active-text-color="#00d4ff">
-          <el-menu-item index="/admin/dashboard">
+          <el-menu-item index="/">
             <el-icon><DataAnalysis /></el-icon>
             <span>数据概览</span>
           </el-menu-item>
@@ -41,67 +41,67 @@
               <el-icon><User /></el-icon>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="/admin/user/list">用户列表</el-menu-item>
-            <el-menu-item index="/admin/user/credit">用户积分</el-menu-item>
+            <el-menu-item index="/user">用户列表</el-menu-item>
+            <el-menu-item index="/user/credit">用户积分</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="merchant">
             <template #title>
               <el-icon><Shop /></el-icon>
               <span>商家管理</span>
             </template>
-            <el-menu-item index="/admin/merchant/list">商家列表</el-menu-item>
-            <el-menu-item index="/admin/merchant/audit">入驻审核</el-menu-item>
+            <el-menu-item index="/merchant">商家列表</el-menu-item>
+            <el-menu-item index="/merchant/audit">入驻审核</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="product">
             <template #title>
               <el-icon><Goods /></el-icon>
               <span>商品管理</span>
             </template>
-            <el-menu-item index="/admin/product/list">商品列表</el-menu-item>
-            <el-menu-item index="/admin/product/audit">商品审核</el-menu-item>
-            <el-menu-item index="/admin/product/category">分类管理</el-menu-item>
+            <el-menu-item index="/product">商品列表</el-menu-item>
+            <el-menu-item index="/product/audit">商品审核</el-menu-item>
+            <el-menu-item index="/product/category">分类管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="order">
             <template #title>
               <el-icon><ShoppingCart /></el-icon>
               <span>订单管理</span>
             </template>
-            <el-menu-item index="/admin/order/list">订单列表</el-menu-item>
-            <el-menu-item index="/admin/order/refund">退款管理</el-menu-item>
+            <el-menu-item index="/order">订单列表</el-menu-item>
+            <el-menu-item index="/order/refund">退款管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="coupon">
             <template #title>
               <el-icon><Ticket /></el-icon>
               <span>优惠券管理</span>
             </template>
-            <el-menu-item index="/admin/coupon/list">优惠券列表</el-menu-item>
-            <el-menu-item index="/admin/coupon/template">模板管理</el-menu-item>
+            <el-menu-item index="/coupon">优惠券列表</el-menu-item>
+            <el-menu-item index="/coupon/template">模板管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="content">
             <template #title>
               <el-icon><Document /></el-icon>
               <span>内容管理</span>
             </template>
-            <el-menu-item index="/admin/content/notice">公告管理</el-menu-item>
-            <el-menu-item index="/admin/content/banner">轮播图管理</el-menu-item>
-            <el-menu-item index="/admin/content/review">评价审核</el-menu-item>
+            <el-menu-item index="/content/notice">公告管理</el-menu-item>
+            <el-menu-item index="/content/banner">轮播图管理</el-menu-item>
+            <el-menu-item index="/content/review">评价审核</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="marketing">
             <template #title>
               <el-icon><Promotion /></el-icon>
               <span>营销管理</span>
             </template>
-            <el-menu-item index="/admin/marketing/activity">活动管理</el-menu-item>
-            <el-menu-item index="/admin/marketing/lottery">抽奖管理</el-menu-item>
+            <el-menu-item index="/marketing/activity">活动管理</el-menu-item>
+            <el-menu-item index="/marketing/lottery">抽奖管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="system">
             <template #title>
               <el-icon><Setting /></el-icon>
               <span>系统设置</span>
             </template>
-            <el-menu-item index="/admin/system/settings">系统配置</el-menu-item>
-            <el-menu-item index="/admin/system/log">操作日志</el-menu-item>
-            <el-menu-item index="/admin/system/permission">权限管理</el-menu-item>
+            <el-menu-item index="/system/settings">系统配置</el-menu-item>
+            <el-menu-item index="/system/log">操作日志</el-menu-item>
+            <el-menu-item index="/system/permission">权限管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </aside>
@@ -138,16 +138,16 @@ const handleCommand = (command) => {
   if (command === 'logout') {
     localStorage.removeItem('token')
     localStorage.removeItem('adminInfo')
-    router.push('/admin/login')
+    router.push('/login')
     ElMessage.success('已退出登录')
   } else if (command === 'profile') {
-    router.push('/admin/profile')
+    router.push('/profile')
   }
 }
 
 // 跳转到通知
 const goToNotifications = () => {
-  router.push('/admin/notifications')
+  router.push('/notifications')
 }
 
 // 获取未读消息数
@@ -162,6 +162,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@admin/assets/mall-style.css';
+
 .admin-dashboard {
   min-height: 100vh;
   background: #0a0f1a;

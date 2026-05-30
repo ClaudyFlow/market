@@ -161,7 +161,7 @@ const submitForm = async () => {
       await createProduct(form)
       ElMessage.success('发布成功')
     }
-    router.push('/merchant/product')
+    router.push('/product')
   } catch (error: any) {
     ElMessage.error(error.message || '操作失败')
   } finally {
